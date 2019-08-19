@@ -1,0 +1,19 @@
+
+/* 
+ * Get nested map
+ * --------------
+ *
+ * @param [map] $map
+ * @param [list] $keys
+ *
+ * @return [map]
+ *
+ */
+
+@function mapDeepGet( $map, $keys... ) {
+    @each $key in $keys {
+        $map: map-get( $map, $key );
+    }
+    
+    @return $map;
+}

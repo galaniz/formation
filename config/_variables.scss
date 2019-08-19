@@ -1,0 +1,38 @@
+
+/*
+ * Variables
+ * ---------
+ */
+
+$g-colors: () !default;
+$g-fonts: () !default;
+$g-breakpoints: () !default;
+
+/* Layout containers and padding */
+
+$g-containers: () !default;
+$g-containerPadding: 25px !default;
+
+/* Grid system */
+
+$g-grid: () !default;
+
+/* Utility properties */
+
+$g-props: () !default;
+
+/* Rem/em context */
+
+$g-context: 16px !default;
+
+/* Aspect ratio padding */
+
+$g-aspectRatioPadding: () !default;
+
+/* Transitions */
+
+$g-transitions: () !default;
+
+/* Z index */
+
+$g-zIndex: () !default;

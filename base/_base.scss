@@ -1,0 +1,165 @@
+
+/*
+ * Base
+ * ----
+ */
+
+* {
+    @extend %u-color-inherit;
+}
+
+*, 
+*:before, 
+*:after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none; 
+    font-size: 100%;
+}
+
+/* Resets */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+p,
+blockquote,
+input,
+textarea,
+button, 
+fieldset,
+figure {
+    margin: 0;
+    padding: 0;
+}
+
+/* Input resets */
+
+input,
+textarea,
+button, 
+fieldset {
+    border: 0;
+    outline: none;
+}
+
+input,
+textarea,
+button {
+    appearance: none !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    &:hover,
+    &:active,
+    &:focus {
+        box-shadow: none !important;
+        background-image: none;
+        outline: none;
+    }
+}
+
+// clears the 'X' from ie 
+input::-ms-clear,
+input::-ms-reveal { 
+    display: none;
+    width: 0; 
+    height: 0; 
+}
+
+// clears the 'X' from chrome 
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration { 
+    display: none;
+}
+
+button {
+    background: transparent;
+}
+
+/* Misc resets */
+
+embed,
+iframe,
+img,
+object,
+video {
+    max-width: 100%;
+}
+
+embed,
+img,
+object,
+video {
+    height: auto;
+}
+
+img {
+    @extend %u-display-block;
+}
+
+address{
+    font-style: normal;
+}
+
+main,
+time {
+    @extend %u-display-block;
+}
+
+/* Links */
+
+a {
+    text-decoration: none;
+    &:hover,
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+/* Headings */
+
+h1,
+h2, 
+h3, 
+h4, 
+h5, 
+h6 {
+    & a {
+        @extend %u-color-inherit;
+    }   
+}
+
+/* Lists */
+
+ol,
+ul {
+    list-style: none;
+}
+
+/* Blockquote */
+
+blockquote {
+    font-style: italic;
+}
+
+/* Svg */
+
+svg {
+    fill: inherit;
+}

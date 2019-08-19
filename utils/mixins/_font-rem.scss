@@ -1,0 +1,17 @@
+
+/* 
+ * Font size in rem units
+ * ----------------------
+ *
+ * @param [number] $size
+ * @param [boolean] $important
+ *
+ */
+
+@mixin fontRem( $size, $important: false ) {
+    @if $important {
+        font-size: calcRem( $size ) !important;
+    } @else {
+        font-size: calcRem( $size );
+    }
+}

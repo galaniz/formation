@@ -1,0 +1,10 @@
+
+/*
+ * Main container
+ * --------------
+ */
+
+.c-container {
+	@extend %u-position-relative;
+    min-height: 100%;
+}

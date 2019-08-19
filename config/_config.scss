@@ -1,0 +1,168 @@
+
+/*
+ * Config
+ * ------
+ */
+
+/* Colors */
+
+$g-colors: map-merge( 
+	(
+		primary: (
+			base: #1DE9B6,
+			light: #A7FFEB,
+			dark: #00BFA5
+		),
+		foreground: (
+			base: #1E1E1E,
+			light: #444444,
+			dark: #000000
+		),
+		background: (
+			base: #F8F8F8,
+			light: #FFFFFF,
+			dark: #EEEEEE
+		)
+	), 
+	$g-colors 
+);
+
+/* Fonts */
+
+$g-fonts: map-merge(
+	( 
+		primary: (   
+			Helvetica, 
+			Arial,
+			sans-serif 
+		),
+		weight: (
+			normal: 400
+		)
+	),
+	$g-fonts
+);
+
+/* Grid */
+
+$g-grid: map-merge(
+	( 
+		25: (   
+			600: 50%,
+			900: 25%
+		),
+		33: (
+			600: 50%,
+			900: 33.33333%
+		),
+		50: (
+			600: 50%
+		),
+		66: (
+			600: 50%,
+			900: 66.66667%
+		),
+		75: (
+			600: 50%,
+			900: 75%
+		)
+	),
+	$g-grid
+);
+
+/* Breakpoints */
+
+$g-breakpoints: map-merge( 
+	( 
+		0: 0px, 
+		500: 500px,
+		600: 600px,
+		700: 700px,
+		800: 800px,
+		900: 900px, 
+		1000: 1000px
+	), 
+	$g-breakpoints 
+);
+
+/* Containers */
+
+$g-containers: map-merge( 
+	( 
+		def: 1200px, 
+		sm: 800px,
+		lg: 1800px
+	), 
+	$g-containers 
+); 
+
+// append to breakpoints
+@each $c, $width in $g-containers {
+	$k: inspect( $c );
+	$suffix: '';
+
+	@if $c != 'def' {
+		$suffix: #{ capitalize( $c ) };
+	} 
+
+	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width ), $g-breakpoints );
+}
+
+/* Transitions */
+
+$g-transitions: map-merge( 
+	( 
+		def: (
+			duration: 300ms,
+			timingFunction: 'ease-in-out',
+			timingFunctionCubic: 'cubic-bezier( .07, .51, .12, 1 )'
+		),
+		fade: (
+			durations: (
+				def: '800ms, 500ms',
+				s: '1200ms, 800ms'
+			),
+			y: (
+				def: 5%,
+				sm: 25%,
+				md: 50%,
+				lg: 100%
+			),
+			x: (
+				def: 5%,
+				sm: 25%,
+				md: 50%,
+				lg: 100%
+			)
+		),
+		scale: (
+			durations: (
+				def: '800ms, 500ms',
+				s: '2200ms, 600ms'
+			),
+			in: (
+				def: 1.10,
+				hover: 1.06,
+				sm: 1.05,
+				md: 1.20,
+				lg: 1.55
+			),
+			out: (
+				def: 1.10,
+				hover: 1,
+				sm: 1.04,
+				md: 1.20
+			)
+		)
+	), 
+	$g-transitions 
+);
+
+/* Z index */
+
+$g-zIndex: map-merge( 
+	( 
+		skipLink: 100
+	), 
+	$g-zIndex 
+);

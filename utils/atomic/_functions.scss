@@ -1,0 +1,73 @@
+
+/* 
+ * Append to list
+ * --------------
+ *
+ * @param [list] $arr
+ * @param [list] $prop
+ *
+ * @return [list] comma separated
+ *
+ */
+
+@function _addProp( $list, $prop ) {
+    $newList: append( $list, $prop, comma );
+    @return $newList;
+}
+
+/* 
+ * Convert map to one level map
+ * ----------------------------
+ *
+ * @param [map] $map
+ * @param [map] $newMap
+ * @param [string] $prefix
+ * @param [null/string] $newPrefix
+ *
+ * @return [map]
+ *
+ */
+
+@function _mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
+    @each $key, $value in $map {
+        @if( type-of( $value ) == map ) {
+            $nPrefix: "#{ $key }";
+
+            @if( $newPrefix ) {
+                $k: "#{ $key }";
+
+                @if( $key != '' ) {
+                    $k: "-#{ $key }";
+                }
+
+                @if( $key == def ) {
+                    $k: '';
+                }
+                
+                $nPrefix: "#{ $newPrefix }#{ $k }";
+            }
+
+            $newMap: _mapFlatten( $value, $newMap, $prefix, $nPrefix );
+        } @else {
+            $newKey: "#{ $key }";
+
+            @if( $prefix != '' ) {
+                $newKey: "#{ $prefix }-#{ $key }";
+            }
+
+            @if( $newPrefix ) {
+                @if( $prefix != '' ) {
+                    $newKey: "#{ $prefix }-#{ $newPrefix }-#{ $key }";
+                } @else {
+                    $newKey: "#{ $newPrefix }-#{ $key }";
+                }   
+            }
+
+            $newMap: map-merge( $newMap, ( $newKey: $value ) );
+        }
+    }
+
+    $newMap: map-merge( $newMap, $newMap );
+
+    @return $newMap;
+}

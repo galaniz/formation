@@ -1,0 +1,13 @@
+
+/*
+ * Scale in and out
+ * ----------------
+ */
+
+/* Dependencies */
+
+@import 'mixins';
+
+/* Output classes */
+
+@include _transitionScale();

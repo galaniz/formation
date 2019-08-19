@@ -1,0 +1,28 @@
+
+/* 
+ * Font sizes
+ * ----------
+ *
+ * @param [number] $px
+ * @return [number]
+ *
+ */
+
+@function calcRem( $px ) {
+    $rem: $px / $g-context;
+    @return #{ $rem }rem;
+}
+
+/* 
+ * Font / breakpoint sizes
+ * -----------------------
+ *
+ * @param [number] $px
+ * @return [number]
+ *
+ */
+
+@function calcEm( $px ) {
+    $em: $px / $g-context;
+    @return #{ $em }em;
+}

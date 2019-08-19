@@ -1,0 +1,127 @@
+
+/* 
+ * Append font props to props list
+ * -------------------------------
+ */
+
+@mixin _fontProps() {
+    @each $k, $v in $g-fonts {
+        @if $k == weight {
+            @each $p, $w in $v {
+                $g-props: _addProp( $g-props, ( 
+                    custom: ( 
+                        name: "font-weight-#{$p}",
+                        prop: (
+                            font-weight: $w
+                        )
+                    )
+                ) ) !global;
+            }
+        } @else {
+            $g-props: _addProp( $g-props, ( 
+                custom: ( 
+                    name: "font-family-#{$k}",
+                    prop: (
+                        font-family: $v
+                    )
+                )
+            ) ) !global;
+        } 
+    }
+}
+
+/* 
+ * Append transition props to props list
+ * -------------------------------------
+ */
+
+@mixin _transitionProps() {
+    $transitions: map-get( $g-transitions, 'def' );
+    $duration: map-get( $transitions, 'duration' );
+    $timingFunction: map-get( $transitions, 'timingFunction' );
+    $timingFunctionCubic: map-get( $transitions, 'timingFunctionCubic' );
+
+    $g-props: _addProp( $g-props, ( transition-duration: $duration ) ) !global;
+    $g-props: _addProp( $g-props, ( transition-property: opacity ) ) !global;
+    $g-props: _addProp( $g-props, ( transition-property: transform ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: transition-property-opacity-transform,
+            prop: (
+                transition-property: 'opacity, transform'
+            )
+        )
+    ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: transition-timing-function-cubic,
+            prop: (
+                transition-timing-function: $timingFunctionCubic
+            )
+        )
+    ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: transition-opacity-transform-ease,
+            prop: (
+                transition: "opacity #{$duration} #{$timingFunction}, transform #{$duration} ${$timingFunction}"
+            )
+        )
+    ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: transition-transform-ease,
+            prop: (
+                transition: "transform #{$duration} ${$timingFunction}"
+            )
+        )
+    ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: transition-opacity-ease,
+            prop: (
+                transition: "opacity #{$duration} ${$timingFunction}"
+            )
+        )
+    ) ) !global;
+}
+
+/* 
+ * Make utility placeholders
+ * -------------------------
+ *
+ * @param [string] $key
+ * @param [string/map] $value
+ *
+ */
+
+@mixin _makeUtil( $key, $value ) {
+    @if $key == custom {
+        $map: $value;
+        $name: map-get( $map, name );
+        $prop: map-get( $map, prop );
+
+        %u-#{ $name } {
+            @each $key, $value in $prop {
+                @if( type-of( $value ) == string ) {
+                    #{ $key }: unquote( $value );
+                } @else {
+                    #{ $key }: $value;
+                }
+            }
+        }
+    } @else {
+        %u-#{ $key }-#{ $value } {
+            @if( type-of( $value ) == string ) {
+                #{ $key }: unquote( $value );
+            } @else {
+                #{ $key }: $value;
+            }
+        }
+    }
+}

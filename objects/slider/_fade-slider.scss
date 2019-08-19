@@ -1,0 +1,65 @@
+
+/*
+ * Fade slider
+ * -----------
+ */
+
+.o-fade-slider {
+	@extend %u-overflow-hidden;
+	@extend %u-position-relative;
+	@extend %u-height-100;
+	@extend %u-width-100;
+}
+
+.o-fade-slider__item {
+	@extend %u-position-absolute;
+	@extend %u-height-100;
+	@extend %u-width-100;
+	@extend %u-left-0;
+	@extend %u-top-0;
+	@extend %u-opacity-0;
+	transition: opacity 500ms ease;
+	z-index: 1;
+	&.--active {
+		@extend %u-opacity-1;
+		z-index: 2;
+	}
+}
+
+.o-fade-slider__nav {
+	@extend %u-position-absolute;
+	@extend %u-left-0;
+	@extend %u-right-0;
+	bottom: 25px;
+	z-index: 10;
+	@include breakpointMax( 900 ) {
+		text-align: center;
+		transform: rotate( 90deg ) translateX( -50% );
+		transform-origin: 0 0;
+		left: 50px;
+		top: 50%;
+	}
+}
+
+.o-fade-slider__dot {
+	@extend %u-position-relative;
+	width: 35px;
+	height: 35px;
+	color: transparent;
+	opacity: 0.5;
+	&::after {
+		content: '';
+		@extend %u-background-color-background-light;
+		@extend %u-border-radius-100;
+		@extend %u-margin-auto;
+		@extend %u-position-absolute;
+		@extend %u-left-0;
+		@extend %u-right-0;
+		@extend %u-position-vertical-center;
+		height: 12px;
+		width: 12px;
+	}
+	&.--active {
+		@extend %u-opacity-1;
+	}
+}

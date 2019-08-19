@@ -1,0 +1,15 @@
+
+html,
+body {
+	@extend %u-font-family-primary;
+	@extend %u-height-100;
+}
+
+h1 {
+	@extend %u-color-primary-base;
+}
+
+.c-skip-link {
+	@extend %u-background-color-primary-dark;
+	@extend %u-color-background-light;
+}

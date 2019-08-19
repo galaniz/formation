@@ -1,0 +1,62 @@
+
+/* 
+ * Min media query
+ * ---------------
+ *
+ * @param [string/number] $min
+ *
+ */
+
+@mixin breakpointMin( $min ) { 
+    @if map-has-key( $g-breakpoints, $min ) {
+        $bk-em: calcEm( map-get( $g-breakpoints, $min ) );
+    
+        @media only screen and ( min-width: #{ $bk-em } ) {
+            @content;
+        }
+    } @else {
+        @warn "#{$min} does not exist in breakpoints map.";
+    }
+}
+
+/* 
+ * Max media query
+ * ---------------
+ *
+ * @param [string/number] $max
+ *
+ */
+
+@mixin breakpointMax( $max ) {
+    @if map-has-key( $g-breakpoints, $max ) {
+        $bk-max-em: calcEm( map-get( $g-breakpoints, $max ) );
+
+        @media only screen and ( max-width: #{ $bk-max-em } ) {
+            @content;
+        }
+    } @else {
+        @warn "#{$max} does not exist in breakpoints map.";
+    }
+}
+
+/* 
+ * Min/max media query
+ * -------------------
+ *
+ * @param [string/number] $min
+ * @param [string/number] $max
+ *
+ */
+
+@mixin breakpointMinMax( $min, $max ) { 
+    @if map-has-key( $g-breakpoints, $min ) and map-has-key( $g-breakpoints, $max ) {
+        $bk-min-em: calcEm( map-get( $g-breakpoints, $min ) );
+        $bk-max-em: calcEm( map-get( $g-breakpoints, $max ) );
+
+        @media only screen and ( max-width: #{ $bk-max-em } ) and ( min-width: #{ $bk-min-em } ) {
+            @content;
+        }
+    } @else {
+        @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+    }
+}

@@ -1,0 +1,137 @@
+
+/*
+ * Utility classes
+ * ---------------
+ */
+
+/* Inputs */
+
+.u-visually-hidden {
+    @extend %u-position-absolute;
+    @extend %u-overflow-hidden;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+}
+
+.u-hide-input {
+    @extend %u-position-absolute;
+    @extend %u-overflow-hidden;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    clip: rect( 1px 1px 1px 1px );
+}
+
+/* Dimensions */
+
+.u-height-100 {
+    @extend %u-height-100;
+}
+
+.u-width-100 {
+    @extend %u-width-100;
+}
+
+/* Position */
+
+.u-position-relative {
+    @extend %u-position-relative;
+}
+
+.u-position-center {
+    @extend %u-position-absolute;
+    @extend %u-position-vertical-center;
+    @extend %u-left-0;
+    @extend %u-right-0;
+    @extend %u-margin-auto;
+}
+
+.u-position-abs {
+    @extend %u-position-absolute;
+    @extend %u-left-0;
+    @extend %u-right-0;
+    @extend %u-top-0;
+    @extend %u-bottom-0;
+}
+
+/* Overflow */
+
+.u-overflow-hidden {
+    @extend %u-overflow-hidden;
+}
+
+/* Text */
+
+.u-text-align-left {
+    @extend %u-text-align-left;
+}
+
+.u-text-align-right {
+    @extend %u-text-align-right;
+}
+
+.u-text-align-center {
+    @extend %u-text-align-center;
+}
+
+/* Display */
+
+.u-display-none {
+    @extend %u-display-none;
+}
+
+.u-display-block {
+    @extend %u-display-block;
+}
+
+/* Object fit */
+
+.u-object-contain {
+    object-fit: contain !important;
+    @extend %u-width-100;
+    @extend %u-height-100;
+    .no-object-fit & {
+        @extend %u-opacity-0;
+        @extend %u-visibility-hidden;
+    }  
+}
+
+.u-object-cover {
+    object-fit: cover !important;
+    @extend %u-width-100;
+    @extend %u-height-100;
+    .no-object-fit & {
+        @extend %u-opacity-0;
+        @extend %u-visibility-hidden;
+    }
+}
+
+.u-object-cover-fallback,
+.u-object-contain-fallback {
+    @extend %u-position-absolute;
+    @extend %u-top-0;
+    @extend %u-bottom-0;
+    @extend %u-right-0;
+    @extend %u-left-0;
+    @extend %u-width-100;
+    @extend %u-height-100;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    .object-fit & {
+        @extend %u-display-none;
+    }
+    * > & {
+        @extend %u-position-relative;
+    }
+}
+
+.u-object-cover-fallback {
+    background-size: cover;
+}
+
+.u-object-contain-fallback {
+    background-size: contain;
+}

@@ -1,0 +1,13 @@
+
+/* 
+ * Capitalize string
+ * -----------------
+ *
+ * @param [string] $str
+ * @return [string]
+ *
+ */
+
+@function capitalize( $str ) {
+    @return to-upper-case( str-slice( $str, 1, 1 ) ) + str-slice( $str, 2 );
+}
