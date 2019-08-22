@@ -4,8 +4,7 @@
  * --------------------------
  *
  * @param images [array] of image elements
- * @param done callback [function] for when finished loading
- * 
+ * @param done callback [function] when finished loading
  */
 
 const _imageLoaded = ( image ) => {

@@ -4,9 +4,13 @@
  * ----------------------------------
  *
  * @param meta [object] of props and placeholder values
- * @param e [array] of objects { prop(from meta), selector, all, array }
+ * @param e [array] of objects { 
+ *      @prop prop [string] from meta
+ *      @prop selector [string]
+ *      @prop all [boolean]
+ *      @prop array [boolean]
+ * }
  * @param done [function] callback when done recursing through e and setting meta object
- *
  */
 
 export const setElements = ( meta, e, done = () => {} ) => {

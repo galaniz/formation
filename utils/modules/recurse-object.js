@@ -5,8 +5,7 @@
  * 
  * @param obj [object]
  * @param callback [boolean/function] if function pass property and value
- * @param condition [function] that returns boolean
- *
+ * @param condition [function] returns boolean
  */
 
 export const recurseObject = ( obj, callback = false, condition = () => true ) => {

@@ -5,7 +5,6 @@
  *
  * @param item [HTMLElement]
  * @param className [string] 
- *
  */
 
 /* Dependencies */

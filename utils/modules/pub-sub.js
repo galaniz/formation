@@ -6,13 +6,12 @@
  * Publish
  * 
  * @param name [string]
- * @param args [array] to pass to callback function
+ * @param args [array] pass to callback function
  *
  * Subscribe
  * 
  * @param name [string] ( same as publish name )
  * @param callback [function]
- *
  */
 
 let subscriptions = {};

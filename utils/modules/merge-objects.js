@@ -7,7 +7,6 @@
  *
  * @param x [object]
  * @param y [object] overwrite x values
- *
  */
 
 export const mergeObjects = ( x, y ) => {

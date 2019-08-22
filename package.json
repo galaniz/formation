@@ -1,0 +1,19 @@
+{
+  "name": "@alanizcreative/formation",
+  "version": "1.0.0",
+  "description": "A collection of front end components and utilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galaniz/formation.git"
+  },
+  "author": "Graciela Alaniz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/galaniz/formation/issues"
+  },
+  "homepage": "https://github.com/galaniz/formation#readme"
+}

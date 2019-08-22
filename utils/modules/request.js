@@ -3,15 +3,14 @@
  * Handle ajax requests
  * --------------------
  *
- * @param args [object] {
- *	method = string,
- *	url = string
- *	headers = object
- *	body = url encoded string or form data
+ * @param args [object] { 
+ *      @prop method [string]
+ *      @prop url [string]
+ *      @prop headers [object]
+ *      @prop body [string] url encoded or [form data]
  * }
  *
  * @return [promise] with response / error passed to it
- *
  */
 
 export const request = ( args ) => { 

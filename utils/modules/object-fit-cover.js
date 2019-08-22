@@ -4,7 +4,6 @@
  * -----------------------------
  * 
  * @param images [array] of image elements
- *
  */
 
 export const objectFitCover = ( images = [] ) => {

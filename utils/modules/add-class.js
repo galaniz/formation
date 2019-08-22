@@ -5,7 +5,6 @@
  * 
  * @param item [HTMLElement]
  * @param classes [string] of classes separated by space
- *
  */
 
 export const addClass = ( item, classes ) => {

@@ -1,10 +1,9 @@
 
 /*
- * Cross browser way to get scroll y position
+ * Get scroll y position in cross browser way
  * ------------------------------------------
  * 
  * @return [int] scroll y value
- *
  */
 
 export const getScrollY = () => {

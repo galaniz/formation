@@ -5,10 +5,9 @@
  *
  * @param o [object] ( only param that needs to be passed by user )
  * @param key [string] ( for iteration )
- * @param list [array] to store key value pairs ( for iteration )
+ * @param list [array] store key value pairs ( for iteration )
  * 
  * @return [string]
- *
  */
 
 export const urlEncode = ( o, key, list = [] ) => {

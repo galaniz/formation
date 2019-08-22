@@ -6,7 +6,6 @@
  * @param type [string] with value 'transition' or 'transform'
  * @param item [HTMLElement]
  * @param val [string] property value
- *
  */
 
 export const prefix = ( type, item, val ) => {

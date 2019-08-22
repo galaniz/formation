@@ -4,11 +4,10 @@
  * ------------------------------------------
  * 
  * @param events [array] of objects { 
- *  action = function with optional callback, 
- *  delay = int, 
- *  increment = int 
+ *      @prop action [function] with optional callback
+ *      @prop delay [int]
+ *      @prop increment [int]
  * }
- *
  */
 
 export const cascade = ( events ) => {
