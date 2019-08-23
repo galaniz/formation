@@ -4,7 +4,6 @@
  * ---------------
  *
  * @param [string/number] $min
- *
  */
 
 @mixin breakpointMin( $min ) { 
@@ -24,7 +23,6 @@
  * ---------------
  *
  * @param [string/number] $max
- *
  */
 
 @mixin breakpointMax( $max ) {
@@ -45,7 +43,6 @@
  *
  * @param [string/number] $min
  * @param [string/number] $max
- *
  */
 
 @mixin breakpointMinMax( $min, $max ) { 

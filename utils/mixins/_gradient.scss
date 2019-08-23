@@ -6,7 +6,6 @@
  * @param [string] $direction
  * @param [boolean] $image
  * @param [list] of maps $color-stops
- *
  */
 
 @mixin linearGradient( $direction, $image: false, $color-stops... ) {

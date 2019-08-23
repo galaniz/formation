@@ -6,36 +6,36 @@
 
 /* Alter DOM */
 
-import addClass from '../add-class';
-import hasClass from '../has-class';
-import removeClass from '../remove-class';
-import prefix from '../prefix';
-import objectFitCover from '../object-fit-cover';
+import addClass from 'modules/add-class';
+import hasClass from 'modules/has-class';
+import removeClass from 'modules/remove-class';
+import prefix from 'modules/prefix';
+import objectFitCover from 'modules/object-fit-cover';
 
 /* Get values from DOM */
 
-import closest from '../closest';
-import getScrollY from '../get-scroll-y';
-import setElements from '../set-elements';
+import closest from 'modules/closest';
+import getScrollY from 'modules/get-scroll-y';
+import setElements from 'modules/set-elements';
 
 /* Check DOM */
 
-import imagesLoaded from '../images-loaded';
+import imagesLoaded from 'modules/images-loaded';
 
 /* Object helpers */
 
-import mergeObjects from '../merge-objects';
-import recurseObject from '../recurse-object';
+import mergeObjects from 'modules/merge-objects';
+import recurseObject from 'modules/recurse-object';
 
 /* Ajax requests */
 
-import urlEncode from '../url-encode'; 
-import request from '../request';
+import urlEncode from 'modules/url-encode'; 
+import request from 'modules/request';
 
 /* Misc */
 
-import cascade from '../cascade';
-import { publish, subscribe } from '../pub-sub';
+import cascade from 'modules/cascade';
+import { publish, subscribe } from 'modules/pub-sub';
 
 /*
  * Export

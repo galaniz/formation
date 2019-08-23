@@ -7,7 +7,6 @@
  * @param [list] $prop
  *
  * @return [list] comma separated
- *
  */
 
 @function _addProp( $list, $prop ) {
@@ -25,7 +24,6 @@
  * @param [null/string] $newPrefix
  *
  * @return [map]
- *
  */
 
 @function _mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
