@@ -4,7 +4,7 @@
  * -----------
  */
 
-$border: 1px solid rgba( map-get( $colors, 'foreground-dark' ), 0.10 );
+$border: 1px solid rgba( map-get( $g-colors, 'foreground-dark' ), 0.10 );
 
 .o-multi__fields {
     @include breakpointMin( 700 ) {
@@ -51,7 +51,7 @@ $border: 1px solid rgba( map-get( $colors, 'foreground-dark' ), 0.10 );
         outline: none;
     }
     & .o-multi__icon {
-    	color: rgba( map-get( $colors, 'foreground-dark' ), 0.30 );
+    	color: rgba( map-get( $g-colors, 'foreground-dark' ), 0.30 );
     }
     @include breakpointMax( 700 ) {
     	width: 100%;
