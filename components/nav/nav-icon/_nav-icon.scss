@@ -1,0 +1,38 @@
+
+/*
+ * Nav icon
+ * --------
+ */
+
+$_navIconY: map-get( $g-navIcon, 'width' ) * 0.30;
+
+.c-nav-icon {
+	@extend %u-position-relative;
+	@extend %u-margin-auto;
+	width: map-get( $g-navIcon, 'width' );
+}
+
+.c-nav-icon__top,
+.c-nav-icon__middle,
+.c-nav-icon__bottom,
+.c-nav-icon__right {
+	height: map-get( $g-navIcon, 'lineWidth' );
+}
+
+.c-nav-icon__left {
+	width: map-get( $g-navIcon, 'lineWidth' );
+}
+
+.c-nav-icon__top,
+.c-nav-icon__middle,
+.c-nav-icon__bottom {
+	margin: map-get( $g-navIcon, 'margin' ) auto;
+}
+
+.c-nav-icon__top {
+	margin-top: 0;
+}
+
+.c-nav-icon__bottom {
+	margin-bottom: 0;
+}

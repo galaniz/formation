@@ -1,0 +1,43 @@
+
+/*
+ * Nav icon: seven
+ * ---------------
+ */
+
+.c-nav-icon.--seven {
+	transform: scale( 1 );
+	transition: transform 200ms ease;
+	& .c-nav-icon__top,
+	& .c-nav-icon__bottom {
+		transform: translateY( 0 ) rotate( 0deg );
+		transition: transform 0s ease 150ms;
+	}
+	& .c-nav-icon__middle {
+		@extend %u-opacity-1;
+		transition: opacity 0s ease 150ms;
+	}
+	.--show & {
+		& .c-nav-icon__top {
+			transform: translateY( $_navIconY ) rotate( 45deg );
+		}
+		& .c-nav-icon__middle {
+			@extend %u-opacity-0;
+		}
+		& .c-nav-icon__bottom {
+			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+		}
+		animation: _navIconGrowShrink 300ms;
+	}
+}
+
+@keyframes _navIconGrowShrink {
+	0% { 
+        transform: scaleX( 1 ); 
+    }
+    50% { 
+        transform: scaleX( 0.20 ); 
+    }
+    100% { 
+        transform: scaleX( 1 );
+    }
+}

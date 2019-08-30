@@ -102,8 +102,8 @@
 @mixin _makeUtil( $key, $value ) {
     @if $key == custom {
         $map: $value;
-        $name: map-get( $map, name );
-        $prop: map-get( $map, prop );
+        $name: map-get( $map, 'name' );
+        $prop: map-get( $map, 'prop' );
 
         %u-#{ $name } {
             @each $key, $value in $prop {

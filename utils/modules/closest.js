@@ -9,7 +9,7 @@
 
 /* Dependencies */
 
-import hasClass from './has-class';
+import { hasClass } from './has-class';
 
 export const closest = ( item, className, max = 10 ) => {
 	if( !item || !className )

@@ -1,0 +1,39 @@
+
+/*
+ * Nav icon: five
+ * --------------
+ */
+
+.c-nav-icon.--five {
+	& .c-nav-icon__top,
+	& .c-nav-icon__bottom {
+		transform: translateY( 0 ) rotate( 0deg );
+		transition: transform 150ms ease;
+	}
+	& .c-nav-icon__middle {
+		@extend %u-opacity-1;
+		transition: opacity 150ms ease 100ms;
+	}
+	.--show & {
+		& .c-nav-icon__middle {
+			@extend %u-opacity-0;
+			transition: opacity 150ms ease;
+		}
+	}
+	.--collapse & {
+		& .c-nav-icon__top {
+			transform: translateY( $_navIconY );
+		}
+		& .c-nav-icon__bottom {
+			transform: translateY( #{ $_navIconY * -1 } );
+		}
+	}
+	.--rotate & {
+		& .c-nav-icon__top {
+			transform: translateY( $_navIconY ) rotate( 45deg );
+		}
+		& .c-nav-icon__bottom {
+			transform,: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+		}
+	}
+}

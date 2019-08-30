@@ -44,3 +44,11 @@ $g-transitions: () !default;
 /* Z index */
 
 $g-zIndex: () !default;
+
+/* Nav icon */
+
+$g-navIcon: (
+	width: 35px,
+	lineWidth: 2px,
+	margin: 8px
+) !default;

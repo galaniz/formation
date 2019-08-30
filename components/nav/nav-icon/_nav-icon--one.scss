@@ -1,0 +1,28 @@
+
+/*
+ * Nav icon: one
+ * -------------
+ */
+
+.c-nav-icon.--one {
+	& .c-nav-icon__top,
+	& .c-nav-icon__middle,
+	& .c-nav-icon__bottom {
+		transition: transform 200ms ease;
+	}
+	& .c-nav-icon__top,
+	& .c-nav-icon__bottom {
+		transform: translateY( 0 ) rotate( 0deg );
+	}
+	.--show & {
+		& .c-nav-icon__top {
+			transform: translateY( $_navIconY ) rotate( 45deg );
+		}
+		& .c-nav-icon__middle {
+			transform: scaleX( 0 );
+		}
+		& .c-nav-icon__bottom {
+			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+		}
+	}
+}
