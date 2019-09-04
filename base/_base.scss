@@ -163,3 +163,9 @@ blockquote {
 svg {
     fill: inherit;
 }
+
+/* Hide recaptcha badge */
+
+.grecaptcha-badge {
+    width: 0 !important;
+}

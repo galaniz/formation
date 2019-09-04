@@ -39,14 +39,14 @@
 		@extend %u-position-absolute;
 	}
 	& .c-nav-icon__cross {
-		$_width: map-get( $g-navIcon, 'width' ) * 0.90;
+		$_w: mapDeepGet( $g-nav, 'icon', 'width' ) * 0.70;
 
 		@extend %u-margin-auto;
 		@extend %u-left-0;
 		@extend %u-right-0;
 		transform: rotate( 45deg );
-		height: $_width;
-		width: $_width;
+		height: $_w;
+		width: $_w;
 		top: -5px;
 	}
 	& .c-nav-icon__left,
@@ -82,7 +82,7 @@
 			transition-delay: 250ms;
 		}
 		& .c-nav-icon__left {
-			transform,: scaleY( 1 ) translateX( -50% );
+			transform: scaleY( 1 ) translateX( -50% );
 			transition-delay: 625ms;
 		}
 		& .c-nav-icon__right {

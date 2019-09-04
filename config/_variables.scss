@@ -45,10 +45,12 @@ $g-transitions: () !default;
 
 $g-zIndex: () !default;
 
-/* Nav icon */
+/* Nav */
 
-$g-navIcon: (
-	width: 35px,
-	lineWidth: 2px,
-	margin: 8px
+$g-nav: (
+	icon: (
+		width: 35px,
+		lineWidth: 2px,
+		margin: 8px
+	)
 ) !default;

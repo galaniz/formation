@@ -41,13 +41,21 @@
     $timingFunction: map-get( $transitions, 'timingFunction' );
     $timingFunctionCubic: map-get( $transitions, 'timingFunctionCubic' );
 
-    $g-props: _addProp( $g-props, ( transition-duration: $duration ) ) !global;
     $g-props: _addProp( $g-props, ( transition-property: opacity ) ) !global;
     $g-props: _addProp( $g-props, ( transition-property: transform ) ) !global;
 
     $g-props: _addProp( $g-props, ( 
         custom: ( 
-            name: transition-property-opacity-transform,
+            name: 'transition-duration',
+            prop: (
+                transition-duration: $duration
+            )
+        )
+    ) ) !global;
+
+    $g-props: _addProp( $g-props, ( 
+        custom: ( 
+            name: 'transition-property-opacity-transform',
             prop: (
                 transition-property: 'opacity, transform'
             )
@@ -56,7 +64,7 @@
 
     $g-props: _addProp( $g-props, ( 
         custom: ( 
-            name: transition-timing-function-cubic,
+            name: 'transition-timing-function-cubic',
             prop: (
                 transition-timing-function: $timingFunctionCubic
             )
@@ -65,27 +73,27 @@
 
     $g-props: _addProp( $g-props, ( 
         custom: ( 
-            name: transition-opacity-transform-ease,
+            name: 'transition-opacity-transform-ease',
             prop: (
-                transition: "opacity #{$duration} #{$timingFunction}, transform #{$duration} ${$timingFunction}"
+                transition: "opacity #{$duration} #{$timingFunction}, transform #{$duration} #{$timingFunction}"
             )
         )
     ) ) !global;
 
     $g-props: _addProp( $g-props, ( 
         custom: ( 
-            name: transition-transform-ease,
+            name: 'transition-transform-ease',
             prop: (
-                transition: "transform #{$duration} ${$timingFunction}"
+                transition: "transform #{$duration} #{$timingFunction}"
             )
         )
     ) ) !global;
 
     $g-props: _addProp( $g-props, ( 
         custom: ( 
-            name: transition-opacity-ease,
+            name: 'transition-opacity-ease',
             prop: (
-                transition: "opacity #{$duration} ${$timingFunction}"
+                transition: "opacity #{$duration} #{$timingFunction}"
             )
         )
     ) ) !global;

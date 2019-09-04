@@ -33,7 +33,7 @@
 			transform: translateY( $_navIconY ) rotate( 45deg );
 		}
 		& .c-nav-icon__bottom {
-			transform,: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
 		}
 	}
 }

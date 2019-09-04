@@ -1,0 +1,34 @@
+
+/*
+ * Nav
+ * ---
+ */
+
+.c-nav__button {
+	@extend %u-position-relative;
+	.c-nav:not( .--overflow ) & {
+		@extend %u-display-none;
+	}
+	width: 50px;
+	&::before {
+		content: '';
+		@extend %u-position-absolute;
+		@extend %u-width-100;
+		transform: translate( -50%, -50% );
+		height: 50px;
+		top: 50%;
+		left: 50%;
+	}
+}
+
+.c-nav__overlay {
+	@extend %u-position-fixed;
+	@extend %u-top-0;
+	@extend %u-left-0;
+	@extend %u-bottom-0;
+	@extend %u-right-0;
+	@extend %u-visibility-hidden;
+    .--open & {
+    	@extend %u-visibility-visible;
+    }
+}

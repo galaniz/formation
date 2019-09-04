@@ -1,0 +1,18 @@
+
+/*
+ * Menu for overflowing links
+ * --------------------------
+ */
+
+.c-nav-overflow {
+	@extend %u-display-none;
+	&.--show {
+		@extend %u-display-inline-block;
+	}
+}
+
+.c-nav-overflow__list {
+	&:empty {
+		@extend %u-display-none;
+	}
+}

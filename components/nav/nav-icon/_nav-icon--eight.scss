@@ -24,7 +24,7 @@
 		margin-left: 50%;
 	}
 	.--show & {
-		$_x: map-get( $g-navIcon, 'width' ) * 0.25;
+		$_x: mapDeepGet( $g-nav, 'icon', 'width' ) * 0.25;
 
 		transform: rotate( -45deg );
 		& .c-nav-icon__top {

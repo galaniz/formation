@@ -11,7 +11,7 @@ import {
 	mergeObjects, 
 	cascade, 
 	prefix, 
-} from '../../utils/utils';
+} from '../../utils';
 
 /*
  * Opens and closes nav
@@ -37,6 +37,7 @@ export default class Nav {
         this.overflow = null;
         this.overflowList = null;
         this.items = null;
+        this.itemSelector = '';
         this.links = null;
         this.button = null;
         this.overlay = null;
@@ -108,6 +109,7 @@ export default class Nav {
 				'overflow',
 				'overflowList',
 				'items', 
+				'itemSelector',
 				'links',
 				'button'
 			];
@@ -150,7 +152,7 @@ export default class Nav {
 
 			this._overflowGroups[overflowGroupIndex].push( item );
 		} );
-
+		
 		// set up nav
 		this._setNav( () => {
 			this.done.call( this );
@@ -250,20 +252,20 @@ export default class Nav {
 
 	// check if items are overflowing / wrapping into new line 
 	_overflowing() {
-		let items = this.list.children,
+		let items = this.list.querySelectorAll( this.itemSelector ),
 			itemsLength = items.length;
 
 		// all items are in overflow element now
 		if( itemsLength === 0 )
 			return false;
 
-		let buffer = 10,
-			firstItemOffset = items[0].offsetTop + buffer;
+		let firstItemOffset = items[0].offsetTop;
 		
 		// reverse loop to start from last item
 		for( let i = itemsLength - 1; i >= 0; i-- ) {
-			if( items[i].offsetTop > firstItemOffset ) 
+			if( items[i].offsetTop > firstItemOffset ) {
 				return true;
+			}
 		}
 
 		return false;		
