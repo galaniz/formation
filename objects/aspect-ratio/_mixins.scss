@@ -6,7 +6,7 @@
 
 @mixin _aspectRatioPadding() {
     @each $p in $g-aspectRatioPadding {
-        &.--p-#{$p} {
+        &.--p-#{$p * 100} {
             padding-top: percentage( $p );
         }
     }

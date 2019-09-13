@@ -1,0 +1,30 @@
+
+/*
+ * Loader
+ * ------
+ */
+
+$_transitions: map-get( $g-transitions, 'def' );
+$_duration: map-get( $_transitions, 'duration' );
+$_timingFunction: map-get( $_transitions, 'timingFunction' );
+
+.o-loader {
+    transition: opacity #{$_duration} #{$_timingFunction} 10ms, z-index 0ms #{$_timingFunction};
+    @extend %u-position-absolute;
+    @extend %u-top-0;
+    @extend %u-bottom-0;
+    @extend %u-left-0;
+    @extend %u-right-0;
+    @extend %u-opacity-1;
+    @extend %u-background-color-inherit;
+    z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
+    &.--hide {
+        @extend %u-opacity-0;
+        transition: opacity #{$_duration} #{$_timingFunction}, z-index 0ms #{$_timingFunction} #{$_duration};
+        z-index: -1 !important;
+    }
+    &.--page {
+        @extend %u-position-fixed;
+        z-index: mapDeepGet( $g-zIndex, 'loader', 'page' );
+    }
+}

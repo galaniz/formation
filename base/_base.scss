@@ -51,14 +51,17 @@ figure {
 input,
 textarea,
 button, 
-fieldset {
+fieldset,
+select {
     border: 0;
     outline: none;
+    background: transparent;
 }
 
 input,
 textarea,
-button {
+button,
+select {
     appearance: none !important;
     box-shadow: none !important;
     border-radius: 0;

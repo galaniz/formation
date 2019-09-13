@@ -162,7 +162,11 @@ $g-transitions: map-merge(
 
 $g-zIndex: map-merge( 
 	( 
-		skipLink: 100
+		skipLink: 100,
+		loader: (
+			def: 80,
+			page: 110
+		)
 	), 
 	$g-zIndex 
 );

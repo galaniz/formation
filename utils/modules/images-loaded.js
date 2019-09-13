@@ -23,8 +23,10 @@ const _imageLoaded = ( image ) => {
 };
 
 export const imagesLoaded = ( images = [], done ) => {
-    if( images.length == 0 )
+    if( images.length == 0 ) {
         done( 'No images' );
+        return;
+    }
 
 	Promise.all( images.map( _imageLoaded ) ).then( ( data ) => {
 		done( data );

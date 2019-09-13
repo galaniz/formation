@@ -31,6 +31,10 @@ $g-props: _addProp( $g-props, ( display: table ) );
 $g-props: _addProp( $g-props, ( display: table-row  ) );
 $g-props: _addProp( $g-props, ( display: table-cell ) );
 
+/* Flexbox */
+
+$g-props: _addProp( $g-props, ( flex-shrink: 0 ) );
+
 /* Visibility */
 
 $g-props: _addProp( $g-props, ( visibility: hidden ) );
@@ -181,6 +185,7 @@ $g-props: _addProp( $g-props, (
 /* Colors */
 
 $g-props: _addProp( $g-props, ( color: inherit ) );
+$g-props: _addProp( $g-props, ( background-color: inherit ) );
 
 // save $colors 
 $colorsCopy: $g-colors;
