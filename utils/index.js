@@ -9,8 +9,10 @@
 import { addClass } from './modules/add-class';
 import { hasClass } from './modules/has-class';
 import { removeClass } from './modules/remove-class';
+import { show } from './modules/show';
 import { prefix } from './modules/prefix';
 import { objectFitCover } from './modules/object-fit-cover';
+import { buttonLoader } from './modules/button-loader';
 
 /* Get values from DOM */
 
@@ -46,6 +48,8 @@ export {
     addClass, 
     removeClass, 
     hasClass, 
+    show,
+    buttonLoader,
     prefix,
     objectFitCover,
     closest,
