@@ -1,0 +1,65 @@
+
+/*
+ * Modal
+ * -----
+ */
+
+.o-modal {
+	@extend %u-position-relative;
+	@extend %u-overflow-hidden;
+	@extend %u-display-inline-block;
+	&.--open {
+		z-index: map-get( $g-zIndex, 'modal' );
+		overflow: visible;
+	}
+}
+
+.o-modal__overlay {
+	@extend %u-position-fixed;
+	@extend %u-top-0;
+	@extend %u-left-0;
+	@extend %u-right-0;
+	@extend %u-bottom-0;
+	@extend %u-opacity-0;
+	@extend %u-visibility-hidden;
+	transition: opacity 300ms ease-in-out, visibility 0ms ease-in-out 300ms;
+	.--open & {
+		@extend %u-opacity-1;
+		@extend %u-visibility-visible;
+		transition: opacity 300ms ease-in-out 10ms, visibility 0ms ease-in-out;
+	}
+}
+
+.o-modal__window {
+	@extend %u-width-100;
+	@extend %u-position-absolute;
+	@extend %u-top-0;
+	@extend %u-right-0;
+	@extend %u-left-0;
+	@extend %u-transform-origin-0-0;
+	@extend %u-transition-transform-ease;
+	&.--sticky {
+		@extend %u-position-fixed;
+	}
+	z-index: 2;
+}
+
+.o-modal__content {
+	@extend %u-position-relative;
+	& > div {
+		@extend %u-opacity-0;
+		@extend %u-transition-opacity-ease;
+		.--w-open & {
+			@extend %u-opacity-1;
+		}
+	}
+}
+
+.o-modal__close {
+	@extend %u-position-absolute;
+	@extend %u-top-0;
+	@extend %u-right-0;
+	height: 50px;
+	width: 50px;
+	z-index: 5;
+}

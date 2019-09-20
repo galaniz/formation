@@ -1,0 +1,36 @@
+
+/*
+ * Table
+ * -----
+ */
+
+.o-table {
+	@extend %u-width-100;
+    border-collapse: collapse;
+    border-spacing: 0;
+    .o-table__label::before {
+		content: attr( data-label );
+		@extend %u-display-none;
+		@extend %u-float-left;
+		width: 50%;
+		margin-right: 25px;
+    }
+    @include breakpointMax( 700 ) {
+    	& thead {
+    		display: none;
+    	}
+    	& td {
+    		display: flex;
+    		& > div {
+    			width: 100%;
+    		}
+    		&.o-table__label > div {
+    			width: 50%;
+    		}
+    	}
+		& tr,
+    	& .o-table__label::before {
+    		display: block;
+    	}
+    }
+}
