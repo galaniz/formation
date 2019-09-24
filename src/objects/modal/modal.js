@@ -11,7 +11,7 @@ import {
 	prefix,
 	publish,
 	mergeObjects
-} from '../../utils';
+} from '../../utils/utils';
 
 /*
  * Open / close modals

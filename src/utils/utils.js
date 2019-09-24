@@ -11,8 +11,8 @@ import { hasClass } from './modules/has-class';
 import { removeClass } from './modules/remove-class';
 import { show } from './modules/show';
 import { prefix } from './modules/prefix';
-import { objectFitCover } from './modules/object-fit-cover';
-import { buttonLoader } from './modules/button-loader';
+import { objectFit } from './modules/object-fit';
+import { disableButtonLoader } from './modules/disable-button-loader';
 
 /* Get values from DOM */
 
@@ -49,9 +49,9 @@ export {
     removeClass, 
     hasClass, 
     show,
-    buttonLoader,
+    disableButtonLoader,
     prefix,
-    objectFitCover,
+    objectFit,
     closest,
     getScrollY,
     setElements,

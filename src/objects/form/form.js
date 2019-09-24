@@ -10,7 +10,7 @@ import {
 	closest,
 	urlEncode,
 	mergeObjects
-} from '../../utils';
+} from '../../utils/utils';
 
 /*
  * Validate and get values from form inputs

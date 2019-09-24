@@ -105,7 +105,7 @@ $g-containers: map-merge(
 		$suffix: #{ capitalize( $c ) };
 	} 
 
-	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width ), $g-breakpoints );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
 }
 
 /* Transitions */

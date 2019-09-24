@@ -4,7 +4,7 @@
  * -------
  */
 
-import { addClass, removeClass } from '../../utils';
+import { addClass, removeClass } from '../../utils/utils';
 
 /*
  * Skip link to main content

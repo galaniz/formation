@@ -8,7 +8,7 @@ import {
 	addClass, 
 	removeClass, 
 	mergeObjects
-} from '../../utils';
+} from '../../utils/utils';
 
 /*
  * Float labels above inputs 

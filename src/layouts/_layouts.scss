@@ -59,6 +59,9 @@
     &.--justify-right {
         justify-content: flex-end;
     }
+    &.--justify-left {
+        justify-content: flex-start;
+    }
     &.--align-center {
         align-items: center;
     }

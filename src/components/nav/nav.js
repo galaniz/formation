@@ -11,7 +11,7 @@ import {
 	mergeObjects, 
 	cascade, 
 	prefix, 
-} from '../../utils';
+} from '../../utils/utils';
 
 /*
  * Opens and closes nav
@@ -42,7 +42,8 @@ export default class Nav {
         this.button = null;
         this.overlay = null;
         this.transition = null;
-        this.checkOverflow = () => {};
+        this.onSet = () => {};
+        this.onReset = () => {};
         this.onResize = () => {};
         this.onToggle = () => {};
         this.endToggle = () => {};
@@ -152,10 +153,12 @@ export default class Nav {
 
 			this._overflowGroups[overflowGroupIndex].push( item );
 		} );
-		
-		// set up nav
-		this._setNav( () => {
-			this.done.call( this );
+
+		window.addEventListener( 'load', () => {
+			// set up nav
+			this._setNav( () => {
+				this.done.call( this );
+			} );
 		} );
 
 		return true;
@@ -168,20 +171,34 @@ export default class Nav {
 
 	 // return overflowing items to list
 	_resetNav() {
+		this.onReset.call( this );
+
 		removeClass( this.nav, '--overflow' );
 		removeClass( this.nav, '--overflow-all' );
 
 		this._lastOverflowFocus = null;
 
 		if( this._currentOverflowGroups.length > 0 ) {
-			let frag = document.createDocumentFragment();
+			let frag = document.createDocumentFragment(),
+				appendFrag = true;
 
-			this.items.forEach( ( item ) => {
-				frag.appendChild( item );
+			this.items.forEach( ( item, i ) => {
+				// insert at specific index
+				if( item.hasAttribute( 'data-index' ) ) {
+					appendFrag = false;
+
+					let index = parseInt( item.getAttribute( 'data-index' ) ),
+						refNode = this.list.children[index];
+
+					this.list.insertBefore( item, refNode );
+				} else { // insert 
+					frag.appendChild( item );
+				}			
 			} );
 
 			// append overflowing items
-			this.list.appendChild( frag );
+			if( appendFrag )
+				this.list.appendChild( frag );
 		}
 
 		this.overflowList.innerHTML = '';
@@ -242,7 +259,7 @@ export default class Nav {
 			this._toggle( true, false );
 		}
 
-		this.checkOverflow( ogOverflow );
+		this.onSet.call( this );
 
 		this.button.style.display = '';
 
@@ -263,6 +280,8 @@ export default class Nav {
 		
 		// reverse loop to start from last item
 		for( let i = itemsLength - 1; i >= 0; i-- ) {
+			console.log('BOOOM', items[i].offsetTop, firstItemOffset);
+
 			if( items[i].offsetTop > firstItemOffset ) {
 				return true;
 			}
@@ -290,7 +309,7 @@ export default class Nav {
 	 */
 
 	_toggle( close = true, setNavOpen = true ) {
-		this.onToggle();
+		this.onToggle.call( this );
 
 		this._navOpen = !close; 
 
@@ -348,7 +367,7 @@ export default class Nav {
 				},
 				{
 					action: () => {
-						this.endToggle();
+						this.endToggle.call( this );
 					}
 				}
 			] );
@@ -401,8 +420,17 @@ export default class Nav {
             }
 
             this._setNav();
-            this.onResize();
+            this.onResize.call( this );
         }, 100 );
+	}
+
+	/*
+	 * Public methods
+	 * --------------
+	 */
+
+	isOverflowing() {
+		return this._currentOverflowGroups.length > 0;
 	}
 
 } // end Nav

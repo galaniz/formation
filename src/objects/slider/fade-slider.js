@@ -9,7 +9,7 @@ import {
 	removeClass,
 	prefix, 
 	mergeObjects
-} from '../../utils';
+} from '../../utils/utils';
 
 /*
  * Slider that fades in and out

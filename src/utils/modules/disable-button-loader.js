@@ -14,7 +14,7 @@
 import { addClass } from './add-class';
 import { removeClass } from './remove-class';
 
-export const buttonLoader = ( button = null, loader = null, className = '', add = true, disable = false ) => {
+export const disableButtonLoader = ( button = null, loader = null, className = '', add = true, disable = false ) => {
     if( !button || !loader || !className )
         return;
 
