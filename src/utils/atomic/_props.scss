@@ -55,7 +55,8 @@ $g-props: _addProp( $g-props, (
         name: position-vertical-center,
         prop: (
             top: 50%,
-            transform: translateY( -50% )
+            transform: translateY( -50% ),
+            bottom: auto
         )
     )
 ) );

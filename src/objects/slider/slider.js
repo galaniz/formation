@@ -1,0 +1,448 @@
+
+/*
+ * Imports
+ * -------
+ */
+
+import {
+	addClass, 
+	removeClass,
+	prefix
+} from '../../utils/utils';
+
+import BaseSlider from './base-slider';
+
+/*
+ * Slider
+ * ------
+ */
+
+export default class Slider extends BaseSlider {
+
+   /*
+	* Constructor
+	* -----------
+	*/
+
+	constructor( args = {} ) {
+
+       /*
+        * Base variables & init
+        * ---------------------
+        */
+
+		super( args );
+
+       /*
+        * Public variables
+        * ----------------
+        */
+
+        let childDefaults = {
+        	easing: 'ease',
+        	duration: 500,
+        	padding: {},
+        	center: false,
+        	linkClick: () => {},
+        	endMove: () => {}
+        };
+
+        for( let prop in childDefaults ) {
+        	this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
+        }
+
+       /*
+        * Internal variables
+        * ------------------
+        */
+
+        /* Keep track pointer hold and dragging distance */
+
+		this._pointerDown = false;
+
+		this._drag = {
+			startX: 0,
+			endX: 0,
+			startY: 0,
+			currentX: 0,
+			maxX: 0,
+			minX: 0,
+			threshold: 0,
+			letItGo: null,
+			preventClick: false
+		};
+
+		/* Dimensions */
+
+        this._sliderWidth = 0;
+        this._itemWidth = 0;
+        this._padding = 0;
+
+        /* Resize */
+
+        this._resizeTimer;
+
+        /* How many slides visible */
+
+        this._perPage = 1;
+
+        /* Links */
+
+        this._links = Array.from( this.slider.querySelectorAll( 'a' ) );
+
+       /*
+        * Events
+        * ------
+        */
+
+		/* Bind all event handlers for referencability */
+
+		[
+			'resizeHandler', 
+			'touchstartHandler', 
+			'touchendHandler', 
+			'touchmoveHandler', 
+			'mousedownHandler', 
+			'mouseupHandler', 
+			'mouseleaveHandler', 
+			'mousemoveHandler', 
+			'clickHandler'
+		].forEach( method => {
+			this[`_${ method }`] = this[`_${ method }`].bind( this );
+		} );
+
+		/* Resize */
+
+		window.addEventListener( 'resize', this._resizeHandler );
+
+		/* Touch */
+
+		this.slider.addEventListener( 'touchstart', this._touchstartHandler );
+		this.slider.addEventListener( 'touchend', this._touchendHandler );
+		this.slider.addEventListener( 'touchmove', this._touchmoveHandler );
+
+		/* Mouse */
+
+		this.slider.addEventListener( 'mousedown', this._mousedownHandler );
+		this.slider.addEventListener( 'mouseleave', this._mouseleaveHandler );
+
+		/* Click */
+
+		this.slider.addEventListener( 'click', this._clickHandler );
+
+       /*
+        * Set up
+        * ------
+        */
+
+		this.slider.style.cursor = '-webkit-grab';
+        this.slider.style.touchAction = 'pan-y pinch-zoom';
+        this.slider.tabIndex = '0';
+
+        prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
+
+        this._setDimensions();
+		this._goTo( this.currentIndex, true );
+	}
+
+   /*
+	* Parent methods
+	* --------------
+	*/
+
+	_doGoTo( index ) {
+		super._doGoTo( index );
+		this._move();
+	}
+
+   /*
+    * Helpers
+    * -------
+    */
+
+	_setDimensions() {
+        this._sliderWidth = this.slider.clientWidth;
+        this._itemWidth = this.items[0].clientWidth;
+
+        // set padding
+        this._resolveObject( '_padding', 'padding' );
+
+        // set slides per page
+        this._perPage = Math.round( this._sliderWidth / ( this._itemWidth + ( this._padding * 2 ) ) );
+
+        this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding * 2 );
+        this._drag.minX = this._padding * 2;
+
+		this._drag.threshold = this._itemWidth / 3;
+    } 
+
+	_resolveObject( setKey, getKey ) {
+		let viewportWidth = window.innerWidth;
+		this[setKey] = 0;
+
+		for( let viewport in this[getKey] ) {
+			if( viewportWidth >= viewport ) {
+				this[setKey] = this[getKey][viewport];
+			}
+		}
+	}
+
+	_disableTransition() {
+		prefix( 'transition', this.slider, `all 0ms ${ this.easing }` );
+	}
+	
+	_enableTransition() {
+		prefix( 'transition', this.slider, `all ${ this.duration }ms ${ this.easing }` );
+	}
+
+	/* Prevent dragging / swiping on inputs, selects and textareas */
+
+	_ignore( e ) {
+		let ignore = ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf( e.target.nodeName ) !== -1;
+
+		if( ignore )
+			return true;
+
+		return false;
+	}
+
+	/* Clear drag after touchend and mouseup event */
+
+	_clearDrag() {
+		this._drag.startX = 0;
+		this._drag.endX = 0;
+		this._drag.startY = 0;
+		this._drag.letItGo = null;
+	}
+
+   /*
+    * Move ( nav click, after drag )
+    * ------------------------------
+    */
+
+    _move( drag = false ) {
+
+    	/* Get move state if dragging */
+
+    	if( drag ) {
+    		let dragOffset = this._drag.startX - this._drag.endX;
+
+    		if( Math.abs( dragOffset ) > this._drag.threshold ) {	
+				let slideNumber = Math.round( Math.abs( dragOffset ) / this._itemWidth );
+
+				if( dragOffset > 0 ) {
+					this.currentIndex += slideNumber;
+				} else {
+					this.currentIndex -= slideNumber;
+				}
+			} else {
+				this.currentIndex = this.currentIndex;
+			}
+
+			if( this.currentIndex < 0 )
+				this.currentIndex = 0;
+
+			if( this.currentIndex > this._lastIndex )
+				this.currentIndex = this._lastIndex;
+    	}
+
+    	/* Add transition to slider */
+
+    	this._enableTransition();
+
+    	/* Transform slider */
+
+    	let transform = -( ( this.currentIndex * this._itemWidth ) - ( this._padding * this._perPage ) );
+
+    	if( Math.abs( transform ) < this._drag.minX )
+			transform = this._drag.minX;
+
+		if( Math.abs( transform ) > this._drag.maxX ) {
+			transform = -( this._drag.maxX );
+		}
+
+
+
+    	prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
+
+    	/* Save x position */
+
+		this._drag.currentX = transform;
+
+		this.endMove(); 
+    }
+
+   /*
+    * Drag ( mousemove, touchmove )
+    * -----------------------------
+    */
+
+	_dragging() {
+		let dragOffset = ( this._drag.startX - this._drag.endX ),
+			transform = this._drag.currentX - dragOffset,
+			transformAbs = Math.abs( transform ),
+			friction = transformAbs * 0.25;
+
+		let ogTransform = transform;
+
+		if( transform > this._drag.minX )
+			transform = this._drag.minX;
+
+		if( transformAbs > this._drag.maxX ) {
+			transform = -( this._drag.maxX );
+		}
+
+		prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
+	}
+
+	/*
+	 * Event callbacks
+	 * ---------------
+	 */
+
+	/* Touch */
+	
+	_touchstartHandler( e ) {
+		if( this._ignore( e ) ) 
+			return;
+
+		e.stopPropagation();
+
+		this._disableTransition();
+
+		this._pointerDown = true;
+		this._drag.startX = e.touches[0].pageX;
+		this._drag.startY = e.touches[0].pageY;
+	}
+	
+	_touchendHandler( e ) {
+		e.stopPropagation();
+		this._pointerDown = false;
+		
+		if( this._drag.endX )
+			this._move( true );
+
+		this._clearDrag();
+	}
+
+	_touchmoveHandler( e ) {
+		e.stopPropagation();
+
+		if( this._drag.letItGo === null )
+			this._drag.letItGo = Math.abs( this._drag.startY - e.touches[0].pageY ) < Math.abs( this._drag.startX - e.touches[0].pageX );
+
+		if( this._pointerDown && this._drag.letItGo ) {
+			e.preventDefault();
+			this._drag.endX = e.touches[0].pageX;
+
+			this._dragging();
+		}
+	}
+
+	/* Mouse */
+
+	_mousedownHandler( e ) {
+		if( this._ignore( e ) ) 
+			return;
+
+		e.preventDefault();
+		e.stopPropagation();
+
+		// add listeners
+		document.addEventListener( 'mousemove', this._mousemoveHandler, true );
+		document.addEventListener( 'mouseup', this._mouseupHandler, true );
+
+		this._disableTransition();
+
+		this._pointerDown = true;
+		this._drag.startX = e.pageX;
+	}
+
+	_mouseupHandler( e ) {
+		e.stopPropagation();
+		this._pointerDown = false;
+		this.slider.style.cursor = '-webkit-grab';
+		
+		if( this._drag.endX ) 
+			this._move( true );
+
+		this._clearDrag();
+
+		// remove listeners
+		document.removeEventListener( 'mousemove', this._mousemoveHandler, true );
+		document.removeEventListener( 'mouseup', this._mouseupHandler, true );
+	}
+
+	/* On drag check if link to prevent */
+
+	_isTargetLink( target ) {
+
+	}
+
+	_mousemoveHandler( e ) {
+		e.preventDefault();
+		
+		if( this._pointerDown ) {
+
+			/* 
+				Dragged element is a link
+				preventClick prop true
+				detemine browser redirection later
+			*/
+
+			// console.log('MOUSEMOVE', e.target.nodeName);
+
+			if( e.target.nodeName === 'A' || e.target.nodeName === 'IMG' ) {
+				this._drag.preventClick = true;
+				this.linkClick( true );
+			} else {
+				this.linkClick( false );
+			}
+
+			this._drag.endX = e.pageX;
+			this.slider.style.cursor = '-webkit-grabbing';
+			
+			this._dragging();
+		}
+	}
+
+	_mouseleaveHandler( e ) {
+		if( this._pointerDown ) {
+			this._pointerDown = false;
+			this.slider.style.cursor = '-webkit-grab';
+			this._drag.endX = e.pageX;
+			this._drag.preventClick = false;
+			this._move( true );
+			this._clearDrag();
+		}
+	}
+
+	/* Click */
+	
+	_clickHandler( e ) {
+		// console.log( 'CLICK' );
+
+		/* 
+			Dragged element is a link 
+			prevent browsers from folowing the link
+		*/
+
+		if( this._drag.preventClick )
+			e.preventDefault();
+
+		this._drag.preventClick = false;
+	}
+
+	/* Resize */
+
+	_resizeHandler() {
+		// throttles resize event
+        clearTimeout( this._resizeTimer );
+
+        this._resizeTimer = setTimeout( () => {
+			this._setDimensions();
+			this._goTo( this.currentIndex, true );
+        }, 100 );
+	}
+
+} // end Slider

@@ -16,3 +16,29 @@
     
     @return $map;
 }
+
+/* 
+ * Recursively set nested map
+ * --------------------------
+ *
+ * @param [map] $parentMap
+ * @param [map] $childMap
+ *
+ * source: https://github.com/pentzzsolt/sass-recursive-map-merge
+ *
+ * @return [map]
+ */
+
+@function mapRecursiveMerge( $parentMap, $childMap ) {
+	$result: $parentMap;
+	
+	@each $key, $value in $childMap {
+		@if( not map-has-key( $result, $key ) ) or ( type-of( map-get( $result, $key ) ) != type-of( $value ) ) or ( not ( type-of( map-get( $result, $key ) ) == map and type-of( $value ) == map ) ) {
+			$result: map-merge( $result, ( $key: $value ) );
+		} @else {
+			$result: map-merge( $result, ( $key: mapRecursiveMerge( map-get( $result, $key ), $value ) ) );
+		}
+	}
+
+	@return $result;
+}

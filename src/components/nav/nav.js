@@ -56,6 +56,8 @@ export default class Nav {
         // merge default variables with args
         mergeObjects( this, args );
 
+        this.isOverflowing = false;
+
        /*
         * Internal variables ( more set in init method )
         * ---------------------------------------------
@@ -214,6 +216,7 @@ export default class Nav {
 			overflow = this._overflowing(),
 			ogOverflow = overflow;
 
+		this.isOverflowing = ogOverflow;
 		this.button.style.display = 'block';
 
 		while( overflow ) {
@@ -263,8 +266,8 @@ export default class Nav {
 
 		this.button.style.display = '';
 
-		if( done ) 
-			done();
+		if( done !== undefined )
+			done.call( this );
 	}
 
 	// check if items are overflowing / wrapping into new line 
@@ -280,8 +283,6 @@ export default class Nav {
 		
 		// reverse loop to start from last item
 		for( let i = itemsLength - 1; i >= 0; i-- ) {
-			console.log('BOOOM', items[i].offsetTop, firstItemOffset);
-
 			if( items[i].offsetTop > firstItemOffset ) {
 				return true;
 			}
@@ -422,15 +423,6 @@ export default class Nav {
             this._setNav();
             this.onResize.call( this );
         }, 100 );
-	}
-
-	/*
-	 * Public methods
-	 * --------------
-	 */
-
-	isOverflowing() {
-		return this._currentOverflowGroups.length > 0;
 	}
 
 } // end Nav

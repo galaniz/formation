@@ -372,5 +372,3 @@ export default class Form {
 	}
 
 } // end Form
-
-module.exports.Form = Form;

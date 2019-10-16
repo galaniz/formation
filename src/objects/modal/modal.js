@@ -94,11 +94,15 @@ export default class Modal {
 
 	_initialize() {
 		// check that required variables not null
-		if( !this.modal || !this.trigger || !this.overlay || !this.close )
+		if( !this.modal || !this.window || !this.trigger || !this.overlay || !this.close )
 			return false;
 
 		if( this.scaleTransition && !this.window )
 			return false;
+
+        // for centering window
+        this._windowWidth = this.window.clientWidth;
+        this._windowHeight = this.window.clientHeight;
 
 		// add event listeners
 		this.trigger.addEventListener( 'click', this._openHandler.bind( this ) );
@@ -107,10 +111,12 @@ export default class Modal {
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
-		// scale window to size and offst of trigger
+		// scale window to size and offset of trigger
     	if( this.scaleTransition ) {
         	this._setMatrix();
         	this._setTransforms();
+    	} else {
+    		this._verticallyCenter();
     	}
 		
 		return true;
@@ -123,22 +129,19 @@ export default class Modal {
 
 	_setMatrix() {
 		let triggerRect = this.trigger.getBoundingClientRect(),
-			windowHeight = this.window.clientHeight,
-			windowWidth = this.window.clientWidth;
-
-		let xScale = triggerRect.width / windowWidth,
-			yScale = triggerRect.height / windowHeight;
+			xScale = triggerRect.width / this._windowWidth,
+			yScale = triggerRect.height / this._windowHeight;
 
 		this._matrix = {
 			open: {
 				sX: 1,
 				sY: 1,
-				tX: windowWidth < this._viewportWidth ? ( this._viewportWidth - windowWidth ) / 2 : 0,
-				tY: windowHeight < this._viewportHeight ? ( this._viewportHeight - windowHeight ) / 2 : 0,
+				tX: this._windowWidth < this._viewportWidth ? ( this._viewportWidth - this._windowWidth ) / 2 : 0,
+				tY: this._windowHeight < this._viewportHeight ? ( this._viewportHeight - this._windowHeight ) / 2 : 0,
 			},
 			close: {
-				sX: triggerRect.width / windowWidth,
-				sY: triggerRect.height / windowHeight,
+				sX: triggerRect.width / this._windowWidth,
+				sY: triggerRect.height / this._windowHeight,
 				tX: triggerRect.left,
 				tY: triggerRect.top
 			}
@@ -156,6 +159,14 @@ export default class Modal {
 				tY = this._matrix[prop].tY;
 
 			prefix( 'transform', this.window, `matrix( ${ sX }, 0, 0, ${ sY }, ${ tX }, ${ tY } )` );
+		}
+	}
+
+	_verticallyCenter() {
+		if( this._windowHeight < this._viewportHeight ) {
+			addClass( this.window, '--center' );
+		} else {
+			removeClass( this.window, '--center' );
 		}
 	}
 
@@ -213,9 +224,14 @@ export default class Modal {
         	this._viewportWidth = window.innerWidth;
         	this._viewportHeight = window.innerHeight;
 
+			this._windowWidth = this.window.clientWidth;
+			this._windowHeight = this.window.clientHeight;
+
         	if( this.scaleTransition ) {
             	this._setMatrix();
             	this._setTransforms();
+        	} else {
+        		this._verticallyCenter();
         	}
         }, 100 );
     }

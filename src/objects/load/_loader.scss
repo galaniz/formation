@@ -4,12 +4,8 @@
  * ------
  */
 
-$_transitions: map-get( $g-transitions, 'def' );
-$_duration: map-get( $_transitions, 'duration' );
-$_timingFunction: map-get( $_transitions, 'timingFunction' );
-
 .o-loader {
-    transition: opacity #{$_duration} #{$_timingFunction} 10ms, z-index 0ms #{$_timingFunction};
+    transition: opacity #{$g-defDuration} #{$g-defTimingFunction} 10ms, z-index 0ms #{$g-defTimingFunction};
     @extend %u-position-absolute;
     @extend %u-top-0;
     @extend %u-bottom-0;
@@ -20,7 +16,7 @@ $_timingFunction: map-get( $_transitions, 'timingFunction' );
     z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
     &.--hide {
         @extend %u-opacity-0;
-        transition: opacity #{$_duration} #{$_timingFunction}, z-index 0ms #{$_timingFunction} #{$_duration};
+        transition: opacity #{$g-defDuration} #{$g-defTimingFunction}, z-index 0ms #{$g-defTimingFunction} #{$g-defDuration};
         z-index: -1 !important;
     }
     &.--page {

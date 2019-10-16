@@ -6,7 +6,7 @@
 
 /* Colors */
 
-$g-colors: map-merge( 
+$g-colors: mapRecursiveMerge( 
 	(
 		primary: (
 			base: #1DE9B6,
@@ -29,7 +29,7 @@ $g-colors: map-merge(
 
 /* Fonts */
 
-$g-fonts: map-merge(
+$g-fonts: mapRecursiveMerge(
 	( 
 		primary: (   
 			Helvetica, 
@@ -45,7 +45,7 @@ $g-fonts: map-merge(
 
 /* Grid */
 
-$g-grid: map-merge(
+$g-grid: mapRecursiveMerge(
 	( 
 		25: (   
 			600: 50%,
@@ -72,7 +72,7 @@ $g-grid: map-merge(
 
 /* Breakpoints */
 
-$g-breakpoints: map-merge( 
+$g-breakpoints: mapRecursiveMerge( 
 	( 
 		0: 0px, 
 		500: 500px,
@@ -87,7 +87,7 @@ $g-breakpoints: map-merge(
 
 /* Containers */
 
-$g-containers: map-merge( 
+$g-containers: mapRecursiveMerge( 
 	( 
 		def: 1200px, 
 		sm: 800px,
@@ -110,7 +110,7 @@ $g-containers: map-merge(
 
 /* Transitions */
 
-$g-transitions: map-merge( 
+$g-transitions: mapRecursiveMerge( 
 	( 
 		def: (
 			duration: 300ms,
@@ -158,11 +158,18 @@ $g-transitions: map-merge(
 	$g-transitions 
 );
 
+$g-defTransitions: map-get( $g-transitions, 'def' );
+$g-defDuration: map-get( $g-defTransitions, 'duration' );
+$g-defTimingFunction: map-get( $g-defTransitions, 'timingFunction' );
+
 /* Z index */
 
-$g-zIndex: map-merge( 
+$g-zIndex: mapRecursiveMerge( 
 	( 
 		skipLink: 100,
+		transition: 100,
+		modal: 90,
+		nav: 85,
 		loader: (
 			def: 80,
 			page: 110
