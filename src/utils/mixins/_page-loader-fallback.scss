@@ -1,0 +1,29 @@
+
+/* 
+ * Output fallback for page loader
+ * -------------------------------
+ *
+ * @param [string] $selectors
+ */
+
+@mixin pageLoaderFallback( $selectors: '#js-page-loader, #js-page-transition' ) {
+    #{ $selectors } {
+        .no-js & {
+            animation-name: _pageLoaderFadeOut;
+            animation-duration: 1000ms;
+            animation-delay: 8000ms;
+            animation-fill-mode: forwards;
+        }
+    }
+
+    @keyframes _pageLoaderFadeOut {
+        0% { opacity: 1; }
+        25% { opacity: 1; }
+        50% { opacity: 1; }
+        75% { opacity: 1; }
+        100% {
+            opacity: 0;
+            z-index: -1;
+        }
+    }
+}
