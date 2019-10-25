@@ -48,12 +48,13 @@
 	@extend %u-position-relative;
 	@extend %u-overflow-y-auto;
 	@extend %u-overflow-x-hidden;
-	& > div {
-		@extend %u-opacity-0;
-		@extend %u-transition-opacity-ease;
-		.--w-open & {
-			@extend %u-opacity-1;
-		}
+}
+
+.o-modal__fade {
+	@extend %u-opacity-0;
+	@extend %u-transition-opacity-ease;
+	.--w-open & {
+		@extend %u-opacity-1;
 	}
 }
 
