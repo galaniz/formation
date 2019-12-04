@@ -25,6 +25,7 @@ export default class Collapsible {
     */
 
     constructor( args ) {
+
        /*
         * Public variables
         * ----------------
@@ -47,6 +48,9 @@ export default class Collapsible {
         this._viewportWidth = window.innerWidth;
 
         this._collapsibleHeight = 0;
+        this._currentHeight = 0;
+
+        this._set = true;
 
         // keep track of state
         this._open = false;
@@ -89,8 +93,10 @@ export default class Collapsible {
         
         window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
-        this._setCollapsibleHeight();
-        this._toggleCollapsible( false );
+        window.addEventListener( 'load', () => {
+            this._setCollapsibleHeight();
+            this._toggleCollapsible( false );
+        } );
 
         return true;
     }
@@ -101,18 +107,28 @@ export default class Collapsible {
     */
 
     _setCollapsibleHeight() {
+        if( !this._set )
+            return;
+
         this.collapsible.style.height = '';
         this._collapsibleHeight = this.collapsible.clientHeight;
+
+        this.collapsible.style.height = this._currentHeight + 'px';
     }
 
     _toggleCollapsible( open = true ) {
+        if( !this._set )
+            return;
+
         this._open = open;
         this.trigger.setAttribute( 'aria-expanded', open );
 
         if( open ) {
             this.collapsible.style.height = this._collapsibleHeight + 'px';
+            this._currentHeight = this._collapsibleHeight;
         } else {
             this.collapsible.style.height = 0;
+            this._currentHeight = 0;
         }       
     }
 
@@ -152,6 +168,22 @@ export default class Collapsible {
 
         if( keyCode === 'ESC' ) {
             this._toggleCollapsible( false );
+        }
+    }
+
+   /*
+    * Public methods
+    * --------------
+    */
+
+    set( set = true ) {
+        this._set = set;
+
+        if( set ) {
+            this._setCollapsibleHeight();
+            this._toggleCollapsible( false );
+        } else {
+            this.collapsible.style.height = '';
         }
     }
 

@@ -42,6 +42,7 @@ export default class SendForm {
         this.groupClass = '';
         this.fieldClass = '';
         this.labelClass = '';
+        this.errorClass = '';
         this.submit = null;
         this.inputs = null;
         this.loader = null;
@@ -103,7 +104,7 @@ export default class SendForm {
 
 		recurseObject( this, 
 			( prop, value ) => {
-				if( !value ) 
+				if( prop != 'errorClass' && !value ) 
 					requiredError = true;
 			},
 			( prop, value ) => {
@@ -138,6 +139,8 @@ export default class SendForm {
 			groupClass: this.groupClass,
 			fieldClass: this.fieldClass,
 			labelClass: this.labelClass,
+			errorClass: this.errorClass,
+			errorShake: this.shake,
 			inputs: this.inputs
     	} );
 

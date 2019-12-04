@@ -14,7 +14,7 @@
     &.a-hover:hover,
     &.a-hover:focus,
     &.a-hover:active {
-        transform: unquote( $value );
+        transform: unquote( $value ) !important;
     }
 }
 
@@ -49,7 +49,7 @@
                 }
             }
 
-            @include _transformHover( "transform: translate#{$type}( #{$p} )" );
+            @include _transformHover( "translate#{$type}( #{$p} )" );
 
             &.--reverse {
                 @if $k == def {
@@ -62,7 +62,7 @@
                     }
                 }
 
-                @include _transformHover( "transform: translate#{$type}( #{$reverseP} )" );
+                @include _transformHover( "translate#{$type}( #{$reverseP} )" );
             }
         }
     }
@@ -164,7 +164,7 @@
                     transform: scale( #{$v} );
                 }
             } @else if $k == hover {
-                @include _transformHover( "transform: scale( #{$v} )" );
+                @include _transformHover( "scale( #{$v} )" );
             } @else {
                 .js &.--#{$k} {
                     transform: scale( #{$v} );
@@ -184,18 +184,16 @@
         .js &.--vis,
         .js &.--show {
             @extend %u-opacity-1;
-            @each $k, $v in $in {
+            @each $k, $v in $out {
                 @if $k == def {
-                    .js & {
-                        transform: scale( #{$v} );
-                    }
+                    transform: scale( #{$v} );
                 } @else {
-                    .js &.--#{$k} {
+                    &.--#{$k} {
                         transform: scale( #{$v} );
                     }
                 }
             }
         }
-        @include _transformHover( "transform: scale( 1 )" );
+        @include _transformHover( "scale( 1 )" );
     }
 }

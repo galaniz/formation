@@ -135,3 +135,17 @@
 .u-object-contain-fallback {
     background-size: contain;
 }
+
+/* Misc */
+
+.u-svg-scale-fix {
+    @extend %u-width-100;
+    @extend %u-display-block;
+    @extend %u-visibility-hidden;
+    & ~ svg {
+        @extend %u-position-absolute;
+        @extend %u-top-0;
+        @extend %u-left-0;
+        @extend %u-right-0;
+    }
+}

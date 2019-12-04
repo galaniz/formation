@@ -61,6 +61,10 @@ export default class FadeSlider extends BaseSlider {
 			} );
 		}
 
+		/* Nav set up */
+
+		this._setUpNav();
+
         this._goTo( this.currentIndex, true );
 	}
 

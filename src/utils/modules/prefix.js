@@ -20,6 +20,13 @@ export const prefix = ( type, item, val ) => {
             item.style.OTransform = val;
             item.style.transform = val;
         },
+        transformOrigin( el, val ) {
+            item.style.webkitTransformOrigin = val;
+            item.style.MozTransformOrigin = val;
+            item.style.msTransformOrigin = val;
+            item.style.OTransformOrigin = val;
+            item.style.transformOrigin = val;
+        },
         transition( el, val ) {
             item.style.webkitTransition = val;
             item.style.MozTransition = val;

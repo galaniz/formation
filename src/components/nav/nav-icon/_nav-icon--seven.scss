@@ -5,7 +5,8 @@
  */
 
 .c-nav-icon.--seven {
-	transform: scale( 1 );
+	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'width' ) * 0.28571 ) - ( 8 - mapDeepGet( $g-nav, 'icon', 'margin' ) );
+
 	transition: transform 200ms ease;
 	& .c-nav-icon__top,
 	& .c-nav-icon__bottom {
@@ -16,7 +17,10 @@
 		@extend %u-opacity-1;
 		transition: opacity 0s ease 150ms;
 	}
-	.--show & {
+	.c-nav__button:not( .--show ) & {
+		animation: _navIconGrowShrinkCopy 300ms;
+	}
+	.c-nav__button.--show & {
 		& .c-nav-icon__top {
 			transform: translateY( $_navIconY ) rotate( 45deg );
 		}
@@ -30,14 +34,26 @@
 	}
 }
 
-@keyframes _navIconGrowShrink {
+@keyframes _navIconGrowShrinkCopy {
 	0% { 
-        transform: scaleX( 1 ); 
+        transform: scale( 1 ); 
     }
     50% { 
-        transform: scaleX( 0.20 ); 
+        transform: scale( 0.20 ); 
     }
     100% { 
-        transform: scaleX( 1 );
+        transform: scale( 1 );
+    }
+}
+
+@keyframes _navIconGrowShrink {
+	0% { 
+        transform: scale( 1 ); 
+    }
+    50% { 
+        transform: scale( 0.20 ); 
+    }
+    100% { 
+        transform: scale( 1 );
     }
 }

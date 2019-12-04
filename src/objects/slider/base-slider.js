@@ -55,6 +55,11 @@ export default class BaseSlider {
 
         this._navItems = [];
         this._navItemsLen = 0;
+        this._dotsLen = 0;
+        this._dotsLastIndex = 0;
+
+        // visible slides
+        this._perPage = 1;
 
         // for key events
         this._KEYS = {
@@ -95,62 +100,6 @@ export default class BaseSlider {
 		this.items = Array.from( this.items );
 
 		this._lastIndex = this.items.length - 1;
-
-		/* Create navigation dots */
-
-		if( this.nav && this.navItemClass ) {
-			let navItems = Array.from( this.nav.querySelectorAll( '.' + this.navItemClass ) );
-
-			const setupNavItem = ( item = null, i = 0, classes = '' ) => {
-				let active = i == this.currentIndex ? true : false,
-					setClass = classes ? true : false;
-
-				if( active )
-					classes += ' --active';
-
-				if( setClass ) {
-					item.setAttribute( 'class', classes );
-				} else {
-					addClass( item, classes );
-				}
-				
-				item.setAttribute( 'data-index', i );
-				item.addEventListener( 'click', this._nav.bind( this ) );
-
-				this._navItems.push( item );
-			};
-
-			if( !navItems ) {
-				navItems = document.createDocumentFragment();
-
-				for( let i = 0; i < this.items.length; i++ ) {
-					let navItem = document.createElement( 'button' );
-
-					navItem.type = 'button';
-					navItem.textContent = i;
-
-					setupNavItem( navItem, i, this.navItemClass );
-
-					navItems.appendChild( navItem );
-				}
-
-				this.nav.appendChild( navItems );
-			} else {
-				navItems.forEach( ( item, i ) => {
-					setupNavItem( item, i );
-				} );
-			}
-
-			this._navItemsLen = this._navItems.length;
-		}
-
-		/* Prev / next navigation */
-
-		if( this.prev )
-			this.prev.addEventListener( 'click', this._prev.bind( this ) );
-
-		if( this.next )
-			this.next.addEventListener( 'click', this._next.bind( this ) );
 
 		/* Auto play event listeners and animations */
 
@@ -200,7 +149,7 @@ export default class BaseSlider {
 		let prevIndex = index - 1;
 
 		if( index <= 0 )
-			prevIndex = this.loop ? this._lastIndex : 0;
+			prevIndex = this.loop ? this._dotsLastIndex : 0;
 
 		return prevIndex;
 	}
@@ -208,10 +157,92 @@ export default class BaseSlider {
 	_getNextIndex( index ) {
 		let nextIndex = index + 1;
 
-		if( index >= this._lastIndex )
-			nextIndex = this.loop ? 0 : this._lastIndex;
+		if( index >= this._dotsLastIndex )
+			nextIndex = this.loop ? 0 : this._dotsLastIndex;
 
 		return nextIndex;
+	}
+
+	_setUpNav( resize = false ) {
+		this._dotsLen = ( this.items.length - this._perPage ) + 1;
+		this._dotsLastIndex = this._dotsLen - 1;
+
+		if( this.nav && this.navItemClass ) {
+			if( resize ) {
+				this.nav.innerHTML = '';
+				this._navItems = [];
+				this._navItemsLen = 0;
+			}
+
+			let navItems = Array.from( this.nav.querySelectorAll( '.' + this.navItemClass ) );
+
+			const setupNavItem = ( item = null, i = 0, classes = '' ) => {
+				let active = i == this.currentIndex ? true : false,
+					setClass = classes ? true : false;
+
+				if( active )
+					classes += ' --active';
+
+				if( setClass ) {
+					item.setAttribute( 'class', classes );
+				} else {
+					addClass( item, classes );
+				}
+				
+				item.setAttribute( 'data-index', i );
+				item.addEventListener( 'click', this._nav.bind( this ) );
+
+				this._navItems.push( item );
+			};
+
+			if( navItems.length === 0 ) {
+				navItems = document.createDocumentFragment();
+
+				if( this._dotsLen > 1 ) {
+					for( let i = 0; i < this._dotsLen; i++ ) {
+						let navItem = document.createElement( 'button' );
+
+						navItem.type = 'button';
+						navItem.textContent = i;
+
+						setupNavItem( navItem, i, this.navItemClass );
+
+						navItems.appendChild( navItem );
+					}
+					
+					this.nav.appendChild( navItems );
+					this.slider.setAttribute( 'data-has-dots', 'true' );
+				} else {
+					this.slider.removeAttribute( 'data-has-dots' );
+				}
+			} else {
+				this.slider.setAttribute( 'data-has-dots', 'true' );
+
+				navItems.forEach( ( item, i ) => {
+					setupNavItem( item, i );
+				} );
+			}
+
+			this._navItemsLen = this._navItems.length;
+		}
+
+		/* Prev / next navigation */
+
+		if( this._dotsLen > 1 ) {
+			if( !resize ) {
+				if( this.prev )
+					this.prev.addEventListener( 'click', this._prev.bind( this ) );
+
+				if( this.next )
+					this.next.addEventListener( 'click', this._next.bind( this ) );
+			}
+		} else {
+			if( this.prev )
+				this.prev.style.display = 'none';
+
+			if( this.next )
+				this.next.style.display = 'none';
+		}
 	}
 
 	_setNav( index = null, lastIndex = null ) {
@@ -234,7 +265,7 @@ export default class BaseSlider {
 		if( this.next ) {
 			let disable = false;
 
-			if( index >= this._lastIndex  )
+			if( index >= this._dotsLastIndex  )
 				disable = true;
 
 			this.next.disabled = disable;
@@ -243,10 +274,10 @@ export default class BaseSlider {
 
 	_doGoTo( index ) {
 		if( index < 0 )
-			index = this.loop ? this._lastIndex : 0;
+			index = this.loop ? this._dotsLastIndex : 0;
 
-		if( index > this._lastIndex )
-			index = this.loop ? 0 : this._lastIndex;
+		if( index > this._dotsLastIndex )
+			index = this.loop ? 0 : this._dotsLastIndex;
 		
 		let lastIndex = this.currentIndex;
 
@@ -325,7 +356,7 @@ export default class BaseSlider {
 				index = 0;
 				break;
 			case 'END':
-				index = this._lastIndex;
+				index = this._dotsLastIndex;
 				break;
 		}
 

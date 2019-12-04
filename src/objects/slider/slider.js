@@ -82,13 +82,27 @@ export default class Slider extends BaseSlider {
 
         this._resizeTimer;
 
-        /* How many slides visible */
-
-        this._perPage = 1;
-
         /* Links */
 
         this._links = Array.from( this.slider.querySelectorAll( 'a' ) );
+
+       /*
+        * Set up
+        * ------
+        */
+
+        this._setDimensions();
+        this._setUpNav();
+
+        if( !( this.items.length - this._perPage ) )
+        	return;
+
+		this.slider.style.cursor = '-webkit-grab';
+        this.slider.style.touchAction = 'pan-y pinch-zoom';
+        this.slider.tabIndex = '0';
+
+        prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
+        prefix( 'transformOrigin', this.slider, '0 0' );
 
        /*
         * Events
@@ -130,18 +144,8 @@ export default class Slider extends BaseSlider {
 
 		this.slider.addEventListener( 'click', this._clickHandler );
 
-       /*
-        * Set up
-        * ------
-        */
+		/* Init */
 
-		this.slider.style.cursor = '-webkit-grab';
-        this.slider.style.touchAction = 'pan-y pinch-zoom';
-        this.slider.tabIndex = '0';
-
-        prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
-
-        this._setDimensions();
 		this._goTo( this.currentIndex, true );
 	}
 
@@ -168,10 +172,10 @@ export default class Slider extends BaseSlider {
         this._resolveObject( '_padding', 'padding' );
 
         // set slides per page
-        this._perPage = Math.round( this._sliderWidth / ( this._itemWidth + ( this._padding * 2 ) ) );
+        this._perPage = Math.round( this._sliderWidth / this._itemWidth );
 
-        this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding * 2 );
-        this._drag.minX = this._padding * 2;
+        this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding );
+        this._drag.minX = this._padding;
 
 		this._drag.threshold = this._itemWidth / 3;
     } 
@@ -224,11 +228,13 @@ export default class Slider extends BaseSlider {
 
     	/* Get move state if dragging */
 
+    	let ogIndex = this.currentIndex;
+
     	if( drag ) {
     		let dragOffset = this._drag.startX - this._drag.endX;
 
     		if( Math.abs( dragOffset ) > this._drag.threshold ) {	
-				let slideNumber = Math.round( Math.abs( dragOffset ) / this._itemWidth );
+				let slideNumber = Math.ceil( Math.abs( dragOffset ) / this._itemWidth );
 
 				if( dragOffset > 0 ) {
 					this.currentIndex += slideNumber;
@@ -252,22 +258,23 @@ export default class Slider extends BaseSlider {
 
     	/* Transform slider */
 
-    	let transform = -( ( this.currentIndex * this._itemWidth ) - ( this._padding * this._perPage ) );
+    	let transform = -( ( this.currentIndex * this._itemWidth ) - this._padding );
 
-    	if( Math.abs( transform ) < this._drag.minX )
+    	if( transform > this._drag.minX )
 			transform = this._drag.minX;
 
-		if( Math.abs( transform ) > this._drag.maxX ) {
+		if( transform < -( this._drag.maxX ) )
 			transform = -( this._drag.maxX );
-		}
-
-
 
     	prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
 
     	/* Save x position */
 
 		this._drag.currentX = transform;
+
+		/* Set nav buttons */
+
+		this._setNav( this.currentIndex, ogIndex );
 
 		this.endMove(); 
     }
@@ -280,17 +287,13 @@ export default class Slider extends BaseSlider {
 	_dragging() {
 		let dragOffset = ( this._drag.startX - this._drag.endX ),
 			transform = this._drag.currentX - dragOffset,
-			transformAbs = Math.abs( transform ),
-			friction = transformAbs * 0.25;
-
-		let ogTransform = transform;
+			friction = ( ( Math.abs( dragOffset ) / this._drag.maxX ) / this._perPage ) * this._itemWidth;
 
 		if( transform > this._drag.minX )
-			transform = this._drag.minX;
+			transform = this._drag.minX + friction;
 
-		if( transformAbs > this._drag.maxX ) {
-			transform = -( this._drag.maxX );
-		}
+		if( transform < -( this._drag.maxX ) )
+			transform = -( this._drag.maxX + friction );
 
 		prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
 	}
@@ -390,9 +393,57 @@ export default class Slider extends BaseSlider {
 				detemine browser redirection later
 			*/
 
-			// console.log('MOUSEMOVE', e.target.nodeName);
+			let isLink = e.target.nodeName === 'A';
 
-			if( e.target.nodeName === 'A' || e.target.nodeName === 'IMG' ) {
+			if( !isLink ) {
+				let t = e.target,
+			        counter = 0,
+			        max = 20;
+
+			    while( !isLink ) {
+			        t = t.parentElement;
+
+			        console.log(t);
+
+			        /*if( t === null ) {
+			        	isLink = false;
+			            break;
+			        }*/
+
+			        isLink = t.nodeName === 'A';
+			        counter++;
+
+			        if( counter === max ) {
+			            isLink = false;
+			            break;
+			        }
+			    }
+
+			    if( !isLink) {
+					t = e.target;
+			        counter = 0;
+			        max = 20;
+
+				    while( !isLink ) {
+				        t = t.firstChildElement;
+
+				        /*if( t === null ) {
+				        	isLink = false;
+				            break;
+				        }*/
+
+				        isLink = t.nodeName === 'A';
+				        counter++;
+
+				        if( counter === max ) {
+				            isLink = false;
+				            break;
+				        }
+				    }
+			    }
+			}
+
+			if( isLink ) {
 				this._drag.preventClick = true;
 				this.linkClick( true );
 			} else {
@@ -420,7 +471,7 @@ export default class Slider extends BaseSlider {
 	/* Click */
 	
 	_clickHandler( e ) {
-		// console.log( 'CLICK' );
+		console.log( 'CLICK', this._drag.preventClick );
 
 		/* 
 			Dragged element is a link 
@@ -441,6 +492,7 @@ export default class Slider extends BaseSlider {
 
         this._resizeTimer = setTimeout( () => {
 			this._setDimensions();
+			this._setUpNav( true );
 			this._goTo( this.currentIndex, true );
         }, 100 );
 	}

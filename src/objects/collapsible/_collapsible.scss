@@ -8,10 +8,6 @@
 	@extend %u-overflow-hidden;
 }
 
-.o-collapsible__trigger {
-	@extend %u-width-100;
-}
-
 .o-collapsible__icon {
 	@extend %u-display-none;
 	.o-collapsible__trigger[aria-expanded="true"] &[data-type="close"] {

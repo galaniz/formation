@@ -33,8 +33,11 @@ export default class Form {
 
         this.inputs = null;
         this.fieldClass = '';
+        this.groupClass = '';
+        this.labelClass = '';
 		this.submitted = false;
 		this.errorShake = false;
+		this.errorClass = '';
 		this.errorShakeClass = 'a-shake';
 
         // merge default variables with args
@@ -60,6 +63,9 @@ export default class Form {
 		// input labels by name
 		this._inputLabels = {};
 
+		// input email labels by name
+		this._inputEmailLabels = {};
+
        /*
         * Initialize
         * ----------
@@ -83,13 +89,11 @@ export default class Form {
 
 		this.inputs = Array.from( this.inputs );
 
-		// convert input types to names wp accept for sanitization
-		let inputTypeTranslations = {
-			text: 'text_field',
-			select: 'text_field',
-			textarea: 'textarea_field',
-			email: 'email'
-		};
+		if( this.errorClass )
+			this.errorClass = ' ' + this.errorClass;
+
+		// check if already got field group
+		let fieldGroupSet = [];
 
 		// loop through inputs to insert input data into inputGroups
 		this.inputs.forEach( ( input ) => {
@@ -98,29 +102,42 @@ export default class Form {
 			// already exists in inputGroups so just push input into inputs array
 			if( this._inputGroups.hasOwnProperty( name ) ) {
 				this._inputGroups[name].inputs.push( input );
+
+				if( fieldGroupSet.indexOf( name ) === -1 ) {
+					let fieldGroup = closest( input, this.groupClass, 10 );
+
+					if( fieldGroup )
+						this._inputGroups[name].field = fieldGroup;
+
+					fieldGroupSet.push( name );
+				}
 			} else {
 				// doesn't exist so create new object of input data 
 				let reqAttr = input.getAttribute( 'aria-required' ),
 					required = ( reqAttr == 'true' || reqAttr == '1' ),
 					type = input.tagName.toLowerCase();
 
-				if( type === 'input' ) type = input.type;
+				if( type === 'input' ) 
+					type = input.type;
 
-				if( inputTypeTranslations.hasOwnProperty( type ) ) {
-					this._inputTypes[name] = inputTypeTranslations[type];
-				} else {
-					this._inputTypes[name] = '';
-				}
+				this._inputTypes[name] = type;
 
-				if( type === 'radio' || type === 'checkbox' ) {
-					this._inputLabels[name] = input.nextElementSibling.nextElementSibling.textContent;
-				} else {
-					this._inputLabels[name] = input.previousElementSibling.textContent;
-				}
+				let emailLabel = input.getAttribute( 'data-email-label' );
+
+				if( emailLabel )
+					this._inputEmailLabels[name] = emailLabel;
+
+				let field = closest( input, this.fieldClass ),
+					label = field.querySelector( '.' + this.labelClass ) || '';
+
+				if( label )
+					label = label.textContent;
+
+				this._inputLabels[name] = label;
 
 				this._inputGroups[name] = {
 					inputs: [input], // array for checkboxes and radio buttons
-					field: closest( input, this.fieldClass ),
+					field: field,
 					required: required,
 					type: type,
 					values: [],
@@ -244,7 +261,7 @@ export default class Form {
 			messageElement.textContent = message;
 		} else { // doesn't exist
 			field.insertAdjacentHTML( 'beforeend', 
-				`<div id="${ errorID }" class="o-form-error">
+				`<div id="${ errorID }" class="o-form-error${ this.errorClass }">
 					<span class="o-form-error__message">
 						${ message }
 					</span>
@@ -311,7 +328,8 @@ export default class Form {
 	}
 
 	getFormValues( urlEncoded = false ) {
-		let formValues = {};
+		let formValues = {},
+			usedEmailLabels = [];
 
 		for( let name in this._inputGroups ) {
 			let inputGroup = this._inputGroups[name],
@@ -325,14 +343,28 @@ export default class Form {
 				values = values;
 			}
 
-			formValues[name] = {
+			let formValuesArgs = {
 				value: values,
-				type: this._inputTypes[name],
-				label: this._inputLabels[name]
+				type: this._inputTypes[name]
 			};
+
+			if( this._inputEmailLabels.hasOwnProperty( name ) ) {
+				let emailLabel = this._inputEmailLabels[name];
+
+				if( usedEmailLabels.indexOf( emailLabel ) === -1 )
+					formValuesArgs.email_label = emailLabel;
+
+				usedEmailLabels.push( emailLabel );
+			} else {
+				formValuesArgs.label = this._inputLabels[name];
+			}
+
+			formValues[name] = formValuesArgs;
 		}
 
 		formValues = { inputs: formValues };
+
+		console.log('YOOOOOOOFOOOOLL', formValues);
 
 		if( urlEncoded )
 			formValues = urlEncode( formValues );

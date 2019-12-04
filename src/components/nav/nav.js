@@ -44,6 +44,7 @@ export default class Nav {
         this.transition = null;
         this.onSet = () => {};
         this.onReset = () => {};
+        this.afterReset = () => {};
         this.onResize = () => {};
         this.onToggle = () => {};
         this.endToggle = () => {};
@@ -210,6 +211,7 @@ export default class Nav {
 	// if overflowing transfer items over to overflow element
 	_setNav( done ) {
 		this._resetNav();
+		this.afterReset.call( this );
 
 		let overflowGroupIndex = 0,
 			frag = document.createDocumentFragment(),

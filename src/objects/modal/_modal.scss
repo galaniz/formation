@@ -18,11 +18,12 @@
 	@extend %u-bottom-0;
 	@extend %u-opacity-0;
 	@extend %u-visibility-hidden;
-	transition: opacity #{$g-defDuration} #{$g-defTimingFunction}, visibility 0ms #{$g-defTimingFunction} #{$g-defDuration};
+	transition: opacity #{$g-defDuration} #{$g-defTimingFunction}, visibility 0ms #{$g-defTimingFunction} #{$g-defDuration}, z-index 0ms #{$g-defTimingFunction} #{$g-defDuration};
 	.--open & {
 		@extend %u-opacity-1;
 		@extend %u-visibility-visible;
-		transition: opacity #{$g-defDuration} #{$g-defTimingFunction} 10ms, visibility 0ms #{$g-defTimingFunction};
+		transition: opacity #{$g-defDuration} #{$g-defTimingFunction} 10ms, visibility 0ms #{$g-defTimingFunction}, z-index 0ms #{$g-defTimingFunction};
+		z-index: 5;
 	}
 }
 

@@ -5,9 +5,11 @@
  */
 
 .c-nav-overflow {
-	@extend %u-display-none;
-	&.--show {
-		@extend %u-display-inline-block;
+	@extend %u-visibility-hidden;
+	@extend %u-position-absolute;
+	.--open & {
+		@extend %u-visibility-visible;
+		@extend %u-position-relative;
 	}
 }
 
