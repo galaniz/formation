@@ -138,7 +138,9 @@ export default class Slider extends BaseSlider {
 		/* Mouse */
 
 		this.slider.addEventListener( 'mousedown', this._mousedownHandler );
+		this.slider.addEventListener( 'mouseup', this._mouseupHandler );
 		this.slider.addEventListener( 'mouseleave', this._mouseleaveHandler );
+		this.slider.addEventListener( 'mousemove', this._mousemoveHandler );
 
 		/* Click */
 
@@ -164,9 +166,21 @@ export default class Slider extends BaseSlider {
     * -------
     */
 
+    _setWidths( set = true ) {
+    	this.slider.style.width = set ? ( this._itemWidth * this.items.length ) + 'px' : '';
+
+    	this.items.forEach( ( item ) => {
+    		item.style.width = set ? this._itemWidth + 'px' : '';
+    	} );
+    }
+
 	_setDimensions() {
+		this._setWidths( false );
+
         this._sliderWidth = this.slider.clientWidth;
         this._itemWidth = this.items[0].clientWidth;
+
+        this._setWidths( true );
 
         // set padding
         this._resolveObject( '_padding', 'padding' );
@@ -208,6 +222,63 @@ export default class Slider extends BaseSlider {
 			return true;
 
 		return false;
+	}
+
+	/* On drag check if link to prevent */
+
+	_isLink( target ) {
+		if( target === null || target === undefined )
+			return false;
+
+		let isLink = target.nodeName === 'A';
+
+		if( !isLink ) {
+			let t = target,
+		        counter = 0,
+		        max = 20;
+
+		    while( !isLink ) {
+		        t = t.parentElement;
+
+		        if( t === null || t === undefined ) {
+		        	isLink = false;
+		            break;
+		        }
+
+		        isLink = t.nodeName === 'A';
+		        counter++;
+
+		        if( counter === max ) {
+		            isLink = false;
+		            break;
+		        }
+		    }
+
+		    if( !isLink) {
+				t = target;
+		        counter = 0;
+		        max = 20;
+
+			    while( !isLink ) {
+			        t = t.firstChildElement;
+
+			        if( t === null || t === undefined ) {
+			        	isLink = false;
+			            break;
+			        }
+
+			        isLink = t.nodeName === 'A';
+			        counter++;
+
+			        if( counter === max ) {
+			            isLink = false;
+			            break;
+			        }
+			    }
+		    }
+		}
+
+		return isLink;
 	}
 
 	/* Clear drag after touchend and mouseup event */
@@ -348,12 +419,8 @@ export default class Slider extends BaseSlider {
 		if( this._ignore( e ) ) 
 			return;
 
-		e.preventDefault();
 		e.stopPropagation();
-
-		// add listeners
-		document.addEventListener( 'mousemove', this._mousemoveHandler, true );
-		document.addEventListener( 'mouseup', this._mouseupHandler, true );
+		e.preventDefault();
 
 		this._disableTransition();
 
@@ -370,16 +437,6 @@ export default class Slider extends BaseSlider {
 			this._move( true );
 
 		this._clearDrag();
-
-		// remove listeners
-		document.removeEventListener( 'mousemove', this._mousemoveHandler, true );
-		document.removeEventListener( 'mouseup', this._mouseupHandler, true );
-	}
-
-	/* On drag check if link to prevent */
-
-	_isTargetLink( target ) {
-
 	}
 
 	_mousemoveHandler( e ) {
@@ -393,55 +450,7 @@ export default class Slider extends BaseSlider {
 				detemine browser redirection later
 			*/
 
-			let isLink = e.target.nodeName === 'A';
-
-			if( !isLink ) {
-				let t = e.target,
-			        counter = 0,
-			        max = 20;
-
-			    while( !isLink ) {
-			        t = t.parentElement;
-
-			        console.log(t);
-
-			        /*if( t === null ) {
-			        	isLink = false;
-			            break;
-			        }*/
-
-			        isLink = t.nodeName === 'A';
-			        counter++;
-
-			        if( counter === max ) {
-			            isLink = false;
-			            break;
-			        }
-			    }
-
-			    if( !isLink) {
-					t = e.target;
-			        counter = 0;
-			        max = 20;
-
-				    while( !isLink ) {
-				        t = t.firstChildElement;
-
-				        /*if( t === null ) {
-				        	isLink = false;
-				            break;
-				        }*/
-
-				        isLink = t.nodeName === 'A';
-				        counter++;
-
-				        if( counter === max ) {
-				            isLink = false;
-				            break;
-				        }
-				    }
-			    }
-			}
+			let isLink = this._isLink( e.target );
 
 			if( isLink ) {
 				this._drag.preventClick = true;
@@ -471,8 +480,6 @@ export default class Slider extends BaseSlider {
 	/* Click */
 	
 	_clickHandler( e ) {
-		console.log( 'CLICK', this._drag.preventClick );
-
 		/* 
 			Dragged element is a link 
 			prevent browsers from folowing the link

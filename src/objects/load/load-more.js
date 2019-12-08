@@ -51,6 +51,7 @@ export default class LoadMore {
 
         this.type = null;
         this.offset = 0;
+        this.ajaxPpp = 0;
         this.decrement = false;
         this.total = 0;
 
@@ -101,7 +102,7 @@ export default class LoadMore {
 		this._data = {
             postCount: this.offset,
             offset: this._ogOffset,
-            ppp: this._ogOffset,
+            ppp: this.ajaxPpp ? this.ajaxPpp : this._ogOffset,
             total: this.total,
             type: this.type,
             filters: {}
@@ -356,7 +357,7 @@ export default class LoadMore {
 		        	this.insertInto.innerHTML = '';
 
 		        if( rowCount > 0 && output != '' ) {
-		        	let o = this._ogOffset;
+		        	let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
 
 		        	if( this.decrement ) {
 		        		this._data.offset -= o;
