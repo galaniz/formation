@@ -16,8 +16,8 @@ import {
 } from '../../utils/utils';
 
 /*
- * Load posts / comments
- * ---------------------
+ * Load more content
+ * -----------------
  */
 
 export default class LoadMore {

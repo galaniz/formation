@@ -44,7 +44,8 @@ export default class Slider extends BaseSlider {
         	padding: {},
         	center: false,
         	linkClick: () => {},
-        	endMove: () => {}
+        	endMove: () => {},
+        	onResize: () => {}
         };
 
         for( let prop in childDefaults ) {
@@ -501,6 +502,7 @@ export default class Slider extends BaseSlider {
 			this._setDimensions();
 			this._setUpNav( true );
 			this._goTo( this.currentIndex, true );
+			this.onResize();
         }, 100 );
 	}
 

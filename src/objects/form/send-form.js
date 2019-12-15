@@ -38,13 +38,14 @@ export default class SendForm {
 
         this.id = '';
         this.form = null;
-        this.type = 'contact';
         this.groupClass = '';
         this.fieldClass = '';
         this.labelClass = '';
         this.errorClass = '';
         this.submit = null;
         this.inputs = null;
+        this.filterInputs = false;
+        this.data = {};
         this.loader = null;
         this.shake = false;
         this.siteKey = '';
@@ -76,12 +77,6 @@ export default class SendForm {
         // keep track of error / success
         this._error = false;
 
-        // for security
-        this._nonce = {
-        	nonce: null, 
-        	name: ''
-        };
-
        /*
         * Initialize
         * ----------
@@ -104,7 +99,7 @@ export default class SendForm {
 
 		recurseObject( this, 
 			( prop, value ) => {
-				if( prop != 'errorClass' && !value ) 
+				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value ) 
 					requiredError = true;
 			},
 			( prop, value ) => {
@@ -117,22 +112,6 @@ export default class SendForm {
 
 		if( requiredError )
 			return false;
-
-		this._nonce.name = this.id;
-
-		// get nonce from backend
-		request( { 
-			method: 'POST', 
-			url: this.url,
-			headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-			body: `action=create_nonce&nonce_name=${ this.id }`
-    	} )
-	    .then( response => {
-	    	this._nonce.nonce = JSON.parse( response ).nonce;
-	    } )
-	    .catch( xhr => {
-	        // console.log( 'NONCE_ERROR', xhr );
-	    } );
 
 		// prepare for validation
 		this._form = new Form( {
@@ -193,8 +172,14 @@ export default class SendForm {
 		// hide results container
 		removeClass( this.result.container, this._error ? '--error' : '--success' );
 
-		let formValues = this._form.getFormValues( true ),
-			data = `action=send_form&${ formValues }&id=${ this.id }&type=${ this.type }&nonce=${ this._nonce.nonce }&nonce_name=${ this._nonce.name }`;
+		let formValues = this._form.getFormValues( true, this.filterInputs ),
+			data = `id=${ this.id }&${ formValues }`;
+
+		if( this.data ) {
+			for( let d in this.data ) {
+				data += `&${ d }=${ this.data[d] }`;
+			}
+		}
 
 		// get recaptcha token to send to server
 		grecaptcha.execute( this.siteKey, { action: 'send_form' } ).then( ( token ) => {

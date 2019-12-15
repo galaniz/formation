@@ -327,7 +327,7 @@ export default class Form {
 		return validForm;
 	}
 
-	getFormValues( urlEncoded = false ) {
+	getFormValues( urlEncoded = false, filter = false ) {
 		let formValues = {},
 			usedEmailLabels = [];
 
@@ -359,12 +359,13 @@ export default class Form {
 				formValuesArgs.label = this._inputLabels[name];
 			}
 
+			if( filter && 'function' === typeof filter )
+				formValuesArgs = filter( formValuesArgs, inputGroup.inputs );
+
 			formValues[name] = formValuesArgs;
 		}
 
 		formValues = { inputs: formValues };
-
-		console.log('YOOOOOOOFOOOOLL', formValues);
 
 		if( urlEncoded )
 			formValues = urlEncode( formValues );
