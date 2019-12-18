@@ -1,10 +1,10 @@
 
 /*
- * Traverse up dom until find element with class
+ * Traverse up DOM until find element with class
  * ---------------------------------------------
  *
  * @param item [HTMLElement]
- * @param className [string] 
+ * @param className [string]
  */
 
 /* Dependencies */

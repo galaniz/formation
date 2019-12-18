@@ -2,14 +2,14 @@
 /*
  * Prefix transition or transform props on element
  * -----------------------------------------------
- * 
- * @param type [string] with value 'transition' or 'transform'
+ *
+ * @param type [string] with value 'transition', 'transform' or 'transformOrigin'
  * @param item [HTMLElement]
  * @param val [string] property value
  */
 
 export const prefix = ( type, item, val ) => {
-	if( !type || !item || !val ) 
+	if( !type || !item || !val )
 		return;
 
     let typePrefixes = {
