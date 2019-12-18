@@ -4,19 +4,19 @@
  * ------------------------------------------------------------------
  *
  * @param o [object] ( only param that needs to be passed by user )
- * @param key [string] ( for iteration )
- * @param list [array] store key value pairs ( for iteration )
- * 
+ * @param _key [string] ( for iteration )
+ * @param _list [array] store key value pairs ( for iteration )
+ *
  * @return [string]
  */
 
-export const urlEncode = ( o, key, list = [] ) => {
+export const urlEncode = ( o, _key, _list = [] ) => {
     if( typeof( o ) == 'object' ) {
         for( let idx in o )
-            urlEncode( o[idx], key ? key + '[' + idx + ']' : idx, list );
+            urlEncode( o[idx], _key ? _key + '[' + idx + ']' : idx, _list );
     } else {
-        list.push( key + '=' + encodeURIComponent( o ) );
+        _list.push( _key + '=' + encodeURIComponent( o ) );
     }
 
-    return list.join( '&' );
+    return _list.join( '&' );
 };

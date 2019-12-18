@@ -1,8 +1,8 @@
 
 /*
- * Object fit fallback for cover
- * -----------------------------
- * 
+ * Object fit fallback for cover/contain
+ * -------------------------------------
+ *
  * @param images [array] of image elements
  */
 
@@ -23,8 +23,8 @@ export const objectFit = ( images = [], type = 'cover' ) => {
             classes += ' u-object-cover-fallback';
         }
 
-        image.insertAdjacentHTML( 'afterend', 
-            `<div class="${ classes }" style="background-image: url(${ image.src })"></div>` 
+        image.insertAdjacentHTML( 'afterend',
+            `<div class="${ classes }" style="background-image: url(${ image.src })"></div>`
         );
     } );
 };

@@ -3,14 +3,14 @@
  * Fetch and set elements by selector
  * ----------------------------------
  *
- * @param meta [object] of props and placeholder values
- * @param e [array] of objects { 
- *      @prop prop [string] from meta
+ * @param meta [array] of objects {
+ *      @prop prop [string]
  *      @prop selector [string]
  *      @prop all [boolean]
  *      @prop array [boolean]
  * }
- * @param done [function] callback when done recursing through e and setting meta object
+ * @param e [object]
+ * @param done [function] callback when done recursing through meta and setting e object
  */
 
 export const setElements = ( meta, e, done = () => {} ) => {
@@ -44,7 +44,7 @@ export const setElements = ( meta, e, done = () => {} ) => {
                 recursive( 0, m.descendants, m.descendants.length, el );
 
             recursive( i + 1, array, arrayLength );
-        } 
+        }
 
         if( i === meta.length - 1 )
             done();

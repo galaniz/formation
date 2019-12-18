@@ -22,7 +22,7 @@ const _imageLoaded = ( image ) => {
     } );
 };
 
-export const imagesLoaded = ( images = [], done ) => {
+export const imagesLoaded = ( images = [], done = () => {} ) => {
     if( images.length == 0 ) {
         done( 'No images' );
         return;

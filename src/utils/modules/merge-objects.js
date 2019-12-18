@@ -7,6 +7,8 @@
  *
  * @param x [object]
  * @param y [object] overwrite x values
+ *
+ * @return [object] x
  */
 
 export const mergeObjects = ( x, y ) => {
@@ -14,11 +16,11 @@ export const mergeObjects = ( x, y ) => {
         // if not null or an html element and an object run again
         if( y[i] !== undefined &&
             y[i] !== false &&
-            y[i] !== null && 
+            y[i] !== null &&
             !Array.isArray( y[i] ) &&
-            typeof( y[i] ) == 'object' && 
-            !( y[i] instanceof HTMLElement ) && 
-            !( y[i] instanceof HTMLCollection ) && 
+            typeof( y[i] ) == 'object' &&
+            !( y[i] instanceof HTMLElement ) &&
+            !( y[i] instanceof HTMLCollection ) &&
             !( y[i] instanceof NodeList ) &&
             !( y[i] instanceof SVGElement ) ) {
             if( x.hasOwnProperty( i ) ) {
