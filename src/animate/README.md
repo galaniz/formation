@@ -47,14 +47,14 @@ _Parameters:_
       <td><code>parallax</code></td>
       <td><code>object</code></td>
       <td>
-      <pre lang="js">
-      {
-        rate: 0.2,
-        x: 0,
-        y: 0,
-        z: 0
-      }
-      </pre>
+<pre lang="js">
+{
+  rate: 0.2,
+  x: 0,
+  y: 0,
+  z: 0
+}
+</pre>
       </td>
       <td></td>
     </tr>
