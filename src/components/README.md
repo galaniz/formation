@@ -34,3 +34,15 @@ _Parameters:_
 | `done` | `function` | `() => {}` |
 | `delay` | `object` | <pre lang="js">{<br>&nbsp;open: 200,<br>&nbsp;close: 200<br>}</pre> |
 | `isOverflowing` | `boolean` | `false` |
+
+## Skip Link
+
+### `skipLink( link )`
+
+Add/remove `--show` class from link on focus/blur.
+
+_Parameters:_
+
+* `link`  
+_Type:_ `HTMLElement`  
+_Required:_ true 

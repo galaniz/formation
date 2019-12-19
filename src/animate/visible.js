@@ -5,12 +5,12 @@
  */
 
 import {
-	addClass, 
-	hasClass, 
-	removeClass, 
-	prefix, 
-	mergeObjects, 
-	getScrollY, 
+	addClass,
+	hasClass,
+	removeClass,
+	prefix,
+	mergeObjects,
+	getScrollY,
 	subscribe
 } from '../utils/utils';
 
@@ -27,7 +27,7 @@ export default class Visible {
 	*/
 
 	constructor( args ) {
-		
+
        /*
         * Public variables
         * ----------------
@@ -39,7 +39,7 @@ export default class Visible {
         this.visibleOffset = 0;
         this.classes = [];
         this.delay = 0;
-        this.wait = false;
+        this.wait = '';
         this.sticky = false;
         this.stickyOffset = 0;
         this.stickyDelay = 0;
@@ -95,7 +95,7 @@ export default class Visible {
         // offset / dimensions info for item
         this._rect = {
         	top: 0,
-        	bottom: 0, 
+        	bottom: 0,
         	height: 0
         };
 
@@ -113,7 +113,7 @@ export default class Visible {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -128,7 +128,7 @@ export default class Visible {
 			return false;
 		} else {
 			if( this._withinBreakpoints() )
-				this._setItemRect();	
+				this._setItemRect();
 		}
 
 		if( this.parallax )
@@ -169,10 +169,10 @@ export default class Visible {
 			rect = visibleItem.getBoundingClientRect();
 
 		this._scrollY = getScrollY();
-					
+
 		this._rect = {
 			// top: visibleItem.offsetTop,
-			top: rect.top + this._scrollY, 
+			top: rect.top + this._scrollY,
 			bottom: rect.bottom + this._scrollY,
 			height: rect.height
 		};
@@ -197,8 +197,8 @@ export default class Visible {
     	if( hasClass( this.item, this._classes ) ) {
 			removeClass( this.item, this._classes );
 			this.endVisible();
-		} 
-		
+		}
+
     	if( this.sticky ) {
     		removeClass( this.item, '--top --bottom --sticky' );
     	}
@@ -220,14 +220,14 @@ export default class Visible {
 	_visible() {
 		if( this.visibleTop ) {
 			return ( ( this._scrollY >= this._rect.top - this.visibleOffset ) && this._scrollY <= this._rect.bottom - this.visibleOffset );
-		} else {	
+		} else {
 			return ( ( this._scrollY + this._viewportHeight >= this._rect.top ) && this._scrollY <= this._rect.bottom );
 		}
 	}
 
     _stickyVisible() {
-    	return ( 
-			( this._scrollY >= this._rect.top - this.stickyOffset ) && 
+    	return (
+			( this._scrollY >= this._rect.top - this.stickyOffset ) &&
 			( this._scrollY <= this._rect.bottom - ( this._stickyItemHeight + this.stickyOffset ) )
 		);
     }
@@ -237,7 +237,7 @@ export default class Visible {
     * --------------
     */
 
-	_scrollHandler() {		
+	_scrollHandler() {
 		this._scrollY = getScrollY();
 
 		if( this._withinBreakpoints() ) {
@@ -254,7 +254,7 @@ export default class Visible {
 			} else {
 				this._parallaxScrollY = null;
 
-				if( this.allowUnset ) 
+				if( this.allowUnset )
 					this._unset();
 			}
 

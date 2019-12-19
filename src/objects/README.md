@@ -130,7 +130,7 @@ _Parameters:_
 | `url` | `string` | `''` | Required. Url to make request.
 | `success` | `function` | `() => {}` | Callback when sucessfully submitted.
 | `error` | `function` | `() => {}` | Callback when error submitting form.
-| `result` | `object` | <pre>{<br>container: null,<br>textContainer: null,<br>text: {<br>&nbsp;&nbsp;error: 'Oops! Looks like something went wrong. Please try again later.',<br>&nbsp;&nbsp;success: 'Successfully submitted!'<br>&nbsp;}<br>}</pre> |
+| `result` | `object` | <pre lang="js">{<br>container: null,<br>textContainer: null,<br>text: {<br>&nbsp;&nbsp;error: 'Oops! Looks like something went wrong. Please try again later.',<br>&nbsp;&nbsp;success: 'Successfully submitted!'<br>&nbsp;}<br>}</pre> |
 
 _Methods:_
 
@@ -161,14 +161,14 @@ _Parameters:_
 | `ajaxPpp` | `int` | `0` | How many posts/items to load. Uses offset if 0.
 | `total` | `int` | `0` | Required. Total number of posts/items.
 | `data` | `object` | `{}` | Key : value pairs passed into body of request.
-| `filters` | `array` of `objects` | `[]` | <pre>{<br>&nbsp;item: HTMLElement,<br>&nbsp;type: 'select', 'radio' or 'checkbox'<br>}</pre>
+| `filters` | `array` of `objects` | `[]` | <pre lang="js">{<br>&nbsp;item: HTMLElement,<br>&nbsp;type: 'select', 'radio' or 'checkbox'<br>}</pre>
 | `filtersLoader` | `HTMLElement` | `null` |
 | `insertInto` | `HTMLElement` | `null` | Required.
 | `insertLocation` | `string` | `'beforeend'` |
 | `onInsert` | `function` | `() => {}` |
 | `afterInsert` | `function` | `() => {}` |
 | `decrement` | `boolean` | `false` | If true, decrease offset instead of increase.
-| `noResults` | `object` | <pre>{<br>&nbsp;containers: [],<br>&nbsp;buttons: []<br>}</pre> |
+| `noResults` | `object` | <pre lang="js">{<br>&nbsp;containers: [],<br>&nbsp;buttons: []<br>}</pre> |
 
 ## Modal
 
