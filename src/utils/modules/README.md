@@ -200,7 +200,7 @@ _Type:_ `object`
 _Required:_ true
 
 * `callback`   
-If function, pass current property and value.
+If function, pass current property and value.  
 _Type:_ `boolean|function`  
 
 * `condition`   
@@ -236,7 +236,7 @@ _Type:_ `object`
 _Required:_ true
 
 * `done`  
-Callback when done recursing through meta and setting e object.
+Callback when done recursing through meta and setting e object.  
 _Type:_ `function`  
 _Default:_ `() => {}`  
 
@@ -289,12 +289,12 @@ Publish event by running callback stored in subscriptions by `name`. Import from
 _Parameters:_
 
 * `name`  
-_Type:_ `string`
+_Type:_ `string`  
 _Required:_ true  
 
-* `args`
-Passed to callback stored in subscriptions.
-_Type:_ `array`
+* `args`  
+Passed to callback stored in subscriptions.  
+_Type:_ `array`  
 _Default:_ `[]`
 
 #### `subscribe( name, callback )`
@@ -345,7 +345,7 @@ _Required:_ true
 
 ```js
 {
-  method: 'POST', // or 'GET',
+  method: 'POST', // or 'GET'
   url: 'http://someapi.com',
   headers: {
     'Content-type': 'application/json'

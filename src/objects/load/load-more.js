@@ -5,12 +5,12 @@
  */
 
 // functions
-import { 
+import {
 	removeClass,
 	addClass,
-	mergeObjects, 
-	request, 
-	disableButtonLoader, 
+	mergeObjects,
+	request,
+	disableButtonLoader,
 	urlEncode,
 	imagesLoaded
 } from '../../utils/utils';
@@ -28,7 +28,7 @@ export default class LoadMore {
 	*/
 
 	constructor( args ) {
-		
+
        /*
         * Public variables
         * ----------------
@@ -45,11 +45,11 @@ export default class LoadMore {
         this.filtersLoader = null;
 
         this.noResults = {
-        	containers: [], 
+        	containers: [],
         	buttons: []
         };
 
-        this.type = null;
+        this.type = '';
         this.offset = 0;
         this.ajaxPpp = 0;
         this.decrement = false;
@@ -73,7 +73,7 @@ export default class LoadMore {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -86,8 +86,8 @@ export default class LoadMore {
 		// check that required variables not null
 		if( !this.url ||
 			!this.button ||
-			!this.loader || 
-			!this.type || 
+			!this.loader ||
+			!this.type ||
 			!this.offset ||
 			!this.total ||
 			!this.insertInto )
@@ -144,9 +144,9 @@ export default class LoadMore {
 								f.item.clear();
 							} else {
 								removeClass( f.item, '--inactive' );
-								
+
 								let type = this._getType( f.item );
-							
+
 								switch( type ) {
 									case 'checkbox':
 									case 'radio':
@@ -176,8 +176,8 @@ export default class LoadMore {
 					this._load( 'reset-no-res' );
 				} );
 			} );
-		} 
-	
+		}
+
 		return true;
 	}
 
@@ -186,7 +186,7 @@ export default class LoadMore {
 	* -------
 	*/
 
-	// when filters change reset offset, postCount and total 
+	// when filters change reset offset, postCount and total
 	_reset() {
 		this._data.offset = 0;
 		this._data.postCount = 0;
@@ -195,14 +195,14 @@ export default class LoadMore {
 	_getType( input ) {
 		let type = input.tagName.toLowerCase();
 
-		if( type === 'input' ) 
+		if( type === 'input' )
 			type = input.type;
 
 		return type;
 	}
 
 	_showFilterLoader( show = true, delay = false ) {
-		if( !this.filtersLoader ) 
+		if( !this.filtersLoader )
 			return;
 
 		if( show ) {
@@ -242,7 +242,7 @@ export default class LoadMore {
 	_afterResponse( reset, rowCount, total ) {
 		this._data.postCount += rowCount;
 
-        // get new total 
+        // get new total
         if( reset ) {
         	this._data.offset = rowCount;
         	this._data.total = total;
@@ -327,8 +327,8 @@ export default class LoadMore {
 
     	setTimeout( () => {
     		// fetch more posts
-	    	request( { 
-				method: 'POST', 
+	    	request( {
+				method: 'POST',
 				url: this.url,
 				headers: { 'Content-type': 'application/x-www-form-urlencoded' },
 				body: encodedData
@@ -347,13 +347,13 @@ export default class LoadMore {
 
 		        	return;
 				}
-		    
+
 		        let result = JSON.parse( response ),
 		        	rowCount = result.row_count,
 		        	output = result.output,
 		        	total = parseInt( result.total );
 
-		        if( reset ) 
+		        if( reset )
 		        	this.insertInto.innerHTML = '';
 
 		        if( rowCount > 0 && output != '' ) {
