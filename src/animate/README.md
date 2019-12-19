@@ -33,6 +33,34 @@ _Parameters:_
 | `parallax` | `object` | <pre lang="js">{<br>&nbsp;rate: 0.2,<br>&nbsp;x: 0,<br>&nbsp;y: 0,<br>&nbsp;z: 0<br>}</pre> |
 | `breakpoints` | `object` | <pre lang="js">{<br>&nbsp;min: 0,<br>&nbsp;max: 99999<br>}</pre> |
 
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`parallax`</td>
+      <td>`object`</td>
+      <td>
+      ```js
+      {
+        rate: 0.2,
+        x: 0,
+        y: 0,
+        z: 0
+      }
+      ```
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
 ## Transition
 
 ### `transition( links, transitionElement, delay )`
