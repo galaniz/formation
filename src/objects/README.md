@@ -74,7 +74,8 @@ _Default:_ `false`
 
 * `filter`  
 _Type:_ `boolean|function`  
-_Default:_ `false`
+_Default:_ `false`  
+_Example:_
 
 ```js
 let filter = ( args, inputs ) => {
@@ -95,8 +96,8 @@ Clear value of input.
 
 _Parameters:_
 
-* `exclude`  
-List of input names to exclude from being cleared.
+* `exclude`    
+List of input names to exclude from being cleared.  
 _Type:_ `array`  
 _Default:_ `[]`
 
@@ -122,14 +123,14 @@ _Parameters:_
 | `submit` | `HTMLElement` | `null` | Required.
 | `inputs` | `HTMLCollection` | `null` | Required. Inputs to get data from.
 | `filterInputs` | `boolean/function` | `false` | If function, used  as [`filter`]()
-| `data` | `object` | `{}` | Key => value pairs passed into body of request.
+| `data` | `object` | `{}` | Key : value pairs passed into body of request.
 | `loader` | `HTMLElement` | `null` | Required.
 | `shake` | `boolean` | `false` | [`class Form`]()
 | `siteKey` | `string` | `''` | Required. Google reCAPTCHA site key.
 | `url` | `string` | `''` | Required. Url to make request.
 | `success` | `function` | `() => {}` | Callback when sucessfully submitted.
 | `error` | `function` | `() => {}` | Callback when error submitting form.
-| `result` | `object` | <code>{<br>container: null,<br>textContainer: null,<br>text: {<br>&nbsp;&nbsp;error: 'Oops! Looks like something went wrong. Please try again later.',<br>&nbsp;&nbsp;success: 'Successfully submitted!'<br>&nbsp;}<br>}</code> |
+| `result` | `object` | <pre>{<br>container: null,<br>textContainer: null,<br>text: {<br>&nbsp;&nbsp;error: 'Oops! Looks like something went wrong. Please try again later.',<br>&nbsp;&nbsp;success: 'Successfully submitted!'<br>&nbsp;}<br>}</pre> |
 
 _Methods:_
 
@@ -159,15 +160,15 @@ _Parameters:_
 | `offset` | `int` | `0` | Required.
 | `ajaxPpp` | `int` | `0` | How many posts/items to load. Uses offset if 0.
 | `total` | `int` | `0` | Required. Total number of posts/items.
-| `data` | `object` | `{}` | Key => value pairs passed into body of request.
-| `filters` | `array` of `objects` | `[]` | {<br>&nbsp;item: HTMLElement,<br>&nbsp;type: 'select', 'radio' or 'checkbox'<br>}
+| `data` | `object` | `{}` | Key : value pairs passed into body of request.
+| `filters` | `array` of `objects` | `[]` | <pre>{<br>&nbsp;item: HTMLElement,<br>&nbsp;type: 'select', 'radio' or 'checkbox'<br>}</pre>
 | `filtersLoader` | `HTMLElement` | `null` |
 | `insertInto` | `HTMLElement` | `null` | Required.
 | `insertLocation` | `string` | `'beforeend'` |
 | `onInsert` | `function` | `() => {}` |
 | `afterInsert` | `function` | `() => {}` |
 | `decrement` | `boolean` | `false` | If true, decrease offset instead of increase.
-| `noResults` | `object` | <code>{<br>&nbsp;containers: [],<br>&nbsp;buttons: []<br>}</code> |
+| `noResults` | `object` | <pre>{<br>&nbsp;containers: [],<br>&nbsp;buttons: []<br>}</pre> |
 
 ## Modal
 
@@ -198,6 +199,70 @@ _Parameters:_
 
 ### `class BaseSlider`
 
+Base slider ( to create fade/carousel sliders ).
+
+_Parameters:_
+
+* `args`  
+_Type:_ `object`  
+_Default:_ `{}`  
+_Parameters:_
+
+| Name | Type | Default | Description
+|--|--|--|--|
+| `slider` | `HTMLElement` | `null` | Required.
+| `items` | `HTMLCollection` | `null` | Required.
+| `loop` | `boolean` | `false` |
+| `autoplay` | `boolean` | `false` |
+| `autoplaySpeed` | `int` | `8000` | In milliseconds.
+| `prev` | `HTMLElement` | `null` |
+| `next` | `HTMLElement` | `null` |
+| `nav` | `HTMLElement` | `null` |
+| `navItemClass` | `string` | `''` |
+| `currentIndex` | `int` | `0` |
+
+_Methods:_
+
+#### `goTo( index )`
+
+Go to slide.
+
+_Parameters:_
+
+* `index`  
+_Type:_ `int`  
+_Required:_ true
+
 ### `class FadeSlider`
 
+Slider that fades in and out. Extends [`class BaseSlider`]()
+
+* `args`  
+_Type:_ `object`  
+_Default:_ `{}`  
+_Parameters:_
+
+| Name | Type | Default | Description
+|--|--|--|--|
+| `transitionDuration` | `int` | `500` |
+| `overlayItems` | `boolean` | `false` | Overlay items on top of each other.
+| `showLast` | `boolean` | `false` | Fade without flash of background.
+
 ### `class Slider`
+
+Carousel slider. Extends [`class BaseSlider`]()
+
+* `args`  
+_Type:_ `object`  
+_Default:_ `{}`  
+_Parameters:_
+
+| Name | Type | Default | Description
+|--|--|--|--|
+| `easing` | `string` | `'ease'` |
+| `duration` | `int` | `500` |
+| `padding` | `object` | `{}` | Expects breakpoint `int` : padding `int`
+| `center` | `boolean` | `false` |
+| `linkClick` | `function` | `() => {}` |
+| `endMove` | `function` | `() => {}` |
+| `onResize` | `function` | `() => {}` |

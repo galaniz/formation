@@ -2,7 +2,7 @@
 
 A collection of front end components and utilities.
 
-## Utilities
+### Utilities
 
 #### Sass
 * [placeholder selectors](https://github.com/galaniz/formation/blob/master/src/utils/atomic/_props.scss)
@@ -14,10 +14,10 @@ A collection of front end components and utilities.
   * [modules](https://github.com/galaniz/formation/tree/master/src/utils/modules)
   * [utils](https://github.com/galaniz/formation/blob/master/src/utils/utils.js) (all modules in one file)
 
-## [Configuration](https://github.com/galaniz/formation/tree/master/src/config)
+### [Configuration](https://github.com/galaniz/formation/tree/master/src/config)
 
-## [Components](https://github.com/galaniz/formation/tree/master/src/components)
+### [Components](https://github.com/galaniz/formation/tree/master/src/components)
 
-## [Objects](https://github.com/galaniz/formation/tree/master/src/objects)
+### [Objects](https://github.com/galaniz/formation/tree/master/src/objects)
 
-## [Animate](https://github.com/galaniz/formation/tree/master/src/animate)
+### [Animate](https://github.com/galaniz/formation/tree/master/src/animate)

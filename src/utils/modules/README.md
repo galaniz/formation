@@ -299,7 +299,7 @@ _Default:_ `[]`
 
 #### `subscribe( name, callback )`
 
-Subscribe to event by storing `name` => `callback`. Import from pub-sub.js
+Subscribe to event by storing `name` : `callback`. Import from pub-sub.js
 
 _Parameters:_
 
