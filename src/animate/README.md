@@ -44,17 +44,17 @@ _Parameters:_
   </thead>
   <tbody>
     <tr>
-      <td>`parallax`</td>
-      <td>`object`</td>
+      <td><code>parallax</code></td>
+      <td><code>object</code></td>
       <td>
-      ```js
+      <pre lang="js">
       {
         rate: 0.2,
         x: 0,
         y: 0,
         z: 0
       }
-      ```
+      </pre>
       </td>
       <td></td>
     </tr>
