@@ -32,5 +32,5 @@ _Parameters:_
 | `onToggle` | `function` | `() => {}` |
 | `endToggle` | `function` | `() => {}` |
 | `done` | `function` | `() => {}` |
-| `delay` | `object` | <pre>{<br>&nbsp;open: 200,<br>&nbsp;close: 200<br>}</pre> |
+| `delay` | `object` | <pre lang="js">{<br>&nbsp;open: 200,<br>&nbsp;close: 200<br>}</pre> |
 | `isOverflowing` | `boolean` | `false` |
