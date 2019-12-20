@@ -108,7 +108,7 @@ $g-grid: (
 #### `$g-props`
 
 _Type:_ `map`  
-_Default:_ See utility [props](https://github.com/galaniz/formation/blob/master/src/utils/atomic/_props.scss)
+_Default:_ See utility [props](/src/utils/atomic/_props.scss)
 
 #### `$g-context`
 
