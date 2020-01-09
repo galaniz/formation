@@ -6,19 +6,11 @@
 
 .c-nav__button {
 	@extend %u-position-relative;
+	@extend %u-touch-50;
 	.c-nav:not( .--overflow ) & {
 		@extend %u-display-none;
 	}
 	width: 50px;
-	&::before {
-		content: '';
-		@extend %u-position-absolute;
-		@extend %u-width-100;
-		transform: translate( -50%, -50% );
-		height: 50px;
-		top: 50%;
-		left: 50%;
-	}
 }
 
 .c-nav__overlay {
