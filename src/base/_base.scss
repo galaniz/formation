@@ -8,8 +8,8 @@
     @extend %u-color-inherit;
 }
 
-*, 
-*:before, 
+*,
+*:before,
 *:after {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -20,7 +20,7 @@ body {
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overscroll-behavior-y: none; 
+    overscroll-behavior-y: none;
     font-size: 100%;
     &.u-overflow-hidden {
         -webkit-overflow-scrolling: touch;
@@ -42,7 +42,7 @@ p,
 blockquote,
 input,
 textarea,
-button, 
+button,
 fieldset,
 figure {
     margin: 0;
@@ -53,7 +53,7 @@ figure {
 
 input,
 textarea,
-button, 
+button,
 fieldset,
 select {
     border: 0;
@@ -77,19 +77,19 @@ select {
     }
 }
 
-// clears the 'X' from ie 
+// clears the 'X' from ie
 input::-ms-clear,
-input::-ms-reveal { 
+input::-ms-reveal {
     display: none;
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
 }
 
-// clears the 'X' from chrome 
+// clears the 'X' from chrome
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration { 
+input[type="search"]::-webkit-search-results-decoration {
     display: none;
 }
 
@@ -141,14 +141,14 @@ a {
 /* Headings */
 
 h1,
-h2, 
-h3, 
-h4, 
-h5, 
+h2,
+h3,
+h4,
+h5,
 h6 {
     & a {
         @extend %u-color-inherit;
-    }   
+    }
 }
 
 /* Lists */
