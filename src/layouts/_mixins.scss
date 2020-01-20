@@ -1,5 +1,5 @@
 
-/* 
+/*
  * Make container classes with breakpoints
  * ---------------------------------------
  */
@@ -32,7 +32,7 @@
             @extend %u-margin-right-auto;
             @extend %u-margin-left-auto;
             @extend %u-margin-padding-0;
-            max-width: $width;
+            max-width: calcRem( $width );
             @include breakpointMax( "container#{$suffix}" ) {
                 padding-left: $g-containerPadding;
                 padding-right: $g-containerPadding;
@@ -41,7 +41,7 @@
     }
 }
 
-/* 
+/*
  * Make grid classes with breakpoints
  * ----------------------------------
  */

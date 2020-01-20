@@ -5,8 +5,8 @@
  */
 
 import {
-	addClass, 
-	removeClass, 
+	addClass,
+	removeClass,
 	closest,
 	urlEncode,
 	mergeObjects
@@ -73,7 +73,7 @@ export default class Form {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -112,12 +112,12 @@ export default class Form {
 					fieldGroupSet.push( name );
 				}
 			} else {
-				// doesn't exist so create new object of input data 
+				// doesn't exist so create new object of input data
 				let reqAttr = input.getAttribute( 'aria-required' ),
 					required = ( reqAttr == 'true' || reqAttr == '1' ),
 					type = input.tagName.toLowerCase();
 
-				if( type === 'input' ) 
+				if( type === 'input' )
 					type = input.type;
 
 				this._inputTypes[name] = type;
@@ -165,7 +165,7 @@ export default class Form {
 		// get values from inputGroup
 		inputs.forEach( ( input ) => {
 			let value = '';
-			
+
 			switch( type ) {
 				case 'checkbox':
 				case 'radio':
@@ -191,7 +191,7 @@ export default class Form {
 				valid = true;
 			}
 		} else { // inputGroup has values
-			// check if inputs like email, url etc are valid 
+			// check if inputs like email, url etc are valid
 			switch( type ) {
 				case 'email':
 					if( values[0].match( this._exp.email ) ) {
@@ -250,7 +250,7 @@ export default class Form {
 	}
 
 	_setErrorMessage( inputs, name, field, message ) {
-		// error element id 
+		// error element id
 		let errorID = name + '-error';
 
 		// check if error element exists
@@ -260,12 +260,12 @@ export default class Form {
 			let messageElement = error.querySelector( '.o-form-error__message' );
 			messageElement.textContent = message;
 		} else { // doesn't exist
-			field.insertAdjacentHTML( 'beforeend', 
+			field.insertAdjacentHTML( 'beforeend',
 				`<div id="${ errorID }" class="o-form-error${ this.errorClass }">
-					<span class="o-form-error__message">
+					<span class="o-form-error__message" role="alert">
 						${ message }
 					</span>
-				</div>` 
+				</div>`
 			);
 		}
 
@@ -280,12 +280,12 @@ export default class Form {
 	}
 
 	_removeErrorMessage( inputs, name, field ) {
-		// error element id 
+		// error element id
 		let errorID = name + '-error';
 
 		// check if error element exists
 		let error = document.getElementById( errorID );
-		
+
 		if( error !== null ) // exists
 			field.removeChild( error );
 
@@ -320,7 +320,7 @@ export default class Form {
 		for( let name in this._inputGroups ) {
 			let validGroup = this._validateGroup( this._inputGroups[name], name );
 
-			if( !validGroup ) 
+			if( !validGroup )
 				validForm = false;
 		}
 

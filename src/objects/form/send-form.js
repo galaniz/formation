@@ -6,13 +6,13 @@
  * -------
  */
 
-import { 
-	addClass, 
+import {
+	addClass,
 	removeClass,
 	recurseObject,
-	mergeObjects, 
+	mergeObjects,
 	disableButtonLoader,
-	request 
+	request
 } from '../../utils/utils';
 
 import Form from './form';
@@ -30,7 +30,7 @@ export default class SendForm {
 	*/
 
 	constructor( args ) {
-		
+
        /*
         * Public variables
         * ----------------
@@ -84,7 +84,7 @@ export default class SendForm {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -97,13 +97,13 @@ export default class SendForm {
 		// check that required variables not null
 		let requiredError = false;
 
-		recurseObject( this, 
+		recurseObject( this,
 			( prop, value ) => {
-				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value ) 
+				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value )
 					requiredError = true;
 			},
 			( prop, value ) => {
-				if( prop.indexOf( '_' ) > -1 ) 
+				if( prop.indexOf( '_' ) > -1 )
 					return false;
 
 				return true;
@@ -132,7 +132,7 @@ export default class SendForm {
 	/*
 	 * Helper methods
 	 * --------------
-	 */	
+	 */
 
 	// display results of form submission
 	_displayResult( error = false ) {
@@ -146,7 +146,7 @@ export default class SendForm {
 	/*
 	 * Event Handlers
 	 * --------------
-	 */	
+	 */
 
 	_submit( e ) {
 		e.preventDefault();
@@ -187,8 +187,8 @@ export default class SendForm {
 
 			console.log( 'DATA', data );
 
-			request( { 
-    			method: 'POST', 
+			request( {
+    			method: 'POST',
     			url: this.url,
     			headers: { 'Content-type': 'application/x-www-form-urlencoded' },
     			body: data
@@ -199,12 +199,16 @@ export default class SendForm {
 		        // enable button
 				disableButtonLoader( this.submit, this.loader, '--hide', true );
 
-		    	this._displayResult();
-		    	this.success.call( this, JSON.parse( response ) );
+				try {
+					this.success.call( this, JSON.parse( response ) );
+					this._displayResult();
+				} catch( e ) {
+					this._displayResult( true );
+				}
 		    } )
 		    .catch( xhr => {
 		        console.log( 'ERROR', xhr );
-		    	
+
 		        // enable button
 				disableButtonLoader( this.submit, this.loader, '--hide', true );
 
@@ -215,9 +219,9 @@ export default class SendForm {
 	}
 
 	/*
-	 * Public methods	
+	 * Public methods
 	 * --------------
-	 */	
+	 */
 
 	clear( exclude = [] ) {
 		if( this._form )
