@@ -5,7 +5,7 @@
  */
 
 import {
-	addClass, 
+	addClass,
 	removeClass,
 	mergeObjects
 } from '../../utils/utils';
@@ -23,7 +23,7 @@ export default class BaseSlider {
 	*/
 
 	constructor( args = {} ) {
-		
+
        /*
         * Public variables
         * ----------------
@@ -83,7 +83,7 @@ export default class BaseSlider {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -188,7 +188,7 @@ export default class BaseSlider {
 				} else {
 					addClass( item, classes );
 				}
-				
+
 				item.setAttribute( 'data-index', i );
 				item.addEventListener( 'click', this._nav.bind( this ) );
 
@@ -209,7 +209,7 @@ export default class BaseSlider {
 
 						navItems.appendChild( navItem );
 					}
-					
+
 					this.nav.appendChild( navItems );
 					this.slider.setAttribute( 'data-has-dots', 'true' );
 				} else {
@@ -251,9 +251,9 @@ export default class BaseSlider {
 				removeClass( this._navItems[lastIndex], '--active' );
 				addClass( this._navItems[index], '--active' );
 			}
-		}	
+		}
 
-		if( this.prev ) {
+		if( this.prev && !this.loop ) {
 			let disable = false;
 
 			if( index <= 0 )
@@ -262,7 +262,7 @@ export default class BaseSlider {
 			this.prev.disabled = disable;
 		}
 
-		if( this.next ) {
+		if( this.next && !this.loop ) {
 			let disable = false;
 
 			if( index >= this._dotsLastIndex  )
@@ -278,7 +278,7 @@ export default class BaseSlider {
 
 		if( index > this._dotsLastIndex )
 			index = this.loop ? 0 : this._dotsLastIndex;
-		
+
 		let lastIndex = this.currentIndex;
 
 		/* Set nav items / prev next buttons */
@@ -315,7 +315,7 @@ export default class BaseSlider {
 	        }
 	    }
 
-		if( !this._autoStart ) 
+		if( !this._autoStart )
 			this._autoStart = now;
 
 		let progress = now - this._autoStart,
@@ -367,12 +367,12 @@ export default class BaseSlider {
 
 	_prev( e ) {
 		e.preventDefault();
-		this._goTo( this.currentIndex - 1 );
+		this._goTo( this._getPrevIndex( this.currentIndex ) );
 	}
 
 	_next( e ) {
 		e.preventDefault();
-		this._goTo( this.currentIndex + 1 );
+		this._goTo( this._getNextIndex( this.currentIndex ) );
 	}
 
    /*
