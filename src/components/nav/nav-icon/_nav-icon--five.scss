@@ -1,38 +1,69 @@
-
 /*
  * Nav icon: five
  * --------------
  */
 
 .c-nav-icon.--five {
-	& .c-nav-icon__top,
+	$_navIconY: ( ( mapDeepGet( $g-nav, 'icon', 'margin' ) * 2 ) + ( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) * 3 ) ) * 0.47;
+
+	& .c-nav-icon__top {
+		animation: 300ms ease forwards _collapseRotateTopReverse;
+	}
 	& .c-nav-icon__bottom {
-		transform: translateY( 0 ) rotate( 0deg );
-		transition: transform 150ms ease;
+		animation: 300ms ease forwards _collapseRotateBottomReverse;
 	}
 	& .c-nav-icon__middle {
 		@extend %u-opacity-1;
 		transition: opacity 150ms ease 100ms;
 	}
-	.--show & {
+	.c-nav__button.--show & {
 		& .c-nav-icon__middle {
 			@extend %u-opacity-0;
 			transition: opacity 150ms ease;
 		}
-	}
-	.--collapse & {
 		& .c-nav-icon__top {
-			transform: translateY( $_navIconY );
+			animation: 300ms ease forwards _collapseRotateTop;
 		}
 		& .c-nav-icon__bottom {
-			transform: translateY( #{ $_navIconY * -1 } );
+			animation: 300ms ease forwards _collapseRotateBottom;
 		}
 	}
-	.--rotate & {
-		& .c-nav-icon__top {
+
+	@keyframes _collapseRotateTopReverse {
+		0% {
 			transform: translateY( $_navIconY ) rotate( 45deg );
 		}
-		& .c-nav-icon__bottom {
+		100% {
+			transform: translateY( 0 ) rotate( 0 );
+		}
+	}
+
+	@keyframes _collapseRotateBottomReverse {
+		0% {
+			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+		}
+		100% {
+			transform: translateY( 0 ) rotate( 0 );
+		}
+	}
+
+	@keyframes _collapseRotateTop {
+		0% {
+			transform: translateY( $_navIconY );
+		}
+		100% {
+			transform: translateY( $_navIconY ) rotate( 45deg );
+		}
+	}
+
+	@keyframes _collapseRotateBottom {
+		0% {
+			transform: translateY( 0 ) rotate( 0 );
+		}
+		1% {
+			transform: translateY( #{ $_navIconY * -1 } );
+		}
+		100% {
 			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
 		}
 	}

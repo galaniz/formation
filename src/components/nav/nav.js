@@ -1,16 +1,15 @@
-
 /*
  * Imports
  * -------
  */
 
-import { 
-	addClass, 
-	hasClass, 
-	removeClass, 
-	mergeObjects, 
-	cascade, 
-	prefix, 
+import {
+	addClass,
+	hasClass,
+	removeClass,
+	mergeObjects,
+	cascade,
+	prefix,
 } from '../../utils/utils';
 
 /*
@@ -33,12 +32,11 @@ export default class Nav {
         */
 
         this.nav = null;
-        this.list = null;
+        this.list = null; // or array
         this.overflow = null;
-        this.overflowList = null;
+        this.overflowList = null; // or array
         this.items = null;
         this.itemSelector = '';
-        this.links = null;
         this.button = null;
         this.overlay = null;
         this.transition = null;
@@ -72,9 +70,11 @@ export default class Nav {
         // escape key for closing nav
     	this._esc = [27, 'Escape'];
 
-        // put items into groups 
+        // put items into groups
         this._overflowGroups = {};
       	this._overflowGroupsLength = 0;
+
+        this._listIndexes = {};
 
         // store groups currently overflown
         this._currentOverflowGroups = [];
@@ -95,7 +95,7 @@ export default class Nav {
 
         let init = this._initialize();
 
-        if( !init ) 
+        if( !init )
         	return false;
 	}
 
@@ -108,13 +108,12 @@ export default class Nav {
 		// check that required variables not null
 		let error = false,
 			required = [
-				'nav', 
-				'list', 
+				'nav',
+				'list',
 				'overflow',
 				'overflowList',
-				'items', 
+				'items',
 				'itemSelector',
-				'links',
 				'button'
 			];
 
@@ -128,33 +127,48 @@ export default class Nav {
 		if( error )
 			return false;
 
-		this.items = Array.from( this.items );
-		this.links = Array.from( this.links );
+        /* Convert list(s) and overflow list(s) to arrays */
 
-		/* Event listeners */ 
+		this.list = !Array.isArray( this.list ) ? [this.list] : this.list;
+		this.overflowList = !Array.isArray( this.overflowList ) ? [this.overflowList] : this.overflowList;
+
+		this.items = Array.from( this.items );
+
+		/* Event listeners */
 
 		this.button.addEventListener( 'click', this._clickHandler.bind( this ) );
 		this.nav.addEventListener( 'keydown', this._keyDownHandler.bind( this ) );
-		this.overflowList.addEventListener( 'focusout', this._listFocusHandler.bind( this ) );
+		this.overflow.addEventListener( 'focusout', this._overflowFocusHandler.bind( this ) );
 
 		if( this.overlay )
 			this.overlay.addEventListener( 'click', this._clickHandler.bind( this ) );
-		
+
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
 		// set up overflow groups
 		this.items.forEach( ( item, index ) => {
-			let overflowGroupIndex = parseInt( item.getAttribute( 'data-overflow-group' ) );
+			let overflowGroupIndex = parseInt( item.getAttribute( 'data-overflow-group' ) ),
+                listIndex = 0;
+
+            if( !item.hasAttribute( 'data-list-index' ) ) {
+                item.setAttribute( 'data-list-index', listIndex );
+            } else {
+                listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
+            }
 
 			if( isNaN( overflowGroupIndex ) )
 				overflowGroupIndex = index;
 
 			if( !this._overflowGroups.hasOwnProperty( overflowGroupIndex ) ) {
 				this._overflowGroups[overflowGroupIndex] = [];
+                this._listIndexes[overflowGroupIndex] = [];
 				this._overflowGroupsLength++;
 			}
 
 			this._overflowGroups[overflowGroupIndex].push( item );
+
+            if( this._listIndexes[overflowGroupIndex].indexOf( listIndex ) == -1 )
+                this._listIndexes[overflowGroupIndex].push( listIndex );
 		} );
 
 		window.addEventListener( 'load', () => {
@@ -182,29 +196,49 @@ export default class Nav {
 		this._lastOverflowFocus = null;
 
 		if( this._currentOverflowGroups.length > 0 ) {
-			let frag = document.createDocumentFragment(),
-				appendFrag = true;
+            let frag = {},
+				appendFrag = true,
+                listIndexes = [];
+
+            for( let overflowGroupIndex in this._listIndexes ) {
+                this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+                    frag[index] = document.createDocumentFragment();
+                } );
+            }
 
 			this.items.forEach( ( item, i ) => {
+                let listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
+
 				// insert at specific index
 				if( item.hasAttribute( 'data-index' ) ) {
 					appendFrag = false;
 
 					let index = parseInt( item.getAttribute( 'data-index' ) ),
-						refNode = this.list.children[index];
+						refNode = this.list[listIndex].children[index];
 
-					this.list.insertBefore( item, refNode );
-				} else { // insert 
-					frag.appendChild( item );
-				}			
+					this.list[listIndex].insertBefore( item, refNode );
+				} else { // insert
+                    frag[listIndex].appendChild( item );
+				}
+
+                if( listIndexes.indexOf( listIndex ) === -1 )
+                    listIndexes.push( listIndex );
 			} );
 
 			// append overflowing items
-			if( appendFrag )
-				this.list.appendChild( frag );
+			if( appendFrag ) {
+                listIndexes.forEach( ( listIndex ) => {
+                    this.list[listIndex].appendChild( frag[listIndex] );
+                } );
+            }
 		}
 
-		this.overflowList.innerHTML = '';
+        for( let overflowGroupIndex in this._listIndexes ) {
+            this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+                this.overflowList[index].innerHTML = '';
+            } );
+        }
+
 		this._currentOverflowGroups = [];
 	}
 
@@ -214,9 +248,14 @@ export default class Nav {
 		this.afterReset.call( this );
 
 		let overflowGroupIndex = 0,
-			frag = document.createDocumentFragment(),
-			overflow = this._overflowing(),
+            lastOverflowGroupIndex = 0,
+			frag = {},
+			overflow = this._overflowing( this._listIndexes[overflowGroupIndex] ),
 			ogOverflow = overflow;
+
+        this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+            frag[index] = document.createDocumentFragment();
+        } );
 
 		this.isOverflowing = ogOverflow;
 		this.button.style.display = 'block';
@@ -225,13 +264,14 @@ export default class Nav {
 			let overflowGroup = this._overflowGroups[overflowGroupIndex];
 
 			overflowGroup.forEach( ( item ) => {
-				frag.appendChild( item );
+                let listIndex = parseInt( item.getAttribute( 'data-list-index') );
+				frag[listIndex].appendChild( item );
 			} );
 
 			this._currentOverflowGroups.push( overflowGroup );
 
 			overflowGroupIndex++;
-			overflow = this._overflowing();
+			overflow = this._overflowing( this._listIndexes[overflowGroupIndex] );
 
 			if( !overflow ) {
 				// get last child in list
@@ -247,10 +287,14 @@ export default class Nav {
 						break;
 					}
 				}
-			}
+			} else {
+                lastOverflowGroupIndex = overflowGroupIndex;
+            }
 		}
 
-		this.overflowList.appendChild( frag );
+        this._listIndexes[lastOverflowGroupIndex].forEach( ( index ) => {
+            this.overflowList[index].appendChild( frag[index] );
+        } );
 
 		if( this._currentOverflowGroups.length > 0 ) {
 			if( !hasClass( this.nav, '--overflow' ) )
@@ -272,25 +316,32 @@ export default class Nav {
 			done.call( this );
 	}
 
-	// check if items are overflowing / wrapping into new line 
-	_overflowing() {
-		let items = this.list.querySelectorAll( this.itemSelector ),
-			itemsLength = items.length;
+	// check if items are overflowing / wrapping into new line
+	_overflowing( listIndexes = [0] ) {
+        let overflow = false;
 
-		// all items are in overflow element now
-		if( itemsLength === 0 )
-			return false;
+        listIndexes.forEach( ( index ) => {
+            let items = this.list[index].querySelectorAll( this.itemSelector ),
+    			itemsLength = items.length;
 
-		let firstItemOffset = items[0].offsetTop;
-		
-		// reverse loop to start from last item
-		for( let i = itemsLength - 1; i >= 0; i-- ) {
-			if( items[i].offsetTop > firstItemOffset ) {
-				return true;
-			}
-		}
+    		// all items are in overflow element now
+    		if( itemsLength === 0 ) {
+                overflow = false;
+                return;
+            }
 
-		return false;		
+    		let firstItemOffset = items[0].offsetTop;
+
+    		// reverse loop to start from last item
+    		for( let i = itemsLength - 1; i >= 0; i-- ) {
+    			if( items[i].offsetTop > firstItemOffset ) {
+                    overflow = true;
+                    return;
+    			}
+    		}
+        } );
+
+		return overflow;
 	}
 
 	/*
@@ -314,7 +365,7 @@ export default class Nav {
 	_toggle( close = true, setNavOpen = true ) {
 		this.onToggle.call( this );
 
-		this._navOpen = !close; 
+		this._navOpen = !close;
 
 		if( close === false ) {
 			cascade( [
@@ -365,7 +416,7 @@ export default class Nav {
 						removeClass( this.nav, '--open' );
 
 						this._disableBodyScroll( false );
-						this.button.setAttribute( 'aria-expanded', 'false' ); 
+						this.button.setAttribute( 'aria-expanded', 'false' );
 					}
 				},
 				{
@@ -393,14 +444,14 @@ export default class Nav {
 
 	_keyDownHandler( e ) {
 		let key = e.key || e.keyCode || e.which || e.code;
-        
+
         if( this._esc.indexOf( key ) !== -1 )
         	this._toggle();
 	}
 
 	/* Last element focus close nav */
 
-	_listFocusHandler( e ) {
+	_overflowFocusHandler( e ) {
 		if( e.target === this._lastOverflowFocus )
 			this._toggle();
 	}
