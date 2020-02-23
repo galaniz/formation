@@ -120,6 +120,7 @@ export default class Collapsible {
         window.addEventListener( 'load', () => {
             this._setCollapsibleHeight();
             this._toggleCollapsible( false );
+            this._setClass();
         } );
 
         return true;
@@ -129,6 +130,14 @@ export default class Collapsible {
     * Internal helpers
     * ----------------
     */
+
+    _setClass() {
+        if( this._set ) {
+            addClass( this.container, '--set' );
+        } else {
+            removeClass( this.container, '--set' );
+        }
+    }
 
     _setCollapsibleHeight( onSet = false ) {
         if( !this._set )
@@ -219,6 +228,7 @@ export default class Collapsible {
 
     set( set = true ) {
         this._set = set;
+        this._setClass();
 
         if( set ) {
             this._setCollapsibleHeight();
