@@ -5,7 +5,9 @@
  */
 
 .o-collapsible {
-	@extend %u-overflow-hidden;
+	&.--set {
+		@extend %u-overflow-hidden;
+	}
 }
 
 .o-collapsible__icon {
@@ -19,7 +21,10 @@
 }
 
 .o-collapsible__content {
-	@extend %u-overflow-hidden;
-	box-sizing: content-box;
-	transition: height #{$g-defDuration} #{$g-defTimingFunction};
+	.o-collapsible.--set & {
+		@extend %u-overflow-hidden;
+		box-sizing: content-box;
+		transition: height #{$g-defDuration} #{$g-defTimingFunction};
+		will-change: height;
+	}
 }

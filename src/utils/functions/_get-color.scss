@@ -1,0 +1,12 @@
+
+/*
+ * Get color from $g-colors map
+ * ----------------------------
+ *
+ * @param [string] $color
+ * @return [string]
+ */
+
+@function getColor( $color: 'background-light' ) {
+    @return map-get( $g-colors, $color );
+}

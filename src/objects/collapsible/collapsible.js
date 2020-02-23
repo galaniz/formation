@@ -4,12 +4,12 @@
  * -------
  */
 
-import { 
-    mergeObjects, 
-    prefix, 
-    addClass, 
-    removeClass, 
-    hasClass 
+import {
+    mergeObjects,
+    prefix,
+    addClass,
+    removeClass,
+    hasClass
 } from '../../utils/utils';
 
 /*
@@ -32,8 +32,13 @@ export default class Collapsible {
         */
 
         // items
+        this.container = null;
         this.collapsible = null;
         this.trigger = null;
+        this.nestedInstances = [];
+        this.transitionDuration = 300;
+        this.resize = true;
+        this.onSet = () => {};
 
         // merge default variables with args
         mergeObjects( this, args );
@@ -44,12 +49,12 @@ export default class Collapsible {
         */
 
         // for resize event
-        this._resizeTimer; 
+        this._resizeTimer;
         this._viewportWidth = window.innerWidth;
 
         this._collapsibleHeight = 0;
-        this._currentHeight = 0;
 
+        // used in set method
         this._set = true;
 
         // keep track of state
@@ -90,8 +95,27 @@ export default class Collapsible {
         // event listeners
         this.collapsible.addEventListener( 'keydown', this._keyDownHandler.bind( this ) );
         this.trigger.addEventListener( 'click', this._triggerHandler.bind( this ) );
-        
+
         window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
+
+        if( this.nestedInstances.length ) {
+            this.nestedInstances.forEach( ( n ) => {
+                n.onSet = () => {
+                    let ogHeight = '';
+
+                    if( this._open === false ) {
+                        ogHeight = n.collapsible.style.height;
+                        n.collapsible.style.height = '0';
+                    }
+
+                    this._setCollapsibleHeight( true );
+                    this._toggleCollapsible( this._open );
+
+                    if( this._open === false )
+                        n.collapsible.style.height = ogHeight;
+                };
+            } );
+        }
 
         window.addEventListener( 'load', () => {
             this._setCollapsibleHeight();
@@ -106,14 +130,12 @@ export default class Collapsible {
     * ----------------
     */
 
-    _setCollapsibleHeight() {
+    _setCollapsibleHeight( onSet = false ) {
         if( !this._set )
             return;
 
         this.collapsible.style.height = '';
-        this._collapsibleHeight = this.collapsible.clientHeight;
-
-        this.collapsible.style.height = this._currentHeight + 'px';
+        this._collapsibleHeight = this.collapsible.scrollHeight;
     }
 
     _toggleCollapsible( open = true ) {
@@ -123,21 +145,39 @@ export default class Collapsible {
         this._open = open;
         this.trigger.setAttribute( 'aria-expanded', open );
 
+        this.collapsible.style.height = this._collapsibleHeight + 'px';
+
         if( open ) {
-            this.collapsible.style.height = this._collapsibleHeight + 'px';
-            this._currentHeight = this._collapsibleHeight;
+            if( this.container )
+                addClass( this.container, '--expanded' );
+
+            setTimeout( () => {
+                this.collapsible.style.height = '';
+                this.onSet();
+            }, this.transitionDuration );
         } else {
-            this.collapsible.style.height = 0;
-            this._currentHeight = 0;
-        }       
+            setTimeout( () => {
+                this.collapsible.style.height = 0;
+
+                setTimeout( () => {
+                    if( this.container )
+                        removeClass( this.container, '--expanded' );
+
+                    this.onSet();
+                }, this.transitionDuration );
+            }, this.transitionDuration );
+        }
     }
 
    /*
     * Event handlers
     * --------------
     */
-    
+
     _resizeHandler() {
+        if( !this.resize )
+            return;
+
         // throttles resize event
         clearTimeout( this._resizeTimer );
 
@@ -151,11 +191,13 @@ export default class Collapsible {
             }
 
             this._setCollapsibleHeight();
+            this._toggleCollapsible( this._open );
         }, 100 );
     }
 
     _triggerHandler() {
-        this._toggleCollapsible( !this._open );
+        let open = !this._open;
+        this._toggleCollapsible( open );
     }
 
     _keyDownHandler( e ) {
@@ -166,9 +208,8 @@ export default class Collapsible {
 
         let keyCode = this._keyCodes[key];
 
-        if( keyCode === 'ESC' ) {
+        if( keyCode === 'ESC' )
             this._toggleCollapsible( false );
-        }
     }
 
    /*
@@ -181,7 +222,7 @@ export default class Collapsible {
 
         if( set ) {
             this._setCollapsibleHeight();
-            this._toggleCollapsible( false );
+            this._toggleCollapsible( this._open );
         } else {
             this.collapsible.style.height = '';
         }
