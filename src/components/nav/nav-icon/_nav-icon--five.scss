@@ -3,68 +3,68 @@
  * --------------
  */
 
-.c-nav-icon.--five {
-	$_navIconY: ( ( mapDeepGet( $g-nav, 'icon', 'margin' ) * 2 ) + ( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) * 3 ) ) * 0.47;
+ .c-nav-icon.--five {
+ 	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 
-	& .c-nav-icon__top {
-		animation: 300ms ease forwards _collapseRotateTopReverse;
-	}
-	& .c-nav-icon__bottom {
-		animation: 300ms ease forwards _collapseRotateBottomReverse;
-	}
-	& .c-nav-icon__middle {
-		@extend %u-opacity-1;
-		transition: opacity 150ms ease 100ms;
-	}
-	.c-nav__button.--show & {
-		& .c-nav-icon__middle {
-			@extend %u-opacity-0;
-			transition: opacity 150ms ease;
-		}
-		& .c-nav-icon__top {
-			animation: 300ms ease forwards _collapseRotateTop;
-		}
-		& .c-nav-icon__bottom {
-			animation: 300ms ease forwards _collapseRotateBottom;
-		}
-	}
+ 	& .c-nav-icon__top {
+ 		animation: 300ms ease forwards _collapseRotateTopReverse;
+ 	}
+ 	& .c-nav-icon__bottom {
+ 		animation: 300ms ease forwards _collapseRotateBottomReverse;
+ 	}
+ 	& .c-nav-icon__middle {
+ 		@extend %u-opacity-1;
+ 		transition: opacity 150ms ease 100ms;
+ 	}
+ 	.c-nav__button.--show & {
+ 		& .c-nav-icon__middle {
+ 			@extend %u-opacity-0;
+ 			transition: opacity 150ms ease;
+ 		}
+ 		& .c-nav-icon__top {
+ 			animation: 300ms ease forwards _collapseRotateTop;
+ 		}
+ 		& .c-nav-icon__bottom {
+ 			animation: 300ms ease forwards _collapseRotateBottom;
+ 		}
+ 	}
 
-	@keyframes _collapseRotateTopReverse {
-		0% {
-			transform: translateY( $_navIconY ) rotate( 45deg );
-		}
-		100% {
-			transform: translateY( 0 ) rotate( 0 );
-		}
-	}
+ 	@keyframes _collapseRotateTopReverse {
+ 		0% {
+ 			transform: translateY( $_navIconY ) rotate( 45deg );
+ 		}
+ 		100% {
+ 			transform: translateY( 0 ) rotate( 0 );
+ 		}
+ 	}
 
-	@keyframes _collapseRotateBottomReverse {
-		0% {
-			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
-		}
-		100% {
-			transform: translateY( 0 ) rotate( 0 );
-		}
-	}
+ 	@keyframes _collapseRotateBottomReverse {
+ 		0% {
+ 			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+ 		}
+ 		100% {
+ 			transform: translateY( 0 ) rotate( 0 );
+ 		}
+ 	}
 
-	@keyframes _collapseRotateTop {
-		0% {
-			transform: translateY( $_navIconY );
-		}
-		100% {
-			transform: translateY( $_navIconY ) rotate( 45deg );
-		}
-	}
+ 	@keyframes _collapseRotateTop {
+ 		0% {
+ 			transform: translateY( $_navIconY );
+ 		}
+ 		100% {
+ 			transform: translateY( $_navIconY ) rotate( 45deg );
+ 		}
+ 	}
 
-	@keyframes _collapseRotateBottom {
-		0% {
-			transform: translateY( 0 ) rotate( 0 );
-		}
-		1% {
-			transform: translateY( #{ $_navIconY * -1 } );
-		}
-		100% {
-			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
-		}
-	}
-}
+ 	@keyframes _collapseRotateBottom {
+ 		0% {
+ 			transform: translateY( 0 ) rotate( 0 );
+ 		}
+ 		1% {
+ 			transform: translateY( #{ $_navIconY * -1 } );
+ 		}
+ 		100% {
+ 			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+ 		}
+ 	}
+ }

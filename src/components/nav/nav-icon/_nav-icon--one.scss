@@ -5,7 +5,7 @@
  */
 
 .c-nav-icon.--one {
-	$_navIconY: ( ( mapDeepGet( $g-nav, 'icon', 'margin' ) * 2 ) + ( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) * 3 ) ) * 0.47;
+	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 
 	& .c-nav-icon__top,
 	& .c-nav-icon__middle,
