@@ -38,7 +38,6 @@ export default class Collapsible {
         this.nestedInstances = [];
         this.transitionDuration = 300;
         this.resize = true;
-        this.onSet = () => {};
 
         // merge default variables with args
         mergeObjects( this, args );
@@ -52,6 +51,7 @@ export default class Collapsible {
         this._resizeTimer;
         this._viewportWidth = window.innerWidth;
 
+        // track height
         this._collapsibleHeight = 0;
 
         // used in set method
@@ -67,6 +67,8 @@ export default class Collapsible {
             Tab: 'TAB',
             Escape: 'ESC'
         };
+
+        this._nestedInstancesCallbacks = [];
 
        /*
         * Initialize
@@ -100,20 +102,22 @@ export default class Collapsible {
 
         if( this.nestedInstances.length ) {
             this.nestedInstances.forEach( ( n ) => {
-                n.onSet = () => {
-                    let ogHeight = '';
+                const c = () => {
+                    /*let ogHeight = '';
 
                     if( this._open === false ) {
                         ogHeight = n.collapsible.style.height;
                         n.collapsible.style.height = '0';
-                    }
+                    }*/
 
-                    this._setCollapsibleHeight( true );
+                    this._setCollapsibleHeight();
                     this._toggleCollapsible( this._open );
 
-                    if( this._open === false )
-                        n.collapsible.style.height = ogHeight;
+                    /*if( this._open === false )
+                        n.collapsible.style.height = ogHeight;*/
                 };
+
+                n._nestedInstancesCallbacks.push( c );
             } );
         }
 
@@ -131,7 +135,19 @@ export default class Collapsible {
     * ----------------
     */
 
+    _onSet() {
+        if( !this._nestedInstancesCallbacks.length )
+            return;
+
+        this._nestedInstancesCallbacks.forEach( ( n ) => {
+            n();
+        } );
+    }
+
     _setClass() {
+        if( !this.container )
+            return;
+
         if( this._set ) {
             addClass( this.container, '--set' );
         } else {
@@ -139,7 +155,7 @@ export default class Collapsible {
         }
     }
 
-    _setCollapsibleHeight( onSet = false ) {
+    _setCollapsibleHeight() {
         if( !this._set )
             return;
 
@@ -162,7 +178,7 @@ export default class Collapsible {
 
             setTimeout( () => {
                 this.collapsible.style.height = '';
-                this.onSet();
+                this._onSet();
             }, this.transitionDuration );
         } else {
             setTimeout( () => {
@@ -172,7 +188,7 @@ export default class Collapsible {
                     if( this.container )
                         removeClass( this.container, '--expanded' );
 
-                    this.onSet();
+                    this._onSet();
                 }, this.transitionDuration );
             }, this.transitionDuration );
         }
