@@ -36,6 +36,7 @@ export default class Collapsible {
         this.collapsible = null;
         this.trigger = null;
         this.nestedInstances = [];
+        this.accordianInstances = [];
         this.transitionDuration = 300;
         this.resize = true;
 
@@ -103,18 +104,8 @@ export default class Collapsible {
         if( this.nestedInstances.length ) {
             this.nestedInstances.forEach( ( n ) => {
                 const c = () => {
-                    /*let ogHeight = '';
-
-                    if( this._open === false ) {
-                        ogHeight = n.collapsible.style.height;
-                        n.collapsible.style.height = '0';
-                    }*/
-
                     this._setCollapsibleHeight();
                     this._toggleCollapsible( this._open );
-
-                    /*if( this._open === false )
-                        n.collapsible.style.height = ogHeight;*/
                 };
 
                 n._nestedInstancesCallbacks.push( c );
@@ -169,6 +160,15 @@ export default class Collapsible {
 
         this._open = open;
         this.trigger.setAttribute( 'aria-expanded', open );
+
+        if( open ) {
+            if( this.accordianInstances.length ) {
+                this.accordianInstances.forEach( ( a ) => {
+                    if( a._open )
+                        a.toggle( false );
+                } );
+            }
+        }
 
         this.collapsible.style.height = this._collapsibleHeight + 'px';
 
@@ -252,6 +252,10 @@ export default class Collapsible {
         } else {
             this.collapsible.style.height = '';
         }
+    }
+
+    toggle( open = true ) {
+        this._toggleCollapsible( open );
     }
 
 } // end Collapsible
