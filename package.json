@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "1.1.0",
+  "version": "1.1.5",
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
@@ -37,14 +37,6 @@
               "ie >= 10"
             ]
           }
-        }
-      ]
-    ],
-    "plugins": [
-      [
-        "transform-react-jsx",
-        {
-          "pragma": "wp.element.createElement"
         }
       ]
     ]

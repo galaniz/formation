@@ -4,7 +4,7 @@
 
 ### `class Collapsible`
 
-Collapse height of specified element by trigger elements.
+Collapse height of specified element by trigger elements. For nested and accordian functionality to work need to pass `array` of collapsible instances in `args`.
 
 _Parameters:_
 
@@ -15,8 +15,13 @@ _Parameters:_
 
 | Name | Type | Default | Description
 |--|--|--|--|
+| `container` | `HTMLElement` | `null` |
 | `collapsible` | `HTMLElement` | `null` | Required.
 | `trigger` | `HTMLElement` | `null` | Required.
+| `nestedInstances` | `array` | `[]` |
+| `accordianInstances` | `array` | `[]` |
+| `transitionDuration` | `int` | `300` |
+| `resize` | `boolean` | `true` | Reset height on resize.
 
 ## Form
 

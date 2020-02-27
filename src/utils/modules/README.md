@@ -66,6 +66,8 @@ _Required:_ true
 _Type:_ `string`  
 _Required:_ true
 
+_Return:_ `HTMLElement/boolean`
+
 * `max`  
 Maximum number of levels to go up DOM.   
 _Type:_ `int`  
@@ -171,6 +173,12 @@ _Default:_ `'() => {}'`
 Get scroll y position in cross browser way.
 
 _Return:_ `int`
+
+#### `generateId()`
+
+Generate unique string of numbers.
+
+_Return:_ `string`
 
 #### `mergeObjects( x, y )`
 
