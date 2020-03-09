@@ -272,6 +272,8 @@ export default class LoadMore {
 
 		// if radio and not checked give inactive
 		if( type == 'radio' ) {
+			id = item.name;
+			
 			if( !this._sameName )
 				this._sameName = Array.from( document.getElementsByName( item.name ) );
 
