@@ -1,0 +1,18 @@
+
+/*
+ * Table
+ * -----
+ */
+
+.l-table {
+    @extend %u-display-table;
+}
+
+.l-table__row {
+    @extend %u-display-table-row;
+}
+
+.l-table__cell {
+    @extend %u-display-table-cell;
+    @extend %u-vertical-align-middle;
+}
