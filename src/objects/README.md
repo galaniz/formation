@@ -25,6 +25,21 @@ _Parameters:_
 
 ## Form
 
+### `focusRing( className, selector )`
+
+Add custom class to focusable elements on keyboard focus.
+
+_Parameters:_
+
+* `className`  
+_Type:_ `string`  
+_Required:_ true
+
+* `selector`  
+_Type:_ `string`  
+_Default:_ `'a, button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'`  
+_Required:_ true 
+
 ### `class FloatLabel`
 
 Float labels above input when input focused/contains value.
