@@ -126,7 +126,28 @@ export default class LoadMore {
 						this._load( 'reset' );
 					} );
 				} else {
-					f.item.addEventListener( 'change', this._filter.bind( this ) );
+					if( f.type === 'search' ) {
+						let searchArgs = { currentTarget: f.item },
+							submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
+
+						if( submitSearchSelector ) {
+							let submitSearch = document.querySelector( submitSearchSelector );
+
+							if( submitSearch )
+								submitSearch.addEventListener( 'click', () => {
+									this._filter( searchArgs );
+								} );
+						}
+
+						f.item.addEventListener( 'keydown', ( e ) => {
+							let key = e.key || e.keyCode || e.which || e.code;
+
+							if( [13, 'Enter'].indexOf( key ) !== -1 )
+								this._filter( searchArgs );
+						} );
+					} else {
+						 f.item.addEventListener( 'change', this._filter.bind( this ) );
+					}
 				}
 			} );
 		}
@@ -273,7 +294,7 @@ export default class LoadMore {
 		// if radio and not checked give inactive
 		if( type == 'radio' ) {
 			id = item.name;
-			
+
 			if( !this._sameName )
 				this._sameName = Array.from( document.getElementsByName( item.name ) );
 
@@ -336,8 +357,6 @@ export default class LoadMore {
 				body: encodedData
 	    	} )
 		    .then( response => {
-		    	console.log( 'RESPONSE', response );
-
 		        // enable button
 				disableButtonLoader( this.button, this.loader, '--hide', true );
 
@@ -354,6 +373,8 @@ export default class LoadMore {
 		        	rowCount = result.row_count,
 		        	output = result.output,
 		        	total = parseInt( result.total );
+
+				console.log( 'RESULT', result );
 
 		        if( reset )
 		        	this.insertInto.innerHTML = '';

@@ -11,7 +11,11 @@
 .o-aspect-ratio {
 	@extend %u-position-relative;
 	@extend %u-overflow-hidden;
-	padding-top: 100%;
+	&::before {
+		@extend %u-display-block;
+		content: '';
+		padding-top: 100%;
+	}
 	@include _aspectRatioPadding();
 	&.--circle {
 		@extend %u-border-radius-100;

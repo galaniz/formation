@@ -1,12 +1,12 @@
 
-/* 
+/*
  * Aspect ratio padding
  * --------------------
  */
 
 @mixin _aspectRatioPadding() {
     @each $p in $g-aspectRatioPadding {
-        &.--p-#{$p * 100} {
+        &.--p-#{$p * 100}::before {
             padding-top: percentage( $p );
         }
     }

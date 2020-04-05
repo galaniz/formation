@@ -10,6 +10,7 @@
 @import 'utils/functions/capitalize';
 @import 'utils/functions/map';
 @import 'utils/functions/get-color';
+@import 'utils/functions/strip-unit';
 
 @import 'config/variables';
 @import 'config/config';
@@ -18,7 +19,9 @@
 
 @import 'utils/mixins/breakpoint';
 @import 'utils/mixins/font-rem';
+@import 'utils/mixins/fluid-size';
 @import 'utils/mixins/gradient';
+@import 'utils/mixins/grayscale';
 @import 'utils/mixins/page-loader-fallback';
 
 /* Atomic */

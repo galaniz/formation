@@ -1,0 +1,14 @@
+
+/*
+ * Strip unit from number
+ * ----------------------
+ *
+ * source: https://css-tricks.com/snippets/css/fluid-typography
+ *
+ * @param [number] $number
+ * @return [number]
+ */
+
+@function stripUnit( $number ) {
+    @return $number / ( $number * 0 + 1 );
+}

@@ -1,0 +1,34 @@
+
+/*
+ * Fluid sizes ( font-size, padding, margins... )
+ * ---------------------------------------------
+ *
+ * @param [number] $minVW
+ * @param [number] $maxVW
+ * @param [number] $minSize
+ * @param [number] $maxSize
+ */
+
+@mixin fluidSize( $prop, $minVW, $maxVW, $minSize, $maxSize, $important: false, $otherVal: null ) {
+    @if $important {
+        & {
+            #{$prop}: $minSize $otherVal !important;
+            @include breakpointMin( stripUnit( $minVW ) ) {
+                #{$prop}: calc( #{$minSize} + #{ stripUnit( $maxSize - $minSize ) } * ( ( 100vw - #{$minVW} ) / #{ stripUnit( $maxVW - $minVW ) } ) ) $otherVal !important;
+            }
+            @include breakpointMin( stripUnit( $maxVW ) ) {
+                #{$prop}: $maxSize $otherVal !important;
+            }
+        }
+    } @else {
+        & {
+            #{$prop}: $minSize $otherVal;
+            @include breakpointMin( stripUnit( $minVW ) ) {
+                #{$prop}: calc( #{$minSize} + #{ stripUnit( $maxSize - $minSize ) } * ( ( 100vw - #{$minVW} ) / #{ stripUnit( $maxVW - $minVW ) } ) ) $otherVal;
+            }
+            @include breakpointMin( stripUnit( $maxVW ) ) {
+                #{$prop}: $maxSize $otherVal;
+            }
+        }
+    }
+}
