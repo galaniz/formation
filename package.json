@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
@@ -18,31 +18,4 @@
     "url": "https://github.com/galaniz/formation/issues"
   },
   "homepage": "https://github.com/galaniz/formation#readme",
-  "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
-    "babel-loader": "^8.0.6",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "modules": false,
-          "targets": {
-            "browsers": [
-              "last 3 versions",
-              "ie >= 10"
-            ]
-          }
-        }
-      ]
-    ]
-  },
-  "browserslist": [
-    "> 1%",
-    "last 20 versions"
-  ]
 }
