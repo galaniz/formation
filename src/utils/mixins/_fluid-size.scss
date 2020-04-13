@@ -9,25 +9,37 @@
  * @param [number] $maxSize
  */
 
-@mixin fluidSize( $prop, $minVW, $maxVW, $minSize, $maxSize, $important: false, $otherVal: null ) {
-    @if $important {
-        & {
-            #{$prop}: $minSize $otherVal !important;
-            @include breakpointMin( stripUnit( $minVW ) ) {
-                #{$prop}: calc( #{$minSize} + #{ stripUnit( $maxSize - $minSize ) } * ( ( 100vw - #{$minVW} ) / #{ stripUnit( $maxVW - $minVW ) } ) ) $otherVal !important;
-            }
-            @include breakpointMin( stripUnit( $maxVW ) ) {
-                #{$prop}: $maxSize $otherVal !important;
-            }
+@mixin fluidSize( $prop, $sizes, $widths, $important: false, $otherValues: null ) {
+    $lastIndex: length( $sizes );
+
+    @each $s in $sizes {
+        $i: index( $sizes, $s );
+        $w: nth( $widths, $i );
+        $o: null;
+        $m: null;
+
+        @if type-of( $otherValues ) == 'list' {
+            $o: nth( $widths, $i );
         }
-    } @else {
-        & {
-            #{$prop}: $minSize $otherVal;
-            @include breakpointMin( stripUnit( $minVW ) ) {
-                #{$prop}: calc( #{$minSize} + #{ stripUnit( $maxSize - $minSize ) } * ( ( 100vw - #{$minVW} ) / #{ stripUnit( $maxVW - $minVW ) } ) ) $otherVal;
+
+        @if $important {
+            $m: #{'!important'};
+        }
+
+        @if $i == 1 {
+            #{$prop}: $s $o $m;
+        }
+
+        @if $i == $lastIndex {
+            @include breakpointMin( stripUnit( $w ) ) {
+                #{$prop}: $s $o $m;
             }
-            @include breakpointMin( stripUnit( $maxVW ) ) {
-                #{$prop}: $maxSize $otherVal;
+        } @else {
+            $nextS: nth( $sizes, $i + 1 );
+            $nextW: nth( $widths, $i + 1 );
+
+            @include breakpointMin( stripUnit( $w ) ) {
+                #{$prop}: calc( #{$s} + #{ stripUnit( $nextS - $s ) } * ( ( 100vw - #{$w} ) / #{ stripUnit( $nextW - $w ) } ) ) $o $m;
             }
         }
     }
