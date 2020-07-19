@@ -71,11 +71,13 @@ export default class Table {
 
     _go() {
         this.table.setAttribute( 'data-collapse', false );
+        this.table.style.maxWidth = 'none';
 
         let targetWidth = this.equalWidthTo.clientWidth,
             currentWidth = this.table.clientWidth,
             collapse = currentWidth > targetWidth ? true : false;
 
+        this.table.style.maxWidth = '';
         this.table.setAttribute( 'data-collapse', collapse );
     }
 
