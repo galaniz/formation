@@ -51,7 +51,15 @@
         @extend %u-width-100;
     }
 
-    @each $g, $v in $g-grid {
+    $grid: $g-grid;
+
+    @if type-of( $g-gridOverwrite ) == 'map' {
+        $grid: $g-gridOverwrite;
+    } @else {
+        @warn $g-gridOverwrite;
+    }
+
+    @each $g, $v in $grid {
         .l-#{$g} {
             @extend %u-width-100;
             @each $bk, $width in $v {
