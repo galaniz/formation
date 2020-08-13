@@ -150,13 +150,12 @@ export default class Masonry {
     _wrapItems( cols ) {
         let fragment = document.createDocumentFragment(),
             interval = Math.round( this._itemsLength / cols ),
-            intervalCounter = interval,
-            indexTracker = 0,
-            // keep track of heights to not fetch more than need
-            itemHeights = {},
             colItems = {},
-            colHeights = {},
-            colKeys = [];
+            colHeights = [],
+            colKeys = [],
+            itemCols = [],
+            itemHeights = [],
+            indexTracker = 0;
 
         for( let i = 0; i < cols; i++ ) {
             colItems[i] = [];
@@ -165,29 +164,9 @@ export default class Masonry {
         }
 
         this.items.forEach( ( item, index ) => {
-            let currentItemHeight = itemHeights[index] || item.clientHeight,
-                currentColHeight = colHeights[indexTracker] + currentItemHeight,
-                nextIndexTracker = indexTracker + 1,
-                nextColHeight = colHeights.hasOwnProperty( nextIndexTracker ) ? ( colHeights[nextIndexTracker] + currentItemHeight ) : false,
-                diff = index === this._itemsLength - 1 ? -50 : -100;
-
-            if( nextColHeight && ( nextColHeight - currentColHeight <= diff ) ) {
-                if( index < this._itemsLength - 1 ) {
-                    let nextItemIndex = index + 1,
-                        nextItem = this.items[nextItemIndex],
-                        nextItemHeight = nextItem.clientHeight;
-
-                    if( currentItemHeight - nextItemHeight > 50 )
-                        indexTracker = nextIndexTracker;
-
-                    itemHeights[nextItemIndex] = nextItemHeight;
-                } else {
-                    indexTracker = nextIndexTracker;
-                }
-            }
-
+            itemCols[index] = indexTracker;
             colItems[indexTracker].push( item );
-            colHeights[indexTracker] += currentItemHeight;
+
             indexTracker++;
 
             if( colKeys.indexOf( indexTracker ) == -1 )
@@ -209,6 +188,32 @@ export default class Masonry {
 
         this.container.innerHTML = '';
         this.container.appendChild( fragment );
+
+        /* Hack for trying to equalize column heights a bit */
+
+        // get offsets of all items
+        let offsets = [];
+
+        this.items.forEach( ( item, index ) => {
+            offsets.push( item.offsetTop );
+
+            let itemHeight = item.clientHeight;
+            colHeights[itemCols[index]] += itemHeight;
+            itemHeights[index] = itemHeight;
+        } );
+
+        // get last item (visually)
+        let maxOffset = Math.max( ...offsets ),
+            lastVisualItemIndex = offsets.indexOf( maxOffset );
+
+        colHeights[itemCols[lastVisualItemIndex]] -= itemHeights[lastVisualItemIndex];
+
+        // Get smallest column
+        let smCol = Math.min( ...colHeights ),
+            smColIndex = colHeights.indexOf( smCol ),
+            smColContainer = this.container.children[smColIndex];
+
+        smColContainer.appendChild( this.items[lastVisualItemIndex] );
     }
 
     /*
