@@ -95,8 +95,10 @@ export default class Nav {
 
         let init = this._initialize();
 
-        if( !init )
+        if( !init ) {
+        	this.done.call( this );
         	return false;
+        }
 	}
 
    /*
@@ -133,6 +135,9 @@ export default class Nav {
 		this.overflowList = !Array.isArray( this.overflowList ) ? [this.overflowList] : this.overflowList;
 
 		this.items = Array.from( this.items );
+
+		if( !this.items.length ) 
+			return false;
 
 		/* Event listeners */
 
