@@ -7,9 +7,7 @@
 import {
 	addClass, 
 	removeClass, 
-	getScrollY,
 	prefix,
-	publish,
 	mergeObjects
 } from '../../utils/utils';
 
@@ -27,64 +25,78 @@ export default class Modal {
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+   /*
+	* Public variables
+	* ----------------
+	*/
 
-        this.modal = null;
-        this.trigger = null;
-        this.window = null;
-        this.overlay = null;
-        this.close = null;
-        this.scaleTransition = false;
-        this.scaleTransitionDelay = 300;
-        this.startOpen = false;
-        this.onClose = () => {};
-        
-        // merge default variables with args
-        mergeObjects( this, args );
+	this.modal = null;
+	this.window = null;
+	this.overlay = null;
+	this.trigger = null;
+	this.close = null;
+	this.scaleTransition = false;
+	this.scaleTransitionDelay = 300;
+	this.bodyOverflowHiddenClass = 'u-overflow-hidden';
+	this.onToggle = () => {};
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	// merge default variables with args
+	mergeObjects( this, args );
 
-        // keep track if open or not
-        this._open = this.startOpen;
+   /*
+	* Internal variables
+	* ------------------
+	*/
 
-        this._body = document.body;
-		
-		// for throttling resize event
-        this._resizeTimer;
+	// for key events
+	this._KEYS = {
+		9: 'TAB',
+		Tab: 'TAB',
+		27: 'ESC',
+		Escape: 'ESC'
+	};
 
-        this._viewportWidth = window.innerWidth;
-        this._viewportHeight = window.innerHeight;
+	// for giving focus to right elements
+	this._focusableItems = [];
+	this._firstFocusableItem = null;
+	this._lastFocusableItem = null;
 
-        this._matrix = {
-			open: {
-				sX: 1,
-				sY: 1,
-				tX: 0,
-				tY: 0,
-			},
-			close: {
-				sX: 1,
-				sY: 1,
-				tX: 0,
-				tY: 0
-			}
-		};
+	// track modal state
+	this._open = false;
 
-       /*
-        * Initialize
-        * ----------
-        */
+	// to prevent body scroll
+	this._body = document.body;
 
-        let init = this._initialize();
+	// for throttling resize event
+    this._resizeTimer;
 
-        if( !init ) 
-        	return false;
+    this._viewportWidth = window.innerWidth;
+    this._viewportHeight = window.innerHeight;
+
+    this._matrix = {
+		open: {
+			sX: 1,
+			sY: 1,
+			tX: 0,
+			tY: 0,
+		},
+		close: {
+			sX: 1,
+			sY: 1,
+			tX: 0,
+			tY: 0
+		}
+	};
+
+   /*
+	* Initialize
+	* ----------
+	*/
+
+	let init = this._initialize();
+
+	if( !init ) 
+		return false;
 	}
 
    /*
@@ -94,31 +106,36 @@ export default class Modal {
 
 	_initialize() {
 		// check that required variables not null
-		if( !this.modal || !this.window || !this.trigger || !this.overlay || !this.close )
+		if( !this.modal || !this.trigger || !this.close )
 			return false;
 
 		if( this.scaleTransition && !this.window )
 			return false;
 
-        // for centering window
-        this._windowWidth = this.window.clientWidth;
-        this._windowHeight = this.window.clientHeight;
+		if( this.scaleTransition ) {
+			this._windowWidth = this.window.clientWidth;
+			this._windowHeight = this.window.clientHeight;
+		}
+
+		// check if open
+		if( this.modal.getAttribute( 'aria-hidden' ) == 'false' )
+			this._toggle( true );
 
 		// add event listeners
+		this.modal.addEventListener( 'keydown', this._keyHandler.bind( this ) );
 		this.trigger.addEventListener( 'click', this._openHandler.bind( this ) );
 		this.overlay.addEventListener( 'click', this._closeHandler.bind( this ) );
 		this.close.addEventListener( 'click', this._closeHandler.bind( this ) );
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
-		// scale window to size and offset of trigger
-    	if( this.scaleTransition ) {
-        	this._setMatrix();
-        	this._setTransforms();
-    	} else {
-    		this._verticallyCenter();
-    	}
-		
+		// get focusable elements in modal
+		this._focusableItems = Array.from( this.modal.querySelectorAll( 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]' ) );
+		this._focusableItemsLength = this._focusableItems.length;
+
+		this._firstFocusableItem = this._focusableItems[0];
+		this._lastFocusableItem = this._focusableItems[this._focusableItemsLength - 1];
+
 		return true;
 	}
 
@@ -146,8 +163,6 @@ export default class Modal {
 				tY: triggerRect.top
 			}
 		};
-
-		console.log( 'MATRIX', this._matrix );
 	}
 
 	_setTransforms() {
@@ -162,29 +177,22 @@ export default class Modal {
 		}
 	}
 
-	_verticallyCenter() {
-		if( this._windowHeight < this._viewportHeight ) {
-			addClass( this.window, '--center' );
-		} else {
-			removeClass( this.window, '--center' );
-		}
-	}
-
 	// handle classes / transforms to open / close
 	_toggle( open = true ) {
 		this._open = open;
+		this.modal.setAttribute( 'aria-hidden', !open );
 
 		if( open ) {
-			addClass( this.modal, '--open' );
-			addClass( this._body, 'u-overflow-hidden' );
+			this._firstFocusableItem.focus();
+			addClass( this._body, this.bodyOverflowHiddenClass );
 		} else {
-			removeClass( this.modal, '--open' );
-			removeClass( this._body, 'u-overflow-hidden' );
+			this.trigger.focus();
+			removeClass( this._body, this.bodyOverflowHiddenClass );
 		}
 
 		if( this.scaleTransition ) {
 			if( !open )
-				removeClass( this.modal, '--w-open' );
+				this.modal.setAttribute( 'data-window-open', 'false' );
 
 			setTimeout( () => {
 				this._setTransforms();
@@ -192,27 +200,62 @@ export default class Modal {
 
 			if( open ) {
 				setTimeout( () => {
-					addClass( this.modal, '--w-open' );
+					this.modal.setAttribute( 'data-window-open', 'true' );
 				}, open ? this.scaleTransitionDelay : 0 );
 			}
 		}
 
-		this.onClose( open );
-		publish( 'closeModal', [this.modal] );
+		this.onToggle( open );
+	}
+
+	_handleBackwardTab( e ) {
+		if( document.activeElement === this._firstFocusableItem ) {
+			e.preventDefault();
+			this._lastFocusableItem.focus();
+		}
+	}
+
+	_handleForwardTab( e ) {
+		if( document.activeElement === this._lastFocusableItem ) {
+			e.preventDefault();
+			this._firstFocusableItem.focus();
+		}
 	}
 
    /*
 	* Event callbacks
 	* ---------------
 	*/
-	
+
+	_keyHandler( e ) {
+		let key = e.keyCode || e.which || e.code || e.key;
+
+		switch( this._KEYS[key] ) {
+		case 'TAB':
+			if( this._focusableItemsLength === 1 ) {
+				e.preventDefault();
+				break;
+			}
+
+			// keep focus in modal
+			if( e.shiftKey ) {
+				this._handleBackwardTab( e );
+			} else {
+				this._handleForwardTab( e );
+			}
+
+		break;
+		case 'ESC':
+			this._toggle( false );
+			break;
+		}
+	}
+
 	_openHandler( e ) {
-		e.preventDefault();
 		this._toggle( true );
 	}
 
 	_closeHandler( e ) {
-		e.preventDefault();
 		this._toggle( false );
 	}
 
@@ -221,18 +264,16 @@ export default class Modal {
         clearTimeout( this._resizeTimer );
 
         this._resizeTimer = setTimeout( () => {
-        	this._viewportWidth = window.innerWidth;
-        	this._viewportHeight = window.innerHeight;
-
-			this._windowWidth = this.window.clientWidth;
-			this._windowHeight = this.window.clientHeight;
-
         	if( this.scaleTransition ) {
+				this._viewportWidth = window.innerWidth;
+				this._viewportHeight = window.innerHeight;
+
+				this._windowWidth = this.window.clientWidth;
+				this._windowHeight = this.window.clientHeight;
+
             	this._setMatrix();
             	this._setTransforms();
-        	} else {
-        		this._verticallyCenter();
-        	}
+        	} 
         }, 100 );
     }
 
