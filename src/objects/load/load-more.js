@@ -43,6 +43,7 @@ export default class LoadMore {
 
         this.filters = [];
         this.filtersLoader = null;
+        this.filtersForm = null;
 
         this.noResults = {
         	containers: [],
@@ -241,6 +242,9 @@ export default class LoadMore {
 	_noResults( show = true ) {
 		// disable / enable filters
 		if( this.filters.length > 0 ) {
+			if( this.filtersForm )
+				this.filtersForm.setAttribute( 'data-disabled', show ? 'true' : 'false' );
+
 			this.filters.forEach( ( f ) => {
 				if( f.type == 'listbox' ) {
 					f.item.disable( show ? true : false );

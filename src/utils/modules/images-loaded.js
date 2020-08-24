@@ -8,15 +8,18 @@
  */
 
 const _imageLoaded = ( image ) => {
-    return new Promise( ( resolve ) => {
-        if( image.complete )
-        	resolve( image );
+    return new Promise( ( resolve, reject ) => {
+        let proxyImage = new Image();
+        proxyImage.src = image.src;
 
-        image.onload = () => {
+        if( proxyImage.complete )
+            resolve( image );
+
+        proxyImage.onload = () => {
         	resolve( image );
         };
 
-        image.onerror = () => {
+        proxyImage.onerror = () => {
         	resolve( image );
         };
     } );
@@ -28,7 +31,12 @@ export const imagesLoaded = ( images = [], done = () => {} ) => {
         return;
     }
 
-	Promise.all( images.map( _imageLoaded ) ).then( ( data ) => {
+	Promise.all( images.map( _imageLoaded ) )
+    .then( ( data ) => {
 		done( data );
-	} );
+	} )
+    .catch( ( err ) => {
+        console.log( err );
+        done( data );
+    } );
 };
