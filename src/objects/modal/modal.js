@@ -124,8 +124,10 @@ export default class Modal {
 		// add event listeners
 		this.modal.addEventListener( 'keydown', this._keyHandler.bind( this ) );
 		this.trigger.addEventListener( 'click', this._openHandler.bind( this ) );
-		this.overlay.addEventListener( 'click', this._closeHandler.bind( this ) );
 		this.close.addEventListener( 'click', this._closeHandler.bind( this ) );
+
+		if( this.overlay )
+			this.overlay.addEventListener( 'click', this._closeHandler.bind( this ) );
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 

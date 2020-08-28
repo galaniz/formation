@@ -169,9 +169,11 @@ export default class Tabs {
 
         switch( this._KEYS[key] ) {
             case 'END': // last tab
+                e.preventDefault();
                 index = this._lastTabIndex;
                 break;
             case 'HOME': // first tab
+                e.preventDefault();
                 index = 0;
                 break;
             // Up and down here to prevent page scroll
@@ -179,6 +181,7 @@ export default class Tabs {
                 if( this.orientation == 'horizontal' ) {
                     focus = false;
                 } else {
+                    e.preventDefault();
                     index--;
                 }
                 break;
@@ -186,6 +189,7 @@ export default class Tabs {
                 if( this.orientation == 'horizontal' ) {
                     focus = false;
                 } else {
+                    e.preventDefault();
                     index++;
                 }
                 break;

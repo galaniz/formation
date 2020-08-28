@@ -228,7 +228,7 @@ export default class LoadMore {
 			return;
 
 		if( show ) {
-			let d = delay ? 600 : 0;
+			let d = delay ? 400 : 0;
 
 			setTimeout( () => {
 				removeClass( this.filtersLoader, '--hide' );
@@ -439,7 +439,7 @@ export default class LoadMore {
 
 				this._showFilterLoader( false );
 		    } );
-    	}, 1200 );
+    	}, 0 );
 	}
 
 } // end LoadMore
