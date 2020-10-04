@@ -14,12 +14,12 @@
     @extend %u-opacity-1;
     @extend %u-background-color-inherit;
     z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
-    &.--hide {
+    &[data-hide] {
         @extend %u-opacity-0;
         transition: opacity #{$g-defDuration} #{$g-defTimingFunction}, z-index 0ms #{$g-defTimingFunction} #{$g-defDuration};
         z-index: -1 !important;
     }
-    &.--page {
+    &[data-page] {
         @extend %u-position-fixed;
         z-index: mapDeepGet( $g-zIndex, 'loader', 'page' );
     }

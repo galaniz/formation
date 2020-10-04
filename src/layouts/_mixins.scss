@@ -6,11 +6,11 @@
 
 @mixin _makeContainers() {
     %u-margin-padding-0 {
-        &.--left {
+        &[data-left] {
             margin-left: 0;
             padding-left: 0;
         }
-        &.--right {
+        &[data-right] {
             margin-right: 0;
             padding-right: 0;
         }

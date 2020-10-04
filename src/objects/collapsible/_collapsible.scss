@@ -5,7 +5,7 @@
  */
 
 .o-collapsible {
-	&.--set {
+	&[data-set] {
 		@extend %u-overflow-hidden;
 	}
 }
@@ -21,7 +21,7 @@
 }
 
 .o-collapsible__content {
-	.o-collapsible.--set > & {
+	.o-collapsible[data-set] > & {
 		@extend %u-overflow-hidden;
 		box-sizing: content-box;
 		transition: height #{$g-defDuration} #{$g-defTimingFunction};

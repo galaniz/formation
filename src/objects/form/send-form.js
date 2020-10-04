@@ -1,6 +1,4 @@
 
-'use strict';
-
 /*
  * Imports
  * -------
@@ -139,7 +137,7 @@ export default class SendForm {
 		let message = error ? this.result.text.error : this.result.text.success;
 
         this.result.textContainer.textContent = message;
-        addClass( this.result.container, error ? '--error' : '--success' );
+        this.result.container.setAttribute( 'data-type', error ? 'error' : 'success' );
         this._error = error;
 	}
 
@@ -167,10 +165,10 @@ export default class SendForm {
 		}
 
         // disable button
-		disableButtonLoader( this.submit, this.loader, '--hide', false, true );
+		disableButtonLoader( this.submit, this.loader, false, true );
 
 		// hide results container
-		removeClass( this.result.container, this._error ? '--error' : '--success' );
+		this.result.container.removeAttribute( 'data-type' );
 
 		let formValues = this._form.getFormValues( true, this.filterInputs ),
 			data = `id=${ this.id }&${ formValues }`;
@@ -197,7 +195,7 @@ export default class SendForm {
 		    	console.log( 'RESPONSE', response );
 
 		        // enable button
-				disableButtonLoader( this.submit, this.loader, '--hide', true );
+				disableButtonLoader( this.submit, this.loader );
 
 				try {
 					this.success.call( this, JSON.parse( response ) );
@@ -210,7 +208,7 @@ export default class SendForm {
 		        console.log( 'ERROR', xhr );
 
 		        // enable button
-				disableButtonLoader( this.submit, this.loader, '--hide', true );
+				disableButtonLoader( this.submit, this.loader );
 
 		    	this._displayResult( true );
 		    	this.error();
@@ -228,10 +226,10 @@ export default class SendForm {
 			this._form.clear( exclude );
 
     	// end loader
-    	addClass( this.loader, '--hide' );
+    	this.loader.setAttribute( 'data-hide', '' );
 
 		// hide results container
-		removeClass( this.result.container, this._error ? '--error' : '--success' );
+		this.result.container.removeAttribute( 'data-type' );
 	}
 
 } // end SendForm

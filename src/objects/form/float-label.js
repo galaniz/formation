@@ -5,8 +5,6 @@
  */
 
 import {
-	addClass, 
-	removeClass, 
 	mergeObjects
 } from '../../utils/utils';
 
@@ -88,9 +86,9 @@ export default class FloatLabel {
 		}
 
 		if( float ) {
-			addClass( this.label, '--float' );
+			this.label.setAttribute( 'data-float', '' );
 		} else {
-			removeClass( this.label, '--float' );
+			this.label.removeAttribute( 'data-float' );
 		}
 	}
 

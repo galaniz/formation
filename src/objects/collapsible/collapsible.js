@@ -6,10 +6,7 @@
 
 import {
     mergeObjects,
-    prefix,
-    addClass,
-    removeClass,
-    hasClass
+    prefix
 } from '../../utils/utils';
 
 /*
@@ -115,7 +112,7 @@ export default class Collapsible {
         window.addEventListener( 'load', () => {
             this._setCollapsibleHeight();
             this._toggleCollapsible( false );
-            this._setClass();
+            this._setContainer();
         } );
 
         return true;
@@ -135,14 +132,14 @@ export default class Collapsible {
         } );
     }
 
-    _setClass() {
+    _setContainer() {
         if( !this.container )
             return;
 
         if( this._set ) {
-            addClass( this.container, '--set' );
+            this.container.setAttribute( 'data-set', '' );
         } else {
-            removeClass( this.container, '--set' );
+            this.container.removeAttribute( 'data-set' );
         }
     }
 
@@ -174,7 +171,7 @@ export default class Collapsible {
 
         if( open ) {
             if( this.container )
-                addClass( this.container, '--expanded' );
+                this.container.setAttribute( 'data-expanded', '' );
 
             setTimeout( () => {
                 this.collapsible.style.height = '';
@@ -186,7 +183,7 @@ export default class Collapsible {
 
                 setTimeout( () => {
                     if( this.container )
-                        removeClass( this.container, '--expanded' );
+                        this.container.removeAttribute( 'data-expanded' );
 
                     this._onSet();
                 }, this.transitionDuration );
@@ -244,7 +241,7 @@ export default class Collapsible {
 
     set( set = true ) {
         this._set = set;
-        this._setClass();
+        this._setContainer();
 
         if( set ) {
             this._setCollapsibleHeight();

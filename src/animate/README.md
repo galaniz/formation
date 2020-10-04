@@ -19,14 +19,13 @@ _Parameters:_
 | `visibleItem` | `HTMLElement` | `null` |
 | `visibleTop` | `boolean` | `false` |
 | `visibleOffset` | `int` | `0` |
-| `classes` | `array` | `['--vis']` | Classes to add to item when visible.
 | `delay` | `int` | `0` | Delay setting classes/parallax if specified.
 | `wait` | `string` | `''` | Name of event to subscribe to before initializing scroll handler.
 | `sticky` | `boolean` | `false` |
 | `stickyOffset` | `int` | `0` |
-| `stickyDelay` | `int` | `0` | Milliseconds to delay removing `'--sticky'` class.
+| `stickyDelay` | `int` | `0` | Milliseconds to delay removing `[data-sticky]`.
 | `allowUnset` | `boolean` | `false` |
-| `visAll` | `boolean` | `false` | If true, add `'--vis-all'` to classes when visible.
+| `visAll` | `boolean` | `false` | If true, add `[data-vis-all]` to element when visible.
 | `onVisible` | `function` | `() => {}` |
 | `endVisible` | `function` | `() => {}` |
 | `onInit` | `function` | `() => {}` |
@@ -65,7 +64,7 @@ _Parameters:_
 
 ### `transition( links, transitionElement, delay )`
 
-Complete page transition on link click by adding class `--show` to transitionElement.
+Complete page transition on link click by `[data-show]` to transitionElement.
 
 _Parameters:_
 

@@ -5,8 +5,6 @@
  */
 
 import {
-	addClass, 
-	removeClass,
 	prefix
 } from '../../utils/utils';
 
@@ -80,8 +78,8 @@ export default class FadeSlider extends BaseSlider {
 		if( this.showLast )
 			this.items[lastIndex].style.opacity = 1;
 		
-		removeClass( this.items[ogIndex], '--active' );
-		addClass( this.items[this.currentIndex], '--active' );
+		this.items[ogIndex].removeAttribute( 'data-active' );
+		this.items[this.currentIndex].addAttribute( 'data-active', '' );
 
 		// fade without flash of background
 		setTimeout( () => {

@@ -5,8 +5,6 @@
  */
 
 import {
-	addClass,
-	removeClass,
 	mergeObjects
 } from '../../utils/utils';
 
@@ -181,13 +179,10 @@ export default class BaseSlider {
 					setClass = classes ? true : false;
 
 				if( active )
-					classes += ' --active';
+					item.setAttribute( 'data-active', '' );
 
-				if( setClass ) {
+				if( setClass )
 					item.setAttribute( 'class', classes );
-				} else {
-					addClass( item, classes );
-				}
 
 				item.setAttribute( 'data-index', i );
 				item.addEventListener( 'click', this._nav.bind( this ) );
@@ -248,8 +243,8 @@ export default class BaseSlider {
 	_setNav( index = null, lastIndex = null ) {
 		if( this._navItemsLen ) {
 			if( index !== null && lastIndex !== null ) {
-				removeClass( this._navItems[lastIndex], '--active' );
-				addClass( this._navItems[index], '--active' );
+				this._navItems[lastIndex].removeAttribute( 'data-active' );
+				this._navItems[index].setAttribute( 'data-active', '' );
 			}
 		}
 

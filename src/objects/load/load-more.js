@@ -6,8 +6,6 @@
 
 // functions
 import {
-	removeClass,
-	addClass,
 	mergeObjects,
 	request,
 	disableButtonLoader,
@@ -165,7 +163,7 @@ export default class LoadMore {
 							if( f.type == 'listbox' ) {
 								f.item.clear();
 							} else {
-								removeClass( f.item, '--inactive' );
+								f.item.removeAttribute( 'data-inactive' );
 
 								let type = this._getType( f.item );
 
@@ -228,9 +226,9 @@ export default class LoadMore {
 			return;
 
 		if( show ) {
-			removeClass( this.filtersLoader, '--hide' );
+			this.filtersLoader.removeAttribute( 'data-hide' );
 		} else {
-			addClass( this.filtersLoader, '--hide' );
+			this.filtersLoader.setAttribute( 'data-hide', '' );
 		}
 	}
 
@@ -306,9 +304,9 @@ export default class LoadMore {
 						inactive = false;
 
 					if( inactive ) {
-						addClass( s, '--inactive' );
+						s.setAttribute( 'data-inactive', '' );
 					} else {
-						removeClass( s, '--inactive' );
+						s.removeAttribute( 'data-inactive' );
 					}
 				} );
 			}
@@ -341,7 +339,7 @@ export default class LoadMore {
 		this._noResults( false );
 
 		// disable button
-		disableButtonLoader( this.button, this.loader, '--hide', false, true );
+		disableButtonLoader( this.button, this.loader, false, true );
 
     	// get data as url encoded string
     	let encodedData = urlEncode( this._data );
@@ -358,7 +356,7 @@ export default class LoadMore {
 	    	} )
 		    .then( response => {
 		        // enable button
-				disableButtonLoader( this.button, this.loader, '--hide', true );
+				disableButtonLoader( this.button, this.loader );
 
 				if( !response ) {
 					if( reset )
@@ -431,7 +429,7 @@ export default class LoadMore {
 		        	this._noResults();
 
 		       	// enable button
-				disableButtonLoader( this.button, this.loader, '--hide', true );
+				disableButtonLoader( this.button, this.loader );
 
 				this._showFilterLoader( false );
 		    } );

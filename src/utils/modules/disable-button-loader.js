@@ -9,19 +9,14 @@
  * @param hide [boolean]
  */
 
-/* Dependencies */
-
-import { addClass } from './add-class';
-import { removeClass } from './remove-class';
-
-export const disableButtonLoader = ( button = null, loader = null, className = '', add = true, disable = false ) => {
-    if( !button || !loader || !className )
+export const disableButtonLoader = ( button = null, loader = null, hide = true, disable = false ) => {
+    if( !button || !loader )
         return;
 
-    if( add ) {
-    	addClass( loader, className );
+    if( hide ) {
+    	loader.setAttribute( 'data-hide', '' );
     } else {
-    	removeClass( loader, className );
+    	loader.removeAttribute( 'data-hide' );
     }
 
     button.disabled = disable;

@@ -38,13 +38,14 @@
 
             $transform: "translate#{$type}( #{$p} )";
             $transformReverse: "translate#{$type}( #{$reverseP} )";
+            $dataAttr: "&[data-#{$type}='#{$k}']";
 
             @if $k == def {
                 & {
                     transform: unquote( $transform );
                 }
             } @else {
-                &.--#{$k}-y {
+                #{$dataAttr} {
                     transform: unquote( $transform );
                 }
             }
@@ -57,7 +58,7 @@
                         transform: unquote( $transformReverse );
                     }
                 } @else {
-                    &.--#{$k}-y {
+                    #{$dataAttr} {
                         transform: unquote( $transformReverse );
                     }
                 }
@@ -89,7 +90,7 @@
         @if $k == def {
             transition-duration: unquote( $v );
         } @else {
-            &.--#{k} {
+            &[data-d="#{$k}"] {
                 transition-duration: unquote( $v );
             }
         }
@@ -166,7 +167,7 @@
             } @else if $k == hover {
                 @include _transformHover( "scale( #{$v} )" );
             } @else {
-                .js &.--#{$k} {
+                .js &[data-s="#{$k}"] {
                     transform: scale( #{$v} );
                 }
             }
@@ -188,7 +189,7 @@
                 @if $k == def {
                     transform: scale( #{$v} );
                 } @else {
-                    &.--#{$k} {
+                    &[data-s="#{$k}"] {
                         transform: scale( #{$v} );
                     }
                 }
