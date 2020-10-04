@@ -4,7 +4,7 @@
  * -------------
  */
 
-.c-nav-icon.--six {
+.c-nav-icon[data-num="6"] {
 
 	/* Lines */ 
 
@@ -66,7 +66,7 @@
 		transition-delay: 250ms;
 		top: 50%;
 	}
-	.--show & {
+	.c-nav__button[data-show] & {
 		& .c-nav-icon__top,
 		& .c-nav-icon__middle,
 		& .c-nav-icon__bottom {

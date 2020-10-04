@@ -1,12 +1,5 @@
 
 /*
- * Imports
- * -------
- */
-
-import { addClass, removeClass } from '../../utils/utils';
-
-/*
  * Skip link to main content
  * -------------------------
  */
@@ -15,9 +8,9 @@ const focusHandler = ( e ) => {
 	let link = e.currentTarget;
 
 	if( e.type == 'focus' ) {
-		addClass( link, '--show' );
+		link.setAttribute( 'data-show', true );
 	} else {
-		removeClass( link, '--show' );
+		link.removeAttribute( 'data-show' );
 	}
 };
 

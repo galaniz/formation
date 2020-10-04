@@ -4,7 +4,7 @@
  * --------------
  */
 
-.c-nav-icon.--four {
+.c-nav-icon[data-num="4"] {
 	transform: rotateY( 0deg );
 	transition: transform 300ms ease;
 	& .c-nav-icon__top,
@@ -16,7 +16,7 @@
 		@extend %u-opacity-1;
 		transition: opacity 0s ease 100ms;
 	}
-	.--show & {
+	.c-nav__button[data-show] & {
 		transform: rotateY( 180deg );
 		& .c-nav-icon__top {
 			transform: translateY( $_navIconY ) rotate( 45deg );

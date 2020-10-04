@@ -5,7 +5,6 @@
 
 import {
 	addClass,
-	hasClass,
 	removeClass,
 	mergeObjects,
 	cascade,
@@ -40,6 +39,7 @@ export default class Nav {
         this.button = null;
         this.overlay = null;
         this.transition = null;
+        this.bodyOverflowHiddenClass = 'u-overflow-hidden';
         this.onSet = () => {};
         this.onReset = () => {};
         this.afterReset = () => {};
@@ -195,8 +195,8 @@ export default class Nav {
 	_resetNav() {
 		this.onReset.call( this );
 
-		removeClass( this.nav, '--overflow' );
-		removeClass( this.nav, '--overflow-all' );
+		this.nav.removeAttribute( 'data-overflow' );
+		this.nav.removeAttribute( 'data-overflow-all' );
 
 		this._lastOverflowFocus = null;
 
@@ -302,12 +302,12 @@ export default class Nav {
         } );
 
 		if( this._currentOverflowGroups.length > 0 ) {
-			if( !hasClass( this.nav, '--overflow' ) )
-				addClass( this.nav, '--overflow' );
+			if( !hasAttribute( this.nav, 'data-overflow' ) )
+				this.nav.setAttribute( 'data-overflow', '' );
 
 			if( this._currentOverflowGroups.length === this._overflowGroupsLength ) {
-				if( !hasClass( this.nav, '--overflow-all' ) )
-					addClass( this.nav, '--overflow-all' );
+				if( !hasAttribute( this.nav, 'data-overflow-all' ) )
+					this.nav.setAttribute( 'data-overflow-all', '' );
 			}
 		} else {
 			this._toggle( true, false );
@@ -356,9 +356,9 @@ export default class Nav {
 
 	_disableBodyScroll( disable = true ) {
 		if( disable ) {
-			addClass( this._body, 'u-overflow-hidden' );
+			addClass( this._body, this.bodyOverflowHiddenClass );
 		} else {
-			removeClass( this._body, 'u-overflow-hidden' );
+			removeClass( this._body, this.bodyOverflowHiddenClass );
 		}
 	}
 
@@ -376,26 +376,26 @@ export default class Nav {
 			cascade( [
 				{
 					action: () => {
-						addClass( this.button, '--show' );
+						this.button.setAttribute( 'data-show', '' );
 
 						this._disableBodyScroll();
-						this.button.setAttribute( 'aria-expanded', 'true' );
 
-						addClass( this.nav, '--open' );
+						this.button.setAttribute( 'aria-expanded', 'true' );
+						this.nav.setAttribute( 'data-open', '' );
 
 						if( this.transition )
-							addClass( this.transition, '--show' );
+							this.transition.setAttribute( 'data-show', '' );
 					}
 				},
 				{
 					action: () => {
-						addClass( this.overflow, '--show' );
+						this.overflow.setAttribute( 'data-show', '' );
 					},
 					delay: this.delay.open
 				},
 				{
 					action: () => {
-						addClass( this.overflow, '--show-items' );
+						this.overflow.setAttribute( 'data-show-items', '' );
 					}
 				}
 			] );
@@ -403,22 +403,22 @@ export default class Nav {
 			cascade( [
 				{
 					action: () => {
-						removeClass( this.overflow, '--show-items' );
+						this.overflow.removeAttribute( 'data-show-items' );
 					}
 				},
 				{
 					action: () => {
-						removeClass( this.button, '--show' );
-						removeClass( this.overflow, '--show' );
+						this.button.removeAttribute( 'data-show' );
+						this.overflow.removeAttribute( 'data-show' );
 
 						if( this.transition )
-							removeClass( this.transition, '--show' );
+							this.transition.removeAttribute( 'data-show' );
 					},
 					delay: this.delay.close
 				},
 				{
 					action: () => {
-						removeClass( this.nav, '--open' );
+						this.nav.removeAttribute( 'data-open' );
 
 						this._disableBodyScroll( false );
 						this.button.setAttribute( 'aria-expanded', 'false' );

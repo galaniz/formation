@@ -4,7 +4,7 @@
  * ---------------
  */
 
-.c-nav-icon.--three {
+.c-nav-icon[data-num="3"] {
 	transform: rotate( 0deg );
 	transition: transform 225ms ease;
 	& .c-nav-icon__top,
@@ -16,7 +16,7 @@
 		@extend %u-opacity-1;
 		transition: opacity 225ms ease;
 	}
-	.--show & {
+	.c-nav__button[data-show] & {
 		transform: rotate( 45deg );
 		& .c-nav-icon__top {
 			transform: translateY( $_navIconY );

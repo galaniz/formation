@@ -27,7 +27,7 @@ const _imageLoaded = ( image ) => {
 
 export const imagesLoaded = ( images = [], done = () => {} ) => {
     if( images.length == 0 ) {
-        done( 'No images' );
+        done( false );
         return;
     }
 
@@ -37,6 +37,6 @@ export const imagesLoaded = ( images = [], done = () => {} ) => {
 	} )
     .catch( ( err ) => {
         console.log( err );
-        done( data );
+        done( false );
     } );
 };

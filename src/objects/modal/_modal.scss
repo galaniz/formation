@@ -11,7 +11,7 @@
 	@extend %u-visibility-hidden;
 	z-index: map-get( $g-zIndex, 'modal' );
 	transition: visibility 0ms #{$g-defTimingFunction} #{$g-defDuration};
-	&[data-center="true"] {
+	&[data-center] {
 		@extend %u-display-flex;
 		align-items: center;
 		height: 100%;
@@ -57,7 +57,7 @@
 .o-modal__fade {
 	@extend %u-opacity-0;
 	@extend %u-transition-opacity-ease;
-	.o-modal[data-window-open="true"] & {
+	.o-modal[data-window-open] & {
 		@extend %u-opacity-1;
 	}
 }

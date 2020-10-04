@@ -4,7 +4,7 @@
  * ---------------
  */
 
-.c-nav-icon.--eight {
+.c-nav-icon[data-num="8"] {
 	transform: rotate( 0deg );
 	&,
 	& .c-nav-icon__top,
@@ -23,7 +23,7 @@
 	& .c-nav-icon__bottom {
 		margin-left: 50%;
 	}
-	.--show & {
+	.c-nav__button[data-show] & {
 		$_x: mapDeepGet( $g-nav, 'icon', 'width' ) * 0.25;
 
 		transform: rotate( -45deg );

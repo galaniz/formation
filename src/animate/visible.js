@@ -5,9 +5,6 @@
  */
 
 import {
-	addClass,
-	hasClass,
-	removeClass,
 	prefix,
 	mergeObjects,
 	getScrollY,
@@ -37,7 +34,6 @@ export default class Visible {
         this.visibleItem = null;
         this.visibleTop = false;
         this.visibleOffset = 0;
-        this.classes = [];
         this.delay = 0;
         this.wait = '';
         this.sticky = false;
@@ -78,6 +74,9 @@ export default class Visible {
         // check if requestanimationframe supported
         this._requestAnimationSupported = window.hasOwnProperty( 'requestAnimationFrame' );
 
+        // check if visible
+        this._isVisible = false;
+
         // for scroll event
         this._scrollY = 0;
         this._lastScrollY = 0;
@@ -101,10 +100,6 @@ export default class Visible {
 
         // if sticky get height of item
         this._stickyItemHeight = 0;
-
-        // classes to add when visible
-        this._classes = [ '--vis' + ( this.visAll ? ' --vis-all' : '' ) ].concat( this.classes );
-        this._classes = this._classes.join( ' ' );
 
        /*
         * Initialize
@@ -184,8 +179,14 @@ export default class Visible {
 	}
 
 	_set() {
-		if( !hasClass( this.item, this._classes ) ) {
-			addClass( this.item, this._classes );
+		if( !this._isVisible ) {
+			this.item.setAttribute( 'data-vis', true );
+
+			if( this.visAll )
+				this.item.setAttribute( 'data-vis-all', true );
+
+			this._isVisible = true;
+
 			this.onVisible();
 		}
 
@@ -194,13 +195,20 @@ export default class Visible {
     }
 
     _unset() {
-    	if( hasClass( this.item, this._classes ) ) {
-			removeClass( this.item, this._classes );
+    	if( this._isVisible ) {
+			this.item.removeAttribute( 'data-vis' );
+
+			if( this.visAll )
+				this.item.removeAttribute( 'data-vis-all' );
+
+			this._isVisible = false;
+
 			this.endVisible();
 		}
 
     	if( this.sticky ) {
-    		removeClass( this.item, '--top --bottom --sticky' );
+    		this.item.removeAttribute( 'data-sticky' );
+    		this.item.removeAttribute( 'data-sticky-pos' );
     	}
 
     	/*if( this.parallax )
@@ -260,24 +268,24 @@ export default class Visible {
 
 			if( this.sticky ) {
 				if( this._stickyVisible() ) {
-					removeClass( this.item, '--top --bottom' );
-					addClass( this.item, '--sticky' );
+					this.item.setAttribute( 'data-sticky-pos', false );
+					this.item.setAttribute( 'data-sticky', true );
 				} else {
 					let stickyDelay = 0;
 
 					// reached bottom limit
 					if( this._scrollY > this._rect.bottom - ( this._stickyItemHeight + this.stickyOffset ) ) {
-						addClass( this.item, '--bottom' );
+						this.item.setAttribute( 'data-sticky-pos', 'bottom' );
 						stickyDelay = this.stickyDelay;
 					}
 
 					setTimeout( () => {
-						removeClass( this.item, '--sticky' );
+						this.item.setAttribute( 'data-sticky', false );
 					}, stickyDelay );
 
 					// reached the top limit
 					if( this._scrollY < this._rect.top - this.stickyOffset ) {
-						addClass( this.item, '--top' );
+						this.item.setAttribute( 'data-sticky-pos', 'top' );
 					}
 				}
 			}

@@ -228,11 +228,7 @@ export default class LoadMore {
 			return;
 
 		if( show ) {
-			let d = delay ? 400 : 0;
-
-			setTimeout( () => {
-				removeClass( this.filtersLoader, '--hide' );
-			}, d );
+			removeClass( this.filtersLoader, '--hide' );
 		} else {
 			addClass( this.filtersLoader, '--hide' );
 		}

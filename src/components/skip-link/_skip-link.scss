@@ -14,7 +14,7 @@
 	transform: translateY( -150% );
 	padding: 18px 0;
 	letter-spacing: 0.6px;
-	&.--show {
+	&[data-show] {
 		transform: translateY( 0 );
 	}
 	&:focus, 

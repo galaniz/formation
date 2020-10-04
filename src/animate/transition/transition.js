@@ -1,12 +1,5 @@
 
 /*
- * Imports
- * -------
- */
-
-import { addClass } from '../../utils/utils';
-
-/*
  * Complete page transition on link click
  * --------------------------------------
  */
@@ -23,7 +16,7 @@ const clickHandler = ( e ) => {
 
 	let url = e.currentTarget.href;
 
-	addClass( t, '--show' );
+	t.setAttribute( 'data-show' );
 
 	setTimeout( () => {
 		window.location = url;

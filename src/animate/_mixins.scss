@@ -51,7 +51,7 @@
 
             @include _transformHover( "translate#{$type}( #{$p} )" );
 
-            &.--reverse {
+            &[data-reverse] {
                 @if $k == def {
                     & {
                         transform: unquote( $transformReverse );
@@ -66,11 +66,11 @@
             }
         }
     }
-    .js .--vis-all &,
-    .js &.--show,
-    .js &.--vis {
+    .js [data-vis-all] &,
+    .js &[data-show],
+    .js &[data-vis] {
         &,
-        &.--reverse {
+        &[data-reverse] {
             transform: unquote( $showTransform );
         }
     }
@@ -116,9 +116,9 @@
         .js & {
             @extend %u-opacity-0;
         }
-        .js .--vis-all &,
-        .js &.--show,
-        .js &.--vis {
+        .js [data-vis-all] &,
+        .js &[data-show],
+        .js &[data-vis] {
             @extend %u-opacity-1;
         }
     }
@@ -171,18 +171,18 @@
                 }
             }
         }
-        .js .--vis-all &,
-        .js &.--vis,
-        .js &.--show {
+        .js [data-vis-all] &,
+        .js &[data-show],
+        .js &[data-vis] {
             @extend %u-opacity-1;
             transform: scale( 1 );
         }
     }
 
     .a-scale-out {
-        .js .--vis-all &,
-        .js &.--vis,
-        .js &.--show {
+        .js [data-vis-all] &,
+        .js &[data-show],
+        .js &[data-vis] {
             @extend %u-opacity-1;
             @each $k, $v in $out {
                 @if $k == def {

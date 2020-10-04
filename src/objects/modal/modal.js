@@ -194,7 +194,7 @@ export default class Modal {
 
 		if( this.scaleTransition ) {
 			if( !open )
-				this.modal.setAttribute( 'data-window-open', 'false' );
+				this.modal.removeAttribute( 'data-window-open' );
 
 			setTimeout( () => {
 				this._setTransforms();
@@ -202,7 +202,7 @@ export default class Modal {
 
 			if( open ) {
 				setTimeout( () => {
-					this.modal.setAttribute( 'data-window-open', 'true' );
+					this.modal.setAttribute( 'data-window-open', '' );
 				}, open ? this.scaleTransitionDelay : 0 );
 			}
 		}

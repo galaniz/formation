@@ -4,7 +4,7 @@
  * ---------------
  */
 
-.c-nav-icon.--seven {
+.c-nav-icon[data-num="7"] {
 	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'width' ) * 0.28571 ) - ( 8 - mapDeepGet( $g-nav, 'icon', 'margin' ) );
 
 	transition: transform 200ms ease;
@@ -17,10 +17,10 @@
 		@extend %u-opacity-1;
 		transition: opacity 0s ease 150ms;
 	}
-	.c-nav__button:not( .--show ) & {
+	.c-nav__button:not( [data-show] ) & {
 		animation: _navIconGrowShrinkCopy 300ms;
 	}
-	.c-nav__button.--show & {
+	.c-nav__button[data-show] & {
 		& .c-nav-icon__top {
 			transform: translateY( $_navIconY ) rotate( 45deg );
 		}

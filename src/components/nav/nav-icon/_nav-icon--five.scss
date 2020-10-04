@@ -3,7 +3,7 @@
  * --------------
  */
 
- .c-nav-icon.--five {
+ .c-nav-icon[data-num="5"] {
  	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 
  	& .c-nav-icon__top {
@@ -16,7 +16,7 @@
  		@extend %u-opacity-1;
  		transition: opacity 150ms ease 100ms;
  	}
- 	.c-nav__button.--show & {
+ 	.c-nav__button[data-show] & {
  		& .c-nav-icon__middle {
  			@extend %u-opacity-0;
  			transition: opacity 150ms ease;
