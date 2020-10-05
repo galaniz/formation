@@ -108,7 +108,7 @@ _Required:_ true
 _Type:_ `boolean`  
 _Default:_ `true`
 
-#### `disableButtonLoader( button, loader, className, add, disable )`
+#### `disableButtonLoader( button, loader, hide, disable )`
 
 Disable button/show loader.
 
@@ -124,18 +124,13 @@ _Type:_ `HTMLElement`
 _Default:_ `null`   
 _Required:_ true
 
-* `className`  
-_Type:_ `string`  
-_Default:_ `''`   
-_Required:_ true
-
-* `add`   
-If true, [`addClass`](#user-content-addclass-item-classes-) otherwise [`removeClass`](#user-content-removeclass-item-classes-)    
+* `hide`   
+Adds or removes `[data-hide]` attribute from loader.  
 _Type:_ `boolean`  
 _Default:_ `true`
 
 * `disable`  
-Disabled attribute value.    
+Disable or enable button.    
 _Type:_ `boolean`  
 _Default:_ `false`
 
