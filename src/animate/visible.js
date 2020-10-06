@@ -18,32 +18,32 @@ import {
 
 export default class Visible {
 
-   /*
-	* Constructor
-	* -----------
-	*/
+	/*
+	 * Constructor
+	 * -----------
+	 */
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+		/*
+		 * Public variables
+		 * ----------------
+		 */
 
-        this.item = null;
-        this.visibleItem = null;
-        this.visibleTop = false;
-        this.visibleOffset = 0;
-        this.delay = 0;
-        this.wait = '';
+		this.item = null;
+		this.visibleItem = null;
+		this.visibleOffset = 0;
+		this.visibleOffsetPercentage = 0;
+		this.visAll = false;
+		this.allowUnset = false;
+		this.delay = 0;
+		this.wait = '';
         this.sticky = false;
         this.stickyOffset = 0;
         this.stickyDelay = 0;
-        this.allowUnset = false;
-        this.visAll = false;
-        this.onVisible = () => {};
-        this.endVisible = () => {};
-        this.onInit = () => {};
+		this.onVisible = () => {};
+		this.endVisible = () => {};
+		this.onInit = () => {};
 
     	this.parallax = {
 	    	rate: 0.2,
@@ -52,67 +52,67 @@ export default class Visible {
 	    	z: 0
 	    };
 
-        this.breakpoints = {
-        	min: 0,
-        	max: 99999
-        };
+		this.breakpoints = {
+			min: 0,
+			max: 99999
+		};
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-        if( !args.hasOwnProperty( 'parallax' ) )
-        	this.parallax = false;
+		/*
+		 * Internal variables
+		 * ------------------
+		 */
 
-       /*
-        * Internal variables
-        * ------------------
-        */
-
-        // check if already initialized
-        this._initDone = false;
+		// check if already initialized
+		this._initDone = false;
 
         // check if requestanimationframe supported
         this._requestAnimationSupported = window.hasOwnProperty( 'requestAnimationFrame' );
 
-        // check if visible
-        this._isVisible = false;
+		// check if scrolling up or down
+		this._scrollDown = true;
 
-        // for scroll event
-        this._scrollY = 0;
-        this._lastScrollY = 0;
-        this._parallaxScrollY = null;
+		// check if visible
+		this._isVisible = false;
 
-        // for throttling resize event
-        this._resizeTimer;
+		// for scroll event
+		this._scrollY = 0;
+		this._lastScrollY = 0;
+		this._parallaxScrollY = null;
 
-        // for resizing only on x axis
-        this._viewportWidth = window.innerWidth;
+		// for throttling resize event
+		this._resizeTimer;
 
-        // for checking if item visible
-        this._viewportHeight = window.innerHeight;
+		// for resizing only on x axis
+		this._viewportWidth = window.innerWidth;
 
-        // offset / dimensions info for item
-        this._rect = {
-        	top: 0,
-        	bottom: 0,
-        	height: 0
-        };
+		// for checking if item visible
+		this._viewportHeight = window.innerHeight;
+
+		// offset / dimensions info for item
+		this._rect = {
+			top: 0,
+			bottom: 0,
+			height: 0
+		};
 
         // if sticky get height of item
         this._stickyItemHeight = 0;
 
-       /*
-        * Initialize
-        * ----------
-        */
+		/*
+		 * Initialize
+		 * ----------
+		 */
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+	/*
 	* Internal methods
 	* ----------------
 	*/
@@ -165,16 +165,34 @@ export default class Visible {
 
 		this._scrollY = getScrollY();
 
+		let top = rect.top + this._scrollY,
+			bottom = rect.bottom + this._scrollY;
+
 		this._rect = {
-			// top: visibleItem.offsetTop,
-			top: rect.top + this._scrollY,
-			bottom: rect.bottom + this._scrollY,
+			top: top,
+			ogTop: top,
+			bottom: bottom,
+			ogBottom: bottom,
 			height: rect.height
 		};
 
-		if( this.sticky ) {
+		if( this.sticky )
 			this._stickyItemHeight = this.item.clientHeight;
-			console.log( this._rect );
+	}
+
+	_setOffset() {
+		let percent = 0,
+			offset = this.visibleOffset;
+
+		if( this.visibleOffsetPercentage )
+			percent = ( this.visibleOffsetPercentage / 100 ) * this._rect.height;
+
+		if( this._scrollDown ) {
+			this._rect.top = this._rect.ogTop + percent + offset;
+			this._rect.bottom = this._rect.ogBottom + percent + offset;
+		} else {
+			this._rect.top = this._rect.ogTop - percent - offset;
+			this._rect.bottom = this._rect.ogBottom - percent - offset;
 		}
 	}
 
@@ -192,14 +210,14 @@ export default class Visible {
 
 		if( this.parallax && this._requestAnimationSupported )
 			requestAnimationFrame( this._parallax.bind( this ) );
-    }
+	}
 
-    _unset() {
-    	if( this._isVisible ) {
-			this.item.removeAttribute( 'data-vis' );
+	_unset() {
+		if( this._isVisible ) {
+			this.item.setAttribute( 'data-vis', false );
 
 			if( this.visAll )
-				this.item.removeAttribute( 'data-vis-all' );
+				this.item.setAttribute( 'data-vis-all', false );
 
 			this._isVisible = false;
 
@@ -211,9 +229,9 @@ export default class Visible {
     		this.item.removeAttribute( 'data-sticky-pos' );
     	}
 
-    	/*if( this.parallax )
-    		prefix( 'transform', this.item, '' );*/
-    }
+    	if( this.parallax )
+    		prefix( 'transform', this.item, '' );
+	}
 
 	_parallax() {
 		let scrollAmount = this._scrollY - ( this._rect.top > this._viewportHeight ? this._rect.top : 0 ),
@@ -226,11 +244,7 @@ export default class Visible {
     }
 
 	_visible() {
-		if( this.visibleTop ) {
-			return ( ( this._scrollY >= this._rect.top - this.visibleOffset ) && this._scrollY <= this._rect.bottom - this.visibleOffset );
-		} else {
-			return ( ( this._scrollY + this._viewportHeight >= this._rect.top ) && this._scrollY <= this._rect.bottom );
-		}
+		return ( ( this._scrollY + this._viewportHeight >= this._rect.top ) && this._scrollY <= this._rect.bottom );
 	}
 
     _stickyVisible() {
@@ -240,17 +254,19 @@ export default class Visible {
 		);
     }
 
-   /*
-    * Event handlers
-    * --------------
-    */
+	/*
+	 * Event handlers
+	 * --------------
+	 */
 
 	_scrollHandler() {
 		this._scrollY = getScrollY();
+		this._scrollDown = this._lastScrollY - this._scrollY <= 0 ? true : false;
+
+		this._setOffset();
 
 		if( this._withinBreakpoints() ) {
 			if( this._visible( this._scrollY ) ) {
-
 				if( this._parallaxScrollY === null )
 					this._parallaxScrollY = this._scrollY;
 
@@ -297,11 +313,11 @@ export default class Visible {
 	}
 
 	_resizeHandler() {
-        // throttles resize event
-        clearTimeout( this._resizeTimer );
+		// throttles resize event
+		clearTimeout( this._resizeTimer );
 
-        this._resizeTimer = setTimeout( () => {
-        	let viewportWidth = window.innerWidth;
+		this._resizeTimer = setTimeout( () => {
+			let viewportWidth = window.innerWidth;
 
             if( viewportWidth != this._viewportWidth ) {
                 this._viewportWidth = viewportWidth;
@@ -311,18 +327,17 @@ export default class Visible {
             		return;
             }
 
-        	if( this._withinBreakpoints() ) {
-        		this._viewportHeight = window.innerHeight;
-            	this._setItemRect();
-            	// this._scrollHandler();
+			if( this._withinBreakpoints() ) {
+				this._viewportHeight = window.innerHeight;
+				this._setItemRect();
 
-            	// on touch devices changing height of viewport on scroll
+				// on touch devices changing height of viewport on scroll
             	if( this.sticky || this.parallax !== false )
             		this._scrollHandler();
-        	} else {
-        		this._unset();
-        	}
-        }, 100 );
-    }
+			} else {
+				this._unset();
+			}
+		}, 100 );
+	}
 
 } // end Visible
