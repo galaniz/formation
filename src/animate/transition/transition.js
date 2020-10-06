@@ -16,7 +16,7 @@ const clickHandler = ( e ) => {
 
 	let url = e.currentTarget.href;
 
-	t.setAttribute( 'data-show' );
+	t.setAttribute( 'data-show', '' );
 
 	setTimeout( () => {
 		window.location = url;

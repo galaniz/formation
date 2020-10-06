@@ -302,11 +302,11 @@ export default class Nav {
         } );
 
 		if( this._currentOverflowGroups.length > 0 ) {
-			if( !hasAttribute( this.nav, 'data-overflow' ) )
+			if( !this.nav.hasAttribute( 'data-overflow' ) )
 				this.nav.setAttribute( 'data-overflow', '' );
 
 			if( this._currentOverflowGroups.length === this._overflowGroupsLength ) {
-				if( !hasAttribute( this.nav, 'data-overflow-all' ) )
+				if( !this.nav.hasAttribute( 'data-overflow-all' ) )
 					this.nav.setAttribute( 'data-overflow-all', '' );
 			}
 		} else {
