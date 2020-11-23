@@ -5,22 +5,24 @@
  */
 
 #{ $g-loader-selector } {
-    transition: opacity #{$g-defDuration} #{$g-defTimingFunction} 10ms, z-index 0ms #{$g-defTimingFunction};
-    @extend %u-position-absolute;
-    @extend %u-top-0;
-    @extend %u-bottom-0;
-    @extend %u-left-0;
-    @extend %u-right-0;
-    @extend %u-opacity-1;
-    @extend %u-background-color-inherit;
-    z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
-    &[data-hide] {
-        @extend %u-opacity-0;
-        transition: opacity #{$g-defDuration} #{$g-defTimingFunction}, z-index 0ms #{$g-defTimingFunction} #{$g-defDuration};
-        z-index: -1 !important;
-    }
-    &[data-page] {
-        @extend %u-position-fixed;
-        z-index: mapDeepGet( $g-zIndex, 'loader', 'page' );
-    }
+	transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction } 10ms, z-index 0ms #{ $g-defTimingFunction };
+	@extend %u-position-absolute;
+	@extend %u-top-0;
+	@extend %u-bottom-0;
+	@extend %u-left-0;
+	@extend %u-right-0;
+	@extend %u-opacity-1;
+	@extend %u-background-color-inherit;
+	z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
+
+	&[data-hide] {
+		@extend %u-opacity-0;
+		transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction }, z-index 0ms #{ $g-defTimingFunction } #{ $g-defDuration };
+		z-index: -1 !important;
+	}
+
+	&[data-page] {
+		@extend %u-position-fixed;
+		z-index: mapDeepGet( $g-zIndex, 'loader', 'page' );
+	}
 }

@@ -5,8 +5,8 @@
  */
 
 let t = null,
-	d = 800,
-	run = true;
+		d = 800,
+		run = true;
 
 const clickHandler = ( e ) => {
 	e.preventDefault();

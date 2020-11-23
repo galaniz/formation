@@ -19,34 +19,34 @@ import {
 
 export default class Form {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.inputs = null;
-        this.fieldClass = '';
-        this.groupClass = '';
-        this.labelClass = '';
+		this.inputs = null;
+		this.fieldClass = '';
+		this.groupClass = '';
+		this.labelClass = '';
 		this.submitted = false;
 		this.errorShake = false;
 		this.errorClass = '';
 		this.errorShakeClass = 'a-shake';
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
 		// regex for url, email inputs
 		this._exp = {
@@ -66,18 +66,18 @@ export default class Form {
 		// input email labels by name
 		this._inputEmailLabels = {};
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+	 /*
 	* Initialize
 	* ----------
 	*/
@@ -114,8 +114,8 @@ export default class Form {
 			} else {
 				// doesn't exist so create new object of input data
 				let reqAttr = input.getAttribute( 'aria-required' ),
-					required = ( reqAttr == 'true' || reqAttr == '1' ),
-					type = input.tagName.toLowerCase();
+						required = ( reqAttr == 'true' || reqAttr == '1' ),
+						type = input.tagName.toLowerCase();
 
 				if( type === 'input' )
 					type = input.type;
@@ -152,15 +152,15 @@ export default class Form {
 		return true;
 	}
 
-   /*
+	 /*
 	* Internal helper methods
 	* -----------------------
 	*/
 
 	_validateInputs( inputs, type, required ) {
 		let values = [],
-			message = '',
-			valid = false;
+				message = '',
+				valid = false;
 
 		// get values from inputGroup
 		inputs.forEach( ( input ) => {
@@ -224,16 +224,16 @@ export default class Form {
 	_validateGroup( inputGroup, name ) {
 		// get inputGroup data
 		let validGroup = true,
-			inputs = inputGroup.inputs,
-			field = inputGroup.field,
-			type = inputGroup.type,
-			required = inputGroup.required;
+				inputs = inputGroup.inputs,
+				field = inputGroup.field,
+				type = inputGroup.type,
+				required = inputGroup.required;
 
 		// validate inputGroup
 		let validate = this._validateInputs( inputs, type, required ),
-			values = validate.values,
-			valid = validate.valid,
-			message = validate.message;
+				values = validate.values,
+				valid = validate.valid,
+				message = validate.message;
 
 		if( !valid ) {
 			this._setErrorMessage( inputs, name, field, message );
@@ -308,7 +308,7 @@ export default class Form {
 			this._validateGroup( inputGroup, name );
 	}
 
-   /*
+	 /*
 	* Public methods
 	* --------------
 	*/
@@ -329,11 +329,11 @@ export default class Form {
 
 	getFormValues( urlEncoded = false, filter = false ) {
 		let formValues = {},
-			usedEmailLabels = [];
+				usedEmailLabels = [];
 
 		for( let name in this._inputGroups ) {
 			let inputGroup = this._inputGroups[name],
-				values = inputGroup.values;
+					values = inputGroup.values;
 
 			if( values.length === 0 ) {
 				values = '';
@@ -376,9 +376,9 @@ export default class Form {
 	clear( exclude = [] ) {
 		for( let name in this._inputGroups ) {
 			let inputGroup = this._inputGroups[name],
-				inputs = inputGroup.inputs,
-				field = inputGroup.field,
-				type = inputGroup.type;
+					inputs = inputGroup.inputs,
+					field = inputGroup.field,
+					type = inputGroup.type;
 
 			// remove error markup if exists
 			this._removeErrorMessage( inputs, name, field );

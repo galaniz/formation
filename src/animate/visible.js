@@ -38,19 +38,19 @@ export default class Visible {
 		this.allowUnset = false;
 		this.delay = 0;
 		this.wait = '';
-        this.sticky = false;
-        this.stickyOffset = 0;
-        this.stickyDelay = 0;
+		this.sticky = false;
+		this.stickyOffset = 0;
+		this.stickyDelay = 0;
 		this.onVisible = () => {};
 		this.endVisible = () => {};
 		this.onInit = () => {};
 
-    	this.parallax = {
-	    	rate: 0.2,
-	    	x: 0,
-	    	y: 0,
-	    	z: 0
-	    };
+		this.parallax = {
+			rate: 0.2,
+			x: 0,
+			y: 0,
+			z: 0
+		};
 
 		this.breakpoints = {
 			min: 0,
@@ -68,8 +68,8 @@ export default class Visible {
 		// check if already initialized
 		this._initDone = false;
 
-        // check if requestanimationframe supported
-        this._requestAnimationSupported = window.hasOwnProperty( 'requestAnimationFrame' );
+		// check if requestanimationframe supported
+		this._requestAnimationSupported = window.hasOwnProperty( 'requestAnimationFrame' );
 
 		// check if scrolling up or down
 		this._scrollDown = true;
@@ -98,8 +98,8 @@ export default class Visible {
 			height: 0
 		};
 
-        // if sticky get height of item
-        this._stickyItemHeight = 0;
+		// if sticky get height of item
+		this._stickyItemHeight = 0;
 
 		/*
 		 * Initialize
@@ -161,12 +161,12 @@ export default class Visible {
 
 	_setItemRect() {
 		let visibleItem = this.visibleItem ? this.visibleItem : this.item,
-			rect = visibleItem.getBoundingClientRect();
+				rect = visibleItem.getBoundingClientRect();
 
 		this._scrollY = getScrollY();
 
 		let top = rect.top + this._scrollY,
-			bottom = rect.bottom + this._scrollY;
+				bottom = rect.bottom + this._scrollY;
 
 		this._rect = {
 			top: top,
@@ -182,7 +182,7 @@ export default class Visible {
 
 	_setOffset() {
 		let percent = 0,
-			offset = this.visibleOffset;
+				offset = this.visibleOffset;
 
 		if( this.visibleOffsetPercentage )
 			percent = ( this.visibleOffsetPercentage / 100 ) * this._rect.height;
@@ -224,35 +224,35 @@ export default class Visible {
 			this.endVisible();
 		}
 
-    	if( this.sticky ) {
-    		this.item.removeAttribute( 'data-sticky' );
-    		this.item.removeAttribute( 'data-sticky-pos' );
-    	}
+			if( this.sticky ) {
+				this.item.removeAttribute( 'data-sticky' );
+				this.item.removeAttribute( 'data-sticky-pos' );
+			}
 
-    	if( this.parallax )
-    		prefix( 'transform', this.item, '' );
+			if( this.parallax )
+				prefix( 'transform', this.item, '' );
 	}
 
 	_parallax() {
 		let scrollAmount = this._scrollY - ( this._rect.top > this._viewportHeight ? this._rect.top : 0 ),
-			percentageMoved = ( ( scrollAmount / this._viewportHeight ) * this._rect.height ),
-			transformY = Math.round( percentageMoved * ( this._viewportHeight / this._rect.height ) * this.parallax.rate );
+				percentageMoved = ( ( scrollAmount / this._viewportHeight ) * this._rect.height ),
+				transformY = Math.round( percentageMoved * ( this._viewportHeight / this._rect.height ) * this.parallax.rate );
 
 		this.parallax.y = transformY;
 
 		prefix( 'transform', this.item, `translate3d( ${ this.parallax.x }, ${ transformY }px, ${ this.parallax.z } )` );
-    }
+	}
 
 	_visible() {
 		return ( ( this._scrollY + this._viewportHeight >= this._rect.top ) && this._scrollY <= this._rect.bottom );
 	}
 
-    _stickyVisible() {
-    	return (
+	_stickyVisible() {
+		return (
 			( this._scrollY >= this._rect.top - this.stickyOffset ) &&
 			( this._scrollY <= this._rect.bottom - ( this._stickyItemHeight + this.stickyOffset ) )
 		);
-    }
+	}
 
 	/*
 	 * Event handlers
@@ -319,21 +319,21 @@ export default class Visible {
 		this._resizeTimer = setTimeout( () => {
 			let viewportWidth = window.innerWidth;
 
-            if( viewportWidth != this._viewportWidth ) {
-                this._viewportWidth = viewportWidth;
-            } else {
-            	// on touch devices changing height of viewport on scroll
-            	if( !this.sticky )
-            		return;
-            }
+			if( viewportWidth != this._viewportWidth ) {
+				this._viewportWidth = viewportWidth;
+			} else {
+				// on touch devices changing height of viewport on scroll
+				if( !this.sticky )
+					return;
+			}
 
 			if( this._withinBreakpoints() ) {
 				this._viewportHeight = window.innerHeight;
 				this._setItemRect();
 
 				// on touch devices changing height of viewport on scroll
-            	if( this.sticky || this.parallax !== false )
-            		this._scrollHandler();
+				if( this.sticky || this.parallax !== false )
+					this._scrollHandler();
 			} else {
 				this._unset();
 			}

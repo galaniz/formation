@@ -16,77 +16,77 @@ import {
 import Form from './form';
 
 /*
- * Handle validating and sending forms
- * -----------------------------------
+ * Handle validating and sending forms with Google reCAPTCHA
+ * ---------------------------------------------------------
  */
 
 export default class SendForm {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.id = '';
-        this.form = null;
-        this.groupClass = '';
-        this.fieldClass = '';
-        this.labelClass = '';
-        this.errorClass = '';
-        this.submit = null;
-        this.inputs = null;
-        this.filterInputs = false;
-        this.data = {};
-        this.loader = null;
-        this.shake = false;
-        this.siteKey = '';
-        this.url = '';
+		this.id = '';
+		this.form = null;
+		this.groupClass = '';
+		this.fieldClass = '';
+		this.labelClass = '';
+		this.errorClass = '';
+		this.submit = null;
+		this.inputs = null;
+		this.filterInputs = false;
+		this.data = {};
+		this.loader = null;
+		this.shake = false;
+		this.siteKey = '';
+		this.url = '';
 
-        this.success = () => {};
-        this.error = () => {};
+		this.success = () => {};
+		this.error = () => {};
 
-        this.result = {
-        	container: null,
-        	textContainer: null,
-        	text: {
-        		error: 'Oops! Looks like something went wrong. Please try again later.',
-        		success: 'Successfully submitted!'
-        	}
-        };
+		this.result = {
+			container: null,
+			textContainer: null,
+			text: {
+				error: 'Oops! Looks like something went wrong. Please try again later.',
+				success: 'Successfully submitted!'
+			}
+		};
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
-        // form for validation
-        this._form = null;
+		// form for validation
+		this._form = null;
 
-        // keep track of error / success
-        this._error = false;
+		// keep track of error / success
+		this._error = false;
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+	 /*
 	* Initialize
 	* ----------
 	*/
@@ -119,7 +119,7 @@ export default class SendForm {
 			errorClass: this.errorClass,
 			errorShake: this.shake,
 			inputs: this.inputs
-    	} );
+		} );
 
 		// add event listeners
 		this.form.addEventListener( 'submit', this._submit.bind( this ) );
@@ -136,9 +136,9 @@ export default class SendForm {
 	_displayResult( error = false ) {
 		let message = error ? this.result.text.error : this.result.text.success;
 
-        this.result.textContainer.textContent = message;
-        this.result.container.setAttribute( 'data-type', error ? 'error' : 'success' );
-        this._error = error;
+		this.result.textContainer.textContent = message;
+		this.result.container.setAttribute( 'data-type', error ? 'error' : 'success' );
+		this._error = error;
 	}
 
 	/*
@@ -164,14 +164,14 @@ export default class SendForm {
 			return;
 		}
 
-        // disable button
+		// disable button
 		disableButtonLoader( this.submit, this.loader, false, true );
 
 		// hide results container
 		this.result.container.removeAttribute( 'data-type' );
 
 		let formValues = this._form.getFormValues( true, this.filterInputs ),
-			data = `id=${ this.id }&${ formValues }`;
+				data = `id=${ this.id }&${ formValues }`;
 
 		if( this.data ) {
 			for( let d in this.data ) {
@@ -186,15 +186,15 @@ export default class SendForm {
 			console.log( 'DATA', data );
 
 			request( {
-    			method: 'POST',
-    			url: this.url,
-    			headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-    			body: data
-	    	} )
-		    .then( response => {
-		    	console.log( 'RESPONSE', response );
+				method: 'POST',
+				url: this.url,
+				headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+				body: data
+			} )
+			.then( response => {
+				console.log( 'RESPONSE', response );
 
-		        // enable button
+				// enable button
 				disableButtonLoader( this.submit, this.loader );
 
 				try {
@@ -203,16 +203,16 @@ export default class SendForm {
 				} catch( e ) {
 					this._displayResult( true );
 				}
-		    } )
-		    .catch( xhr => {
-		        console.log( 'ERROR', xhr );
+			} )
+			.catch( xhr => {
+				console.log( 'ERROR', xhr );
 
-		        // enable button
+				// enable button
 				disableButtonLoader( this.submit, this.loader );
 
-		    	this._displayResult( true );
-		    	this.error();
-		    } );
+				this._displayResult( true );
+				this.error();
+			} );
 		} );
 	}
 
@@ -225,8 +225,8 @@ export default class SendForm {
 		if( this._form )
 			this._form.clear( exclude );
 
-    	// end loader
-    	this.loader.setAttribute( 'data-hide', '' );
+		// end loader
+		this.loader.setAttribute( 'data-hide', '' );
 
 		// hide results container
 		this.result.container.removeAttribute( 'data-type' );

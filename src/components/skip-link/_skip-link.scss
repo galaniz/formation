@@ -12,11 +12,11 @@
 	@extend %u-right-0;
 	z-index: map-get( $g-zIndex, 'skipLink' );
 	transform: translateY( -150% );
-	padding: 18px 0;
-	letter-spacing: 0.6px;
+
 	&[data-show] {
 		transform: translateY( 0 );
 	}
+
 	&:focus, 
 	&:active, 
 	&:hover {

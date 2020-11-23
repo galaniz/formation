@@ -9,28 +9,28 @@
  */
 
 export const hasClass = ( item, classes, all = true ) => {
-    if( !item || !classes )
+  if( !item || !classes )
+    return;
+
+  let currentClasses = item.className.split( ' ' ),
+      hasClasses = all;
+      classes = classes.split( ' ' );
+      
+  classes.forEach( ( c ) => {
+    let classPos = currentClasses.indexOf( c ); 
+
+    if( all ) {
+      if( classPos === -1 ) {
+        hasClasses = false;
         return;
+      }
+    } else {
+      if( classPos !== -1 ) {
+        hasClasses = true;
+        return;
+      }
+    }
+  } );
 
-    let currentClasses = item.className.split( ' ' ),
-        hasClasses = all;
-        classes = classes.split( ' ' );
-        
-    classes.forEach( ( c ) => {
-        let classPos = currentClasses.indexOf( c ); 
-
-        if( all ) {
-            if( classPos === -1 ) {
-                hasClasses = false;
-                return;
-            }
-        } else {
-            if( classPos !== -1 ) {
-                hasClasses = true;
-                return;
-            }
-        }
-    } );
-
-    return hasClasses;
+  return hasClasses;
 };

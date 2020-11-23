@@ -10,19 +10,23 @@
 		transform: translateY( 0 );
 		transition: transform 175ms ease;
 	}
+
 	& .c-nav-icon__middle {
 		@extend %u-opacity-1;
 		transition: opacity 175ms ease;
 	}
+
 	.c-nav__button[data-show] & {
 		& .c-nav-icon__top {
-			transform: translateY( $_navIconY );
+			transform: translateY( $_y );
 		}
+
 		& .c-nav-icon__middle {
 			@extend %u-opacity-0;
 		}
+		
 		& .c-nav-icon__bottom {
-			transform: translateY( #{ $_navIconY * -1 } );
+			transform: translateY( #{ $_y * -1 } );
 		}
 	}
 }

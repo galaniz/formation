@@ -11,9 +11,11 @@
 
 .o-fade-slider__item {
 	@extend %u-position-relative;
+
 	.o-fade-slider:not( [data-no-slides] ) & {
 		@extend %u-opacity-0;
 		z-index: 1;
+		
 		&[data-active] {
 			@extend %u-opacity-1;
 			z-index: 2;

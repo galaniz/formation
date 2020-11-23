@@ -15,18 +15,22 @@
 	& .c-nav-icon__right {
 		transition: transform 200ms ease;
 	}
+
 	& .c-nav-icon__top,
 	& .c-nav-icon__middle,
 	& .c-nav-icon__bottom {
 		transform: scaleX( 1 );
-		transform-origin: left center;
+		transform-origin: 0 50%;
 	}
+
 	& .c-nav-icon__top {
 		transition-delay: 500ms;
 	}
+
 	& .c-nav-icon__middle {
 		transition-delay: 625ms;
 	}
+
 	& .c-nav-icon__bottom {
 		transition-delay: 750ms;
 	}
@@ -38,21 +42,25 @@
 	& .c-nav-icon__right {
 		@extend %u-position-absolute;
 	}
+
 	& .c-nav-icon__cross {
-		$_w: mapDeepGet( $g-nav, 'icon', 'width' ) * 0.70;
+		$_w: calcRem( mapDeepGet( $g-nav, 'icon', 'width' ) * 0.90 );
 
 		@extend %u-margin-auto;
 		@extend %u-left-0;
 		@extend %u-right-0;
+		@extend %u-top-0;
+		@extend %u-bottom-0;
 		transform: rotate( 45deg );
 		height: $_w;
 		width: $_w;
-		top: -5px;
 	}
+
 	& .c-nav-icon__left,
 	& .c-nav-icon__right {
-		transform-origin: 0 0;
+		@extend %u-transform-origin-0-0;
 	}
+
 	& .c-nav-icon__left {
 		@extend %u-top-0;
 		@extend %u-height-100;
@@ -60,31 +68,38 @@
 		transition-delay: 0ms;
 		left: 50%;
 	}
+
 	& .c-nav-icon__right {
 		@extend %u-width-100;
 		transform: scaleX( 0 ) translateY( -50% );
 		transition-delay: 250ms;
 		top: 50%;
 	}
+
 	.c-nav__button[data-show] & {
 		& .c-nav-icon__top,
 		& .c-nav-icon__middle,
 		& .c-nav-icon__bottom {
 			transform: scaleX( 0 );
 		}
+
 		& .c-nav-icon__top {
 			transition-delay: 0ms;
 		}
+
 		& .c-nav-icon__middle {
 			transition-delay: 125ms;
 		}
+
 		& .c-nav-icon__bottom {
 			transition-delay: 250ms;
 		}
+
 		& .c-nav-icon__left {
 			transform: scaleY( 1 ) translateX( -50% );
 			transition-delay: 625ms;
 		}
+		
 		& .c-nav-icon__right {
 			transform: scaleX( 1 ) translateY( -50% );
 			transition-delay: 375ms;

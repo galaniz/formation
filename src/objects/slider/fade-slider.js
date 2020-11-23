@@ -4,9 +4,7 @@
  * -------
  */
 
-import {
-	prefix
-} from '../../utils/utils';
+import { prefix } from '../../utils/utils';
 
 import BaseSlider from './base-slider';
 
@@ -17,39 +15,39 @@ import BaseSlider from './base-slider';
 
 export default class FadeSlider extends BaseSlider {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args = {} ) {
 
-       /*
-        * Base variables & init
-        * ---------------------
-        */
+	 /*
+		* Base variables & init
+		* ---------------------
+		*/
 
 		super( args );
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        let childDefaults = {
-        	transitionDuration: 500,
-        	overlayItems: false,
-        	showLast: false
-        };
+		let childDefaults = {
+			transitionDuration: 500,
+			overlayItems: false,
+			showLast: false
+		};
 
-        for( let prop in childDefaults ) {
-        	this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
-        }
+		for( let prop in childDefaults ) {
+			this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
+		}
 
-       /*
-        * Set up
-        * ------
-        */
+	 /*
+		* Set up
+		* ------
+		*/
 
 		/* Overlay items on top of each other */
 
@@ -63,10 +61,10 @@ export default class FadeSlider extends BaseSlider {
 
 		this._setUpNav();
 
-        this._goTo( this.currentIndex, true );
+		this._goTo( this.currentIndex, true );
 	}
 
-   /*
+ /*
 	* Helpers
 	* -------
 	*/

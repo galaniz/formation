@@ -1,26 +1,26 @@
 
 /* 
- * Font sizes
- * ----------
+ * Convert to rem units
+ * --------------------
  *
  * @param [number] $px
  * @return [number]
  */
 
 @function calcRem( $px ) {
-    $rem: $px / $g-context;
-    @return #{ $rem }rem;
+  $rem: $px / $g-context;
+  @return ( $rem + 0rem );
 }
 
 /* 
- * Font / breakpoint sizes
- * -----------------------
+ * Convert to em units
+ * -------------------
  *
  * @param [number] $px
  * @return [number]
  */
 
 @function calcEm( $px ) {
-    $em: $px / $g-context-em;
-    @return #{ $em }em;
+  $em: $px / $g-context-em;
+  @return ( $em + em );
 }

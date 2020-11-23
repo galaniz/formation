@@ -8,18 +8,18 @@
  */
 
 export const removeClass = ( item, classes ) => {
-    if( !item || !classes )
-        return;
+	if( !item || !classes )
+		return;
 
-    let currentClasses = item.className.split( ' ' );
-        classes = classes.split( ' ' );
+	let currentClasses = item.className.split( ' ' );
+			classes = classes.split( ' ' );
 
-    classes.forEach( ( c ) => {
-        let classPos = currentClasses.indexOf( c ); 
+	classes.forEach( ( c ) => {
+		let classPos = currentClasses.indexOf( c ); 
 
-        if( classPos != -1 )
-            currentClasses.splice( classPos, 1 );
-    } );
+		if( classPos != -1 )
+			currentClasses.splice( classPos, 1 );
+	} );
 
-    item.className = currentClasses.join( ' ' );
+	item.className = currentClasses.join( ' ' );
 };

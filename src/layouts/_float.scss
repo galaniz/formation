@@ -5,15 +5,15 @@
  */
 
 .l-clearfix:after {
-    content: '';
-    clear: both;
-    @extend %u-display-table;
+	content: '';
+	clear: both;
+	@extend %u-display-table;
 }
 
 .l-right {
-    @extend %u-float-right;
+	@extend %u-float-right;
 }
 
 .l-left {
-    @extend %u-float-left;
+	@extend %u-float-left;
 }

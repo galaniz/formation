@@ -7,6 +7,7 @@
 .c-nav__button {
 	@extend %u-position-relative;
 	@extend %u-touch-50;
+
 	.c-nav:not( [data-overflow] ) & {
 		@extend %u-display-none;
 	}
@@ -19,6 +20,7 @@
 	@extend %u-bottom-0;
 	@extend %u-right-0;
 	@extend %u-visibility-hidden;
+	
 	.c-nav[data-open] & {
 		@extend %u-visibility-visible;
 	}

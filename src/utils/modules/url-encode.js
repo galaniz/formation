@@ -11,12 +11,12 @@
  */
 
 export const urlEncode = ( o, _key, _list = [] ) => {
-    if( typeof( o ) == 'object' ) {
-        for( let idx in o )
-            urlEncode( o[idx], _key ? _key + '[' + idx + ']' : idx, _list );
-    } else {
-        _list.push( _key + '=' + encodeURIComponent( o ) );
-    }
+	if( typeof( o ) == 'object' ) {
+		for( let idx in o )
+			urlEncode( o[idx], _key ? _key + '[' + idx + ']' : idx, _list );
+	} else {
+		_list.push( _key + '=' + encodeURIComponent( o ) );
+	}
 
-    return _list.join( '&' );
+	return _list.join( '&' );
 };

@@ -18,14 +18,14 @@ import {
 
 export default class Modal {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-   /*
+ /*
 	* Public variables
 	* ----------------
 	*/
@@ -43,7 +43,7 @@ export default class Modal {
 	// merge default variables with args
 	mergeObjects( this, args );
 
-   /*
+	 /*
 	* Internal variables
 	* ------------------
 	*/
@@ -68,12 +68,12 @@ export default class Modal {
 	this._body = document.body;
 
 	// for throttling resize event
-    this._resizeTimer;
+	this._resizeTimer;
 
-    this._viewportWidth = window.innerWidth;
-    this._viewportHeight = window.innerHeight;
+	this._viewportWidth = window.innerWidth;
+	this._viewportHeight = window.innerHeight;
 
-    this._matrix = {
+	this._matrix = {
 		open: {
 			sX: 1,
 			sY: 1,
@@ -88,7 +88,7 @@ export default class Modal {
 		}
 	};
 
-   /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -99,14 +99,14 @@ export default class Modal {
 		return false;
 	}
 
-   /*
+ /*
 	* Initialize
 	* ----------
 	*/
 
 	_initialize() {
 		// check that required variables not null
-		if( !this.modal || !this.trigger || !this.close )
+		if( !this.modal || !this.window || !this.trigger || !this.close )
 			return false;
 
 		if( this.scaleTransition && !this.window )
@@ -132,7 +132,7 @@ export default class Modal {
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
 		// get focusable elements in modal
-		this._focusableItems = Array.from( this.modal.querySelectorAll( 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]' ) );
+		this._focusableItems = Array.from( this.window.querySelectorAll( 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]' ) );
 		this._focusableItemsLength = this._focusableItems.length;
 
 		this._firstFocusableItem = this._focusableItems[0];
@@ -141,15 +141,15 @@ export default class Modal {
 		return true;
 	}
 
-   /*
+ /*
 	* Internal helpers
 	* ----------------
 	*/
 
 	_setMatrix() {
 		let triggerRect = this.trigger.getBoundingClientRect(),
-			xScale = triggerRect.width / this._windowWidth,
-			yScale = triggerRect.height / this._windowHeight;
+				xScale = triggerRect.width / this._windowWidth,
+				yScale = triggerRect.height / this._windowHeight;
 
 		this._matrix = {
 			open: {
@@ -224,7 +224,7 @@ export default class Modal {
 		}
 	}
 
-   /*
+ /*
 	* Event callbacks
 	* ---------------
 	*/
@@ -262,21 +262,21 @@ export default class Modal {
 	}
 
 	_resizeHandler() {
-        // throttles resize event
-        clearTimeout( this._resizeTimer );
+		// throttles resize event
+		clearTimeout( this._resizeTimer );
 
-        this._resizeTimer = setTimeout( () => {
-        	if( this.scaleTransition ) {
+		this._resizeTimer = setTimeout( () => {
+			if( this.scaleTransition ) {
 				this._viewportWidth = window.innerWidth;
 				this._viewportHeight = window.innerHeight;
 
 				this._windowWidth = this.window.clientWidth;
 				this._windowHeight = this.window.clientHeight;
 
-            	this._setMatrix();
-            	this._setTransforms();
-        	} 
-        }, 100 );
-    }
+				this._setMatrix();
+				this._setTransforms();
+			} 
+		}, 100 );
+	}
 
 } // end Modal

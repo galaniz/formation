@@ -6,23 +6,27 @@
 
 .o-table {
 	@extend %u-width-100;
-    border-collapse: collapse;
-    border-spacing: 0;
-    .o-table__label::before {
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  .o-table__label::before {
 		content: attr( data-label );
 		@extend %u-display-none;
 		@extend %u-float-left;
-    }
+  }
+
 	&[data-collapse="true"] {
 		& thead {
-			display: none;
+			@extend %u-display-none;
 		}
+
 		& td {
-			display: flex;
+			@extend %u-display-flex;
 		}
+
 		& tr,
 		& .o-table__label::before {
-			display: block;
+			@extend %u-display-block;
 		}
 	}
 }

@@ -4,9 +4,7 @@
  * -------
  */
 
-import {
-	mergeObjects
-} from '../../utils/utils';
+import { mergeObjects } from '../../utils/utils';
 
 /*
  * Float labels above inputs 
@@ -15,36 +13,36 @@ import {
 
 export default class FloatLabel {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 		
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.input = null;
-        this.label = null;
+		this.input = null;
+		this.label = null;
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init ) 
-        	return false;
+		if( !init ) 
+			return false;
 	}
 
-   /*
+	 /*
 	* Initialize
 	* ----------
 	*/

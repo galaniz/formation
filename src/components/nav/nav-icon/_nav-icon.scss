@@ -4,29 +4,29 @@
  * --------
  */
 
-$_navIconY: mapDeepGet( $g-nav, 'icon', 'width' ) * 0.30;
+$_y: calcRem( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 
 .c-nav-icon {
 	@extend %u-position-relative;
 	@extend %u-margin-auto;
-	width: mapDeepGet( $g-nav, 'icon', 'width' );
+	width: calcRem( mapDeepGet( $g-nav, 'icon', 'width' ) );
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom,
 .c-nav-icon__right {
-	height: mapDeepGet( $g-nav, 'icon', 'lineWidth' );
+	height: calcRem( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 }
 
 .c-nav-icon__left {
-	width: mapDeepGet( $g-nav, 'icon', 'lineWidth' );
+	width: calcRem( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom {
-	margin: mapDeepGet( $g-nav, 'icon', 'margin' ) auto;
+	margin: calcRem( mapDeepGet( $g-nav, 'icon', 'margin' ) ) auto;
 }
 
 .c-nav-icon__top {

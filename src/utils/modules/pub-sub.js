@@ -17,29 +17,29 @@
 let subscriptions = {};
 
 const publish = ( name, args = [] ) => {
-    if( !subscriptions.hasOwnProperty( name ) )
-        return;
+	if( !subscriptions.hasOwnProperty( name ) )
+			return;
 
-    let callbacks = subscriptions[name];
+	let callbacks = subscriptions[name];
 
-    if( callbacks )
-        callbacks.forEach( ( callback ) => {
-            callback( args );
-        } );
+	if( callbacks )
+		callbacks.forEach( ( callback ) => {
+			callback( args );
+		} );
 };
 
 const subscribe = ( name, callback = () => {} ) => {
-    if( !subscriptions.hasOwnProperty( name ) )
-        subscriptions[name] = [];
+	if( !subscriptions.hasOwnProperty( name ) )
+		subscriptions[name] = [];
 
-    let index = subscriptions[name].push( callback ) - 1;
+	let index = subscriptions[name].push( callback ) - 1;
 
-    // remove subscription
-    return {
-        remove: () => {
-            delete subscriptions[name][index];
-        }
-    };
+	// remove subscription
+	return {
+		remove: () => {
+			delete subscriptions[name][index];
+		}
+	};
 };
 
 export { publish, subscribe };

@@ -18,90 +18,90 @@ import {
 
 export default class Nav {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.nav = null;
-        this.list = null; // or array
-        this.overflow = null;
-        this.overflowList = null; // or array
-        this.items = null;
-        this.itemSelector = '';
-        this.button = null;
-        this.overlay = null;
-        this.transition = null;
-        this.bodyOverflowHiddenClass = 'u-overflow-hidden';
-        this.onSet = () => {};
-        this.onReset = () => {};
-        this.afterReset = () => {};
-        this.onResize = () => {};
-        this.onToggle = () => {};
-        this.endToggle = () => {};
-        this.done = () => {};
-        this.delay = {
-        	open: 200,
-        	close: 200
-        };
+		this.nav = null;
+		this.list = null; // or array
+		this.overflow = null;
+		this.overflowList = null; // or array
+		this.items = null;
+		this.itemSelector = '';
+		this.button = null;
+		this.overlay = null;
+		this.transition = null;
+		this.bodyOverflowHiddenClass = 'u-overflow-hidden';
+		this.onSet = () => {};
+		this.onReset = () => {};
+		this.afterReset = () => {};
+		this.onResize = () => {};
+		this.onToggle = () => {};
+		this.endToggle = () => {};
+		this.done = () => {};
+		this.delay = {
+			open: 200,
+			close: 200
+		};
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-        this.isOverflowing = false;
+		this.isOverflowing = false;
 
-       /*
-        * Internal variables ( more set in init method )
-        * ---------------------------------------------
-        */
+	 /*
+		* Internal variables ( more set in init method )
+		* ---------------------------------------------
+		*/
 
-        this._body = document.body;
+		this._body = document.body;
 
-        this._viewportWidth = window.innerWidth;
-        this._viewportHeight = window.innerHeight;
+		this._viewportWidth = window.innerWidth;
+		this._viewportHeight = window.innerHeight;
 
-        // escape key for closing nav
-    	this._esc = [27, 'Escape'];
+		// escape key for closing nav
+		this._esc = [27, 'Escape'];
 
-        // put items into groups
-        this._overflowGroups = {};
-      	this._overflowGroupsLength = 0;
+		// put items into groups
+		this._overflowGroups = {};
+		this._overflowGroupsLength = 0;
 
-        this._listIndexes = {};
+		this._listIndexes = {};
 
-        // store groups currently overflown
-        this._currentOverflowGroups = [];
+		// store groups currently overflown
+		this._currentOverflowGroups = [];
 
-        // store last focusable element in overflow list
-        this._lastOverflowFocus = null;
+		// store last focusable element in overflow list
+		this._lastOverflowFocus = null;
 
 		// for throttling resize event
-        this._resizeTimer;
+		this._resizeTimer;
 
-        // store if nav is open
-        this._navOpen = false;
+		// store if nav is open
+		this._navOpen = false;
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init ) {
-        	this.done.call( this );
-        	return false;
-        }
+		if( !init ) {
+			this.done.call( this );
+			return false;
+		}
 	}
 
-   /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -109,15 +109,15 @@ export default class Nav {
 	_initialize() {
 		// check that required variables not null
 		let error = false,
-			required = [
-				'nav',
-				'list',
-				'overflow',
-				'overflowList',
-				'items',
-				'itemSelector',
-				'button'
-			];
+				required = [
+					'nav',
+					'list',
+					'overflow',
+					'overflowList',
+					'items',
+					'itemSelector',
+					'button'
+				];
 
 		required.forEach( ( r ) => {
 			if( !this[r] ) {
@@ -129,7 +129,7 @@ export default class Nav {
 		if( error )
 			return false;
 
-        /* Convert list(s) and overflow list(s) to arrays */
+		/* Convert list(s) and overflow list(s) to arrays */
 
 		this.list = !Array.isArray( this.list ) ? [this.list] : this.list;
 		this.overflowList = !Array.isArray( this.overflowList ) ? [this.overflowList] : this.overflowList;
@@ -153,27 +153,27 @@ export default class Nav {
 		// set up overflow groups
 		this.items.forEach( ( item, index ) => {
 			let overflowGroupIndex = parseInt( item.getAttribute( 'data-overflow-group' ) ),
-                listIndex = 0;
+					listIndex = 0;
 
-            if( !item.hasAttribute( 'data-list-index' ) ) {
-                item.setAttribute( 'data-list-index', listIndex );
-            } else {
-                listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
-            }
+			if( !item.hasAttribute( 'data-list-index' ) ) {
+				item.setAttribute( 'data-list-index', listIndex );
+			} else {
+				listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
+			}
 
 			if( isNaN( overflowGroupIndex ) )
 				overflowGroupIndex = index;
 
 			if( !this._overflowGroups.hasOwnProperty( overflowGroupIndex ) ) {
 				this._overflowGroups[overflowGroupIndex] = [];
-                this._listIndexes[overflowGroupIndex] = [];
+				this._listIndexes[overflowGroupIndex] = [];
 				this._overflowGroupsLength++;
 			}
 
 			this._overflowGroups[overflowGroupIndex].push( item );
 
-            if( this._listIndexes[overflowGroupIndex].indexOf( listIndex ) == -1 )
-                this._listIndexes[overflowGroupIndex].push( listIndex );
+			if( this._listIndexes[overflowGroupIndex].indexOf( listIndex ) == -1 )
+				this._listIndexes[overflowGroupIndex].push( listIndex );
 		} );
 
 		window.addEventListener( 'load', () => {
@@ -201,48 +201,48 @@ export default class Nav {
 		this._lastOverflowFocus = null;
 
 		if( this._currentOverflowGroups.length > 0 ) {
-            let frag = {},
-				appendFrag = true,
-                listIndexes = [];
+				let frag = {},
+						appendFrag = true,
+						listIndexes = [];
 
-            for( let overflowGroupIndex in this._listIndexes ) {
-                this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
-                    frag[index] = document.createDocumentFragment();
-                } );
-            }
+				for( let overflowGroupIndex in this._listIndexes ) {
+					this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+						frag[index] = document.createDocumentFragment();
+					} );
+				}
 
 			this.items.forEach( ( item, i ) => {
-                let listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
+				let listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
 
 				// insert at specific index
 				if( item.hasAttribute( 'data-index' ) ) {
 					appendFrag = false;
 
 					let index = parseInt( item.getAttribute( 'data-index' ) ),
-						refNode = this.list[listIndex].children[index];
+							refNode = this.list[listIndex].children[index];
 
 					this.list[listIndex].insertBefore( item, refNode );
 				} else { // insert
-                    frag[listIndex].appendChild( item );
+					frag[listIndex].appendChild( item );
 				}
 
-                if( listIndexes.indexOf( listIndex ) === -1 )
-                    listIndexes.push( listIndex );
+				if( listIndexes.indexOf( listIndex ) === -1 )
+					listIndexes.push( listIndex );
 			} );
 
 			// append overflowing items
 			if( appendFrag ) {
-                listIndexes.forEach( ( listIndex ) => {
-                    this.list[listIndex].appendChild( frag[listIndex] );
-                } );
-            }
+				listIndexes.forEach( ( listIndex ) => {
+					this.list[listIndex].appendChild( frag[listIndex] );
+				} );
+			}
 		}
 
-        for( let overflowGroupIndex in this._listIndexes ) {
-            this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
-                this.overflowList[index].innerHTML = '';
-            } );
-        }
+		for( let overflowGroupIndex in this._listIndexes ) {
+			this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+				this.overflowList[index].innerHTML = '';
+			} );
+		}
 
 		this._currentOverflowGroups = [];
 	}
@@ -253,14 +253,14 @@ export default class Nav {
 		this.afterReset.call( this );
 
 		let overflowGroupIndex = 0,
-            lastOverflowGroupIndex = 0,
-			frag = {},
-			overflow = this._overflowing( this._listIndexes[overflowGroupIndex] ),
-			ogOverflow = overflow;
+				lastOverflowGroupIndex = 0,
+				frag = {},
+				overflow = this._overflowing( this._listIndexes[overflowGroupIndex] ),
+				ogOverflow = overflow;
 
-        this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
-            frag[index] = document.createDocumentFragment();
-        } );
+		this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+			frag[index] = document.createDocumentFragment();
+		} );
 
 		this.isOverflowing = ogOverflow;
 		this.button.style.display = 'block';
@@ -269,7 +269,8 @@ export default class Nav {
 			let overflowGroup = this._overflowGroups[overflowGroupIndex];
 
 			overflowGroup.forEach( ( item ) => {
-                let listIndex = parseInt( item.getAttribute( 'data-list-index') );
+				let listIndex = parseInt( item.getAttribute( 'data-list-index') );
+				
 				frag[listIndex].appendChild( item );
 			} );
 
@@ -281,7 +282,7 @@ export default class Nav {
 			if( !overflow ) {
 				// get last child in list
 				let lastChild = overflowGroup[overflowGroup.length - 1],
-					descendents = lastChild.getElementsByTagName( '*' );
+						descendents = lastChild.getElementsByTagName( '*' );
 
 				// reverse loop through descendents to find last focusable element
 				for( let i = descendents.length - 1; i >= 0; i-- ) {
@@ -293,13 +294,13 @@ export default class Nav {
 					}
 				}
 			} else {
-                lastOverflowGroupIndex = overflowGroupIndex;
-            }
+				lastOverflowGroupIndex = overflowGroupIndex;
+			}
 		}
 
-        this._listIndexes[lastOverflowGroupIndex].forEach( ( index ) => {
-            this.overflowList[index].appendChild( frag[index] );
-        } );
+		this._listIndexes[lastOverflowGroupIndex].forEach( ( index ) => {
+			this.overflowList[index].appendChild( frag[index] );
+		} );
 
 		if( this._currentOverflowGroups.length > 0 ) {
 			if( !this.nav.hasAttribute( 'data-overflow' ) )
@@ -323,28 +324,28 @@ export default class Nav {
 
 	// check if items are overflowing / wrapping into new line
 	_overflowing( listIndexes = [0] ) {
-        let overflow = false;
+		let overflow = false;
 
-        listIndexes.forEach( ( index ) => {
-            let items = this.list[index].querySelectorAll( this.itemSelector ),
-    			itemsLength = items.length;
+		listIndexes.forEach( ( index ) => {
+				let items = this.list[index].querySelectorAll( this.itemSelector ),
+			itemsLength = items.length;
 
-    		// all items are in overflow element now
-    		if( itemsLength === 0 ) {
-                overflow = false;
-                return;
-            }
+			// all items are in overflow element now
+			if( itemsLength === 0 ) {
+				overflow = false;
+				return;
+			}
 
-    		let firstItemOffset = items[0].offsetTop;
+			let firstItemOffset = items[0].offsetTop;
 
-    		// reverse loop to start from last item
-    		for( let i = itemsLength - 1; i >= 0; i-- ) {
-    			if( items[i].offsetTop > firstItemOffset ) {
-                    overflow = true;
-                    return;
-    			}
-    		}
-        } );
+			// reverse loop to start from last item
+			for( let i = itemsLength - 1; i >= 0; i-- ) {
+				if( items[i].offsetTop > firstItemOffset ) {
+					overflow = true;
+					return;
+				}
+			}
+		} );
 
 		return overflow;
 	}
@@ -450,8 +451,8 @@ export default class Nav {
 	_keyDownHandler( e ) {
 		let key = e.key || e.keyCode || e.which || e.code;
 
-        if( this._esc.indexOf( key ) !== -1 )
-        	this._toggle();
+		if( this._esc.indexOf( key ) !== -1 )
+			this._toggle();
 	}
 
 	/* Last element focus close nav */
@@ -465,22 +466,22 @@ export default class Nav {
 
 	_resizeHandler() {
 		// throttles resize event
-        clearTimeout( this._resizeTimer );
+		clearTimeout( this._resizeTimer );
 
-        this._resizeTimer = setTimeout( () => {
-        	let viewportWidth = window.innerWidth;
+		this._resizeTimer = setTimeout( () => {
+			let viewportWidth = window.innerWidth;
 
 			this._viewportHeight = window.innerHeight;
 
-            if( viewportWidth != this._viewportWidth ) {
-                this._viewportWidth = viewportWidth;
-            } else {
-                return;
-            }
+			if( viewportWidth != this._viewportWidth ) {
+				this._viewportWidth = viewportWidth;
+			} else {
+				return;
+			}
 
-            this._setNav();
-            this.onResize.call( this );
-        }, 100 );
+			this._setNav();
+			this.onResize.call( this );
+		}, 100 );
 	}
 
 } // end Nav

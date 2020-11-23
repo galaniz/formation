@@ -8,9 +8,9 @@
  */
 
 @mixin fontRem( $size, $important: false ) {
-    @if $important {
-        font-size: calcRem( $size ) !important;
-    } @else {
-        font-size: calcRem( $size );
-    }
+  @if $important {
+  	font-size: calcRem( $size ) !important;
+  } @else {
+  	font-size: calcRem( $size );
+  }
 }

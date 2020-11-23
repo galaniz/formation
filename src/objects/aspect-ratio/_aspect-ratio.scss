@@ -11,12 +11,15 @@
 .o-aspect-ratio {
 	@extend %u-position-relative;
 	@extend %u-overflow-hidden;
+
 	&::before {
 		@extend %u-display-block;
 		content: '';
 		padding-top: 100%;
 	}
+
 	@include _aspectRatioPadding();
+	
 	&[data-circle] {
 		@extend %u-border-radius-100;
 		-webkit-mask-image: -webkit-radial-gradient( white, black );

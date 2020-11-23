@@ -4,60 +4,56 @@
  * -------
  */
 
-import {
-	addClass, 
-	removeClass,
-	prefix
-} from '../../utils/utils';
+import { prefix } from '../../utils/utils';
 
 import BaseSlider from './base-slider';
 
 /*
- * Slider
+ * Slider ( based on siema )
  * ------
  */
 
 export default class Slider extends BaseSlider {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args = {} ) {
 
-       /*
-        * Base variables & init
-        * ---------------------
-        */
+	 /*
+		* Base variables & init
+		* ---------------------
+		*/
 
 		super( args );
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        let childDefaults = {
-        	easing: 'ease',
-        	duration: 500,
-        	padding: {},
-        	center: false,
-        	linkClick: () => {},
-        	endMove: () => {},
-        	onResize: () => {}
-        };
+		let childDefaults = {
+			easing: 'ease',
+			duration: 500,
+			padding: {},
+			center: false,
+			linkClick: () => {},
+			endMove: () => {},
+			onResize: () => {}
+		};
 
-        for( let prop in childDefaults ) {
-        	this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
-        }
+		for( let prop in childDefaults ) {
+			this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
+		}
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
-        /* Keep track pointer hold and dragging distance */
+		/* Keep track pointer hold and dragging distance */
 
 		this._pointerDown = false;
 
@@ -75,40 +71,40 @@ export default class Slider extends BaseSlider {
 
 		/* Dimensions */
 
-        this._sliderWidth = 0;
-        this._itemWidth = 0;
-        this._padding = 0;
+		this._sliderWidth = 0;
+		this._itemWidth = 0;
+		this._padding = 0;
 
-        /* Resize */
+		/* Resize */
 
-        this._resizeTimer;
+		this._resizeTimer;
 
-        /* Links */
+		/* Links */
 
-        this._links = Array.from( this.slider.querySelectorAll( 'a' ) );
+		this._links = Array.from( this.slider.querySelectorAll( 'a' ) );
 
-       /*
-        * Set up
-        * ------
-        */
+	 /*
+		* Set up
+		* ------
+		*/
 
-        this._setDimensions();
-        this._setUpNav();
+		this._setDimensions();
+		this._setUpNav();
 
-        if( !( this.items.length - this._perPage ) )
-        	return;
+		if( !( this.items.length - this._perPage ) )
+			return;
 
 		this.slider.style.cursor = '-webkit-grab';
-        this.slider.style.touchAction = 'pan-y pinch-zoom';
-        this.slider.tabIndex = '0';
+		this.slider.style.touchAction = 'pan-y pinch-zoom';
+		this.slider.tabIndex = '0';
 
-        prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
-        prefix( 'transformOrigin', this.slider, '0 0' );
+		prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
+		prefix( 'transformOrigin', this.slider, '0 0' );
 
-       /*
-        * Events
-        * ------
-        */
+	 /*
+		* Events
+		* ------
+		*/
 
 		/* Bind all event handlers for referencability */
 
@@ -152,7 +148,7 @@ export default class Slider extends BaseSlider {
 		this._goTo( this.currentIndex, true );
 	}
 
-   /*
+	 /*
 	* Parent methods
 	* --------------
 	*/
@@ -162,38 +158,38 @@ export default class Slider extends BaseSlider {
 		this._move();
 	}
 
-   /*
-    * Helpers
-    * -------
-    */
+ /*
+	* Helpers
+	* -------
+	*/
 
-    _setWidths( set = true ) {
-    	this.slider.style.width = set ? ( this._itemWidth * this.items.length ) + 'px' : '';
+	_setWidths( set = true ) {
+		this.slider.style.width = set ? ( this._itemWidth * this.items.length ) + 'px' : '';
 
-    	this.items.forEach( ( item ) => {
-    		item.style.width = set ? this._itemWidth + 'px' : '';
-    	} );
-    }
+		this.items.forEach( ( item ) => {
+			item.style.width = set ? this._itemWidth + 'px' : '';
+		} );
+	}
 
 	_setDimensions() {
 		this._setWidths( false );
 
-        this._sliderWidth = this.slider.clientWidth;
-        this._itemWidth = this.items[0].clientWidth;
+		this._sliderWidth = this.slider.clientWidth;
+		this._itemWidth = this.items[0].clientWidth;
 
-        this._setWidths( true );
+		this._setWidths( true );
 
-        // set padding
-        this._resolveObject( '_padding', 'padding' );
+		// set padding
+		this._resolveObject( '_padding', 'padding' );
 
-        // set slides per page
-        this._perPage = Math.round( this._sliderWidth / this._itemWidth );
+		// set slides per page
+		this._perPage = Math.round( this._sliderWidth / this._itemWidth );
 
-        this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding );
-        this._drag.minX = this._padding;
+		this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding );
+		this._drag.minX = this._padding;
 
 		this._drag.threshold = this._itemWidth / 3;
-    } 
+	 } 
 
 	_resolveObject( setKey, getKey ) {
 		let viewportWidth = window.innerWidth;
@@ -235,48 +231,48 @@ export default class Slider extends BaseSlider {
 
 		if( !isLink ) {
 			let t = target,
-		        counter = 0,
-		        max = 20;
+					counter = 0,
+					max = 20;
 
-		    while( !isLink ) {
-		        t = t.parentElement;
+			while( !isLink ) {
+				t = t.parentElement;
 
-		        if( t === null || t === undefined ) {
-		        	isLink = false;
-		            break;
-		        }
+				if( t === null || t === undefined ) {
+					isLink = false;
+					break;
+				}
 
-		        isLink = t.nodeName === 'A';
-		        counter++;
+				isLink = t.nodeName === 'A';
+				counter++;
 
-		        if( counter === max ) {
-		            isLink = false;
-		            break;
-		        }
-		    }
+				if( counter === max ) {
+					isLink = false;
+					break;
+				}
+			}
 
-		    if( !isLink) {
+			if( !isLink) {
 				t = target;
-		        counter = 0;
-		        max = 20;
+				counter = 0;
+				max = 20;
 
-			    while( !isLink ) {
-			        t = t.firstChildElement;
+				while( !isLink ) {
+					t = t.firstChildElement;
 
-			        if( t === null || t === undefined ) {
-			        	isLink = false;
-			            break;
-			        }
+					if( t === null || t === undefined ) {
+						isLink = false;
+							break;
+					}
 
-			        isLink = t.nodeName === 'A';
-			        counter++;
+					isLink = t.nodeName === 'A';
+					counter++;
 
-			        if( counter === max ) {
-			            isLink = false;
-			            break;
-			        }
-			    }
-		    }
+					if( counter === max ) {
+						isLink = false;
+						break;
+					}
+				}
+			}
 		}
 
 		return isLink;
@@ -291,21 +287,21 @@ export default class Slider extends BaseSlider {
 		this._drag.letItGo = null;
 	}
 
-   /*
-    * Move ( nav click, after drag )
-    * ------------------------------
-    */
+ /*
+	* Move ( nav click, after drag )
+	* ------------------------------
+	*/
 
-    _move( drag = false ) {
+	_move( drag = false ) {
 
-    	/* Get move state if dragging */
+		/* Get move state if dragging */
 
-    	let ogIndex = this.currentIndex;
+		let ogIndex = this.currentIndex;
 
-    	if( drag ) {
-    		let dragOffset = this._drag.startX - this._drag.endX;
+		if( drag ) {
+			let dragOffset = this._drag.startX - this._drag.endX;
 
-    		if( Math.abs( dragOffset ) > this._drag.threshold ) {	
+			if( Math.abs( dragOffset ) > this._drag.threshold ) {	
 				let slideNumber = Math.ceil( Math.abs( dragOffset ) / this._itemWidth );
 
 				if( dragOffset > 0 ) {
@@ -322,25 +318,25 @@ export default class Slider extends BaseSlider {
 
 			if( this.currentIndex > this._lastIndex )
 				this.currentIndex = this._lastIndex;
-    	}
+		}
 
-    	/* Add transition to slider */
+		/* Add transition to slider */
 
-    	this._enableTransition();
+		this._enableTransition();
 
-    	/* Transform slider */
+		/* Transform slider */
 
-    	let transform = -( ( this.currentIndex * this._itemWidth ) - this._padding );
+		let transform = -( ( this.currentIndex * this._itemWidth ) - this._padding );
 
-    	if( transform > this._drag.minX )
+		if( transform > this._drag.minX )
 			transform = this._drag.minX;
 
 		if( transform < -( this._drag.maxX ) )
 			transform = -( this._drag.maxX );
 
-    	prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
+		prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
 
-    	/* Save x position */
+		/* Save x position */
 
 		this._drag.currentX = transform;
 
@@ -349,17 +345,17 @@ export default class Slider extends BaseSlider {
 		this._setNav( this.currentIndex, ogIndex );
 
 		this.endMove(); 
-    }
+	}
 
-   /*
-    * Drag ( mousemove, touchmove )
-    * -----------------------------
-    */
+ /*
+	* Drag ( mousemove, touchmove )
+	* -----------------------------
+	*/
 
 	_dragging() {
 		let dragOffset = ( this._drag.startX - this._drag.endX ),
-			transform = this._drag.currentX - dragOffset,
-			friction = ( ( Math.abs( dragOffset ) / this._drag.maxX ) / this._perPage ) * this._itemWidth;
+				transform = this._drag.currentX - dragOffset,
+				friction = ( ( Math.abs( dragOffset ) / this._drag.maxX ) / this._perPage ) * this._itemWidth;
 
 		if( transform > this._drag.minX )
 			transform = this._drag.minX + friction;
@@ -496,14 +492,14 @@ export default class Slider extends BaseSlider {
 
 	_resizeHandler() {
 		// throttles resize event
-        clearTimeout( this._resizeTimer );
+		clearTimeout( this._resizeTimer );
 
-        this._resizeTimer = setTimeout( () => {
+		this._resizeTimer = setTimeout( () => {
 			this._setDimensions();
 			this._setUpNav( true );
 			this._goTo( this.currentIndex, true );
 			this.onResize();
-        }, 100 );
+		}, 100 );
 	}
 
 } // end Slider

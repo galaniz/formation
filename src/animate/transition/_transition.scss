@@ -5,13 +5,14 @@
  */
 
 .a-transition {
-    @extend %u-position-fixed;
-    @extend %u-top-0;
-    @extend %u-bottom-0;
-    @extend %u-right-0;
-    @extend %u-left-0;
-    z-index: -1;
-    &[data-show] {
-        z-index: map-get( $g-zIndex, 'transition' );
-    }
+	@extend %u-position-fixed;
+	@extend %u-top-0;
+	@extend %u-bottom-0;
+	@extend %u-right-0;
+	@extend %u-left-0;
+	z-index: -1;
+	
+	&[data-show] {
+		z-index: map-get( $g-zIndex, 'transition' );
+	}
 }

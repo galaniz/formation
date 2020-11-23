@@ -10,8 +10,8 @@
  */
 
 @function _addProp( $list, $prop ) {
-    $newList: append( $list, $prop, comma );
-    @return $newList;
+	$newList: append( $list, $prop, comma );
+	@return $newList;
 }
 
 /* 
@@ -27,45 +27,45 @@
  */
 
 @function _mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
-    @each $key, $value in $map {
-        @if( type-of( $value ) == map ) {
-            $nPrefix: "#{ $key }";
+	@each $key, $value in $map {
+		@if( type-of( $value ) == map ) {
+			$nPrefix: "#{ $key }";
 
-            @if( $newPrefix ) {
-                $k: "#{ $key }";
+			@if( $newPrefix ) {
+				$k: "#{ $key }";
 
-                @if( $key != '' ) {
-                    $k: "-#{ $key }";
-                }
+				@if( $key != '' ) {
+					$k: "-#{ $key }";
+				}
 
-                @if( $key == def ) {
-                    $k: '';
-                }
-                
-                $nPrefix: "#{ $newPrefix }#{ $k }";
-            }
+				@if( $key == def ) {
+					$k: '';
+				}
+				
+				$nPrefix: "#{ $newPrefix }#{ $k }";
+			}
 
-            $newMap: _mapFlatten( $value, $newMap, $prefix, $nPrefix );
-        } @else {
-            $newKey: "#{ $key }";
+			$newMap: _mapFlatten( $value, $newMap, $prefix, $nPrefix );
+		} @else {
+			$newKey: "#{ $key }";
 
-            @if( $prefix != '' ) {
-                $newKey: "#{ $prefix }-#{ $key }";
-            }
+			@if( $prefix != '' ) {
+				$newKey: "#{ $prefix }-#{ $key }";
+			}
 
-            @if( $newPrefix ) {
-                @if( $prefix != '' ) {
-                    $newKey: "#{ $prefix }-#{ $newPrefix }-#{ $key }";
-                } @else {
-                    $newKey: "#{ $newPrefix }-#{ $key }";
-                }   
-            }
+			@if( $newPrefix ) {
+				@if( $prefix != '' ) {
+					$newKey: "#{ $prefix }-#{ $newPrefix }-#{ $key }";
+				} @else {
+					$newKey: "#{ $newPrefix }-#{ $key }";
+				}   
+			}
 
-            $newMap: map-merge( $newMap, ( $newKey: $value ) );
-        }
-    }
+			$newMap: map-merge( $newMap, ( $newKey: $value ) );
+		}
+	}
 
-    $newMap: map-merge( $newMap, $newMap );
+	$newMap: map-merge( $newMap, $newMap );
 
-    @return $newMap;
+	@return $newMap;
 }

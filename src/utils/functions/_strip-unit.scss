@@ -10,5 +10,16 @@
  */
 
 @function stripUnit( $number ) {
-    @return $number / ( $number * 0 + 1 );
+  $n: "#{$number}";
+  $oneUnit: 1px;
+  
+  @if( str-index( $n, 'em' ) ) {
+    $oneUnit: 1em;
+  }
+  
+  @if( str-index( $n, 'rem' ) ) {
+    $oneUnit: 1rem;
+  }
+  
+  @return $number / $oneUnit;
 }

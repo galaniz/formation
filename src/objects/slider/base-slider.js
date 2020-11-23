@@ -4,9 +4,7 @@
  * -------
  */
 
-import {
-	mergeObjects
-} from '../../utils/utils';
+import { mergeObjects } from '../../utils/utils';
 
 /*
  * Base slider ( to create fade / carousel sliders )
@@ -15,52 +13,52 @@ import {
 
 export default class BaseSlider {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args = {} ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.slider = null;
-        this.items = null;
-        this.loop = false;
-        this.autoplay = false;
-        this.autoplaySpeed = 8000;
-        this.prev = null;
-        this.next = null;
-        this.nav = null;
-        this.navItemClass = '';
-        this.currentIndex = 0;
+		this.slider = null;
+		this.items = null;
+		this.loop = false;
+		this.autoplay = false;
+		this.autoplaySpeed = 8000;
+		this.prev = null;
+		this.next = null;
+		this.nav = null;
+		this.navItemClass = '';
+		this.currentIndex = 0;
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
-        this._lastIndex = 0;
+		this._lastIndex = 0;
 
-        this._autoStart = 0;
-        this._goToAutoplay = this._goToAuto.bind( this );
+		this._autoStart = 0;
+		this._goToAutoplay = this._goToAuto.bind( this );
 
-        this._pause = false;
-        this._requestId;
+		this._pause = false;
+		this._requestId;
 
-        this._navItems = [];
-        this._navItemsLen = 0;
-        this._dotsLen = 0;
-        this._dotsLastIndex = 0;
+		this._navItems = [];
+		this._navItemsLen = 0;
+		this._dotsLen = 0;
+		this._dotsLastIndex = 0;
 
-        // visible slides
-        this._perPage = 1;
+		// visible slides
+		this._perPage = 1;
 
-        // for key events
-        this._KEYS = {
+		// for key events
+		this._KEYS = {
 			ArrowLeft: 'LEFT',
 			37: 'LEFT',
 			ArrowRight: 'RIGHT',
@@ -71,21 +69,21 @@ export default class BaseSlider {
 			35: 'END'
 		};
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+	 /*
 	* Initialize
 	* ----------
 	*/
@@ -138,7 +136,7 @@ export default class BaseSlider {
 		return true;
 	}
 
-   /*
+ /*
 	* Helpers
 	* -------
 	*/
@@ -287,7 +285,7 @@ export default class BaseSlider {
 		return lastIndex;
 	}
 
-   /*
+	 /*
 	* Go to slide
 	* -----------
 	*/
@@ -301,14 +299,14 @@ export default class BaseSlider {
 
 	_goToAuto( now ) {
 		// cancel animation
-	    if( this._pause ) {
-	        if( this._requestId ) {
-	            window.cancelAnimationFrame( this._requestId );
-	            this._requestId = false;
-	            this._autoStart = 0;
-	            return;
-	        }
-	    }
+		if( this._pause ) {
+			if( this._requestId ) {
+				window.cancelAnimationFrame( this._requestId );
+				this._requestId = false;
+				this._autoStart = 0;
+				return;
+			}
+		}
 
 		if( !this._autoStart )
 			this._autoStart = now;
@@ -326,7 +324,7 @@ export default class BaseSlider {
 		this._requestId = window.requestAnimationFrame( this._goToAutoplay );
 	}
 
-   /*
+ /*
 	* Event callbacks
 	* ---------------
 	*/
@@ -338,7 +336,7 @@ export default class BaseSlider {
 
 	_keyNav( e ) {
 		let key = e.key || e.keyCode || e.which || e.code,
-			index = null;
+				index = null;
 
 		switch( this._KEYS[key] ) {
 			case 'LEFT':
@@ -370,7 +368,7 @@ export default class BaseSlider {
 		this._goTo( this._getNextIndex( this.currentIndex ) );
 	}
 
-   /*
+	 /*
 	* Public methods
 	* ---------------
 	*/

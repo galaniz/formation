@@ -8,14 +8,14 @@
  */
 
 @mixin _transformHover( $value ) {
-    .a-hover:hover &,
-    .a-hover:focus &,
-    .a-hover:active &,
-    &.a-hover:hover,
-    &.a-hover:focus,
-    &.a-hover:active {
-        transform: unquote( $value ) !important;
-    }
+  .a-hover:hover &,
+  .a-hover:focus &,
+  .a-hover:active &,
+  &.a-hover:hover,
+  &.a-hover:focus,
+  &.a-hover:active {
+    transform: unquote( $value ) !important;
+  }
 }
 
 /* 
@@ -28,53 +28,53 @@
  */
 
 @mixin _transformTranslate( $values, $type: 'y' ) {
-    $showTransform: "translate#{$type}( 0 )";
+  $showTransform: "translate#{$type}( 0 )";
 
-    @extend %u-transition-property-opacity-transform;
-    .js & {
-         @each $k, $v in $values {
-            $p: $v;
-            $reverseP: $v * -1;
+  @extend %u-transition-property-opacity-transform;
+  .js & {
+    @each $k, $v in $values {
+      $p: $v;
+      $reverseP: $v * -1;
 
-            $transform: "translate#{$type}( #{$p} )";
-            $transformReverse: "translate#{$type}( #{$reverseP} )";
-            $dataAttr: "&[data-#{$type}='#{$k}']";
+      $transform: "translate#{$type}( #{$p} )";
+      $transformReverse: "translate#{$type}( #{$reverseP} )";
+      $dataAttr: "&[data-#{$type}='#{$k}']";
 
-            @if $k == def {
-                & {
-                    transform: unquote( $transform );
-                }
-            } @else {
-                #{$dataAttr} {
-                    transform: unquote( $transform );
-                }
-            }
-
-            @include _transformHover( "translate#{$type}( #{$p} )" );
-
-            &[data-reverse] {
-                @if $k == def {
-                    & {
-                        transform: unquote( $transformReverse );
-                    }
-                } @else {
-                    #{$dataAttr} {
-                        transform: unquote( $transformReverse );
-                    }
-                }
-
-                @include _transformHover( "translate#{$type}( #{$reverseP} )" );
-            }
+      @if $k == def {
+        & {
+          transform: unquote( $transform );
         }
-    }
-    .js [data-vis-all] &,
-    .js &[data-show],
-    .js &[data-vis] {
-        &,
-        &[data-reverse] {
-            transform: unquote( $showTransform );
+      } @else {
+        #{$dataAttr} {
+          transform: unquote( $transform );
         }
+      }
+
+      @include _transformHover( "translate#{$type}( #{$p} )" );
+
+      &[data-reverse] {
+        @if $k == def {
+          & {
+            transform: unquote( $transformReverse );
+          }
+        } @else {
+          #{$dataAttr} {
+            transform: unquote( $transformReverse );
+          }
+        }
+
+        @include _transformHover( "translate#{$type}( #{$reverseP} )" );
+      }
     }
+  }
+  .js [data-vis-all] &,
+  .js &[data-show],
+  .js &[data-vis] {
+    &,
+    &[data-reverse] {
+      transform: unquote( $showTransform );
+    }
+  }
 }
 
 /* 
@@ -86,15 +86,15 @@
  */
 
 @mixin _transitionDurations( $durations ) {
-    @each $k, $v in $durations {
-        @if $k == def {
-            transition-duration: unquote( $v );
-        } @else {
-            &[data-d="#{$k}"] {
-                transition-duration: unquote( $v );
-            }
-        }
+  @each $k, $v in $durations {
+    @if $k == def {
+      transition-duration: unquote( $v );
+    } @else {
+      &[data-d="#{$k}"] {
+        transition-duration: unquote( $v );
+      }
     }
+  }
 }
 
 /* 
@@ -103,38 +103,40 @@
  */
 
 @mixin _transitionFade() {
-    $fade: map-get( $g-transitions, 'fade' );
-    $durations: map-get( $fade, 'durations' );
-    $y: map-get( $fade, 'y' );
-    $x: map-get( $fade, 'x' );
+  $fade: map-get( $g-transitions, 'fade' );
+  $durations: map-get( $fade, 'durations' );
+  $y: map-get( $fade, 'y' );
+  $x: map-get( $fade, 'x' );
 
-    .a-fade-in,  
-    .a-fade-in-y,
-    .a-fade-in-x {
-        @extend %u-transform-origin-0-0;
-        @extend %u-transition-timing-function-cubic;
-        @include _transitionDurations( $durations );
-        .js & {
-            @extend %u-opacity-0;
-        }
-        .js [data-vis-all] &,
-        .js &[data-show],
-        .js &[data-vis] {
-            @extend %u-opacity-1;
-        }
+  .a-fade-in,  
+  .a-fade-in-y,
+  .a-fade-in-x {
+    @extend %u-transform-origin-0-0;
+    @extend %u-transition-timing-function-cubic;
+    @include _transitionDurations( $durations );
+
+    .js & {
+      @extend %u-opacity-0;
     }
 
-    .a-fade-in {
-        @extend %u-transition-property-opacity;
+    .js [data-vis-all] &,
+    .js &[data-show],
+    .js &[data-vis] {
+      @extend %u-opacity-1;
     }
+  }
 
-    .a-fade-in-y {
-        @include _transformTranslate( $y, 'y' );  
-    }
+  .a-fade-in {
+    @extend %u-transition-property-opacity;
+  }
 
-    .a-fade-in-x {
-        @include _transformTranslate( $x, 'x' );
-    }  
+  .a-fade-in-y {
+    @include _transformTranslate( $y, 'y' );  
+  }
+
+  .a-fade-in-x {
+    @include _transformTranslate( $x, 'x' );
+  }  
 }
 
 /* 
@@ -150,51 +152,54 @@
 
     .a-scale-in,
     .a-scale-out {
-        @extend %u-transition-timing-function-cubic;
-        @extend %u-transition-property-opacity-transform;
-        @include _transitionDurations( $durations );
-        .js & {
-            @extend %u-opacity-0;
-        }
+      @extend %u-transition-timing-function-cubic;
+      @extend %u-transition-property-opacity-transform;
+      @include _transitionDurations( $durations );
+
+      .js & {
+        @extend %u-opacity-0;
+      }
     }
 
     .a-scale-in {
-        @each $k, $v in $in {
-            @if $k == def {
-                .js & {
-                    transform: scale( #{$v} );
-                }
-            } @else if $k == hover {
-                @include _transformHover( "scale( #{$v} )" );
-            } @else {
-                .js &[data-s="#{$k}"] {
-                    transform: scale( #{$v} );
-                }
-            }
+      @each $k, $v in $in {
+        @if $k == def {
+          .js & {
+            transform: scale( #{$v} );
+          }
+        } @else if $k == hover {
+          @include _transformHover( "scale( #{$v} )" );
+        } @else {
+          .js &[data-s="#{$k}"] {
+            transform: scale( #{$v} );
+          }
         }
-        .js [data-vis-all] &,
-        .js &[data-show],
-        .js &[data-vis] {
-            @extend %u-opacity-1;
-            transform: scale( 1 );
-        }
+      }
+
+      .js [data-vis-all] &,
+      .js &[data-show],
+      .js &[data-vis] {
+        @extend %u-opacity-1;
+        transform: scale( 1 );
+      }
     }
 
     .a-scale-out {
-        .js [data-vis-all] &,
-        .js &[data-show],
-        .js &[data-vis] {
-            @extend %u-opacity-1;
-            @each $k, $v in $out {
-                @if $k == def {
-                    transform: scale( #{$v} );
-                } @else {
-                    &[data-s="#{$k}"] {
-                        transform: scale( #{$v} );
-                    }
-                }
+      .js [data-vis-all] &,
+      .js &[data-show],
+      .js &[data-vis] {
+        @extend %u-opacity-1;
+        @each $k, $v in $out {
+          @if $k == def {
+            transform: scale( #{$v} );
+          } @else {
+            &[data-s="#{$k}"] {
+              transform: scale( #{$v} );
             }
+          }
         }
-        @include _transformHover( "scale( 1 )" );
+      }
+
+      @include _transformHover( "scale( 1 )" );
     }
 }

@@ -7,25 +7,31 @@
 .c-nav-icon[data-num="3"] {
 	transform: rotate( 0deg );
 	transition: transform 225ms ease;
+
 	& .c-nav-icon__top,
 	& .c-nav-icon__bottom {
 		transform: translateY( 0 ) rotate( 0deg );
 		transition: transform 225ms ease;
 	}
+
 	& .c-nav-icon__middle {
 		@extend %u-opacity-1;
 		transition: opacity 225ms ease;
 	}
+
 	.c-nav__button[data-show] & {
 		transform: rotate( 45deg );
+
 		& .c-nav-icon__top {
-			transform: translateY( $_navIconY );
+			transform: translateY( $_y );
 		}
+
 		& .c-nav-icon__middle {
 			@extend %u-opacity-0;
 		}
+		
 		& .c-nav-icon__bottom {
-			transform: translateY( #{ $_navIconY * -1 } ) rotate( 90deg );
+			transform: translateY( #{ $_y * -1 } ) rotate( 90deg );
 		}
 	}
 }

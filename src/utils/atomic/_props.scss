@@ -51,14 +51,14 @@ $g-props: _addProp( $g-props, ( bottom: 0 ) );
 $g-props: _addProp( $g-props, ( left: 0 ) );
 $g-props: _addProp( $g-props, ( right: 0 ) );
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: position-vertical-center,
-        prop: (
-            top: 50%,
-            transform: translateY( -50% ),
-            bottom: auto
-        )
-    )
+	custom: (
+		name: position-vertical-center,
+		prop: (
+			top: 50%,
+			transform: translateY( -50% ),
+			bottom: auto
+		)
+	)
 ) );
 
 /* Text align */
@@ -84,12 +84,12 @@ $g-props: _addProp( $g-props, ( margin-left: auto ) );
 /* Border radius */
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: border-radius-100,
-        prop: (
-            border-radius: 100%
-        )
-    )
+	custom: (
+		name: border-radius-100,
+		prop: (
+			border-radius: 100%
+		)
+	)
 ) );
 
 /* Fonts */
@@ -99,39 +99,39 @@ $g-props: _addProp( $g-props, (
 /* Transform origin */
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: transform-origin-0-0,
-        prop: (
-            transform-origin: 0% 0%
-        )
-    )
+	custom: (
+		name: transform-origin-0-0,
+		prop: (
+			transform-origin: 0% 0%
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: transform-origin-0-100,
-        prop: (
-            transform-origin: 0% 100%
-        )
-    )
+	custom: (
+		name: transform-origin-0-100,
+		prop: (
+			transform-origin: 0% 100%
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: transform-origin-100-0,
-        prop: (
-            transform-origin: 100% 0%
-        )
-    )
+	custom: (
+		name: transform-origin-100-0,
+		prop: (
+			transform-origin: 100% 0%
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: transform-origin-100-100,
-        prop: (
-            transform-origin: 100% 100%
-        )
-    )
+	custom: (
+		name: transform-origin-100-100,
+		prop: (
+			transform-origin: 100% 100%
+		)
+	)
 ) );
 
 /* Opacity */
@@ -149,39 +149,39 @@ $g-props: _addProp( $g-props, ( width: inherit ) );
 $g-props: _addProp( $g-props, ( height: inherit ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: width-100,
-        prop: (
-            width: 100%
-        )
-    )
+	custom: (
+		name: width-100,
+		prop: (
+			width: 100%
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: width-100vw,
-        prop: (
-            width: 100vw
-        )
-    )
+	custom: (
+		name: width-100vw,
+		prop: (
+			width: 100vw
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: height-100,
-        prop: (
-            height: 100%
-        )
-    )
+	custom: (
+		name: height-100,
+		prop: (
+			height: 100%
+		)
+	)
 ) );
 
 $g-props: _addProp( $g-props, (
-    custom: (
-        name: height-100vh,
-        prop: (
-            height: 100vh
-        )
-    )
+	custom: (
+		name: height-100vh,
+		prop: (
+			height: 100vh
+		)
+	)
 ) );
 
 /* Colors */
@@ -196,77 +196,41 @@ $colorsCopy: $g-colors;
 $g-colors: _mapFlatten( $g-colors, (), 'color' );
 
 @each $name, $value in $g-colors {
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: $name,
-            prop: (
-                color: $value
-            )
-        )
-    ) );
+	$g-props: _addProp( $g-props, (
+		custom: (
+			name: $name,
+			prop: (
+				color: $value
+			)
+		)
+	) );
 
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "background-#{ $name }",
-            prop: (
-                background-color: $value
-            )
-        )
-    ) );
+	$g-props: _addProp( $g-props, (
+		custom: (
+			name: "background-#{ $name }",
+			prop: (
+				background-color: $value
+			)
+		)
+	) );
 
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "fill-#{ $name }",
-            prop: (
-                fill: $value
-            )
-        )
-    ) );
+	$g-props: _addProp( $g-props, (
+		custom: (
+			name: "fill-#{ $name }",
+			prop: (
+				fill: $value
+			)
+		)
+	) );
 
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "border-#{ $name }",
-            prop: (
-                border: 1px solid $value
-            )
-        )
-    ) );
-
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "border-top-#{ $name }",
-            prop: (
-                border-top: 1px solid $value
-            )
-        )
-    ) );
-
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "border-bottom-#{ $name }",
-            prop: (
-                border-bottom: 1px solid $value
-            )
-        )
-    ) );
-
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "border-right-#{ $name }",
-            prop: (
-                border-right: 1px solid $value
-            )
-        )
-    ) );
-
-    $g-props: _addProp( $g-props, (
-        custom: (
-            name: "border-left-#{ $name }",
-            prop: (
-                border-left: 1px solid $value
-            )
-        )
-    ) );
+	$g-props: _addProp( $g-props, (
+		custom: (
+			name: "border-#{ $name }",
+			prop: (
+				border-color: $value
+			)
+		)
+	) );
 }
 
 // convert nested colors to one level map without prefix
@@ -274,27 +238,27 @@ $g-colors: _mapFlatten( $colorsCopy, (), '' );
 
 // convert properties to placeholders
 @each $prop in $g-props {
-    @each $key, $value in $prop {
-        @include _makeUtil( $key, $value );
-    }
+	@each $key, $value in $prop {
+		@include _makeUtil( $key, $value );
+	}
 }
 
 /* Grayscale ( work around for duplicate key issue ) */
 
 %u-grayscale {
-    @include grayscale();
+	@include grayscale();
 }
 
 /* Touch area of 50px */
 
 %u-touch-50 {
-    &::before {
-        content: '';
-        @extend %u-position-absolute;
-        transform: translate( -50%, -50% );
-        width: 50px;
-        height: 50px;
-        top: 50%;
-        left: 50%;
-    }
+	&::before {
+		content: '';
+		@extend %u-position-absolute;
+		transform: translate( -50%, -50% );
+		width: calcRem( 50px );
+		height: calcRem( 50px );
+		top: 50%;
+		left: 50%;
+	}
 }

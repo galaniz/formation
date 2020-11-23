@@ -4,9 +4,7 @@
  * -------
  */
 
-import {
-    mergeObjects
-} from '../../utils/utils';
+import { mergeObjects } from '../../utils/utils';
 
 /*
  * Collapse table dynamically
@@ -15,44 +13,44 @@ import {
 
 export default class Table {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.table = null;
-        this.equalWidthTo = null;
+		this.table = null;
+		this.equalWidthTo = null;
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Internal variables
-        * ------------------
-        */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
 		// for throttling resize event
-        this._resizeTimer;
+		this._resizeTimer;
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -64,35 +62,35 @@ export default class Table {
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
-        this._go();
+		this._go();
 
 		return true;
 	}
 
-    _go() {
-        this.table.setAttribute( 'data-collapse', false );
-        this.table.style.maxWidth = 'none';
+	_go() {
+		this.table.setAttribute( 'data-collapse', false );
+		this.table.style.maxWidth = 'none';
 
-        let targetWidth = this.equalWidthTo.clientWidth,
-            currentWidth = this.table.clientWidth,
-            collapse = currentWidth > targetWidth ? true : false;
+		let targetWidth = this.equalWidthTo.clientWidth,
+				currentWidth = this.table.clientWidth,
+				collapse = currentWidth > targetWidth ? true : false;
 
-        this.table.style.maxWidth = '';
-        this.table.setAttribute( 'data-collapse', collapse );
-    }
+		this.table.style.maxWidth = '';
+		this.table.setAttribute( 'data-collapse', collapse );
+	}
 
-   /*
+ /*
 	* Event callbacks
 	* ---------------
 	*/
 
 	_resizeHandler() {
-        // throttles resize event
-        clearTimeout( this._resizeTimer );
+		// throttles resize event
+		clearTimeout( this._resizeTimer );
 
-        this._resizeTimer = setTimeout( () => {
-            this._go();
-        }, 100 );
-    }
+		this._resizeTimer = setTimeout( () => {
+			this._go();
+		}, 100 );
+	}
 
 } // end Table

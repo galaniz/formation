@@ -7,15 +7,15 @@
  */
 
 @mixin breakpointMin( $min ) { 
-    @if map-has-key( $g-breakpoints, $min ) {
-        $bk-em: calcEm( map-get( $g-breakpoints, $min ) );
-    
-        @media only screen and ( min-width: #{ $bk-em } ) {
-            @content;
-        }
-    } @else {
-        @warn "#{$min} does not exist in breakpoints map.";
+  @if map-has-key( $g-breakpoints, $min ) {
+    $bk-rem: calcRem( map-get( $g-breakpoints, $min ) );
+
+    @media only screen and ( min-width: #{ $bk-rem } ) {
+      @content;
     }
+  } @else {
+    @warn "#{$min} does not exist in breakpoints map.";
+  }
 }
 
 /* 
@@ -26,15 +26,15 @@
  */
 
 @mixin breakpointMax( $max ) {
-    @if map-has-key( $g-breakpoints, $max ) {
-        $bk-max-em: calcEm( map-get( $g-breakpoints, $max ) );
+  @if map-has-key( $g-breakpoints, $max ) {
+    $bk-rem: calcRem( map-get( $g-breakpoints, $max ) );
 
-        @media only screen and ( max-width: #{ $bk-max-em } ) {
-            @content;
-        }
-    } @else {
-        @warn "#{$max} does not exist in breakpoints map.";
+    @media only screen and ( max-width: #{ $bk-rem } ) {
+      @content;
     }
+  } @else {
+      @warn "#{$max} does not exist in breakpoints map.";
+  }
 }
 
 /* 
@@ -46,14 +46,14 @@
  */
 
 @mixin breakpointMinMax( $min, $max ) { 
-    @if map-has-key( $g-breakpoints, $min ) and map-has-key( $g-breakpoints, $max ) {
-        $bk-min-em: calcEm( map-get( $g-breakpoints, $min ) );
-        $bk-max-em: calcEm( map-get( $g-breakpoints, $max ) );
+  @if map-has-key( $g-breakpoints, $min ) and map-has-key( $g-breakpoints, $max ) {
+    $bk-min-rem: calcRem( map-get( $g-breakpoints, $min ) );
+    $bk-max-rem: calcRem( map-get( $g-breakpoints, $max ) );
 
-        @media only screen and ( max-width: #{ $bk-max-em } ) and ( min-width: #{ $bk-min-em } ) {
-            @content;
-        }
-    } @else {
-        @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+    @media only screen and ( max-width: #{ $bk-max-rem } ) and ( min-width: #{ $bk-min-rem } ) {
+      @content;
     }
+  } @else {
+    @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+  }
 }

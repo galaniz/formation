@@ -1,29 +1,33 @@
+
 /*
  * Nav icon: five
  * --------------
  */
 
  .c-nav-icon[data-num="5"] {
- 	$_navIconY: ( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
-
  	& .c-nav-icon__top {
  		animation: 300ms ease forwards _collapseRotateTopReverse;
  	}
+
  	& .c-nav-icon__bottom {
  		animation: 300ms ease forwards _collapseRotateBottomReverse;
  	}
+
  	& .c-nav-icon__middle {
  		@extend %u-opacity-1;
  		transition: opacity 150ms ease 100ms;
  	}
+
  	.c-nav__button[data-show] & {
  		& .c-nav-icon__middle {
  			@extend %u-opacity-0;
  			transition: opacity 150ms ease;
  		}
+
  		& .c-nav-icon__top {
  			animation: 300ms ease forwards _collapseRotateTop;
  		}
+ 		
  		& .c-nav-icon__bottom {
  			animation: 300ms ease forwards _collapseRotateBottom;
  		}
@@ -31,7 +35,7 @@
 
  	@keyframes _collapseRotateTopReverse {
  		0% {
- 			transform: translateY( $_navIconY ) rotate( 45deg );
+ 			transform: translateY( $_y ) rotate( 45deg );
  		}
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
@@ -40,7 +44,7 @@
 
  	@keyframes _collapseRotateBottomReverse {
  		0% {
- 			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+ 			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
  		}
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
@@ -49,10 +53,10 @@
 
  	@keyframes _collapseRotateTop {
  		0% {
- 			transform: translateY( $_navIconY );
+ 			transform: translateY( $_y );
  		}
  		100% {
- 			transform: translateY( $_navIconY ) rotate( 45deg );
+ 			transform: translateY( $_y ) rotate( 45deg );
  		}
  	}
 
@@ -61,10 +65,10 @@
  			transform: translateY( 0 ) rotate( 0 );
  		}
  		1% {
- 			transform: translateY( #{ $_navIconY * -1 } );
+ 			transform: translateY( #{ $_y * -1 } );
  		}
  		100% {
- 			transform: translateY( #{ $_navIconY * -1 } ) rotate( -45deg );
+ 			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
  		}
  	}
  }

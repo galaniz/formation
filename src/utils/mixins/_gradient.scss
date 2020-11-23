@@ -9,23 +9,23 @@
  */
 
 @mixin linearGradient( $direction, $image: false, $colorStops... ) {
-    // direction has been omitted and happens to be a color-stop
-    @if is-direction( $direction ) == false {
-        $colorStops: $direction, $colorStops;
-        $direction: left;
-    }
+  // direction has been omitted and happens to be a color-stop
+  @if is-direction( $direction ) == false {
+    $colorStops: $direction, $colorStops;
+    $direction: left;
+  }
 
-    @if $image {
-        background-image: nth( nth( $colorStops, 1 ), 1 );
-        background-image: -moz-linear-gradient( $direction, $colorStops );
-        background-image: -webkit-linear-gradient( $direction, $colorStops );
-        background-image: -o-linear-gradient( $direction, $colorStops );
-        background-image: linear-gradient( $direction, $colorStops );
-    } @else {
-        background: nth( nth( $colorStops, 1 ), 1 );
-        background: -moz-linear-gradient( $direction, $colorStops );
-        background: -webkit-linear-gradient( $direction, $colorStops );
-        background: -o-linear-gradient( $direction, $colorStops );
-        background: linear-gradient( $direction, $colorStops );
-    }
+  @if $image {
+    background-image: nth( nth( $colorStops, 1 ), 1 );
+    background-image: -moz-linear-gradient( $direction, $colorStops );
+    background-image: -webkit-linear-gradient( $direction, $colorStops );
+    background-image: -o-linear-gradient( $direction, $colorStops );
+    background-image: linear-gradient( $direction, $colorStops );
+  } @else {
+    background: nth( nth( $colorStops, 1 ), 1 );
+    background: -moz-linear-gradient( $direction, $colorStops );
+    background: -webkit-linear-gradient( $direction, $colorStops );
+    background: -o-linear-gradient( $direction, $colorStops );
+    background: linear-gradient( $direction, $colorStops );
+  }
 }

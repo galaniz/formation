@@ -8,25 +8,25 @@
  */
 
 export const addClass = ( item, classes ) => {
-    if( !item || !classes )
-        return;
+	if( !item || !classes )
+		return;
 
-    let currentClasses = item.className;
-    
-    if( currentClasses ) {
-        classes = classes.split( ' ' );
-        currentClasses = currentClasses.split( ' ' );
+	let currentClasses = item.className;
+	
+	if( currentClasses ) {
+		classes = classes.split( ' ' );
+		currentClasses = currentClasses.split( ' ' );
 
-        classes.forEach( ( c ) => {
-            let classPos = currentClasses.indexOf( c ); 
+		classes.forEach( ( c ) => {
+			let classPos = currentClasses.indexOf( c ); 
 
-            // only add if doesn't exist
-            if( classPos === -1 )
-                currentClasses.splice( classPos, 0, c );
-        } );
+			// only add if doesn't exist
+			if( classPos === -1 )
+				currentClasses.splice( classPos, 0, c );
+		} );
 
-        item.className = currentClasses.join( ' ' );
-    } else {
-        item.setAttribute( 'class', classes );
-    }
+		item.className = currentClasses.join( ' ' );
+	} else {
+		item.setAttribute( 'class', classes );
+	}
 };

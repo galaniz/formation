@@ -20,63 +20,63 @@ import {
 
 export default class LoadMore {
 
-   /*
+ /*
 	* Constructor
 	* -----------
 	*/
 
 	constructor( args ) {
 
-       /*
-        * Public variables
-        * ----------------
-        */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
-        this.url = '';
-        this.button = null;
-        this.buttonContainer = null;
-        this.loader = null;
+		this.url = '';
+		this.button = null;
+		this.buttonContainer = null;
+		this.loader = null;
 
-        this.data = {};
+		this.data = {};
 
-        this.filters = [];
-        this.filtersLoader = null;
-        this.filtersForm = null;
+		this.filters = [];
+		this.filtersLoader = null;
+		this.filtersForm = null;
 
-        this.noResults = {
-        	containers: [],
-        	buttons: []
-        };
+		this.noResults = {
+			containers: [],
+			buttons: []
+		};
 
-        this.type = '';
-        this.offset = 0;
-        this.ajaxPpp = 0;
-        this.decrement = false;
-        this.total = 0;
+		this.type = '';
+		this.offset = 0;
+		this.ajaxPpp = 0;
+		this.decrement = false;
+		this.total = 0;
 
-        this.insertInto = null;
-        this.insertLocation = 'beforeend';
-        this.onInsert = () => {};
-        this.afterInsert = () => {};
+		this.insertInto = null;
+		this.insertLocation = 'beforeend';
+		this.onInsert = () => {};
+		this.afterInsert = () => {};
 
-        // internal variables
-        this._sameName = null;
+		// internal variables
+		this._sameName = null;
 
-        // merge default variables with args
-        mergeObjects( this, args );
+		// merge default variables with args
+		mergeObjects( this, args );
 
-       /*
-        * Initialize
-        * ----------
-        */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
-        let init = this._initialize();
+		let init = this._initialize();
 
-        if( !init )
-        	return false;
+		if( !init )
+			return false;
 	}
 
-   /*
+	 /*
 	* Initialize
 	* ----------
 	*/
@@ -99,17 +99,17 @@ export default class LoadMore {
 		this._ogOffset = this.offset;
 
 		this._data = {
-            postCount: this.offset,
-            offset: this._ogOffset,
-            ppp: this.ajaxPpp ? this.ajaxPpp : this._ogOffset,
-            total: this.total,
-            type: this.type,
-            filters: {}
-        };
+			postCount: this.offset,
+			offset: this._ogOffset,
+			ppp: this.ajaxPpp ? this.ajaxPpp : this._ogOffset,
+			total: this.total,
+			type: this.type,
+			filters: {}
+		};
 
-        // append public data
-        for( let d in this.data )
-        	this._data[d] = this.data[d];
+		// append public data
+		for( let d in this.data )
+			this._data[d] = this.data[d];
 
 		// add event listeners
 		this.button.addEventListener( 'click', this._load.bind( this ) );
@@ -127,7 +127,7 @@ export default class LoadMore {
 				} else {
 					if( f.type === 'search' ) {
 						let searchArgs = { currentTarget: f.item },
-							submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
+								submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
 
 						if( submitSearchSelector ) {
 							let submitSearch = document.querySelector( submitSearchSelector );
@@ -201,7 +201,7 @@ export default class LoadMore {
 		return true;
 	}
 
-   /*
+ /*
 	* Helpers
 	* -------
 	*/
@@ -250,44 +250,44 @@ export default class LoadMore {
 		}
 
 		// show nothing found message
-        if( this.noResults.containers.length > 0 ) {
-        	this.noResults.containers.forEach( ( c ) => {
-        		c.style.display = show ? 'block' : 'none';
-        	} );
-        }
+		if( this.noResults.containers.length > 0 ) {
+			this.noResults.containers.forEach( ( c ) => {
+				c.style.display = show ? 'block' : 'none';
+			} );
+		}
 	}
 
 	// after response set vars / items
 	_afterResponse( reset, rowCount, total ) {
 		this._data.postCount += rowCount;
 
-        // get new total
-        if( reset ) {
-        	this._data.offset = rowCount;
-        	this._data.total = total;
-        }
+		// get new total
+		if( reset ) {
+			this._data.offset = rowCount;
+			this._data.total = total;
+		}
 
-        // hide load more button if posts are greater than or equal to total post count
-        if( this._data.postCount >= this._data.total ) {
-        	this.buttonContainer.style.display = 'none';
-        } else {
-        	this.buttonContainer.style.display = 'block';
-        }
+		// hide load more button if posts are greater than or equal to total post count
+		if( this._data.postCount >= this._data.total ) {
+			this.buttonContainer.style.display = 'none';
+		} else {
+			this.buttonContainer.style.display = 'block';
+		}
 
-        this._showFilterLoader( false );
+		this._showFilterLoader( false );
 	}
 
-   /*
+ /*
 	* Event handlers
 	* --------------
 	*/
 
 	_filter( e ) {
 		let item = e.currentTarget,
-			id = item.id,
-			value = item.value,
-			operator = item.getAttribute( 'data-operator' ),
-			type = this._getType( item );
+				id = item.id,
+				value = item.value,
+				operator = item.getAttribute( 'data-operator' ),
+				type = this._getType( item );
 
 		// if radio and not checked give inactive
 		if( type == 'radio' ) {
@@ -341,99 +341,99 @@ export default class LoadMore {
 		// disable button
 		disableButtonLoader( this.button, this.loader, false, true );
 
-    	// get data as url encoded string
-    	let encodedData = urlEncode( this._data );
+		// get data as url encoded string
+		let encodedData = urlEncode( this._data );
 
-    	console.log( 'DATA', this._data );
+		console.log( 'DATA', this._data );
 
-    	setTimeout( () => {
-    		// fetch more posts
-	    	request( {
+		setTimeout( () => {
+			// fetch more posts
+			request( {
 				method: 'POST',
 				url: this.url,
 				headers: { 'Content-type': 'application/x-www-form-urlencoded' },
 				body: encodedData
-	    	} )
-		    .then( response => {
-		        // enable button
+			} )
+			.then( response => {
+				// enable button
 				disableButtonLoader( this.button, this.loader );
 
 				if( !response ) {
 					if( reset )
-		        		this._noResults();
+						this._noResults();
 
-		        	this._afterResponse( reset, rowCount, total );
+					this._afterResponse( reset, rowCount, total );
 
-		        	return;
+					return;
 				}
 
-		        let result = JSON.parse( response ),
-		        	rowCount = result.row_count,
-		        	output = result.output,
-		        	total = parseInt( result.total );
+				let result = JSON.parse( response ),
+						rowCount = result.row_count,
+						output = result.output,
+						total = parseInt( result.total );
 
 				console.log( 'RESULT', result );
 
-		        if( reset )
-		        	this.insertInto.innerHTML = '';
+				if( reset )
+					this.insertInto.innerHTML = '';
 
-		        if( rowCount > 0 && output != '' ) {
-		        	let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
+				if( rowCount > 0 && output != '' ) {
+					let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
 
-		        	if( this.decrement ) {
-		        		this._data.offset -= o;
-		        	} else {
-		        		this._data.offset += o;
-		        	}
+					if( this.decrement ) {
+						this._data.offset -= o;
+					} else {
+						this._data.offset += o;
+					}
 
-		        	let table = this.insertInto.tagName == 'TBODY',
-		        		docFragment = document.createDocumentFragment(),
-		        		div = document.createElement( table ? 'TBODY' : 'DIV' );
+					let table = this.insertInto.tagName == 'TBODY',
+						docFragment = document.createDocumentFragment(),
+						div = document.createElement( table ? 'TBODY' : 'DIV' );
 
-	        		div.innerHTML = output;
+					div.innerHTML = output;
 
-	        		let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
-	        			insertedItems = Array.from( div.children );
+					let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
+						insertedItems = Array.from( div.children );
 
-	        		imagesLoaded( imgs, ( data ) => {
-	        			this.onInsert.call( this, insertedItems );
+					imagesLoaded( imgs, ( data ) => {
+						this.onInsert.call( this, insertedItems );
 
-	        			if( table ) {
-	        				insertedItems.forEach( ( item ) => {
-		        				this.insertInto.appendChild( item );
-		        			} );
-	        			} else {
-	        				insertedItems.forEach( ( item ) => {
-		        				docFragment.appendChild( item );
-		        			} );
+						if( table ) {
+							insertedItems.forEach( ( item ) => {
+								this.insertInto.appendChild( item );
+							} );
+						} else {
+							insertedItems.forEach( ( item ) => {
+								docFragment.appendChild( item );
+							} );
 
-		        			this.insertInto.appendChild( docFragment );
-	        			}
+							this.insertInto.appendChild( docFragment );
+						}
 
-	        			setTimeout( () => {
-	        				this._afterResponse( reset, rowCount, total );
-	        				this.afterInsert.call( this, insertedItems );
-	        			}, 0 );
-		        	} );
-		        } else {
-		        	if( reset )
-		        		this._noResults();
+						setTimeout( () => {
+							this._afterResponse( reset, rowCount, total );
+							this.afterInsert.call( this, insertedItems );
+						}, 0 );
+					} );
+				} else {
+					if( reset )
+						this._noResults();
 
-		        	this._afterResponse( reset, rowCount, total );
-		        }
-		    } )
-		    .catch( xhr => {
-	            console.log( 'ERROR', xhr );
+					this._afterResponse( reset, rowCount, total );
+				}
+			} )
+			.catch( xhr => {
+				console.log( 'ERROR', xhr );
 
-	            if( reset )
-		        	this._noResults();
+				if( reset )
+					this._noResults();
 
-		       	// enable button
+				// enable button
 				disableButtonLoader( this.button, this.loader );
 
 				this._showFilterLoader( false );
-		    } );
-    	}, 0 );
+			} );
+		}, 0 );
 	}
 
 } // end LoadMore

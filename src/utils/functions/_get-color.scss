@@ -8,5 +8,5 @@
  */
 
 @function getColor( $color: 'background-light' ) {
-    @return map-get( $g-colors, $color );
+	@return map-get( $g-colors, $color );
 }
