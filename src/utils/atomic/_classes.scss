@@ -8,16 +8,11 @@
 
 $_1px: calcRem( 1px );
 
-.u-visually-hidden {
-	@extend %u-position-absolute;
-	@extend %u-overflow-hidden;
-	left: calcRem( -10000px );
-	top: auto;
-	width: $_1px;
-	height: $_1px;
+.u-v-h {
+	@extend %u-visually-hidden;
 }
 
-.u-hide-input {
+.u-h-i {
 	@extend %u-position-absolute;
 	@extend %u-overflow-hidden;
 	width: $_1px;
@@ -29,21 +24,21 @@ $_1px: calcRem( 1px );
 
 /* Dimensions */
 
-.u-height-100 {
+.u-h-100 {
 	@extend %u-height-100;
 }
 
-.u-width-100 {
+.u-h-100 {
 	@extend %u-width-100;
 }
 
 /* Position */
 
-.u-position-relative {
+.u-p-r {
 	@extend %u-position-relative;
 }
 
-.u-position-center {
+.u-p-c {
 	@extend %u-position-absolute;
 	@extend %u-position-vertical-center;
 	@extend %u-left-0;
@@ -51,7 +46,7 @@ $_1px: calcRem( 1px );
 	@extend %u-margin-auto;
 }
 
-.u-position-abs {
+.u-p-a {
 	@extend %u-position-absolute;
 	@extend %u-left-0;
 	@extend %u-right-0;
@@ -61,60 +56,64 @@ $_1px: calcRem( 1px );
 
 /* Overflow */
 
-.u-overflow-hidden {
+.u-o-h {
 	@extend %u-overflow-hidden;
 }
 
 /* Text */
 
-.u-text-align-left {
+.u-ta-l {
 	@extend %u-text-align-left;
 }
 
-.u-text-align-right {
+.u-ta-r {
 	@extend %u-text-align-right;
 }
 
-.u-text-align-center {
+.u-ta-c {
 	@extend %u-text-align-center;
 }
 
 /* Display */
 
-.u-display-none {
+.u-d-n {
 	@extend %u-display-none;
 }
 
-.u-display-block {
+.u-d-b {
 	@extend %u-display-block;
+}
+
+.u-d-ib {
+	@extend %u-display-inline-block;
 }
 
 /* Object fit */
 
-.u-object-contain {
+.u-obf-cn {
 	object-fit: contain !important;
 	@extend %u-width-100;
 	@extend %u-height-100;
 
-	.no-object-fit & {
+	.no-obf & {
 		@extend %u-opacity-0;
 		@extend %u-visibility-hidden;
 	}  
 }
 
-.u-object-cover {
+.u-obf-cv {
 	object-fit: cover !important;
 	@extend %u-width-100;
 	@extend %u-height-100;
 
-	.no-object-fit & {
+	.no-obf & {
 		@extend %u-opacity-0;
 		@extend %u-visibility-hidden;
 	}
 }
 
-.u-object-cover-fallback,
-.u-object-contain-fallback {
+.u-obf-cv-f,
+.u-obf-cn-f {
 	@extend %u-position-absolute;
 	@extend %u-top-0;
 	@extend %u-bottom-0;
@@ -125,7 +124,7 @@ $_1px: calcRem( 1px );
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 
-	.object-fit & {
+	.obf & {
 		@extend %u-display-none;
 	}
 
@@ -134,17 +133,17 @@ $_1px: calcRem( 1px );
 	}
 }
 
-.u-object-cover-fallback {
+.u-obf-cv-f {
 	background-size: cover;
 }
 
-.u-object-contain-fallback {
+.u-obf-cn-f {
 	background-size: contain;
 }
 
 /* Misc */
 
-.u-svg-scale-fix {
+.u-svg-sc {
 	@extend %u-width-100;
 	@extend %u-display-block;
 	@extend %u-visibility-hidden;

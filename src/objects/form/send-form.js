@@ -86,7 +86,7 @@ export default class SendForm {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -127,10 +127,10 @@ export default class SendForm {
 		return true;
 	}
 
-	/*
-	 * Helper methods
-	 * --------------
-	 */
+ /*
+	* Helper methods
+	* --------------
+	*/
 
 	// display results of form submission
 	_displayResult( error = false ) {
@@ -141,10 +141,10 @@ export default class SendForm {
 		this._error = error;
 	}
 
-	/*
-	 * Event Handlers
-	 * --------------
-	 */
+ /*
+	* Event Handlers
+	* --------------
+	*/
 
 	_submit( e ) {
 		e.preventDefault();
@@ -216,10 +216,10 @@ export default class SendForm {
 		} );
 	}
 
-	/*
-	 * Public methods
-	 * --------------
-	 */
+ /*
+	* Public methods
+	* --------------
+	*/
 
 	clear( exclude = [] ) {
 		if( this._form )

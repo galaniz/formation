@@ -145,61 +145,61 @@
  */
 
 @mixin _transitionScale() {
-    $scale: map-get( $g-transitions, 'scale' );
-    $durations: map-get( $scale, 'durations' );
-    $in: map-get( $scale, 'in' );
-    $out: map-get( $scale, 'out' );
+  $scale: map-get( $g-transitions, 'scale' );
+  $durations: map-get( $scale, 'durations' );
+  $in: map-get( $scale, 'in' );
+  $out: map-get( $scale, 'out' );
 
-    .a-scale-in,
-    .a-scale-out {
-      @extend %u-transition-timing-function-cubic;
-      @extend %u-transition-property-opacity-transform;
-      @include _transitionDurations( $durations );
+  .a-scale-in,
+  .a-scale-out {
+    @extend %u-transition-timing-function-cubic;
+    @extend %u-transition-property-opacity-transform;
+    @include _transitionDurations( $durations );
 
-      .js & {
-        @extend %u-opacity-0;
+    .js & {
+      @extend %u-opacity-0;
+    }
+  }
+
+  .a-scale-in {
+    @each $k, $v in $in {
+      @if $k == def {
+        .js & {
+          transform: scale( #{$v} );
+        }
+      } @else if $k == hover {
+        @include _transformHover( "scale( #{$v} )" );
+      } @else {
+        .js &[data-s="#{$k}"] {
+          transform: scale( #{$v} );
+        }
       }
     }
 
-    .a-scale-in {
-      @each $k, $v in $in {
+    .js [data-vis-all] &,
+    .js &[data-show],
+    .js &[data-vis] {
+      @extend %u-opacity-1;
+      transform: scale( 1 );
+    }
+  }
+
+  .a-scale-out {
+    .js [data-vis-all] &,
+    .js &[data-show],
+    .js &[data-vis] {
+      @extend %u-opacity-1;
+      @each $k, $v in $out {
         @if $k == def {
-          .js & {
-            transform: scale( #{$v} );
-          }
-        } @else if $k == hover {
-          @include _transformHover( "scale( #{$v} )" );
+          transform: scale( #{$v} );
         } @else {
-          .js &[data-s="#{$k}"] {
+          &[data-s="#{$k}"] {
             transform: scale( #{$v} );
           }
         }
       }
-
-      .js [data-vis-all] &,
-      .js &[data-show],
-      .js &[data-vis] {
-        @extend %u-opacity-1;
-        transform: scale( 1 );
-      }
     }
 
-    .a-scale-out {
-      .js [data-vis-all] &,
-      .js &[data-show],
-      .js &[data-vis] {
-        @extend %u-opacity-1;
-        @each $k, $v in $out {
-          @if $k == def {
-            transform: scale( #{$v} );
-          } @else {
-            &[data-s="#{$k}"] {
-              transform: scale( #{$v} );
-            }
-          }
-        }
-      }
-
-      @include _transformHover( "scale( 1 )" );
-    }
+    @include _transformHover( "scale( 1 )" );
+  }
 }

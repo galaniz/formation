@@ -4,10 +4,10 @@
  * ----------------------------------
  *
  * @param meta [array] of objects {
- *		@prop prop [string]
- *		@prop selector [string]
- *		@prop all [boolean]
- *		@prop array [boolean]
+ *	@prop prop [string]
+ *	@prop selector [string]
+ *	@prop all [boolean]
+ *	@prop array [boolean]
  * }
  * @param e [object]
  * @param done [function] callback when done recursing through meta and setting e object

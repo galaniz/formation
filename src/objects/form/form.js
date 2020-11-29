@@ -77,7 +77,7 @@ export default class Form {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -128,7 +128,7 @@ export default class Form {
 					this._inputEmailLabels[name] = emailLabel;
 
 				let field = closest( input, this.fieldClass ),
-					label = field.querySelector( '.' + this.labelClass ) || '';
+						label = field.querySelector( '.' + this.labelClass ) || '';
 
 				if( label )
 					label = label.textContent;
@@ -152,7 +152,7 @@ export default class Form {
 		return true;
 	}
 
-	 /*
+ /*
 	* Internal helper methods
 	* -----------------------
 	*/
@@ -301,14 +301,14 @@ export default class Form {
 
 	_onChange( e ) {
 		let input = e.currentTarget,
-			name = input.name,
-			inputGroup = this._inputGroups[name];
+				name = input.name,
+				inputGroup = this._inputGroups[name];
 
 		if( this.submitted )
 			this._validateGroup( inputGroup, name );
 	}
 
-	 /*
+ /*
 	* Public methods
 	* --------------
 	*/

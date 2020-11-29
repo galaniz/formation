@@ -76,7 +76,7 @@ export default class LoadMore {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -387,13 +387,13 @@ export default class LoadMore {
 					}
 
 					let table = this.insertInto.tagName == 'TBODY',
-						docFragment = document.createDocumentFragment(),
-						div = document.createElement( table ? 'TBODY' : 'DIV' );
+							docFragment = document.createDocumentFragment(),
+							div = document.createElement( table ? 'TBODY' : 'DIV' );
 
 					div.innerHTML = output;
 
 					let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
-						insertedItems = Array.from( div.children );
+							insertedItems = Array.from( div.children );
 
 					imagesLoaded( imgs, ( data ) => {
 						this.onInsert.call( this, insertedItems );

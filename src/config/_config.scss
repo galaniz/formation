@@ -80,7 +80,8 @@ $g-breakpoints: mapRecursiveMerge(
 		700: 700px,
 		800: 800px,
 		900: 900px,
-		1000: 1000px
+		1000: 1000px,
+		1200: 1200px
 	),
 	$g-breakpoints
 );
@@ -105,7 +106,8 @@ $g-containers: mapRecursiveMerge(
 		$suffix: #{ capitalize( $c ) };
 	}
 
-	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
 }
 
 /* Transitions */

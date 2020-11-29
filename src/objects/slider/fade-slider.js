@@ -70,8 +70,8 @@ export default class FadeSlider extends BaseSlider {
 	*/
 
 	_doGoTo( index ) {
-		let ogIndex = this.currentIndex;
-		let lastIndex = super._doGoTo( index );
+		let ogIndex = this.currentIndex,
+				lastIndex = super._doGoTo( index );
 
 		if( this.showLast )
 			this.items[lastIndex].style.opacity = 1;

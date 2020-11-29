@@ -18,17 +18,17 @@ import {
 
 export default class Visible {
 
-	/*
-	 * Constructor
-	 * -----------
-	 */
+ /*
+	* Constructor
+	* -----------
+	*/
 
 	constructor( args ) {
 
-		/*
-		 * Public variables
-		 * ----------------
-		 */
+	 /*
+		* Public variables
+		* ----------------
+		*/
 
 		this.item = null;
 		this.visibleItem = null;
@@ -60,10 +60,10 @@ export default class Visible {
 		// merge default variables with args
 		mergeObjects( this, args );
 
-		/*
-		 * Internal variables
-		 * ------------------
-		 */
+	 /*
+		* Internal variables
+		* ------------------
+		*/
 
 		// check if already initialized
 		this._initDone = false;
@@ -101,10 +101,10 @@ export default class Visible {
 		// if sticky get height of item
 		this._stickyItemHeight = 0;
 
-		/*
-		 * Initialize
-		 * ----------
-		 */
+	 /*
+		* Initialize
+		* ----------
+		*/
 
 		let init = this._initialize();
 
@@ -112,7 +112,7 @@ export default class Visible {
 			return false;
 	}
 
-	/*
+ /*
 	* Internal methods
 	* ----------------
 	*/
@@ -224,13 +224,13 @@ export default class Visible {
 			this.endVisible();
 		}
 
-			if( this.sticky ) {
-				this.item.removeAttribute( 'data-sticky' );
-				this.item.removeAttribute( 'data-sticky-pos' );
-			}
+		if( this.sticky ) {
+			this.item.removeAttribute( 'data-sticky' );
+			this.item.removeAttribute( 'data-sticky-pos' );
+		}
 
-			if( this.parallax )
-				prefix( 'transform', this.item, '' );
+		if( this.parallax )
+			prefix( 'transform', this.item, '' );
 	}
 
 	_parallax() {
@@ -254,10 +254,10 @@ export default class Visible {
 		);
 	}
 
-	/*
-	 * Event handlers
-	 * --------------
-	 */
+ /*
+	* Event handlers
+	* --------------
+	*/
 
 	_scrollHandler() {
 		this._scrollY = getScrollY();

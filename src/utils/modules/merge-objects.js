@@ -27,8 +27,8 @@ export const mergeObjects = ( x, y ) => {
         x[i] = Object.assign( x[i], y[i] );
       }
     } else {
-        if( x.hasOwnProperty( i ) )
-          x[i] = y[i];
+      if( x.hasOwnProperty( i ) )
+        x[i] = y[i];
     }
   }
 

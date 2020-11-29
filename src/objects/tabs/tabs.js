@@ -70,7 +70,7 @@ export default class Tabs {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/

@@ -81,6 +81,22 @@ $g-props: _addProp( $g-props, ( margin: auto ) );
 $g-props: _addProp( $g-props, ( margin-right: auto ) );
 $g-props: _addProp( $g-props, ( margin-left: auto ) );
 
+/* Visually hidden */
+
+$props: addProp( $props, ( 
+  custom: ( 
+  	name: visually-hidden,
+	  prop: (
+	    position: absolute,
+	    overflow: hidden,
+	    left: calcRem( -10000px ),
+	    top: auto,
+	    width: calcRem( 1px ),
+	    height: calcRem( 1px ),
+	  )
+  )
+) );
+
 /* Border radius */
 
 $g-props: _addProp( $g-props, (

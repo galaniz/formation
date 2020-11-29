@@ -7,19 +7,19 @@ _Default:_
 ```scss
 $g-colors: (
   primary: (
-    base: #1DE9B6,
-    light: #A7FFEB,
-    dark: #00BFA5
+  base: #1DE9B6,
+  light: #A7FFEB,
+  dark: #00BFA5
   ),
   foreground: (
-    base: #1E1E1E,
-    light: #444444,
-    dark: #000000
+  base: #1E1E1E,
+  light: #444444,
+  dark: #000000
   ),
   background: (
-    base: #F8F8F8,
-    light: #FFFFFF,
-    dark: #EEEEEE
+  base: #F8F8F8,
+  light: #FFFFFF,
+  dark: #EEEEEE
   )
 );
 ```
@@ -84,23 +84,23 @@ _Default:_
 ```scss
 $g-grid: (
   25: (   
-    600: 50%,
-    900: 25%
+  600: 50%,
+  900: 25%
   ),
   33: (
-    600: 50%,
-    900: 33.33333%
+  600: 50%,
+  900: 33.33333%
   ),
   50: (
-    600: 50%
+  600: 50%
   ),
   66: (
-    600: 50%,
-    900: 66.66667%
+  600: 50%,
+  900: 66.66667%
   ),
   75: (
-    600: 50%,
-    900: 75%
+  600: 50%,
+  900: 75%
   )
 );
 ```
@@ -128,46 +128,46 @@ _Default:_
 ```scss
 $g-transitions: (
   def: (
-    duration: 300ms,
-    timingFunction: 'ease-in-out',
-    timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
+  duration: 300ms,
+  timingFunction: 'ease-in-out',
+  timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
   ),
   fade: (
-    durations: (
-      def: '800ms, 500ms',
-      s: '1200ms, 800ms'
-    ),
-    y: (
-      def: 5%,
-      sm: 25%,
-      md: 50%,
-      lg: 100%
-    ),
-    x: (
-      def: 5%,
-      sm: 25%,
-      md: 50%,
-      lg: 100%
-    )
+  durations: (
+    def: '800ms, 500ms',
+    s: '1200ms, 800ms'
+  ),
+  y: (
+    def: 5%,
+    sm: 25%,
+    md: 50%,
+    lg: 100%
+  ),
+  x: (
+    def: 5%,
+    sm: 25%,
+    md: 50%,
+    lg: 100%
+  )
   ),
   scale: (
-    durations: (
-      def: '800ms, 500ms',
-      s: '2200ms, 600ms'
-    ),
-    in: (
-      def: 1.10,
-      hover: 1.06,
-      sm: 1.05,
-      md: 1.20,
-      lg: 1.55
-    ),
-    out: (
-      def: 1.10,
-      hover: 1,
-      sm: 1.04,
-      md: 1.20
-    )
+  durations: (
+    def: '800ms, 500ms',
+    s: '2200ms, 600ms'
+  ),
+  in: (
+    def: 1.10,
+    hover: 1.06,
+    sm: 1.05,
+    md: 1.20,
+    lg: 1.55
+  ),
+  out: (
+    def: 1.10,
+    hover: 1,
+    sm: 1.04,
+    md: 1.20
+  )
   )
 );
 ```
@@ -184,8 +184,8 @@ $g-zIndex: (
   modal: 90,
   nav: 85,
   loader: (
-    def: 80,
-    page: 110
+  def: 80,
+  page: 110
   )
 );
 ```

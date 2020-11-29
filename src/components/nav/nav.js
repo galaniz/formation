@@ -1,3 +1,4 @@
+
 /*
  * Imports
  * -------
@@ -39,7 +40,7 @@ export default class Nav {
 		this.button = null;
 		this.overlay = null;
 		this.transition = null;
-		this.bodyOverflowHiddenClass = 'u-overflow-hidden';
+		this.bodyOverflowHiddenClass = 'u-o-h';
 		this.onSet = () => {};
 		this.onReset = () => {};
 		this.afterReset = () => {};
@@ -201,15 +202,15 @@ export default class Nav {
 		this._lastOverflowFocus = null;
 
 		if( this._currentOverflowGroups.length > 0 ) {
-				let frag = {},
-						appendFrag = true,
-						listIndexes = [];
+			let frag = {},
+					appendFrag = true,
+					listIndexes = [];
 
-				for( let overflowGroupIndex in this._listIndexes ) {
-					this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
-						frag[index] = document.createDocumentFragment();
-					} );
-				}
+			for( let overflowGroupIndex in this._listIndexes ) {
+				this._listIndexes[overflowGroupIndex].forEach( ( index ) => {
+					frag[index] = document.createDocumentFragment();
+				} );
+			}
 
 			this.items.forEach( ( item, i ) => {
 				let listIndex = parseInt( item.getAttribute( 'data-list-index' ) );
@@ -327,8 +328,8 @@ export default class Nav {
 		let overflow = false;
 
 		listIndexes.forEach( ( index ) => {
-				let items = this.list[index].querySelectorAll( this.itemSelector ),
-			itemsLength = items.length;
+			let items = this.list[index].querySelectorAll( this.itemSelector ),
+					itemsLength = items.length;
 
 			// all items are in overflow element now
 			if( itemsLength === 0 ) {
@@ -350,10 +351,10 @@ export default class Nav {
 		return overflow;
 	}
 
-	/*
-	 * Prevent body scroll when open mobile navigation
-	 * -----------------------------------------------
-	 */
+ /*
+	* Prevent body scroll when open mobile navigation
+	* -----------------------------------------------
+	*/
 
 	_disableBodyScroll( disable = true ) {
 		if( disable ) {
@@ -363,10 +364,10 @@ export default class Nav {
 		}
 	}
 
-	/*
-	 * Open / close mobile navigation
-	 * ------------------------------
-	 */
+ /*
+	* Open / close mobile navigation
+	* ------------------------------
+	*/
 
 	_toggle( close = true, setNavOpen = true ) {
 		this.onToggle.call( this );
@@ -434,10 +435,10 @@ export default class Nav {
 		}
 	}
 
-	/*
-	 * Event Handlers
-	 * --------------
-	 */
+ /*
+	* Event Handlers
+	* --------------
+	*/
 
 	/* When click on button / overlay */
 
