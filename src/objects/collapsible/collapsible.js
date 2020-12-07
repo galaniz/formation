@@ -57,9 +57,7 @@ export default class Collapsible {
 
 		// for keydown event
 		this._keyCodes = {
-			9: 'TAB',
 			27: 'ESC',
-			Tab: 'TAB',
 			Escape: 'ESC'
 		};
 
@@ -227,8 +225,10 @@ export default class Collapsible {
 
 		let keyCode = this._keyCodes[key];
 
-		if( keyCode === 'ESC' )
+		if( keyCode === 'ESC' ) {
 			this._toggleCollapsible( false );
+			this.trigger.focus();
+		}
 	}
 
  /*

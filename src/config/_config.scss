@@ -75,6 +75,7 @@ $g-grid: mapRecursiveMerge(
 $g-breakpoints: mapRecursiveMerge(
 	(
 		0: 0px,
+		400: 400px,
 		500: 500px,
 		600: 600px,
 		700: 700px,

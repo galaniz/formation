@@ -17,6 +17,8 @@ const usingMouse = () => {
 
 	let tab = [9, 'Tab'];
 
+	window.focus(); // to prevent keydown delay
+
 	// check for tabbing to remove class
 	body.addEventListener( 'keydown', ( e ) => {
 		let key = e.key || e.keyCode || e.which || e.code;
