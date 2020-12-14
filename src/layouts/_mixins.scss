@@ -33,11 +33,6 @@
 			@extend %u-margin-left-auto;
 			@extend %u-margin-padding-0;
 			max-width: calcRem( $width );
-
-			@include breakpointMax( "container#{$suffix}" ) {
-				padding-left: calcRem( $g-containerPadding );
-				padding-right: calcRem( $g-containerPadding );
-			}
 		}
 	}
 }

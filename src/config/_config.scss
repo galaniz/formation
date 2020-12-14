@@ -109,6 +109,7 @@ $g-containers: mapRecursiveMerge(
 
 	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
 	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
+	$g-containers: map-merge( ( "#{ $c }WithPadding": $width + ( $g-containerPadding * 2 )  ), $g-containers );
 }
 
 /* Transitions */
