@@ -1,11 +1,11 @@
 
 /*
- * Add class to body if using mouse
- * --------------------------------
- * source: https://bit.ly/2GpioBO
+ * Add attr to body if using mouse
+ * -------------------------------
+ * ssource: https://bit.ly/2GpioBO
  */
 
-const usingMouse = () => {
+export const usingMouse = () => {
 	let body = document.body;
 
 	body.setAttribute( 'data-using-mouse', '' );
@@ -28,5 +28,3 @@ const usingMouse = () => {
 		}
 	} );
 };
-
-export default usingMouse;

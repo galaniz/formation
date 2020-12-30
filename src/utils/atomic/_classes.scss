@@ -146,7 +146,6 @@ $_1px: calcRem( 1px );
 .u-svg-sc {
 	@extend %u-width-100;
 	@extend %u-display-block;
-	@extend %u-visibility-hidden;
 
 	& ~ svg {
 		@extend %u-position-absolute;

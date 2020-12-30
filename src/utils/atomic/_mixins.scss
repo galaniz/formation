@@ -66,6 +66,15 @@
 
 		$g-props: _addProp( $g-props, (
 			custom: (
+				name: 'transition-timing-function',
+				prop: (
+					transition-timing-function: $timingFunction
+				)
+			)
+		) ) !global;
+
+		$g-props: _addProp( $g-props, (
+			custom: (
 				name: 'transition-timing-function-cubic',
 				prop: (
 					transition-timing-function: $timingFunctionCubic
@@ -118,7 +127,7 @@
 
 		%u-#{ $name } {
 			@each $key, $value in $prop {
-				@if( type-of( $value ) == string ) {
+				@if( type-of( $value ) == string and $name != 'content-empty' ) {
 					#{ $key }: unquote( $value );
 				} @else {
 					#{ $key }: $value;

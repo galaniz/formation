@@ -139,11 +139,12 @@ export default class Collapsible {
 	}
 
 	_setCollapsibleHeight() {
+		this.collapsible.style.height = '';
+
 		if( !this._set )
 			return;
 
-		this.collapsible.style.height = '';
-		this._collapsibleHeight = this.collapsible.scrollHeight;
+		this._collapsibleHeight = this.collapsible.clientHeight;
 	}
 
 	_toggleCollapsible( open = true ) {

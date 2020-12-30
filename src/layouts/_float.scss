@@ -5,9 +5,9 @@
  */
 
 .l-clearfix:after {
-	content: '';
-	clear: both;
+	@extend %u-content-empty;
 	@extend %u-display-table;
+	clear: both;
 }
 
 .l-right {

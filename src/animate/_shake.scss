@@ -5,10 +5,10 @@
  */
 
 .a-shake {
-	animation: shake 0.82s cubic-bezier( .36, .07, .19, .97 ) both;
+	animation: _aShake 0.82s cubic-bezier( .36, .07, .19, .97 ) both;
 }
 
-@keyframes shake {
+@keyframes _aShake {
 	10%, 90% {
 		transform: translate3d( #{ calcRem( -1px ) }, 0, 0 );
 	}

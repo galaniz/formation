@@ -13,13 +13,7 @@
 	z-index: map-get( $g-zIndex, 'skipLink' );
 	transform: translateY( -150% );
 
-	&[data-show] {
+	&:focus {
 		transform: translateY( 0 );
-	}
-
-	&:focus, 
-	&:active, 
-	&:hover {
-		@extend %u-opacity-1;
 	}
 }

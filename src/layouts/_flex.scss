@@ -53,5 +53,5 @@
 }
 
 .l-flex-grow {
-	flex-grow: 1;
+	@extend %u-flex-grow-1;
 }

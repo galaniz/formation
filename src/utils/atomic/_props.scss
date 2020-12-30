@@ -41,6 +41,17 @@ $g-props: _addProp( $g-props, ( flex-grow: 1 ) );
 $g-props: _addProp( $g-props, ( visibility: hidden ) );
 $g-props: _addProp( $g-props, ( visibility: visible ) );
 
+/* Content */
+
+$g-props: _addProp( $g-props, (
+	custom: (
+		name: content-empty,
+		prop: (
+			content: ''
+		)
+	)
+) );
+
 /* Position */
 
 $g-props: _addProp( $g-props, ( position: relative ) );
@@ -264,7 +275,7 @@ $g-colors: _mapFlatten( $colorsCopy, (), '' );
 
 %u-touch-50 {
 	&::before {
-		content: '';
+		@extend %u-content-empty;
 		@extend %u-position-absolute;
 		transform: translate( -50%, -50% );
 		width: calcRem( 50px );

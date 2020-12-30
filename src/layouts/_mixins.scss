@@ -32,7 +32,9 @@
 			@extend %u-margin-right-auto;
 			@extend %u-margin-left-auto;
 			@extend %u-margin-padding-0;
-			max-width: calcRem( $width );
+			max-width: calcRem( $width + ( $g-containerPadding * 2 ) );
+			padding-left: calcRem( $g-containerPadding );
+			padding-right: calcRem( $g-containerPadding );
 		}
 	}
 }

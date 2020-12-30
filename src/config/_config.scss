@@ -9,12 +9,12 @@
 $g-colors: mapRecursiveMerge(
 	(
 		primary: (
-			base: #1DE9B6,
-			light: #A7FFEB,
-			dark: #00BFA5
+			base: #888888,
+			light: #AAAAAA,
+			dark: #666666
 		),
 		foreground: (
-			base: #1E1E1E,
+			base: #222222,
 			light: #444444,
 			dark: #000000
 		),
@@ -108,8 +108,7 @@ $g-containers: mapRecursiveMerge(
 	}
 
 	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
-	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
-	$g-containers: map-merge( ( "#{ $c }WithPadding": $width + ( $g-containerPadding * 2 )  ), $g-containers );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 ) ), $g-breakpoints );
 }
 
 /* Transitions */
