@@ -33,7 +33,7 @@ $g-props: [] !default;
 /* Rem/em context */
 
 $g-context: 16px !default;
-$g-context-em: 16px !default;
+$g-contextEm: 16px !default;
 
 /* Aspect ratio padding */
 
@@ -59,4 +59,4 @@ $g-nav: (
 
 /* Loader */
 
-$g-loader-selector: '.o-loader' !default;
+$g-loaderSelector: '.o-loader' !default;

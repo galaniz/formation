@@ -97,8 +97,9 @@ export default class SendForm {
 
 		recurseObject( this,
 			( prop, value ) => {
-				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value )
+				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value ) {
 					requiredError = true;
+				}
 			},
 			( prop, value ) => {
 				if( prop.indexOf( '_' ) > -1 )
