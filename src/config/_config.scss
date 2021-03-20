@@ -116,7 +116,9 @@ $g-containers: mapRecursiveMerge(
 $g-transitions: mapRecursiveMerge(
 	(
 		def: (
-			duration: 300ms,
+			durations: (
+				def: 300ms
+			),
 			timingFunction: 'ease-in-out',
 			timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
 		),
@@ -162,7 +164,7 @@ $g-transitions: mapRecursiveMerge(
 );
 
 $g-defTransitions: map-get( $g-transitions, 'def' );
-$g-defDuration: map-get( $g-defTransitions, 'duration' );
+$g-defDuration: map-get( map-get( $g-defTransitions, 'durations' ), 'def' );
 $g-defTimingFunction: map-get( $g-defTransitions, 'timingFunction' );
 
 /* Z index */

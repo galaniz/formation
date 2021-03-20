@@ -18,6 +18,7 @@ const clickHandler = ( e ) => {
 	let url = e.currentTarget.href;
 
 	b();
+
 	t.setAttribute( 'data-show', '' );
 
 	setTimeout( () => {
@@ -25,7 +26,7 @@ const clickHandler = ( e ) => {
 	}, d );
 };
 
-const transition = ( links = null, transitionElement = null, delay = 800, init = false, beforeShow = false ) => {
+const transition = ( links = [], transitionElement = null, delay = 800, init = false, beforeShow = false ) => {
 	if( !links || !transitionElement )
 		return;
 

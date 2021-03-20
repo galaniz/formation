@@ -31,6 +31,7 @@
   $showTransform: "translate#{$type}( 0 )";
 
   @extend %u-transition-property-opacity-transform;
+
   .js & {
     @each $k, $v in $values {
       $p: $v;
@@ -67,6 +68,7 @@
       }
     }
   }
+  
   .js [data-vis-all] &,
   .js &[data-show],
   .js &[data-vis] {

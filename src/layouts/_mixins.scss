@@ -58,6 +58,7 @@
 	@each $g, $v in $grid {
 		.l-#{$g} {
 			@extend %u-width-100;
+			
 			@each $bk, $width in $v {
 				@include breakpointMin( $bk ) {
 					width: $width;

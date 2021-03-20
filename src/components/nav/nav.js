@@ -5,11 +5,9 @@
  */
 
 import {
-	addClass,
-	removeClass,
 	mergeObjects,
 	cascade,
-	prefix,
+	toggleFocusability
 } from '../../utils/utils';
 
 /*
@@ -64,9 +62,7 @@ export default class Nav {
 		*/
 
 		this._body = document.body;
-
 		this._viewportWidth = window.innerWidth;
-		this._viewportHeight = window.innerHeight;
 
 		// escape key for closing nav
 		this._esc = [27, 'Escape'];
@@ -80,8 +76,8 @@ export default class Nav {
 		// store groups currently overflown
 		this._currentOverflowGroups = [];
 
-		// store last focusable element in overflow list
-		this._lastOverflowFocus = null;
+		// store focusable elements outside nav
+		this._focusableItems = [];
 
 		// for throttling resize event
 		this._resizeTimer;
@@ -140,16 +136,35 @@ export default class Nav {
 		if( !this.items.length ) 
 			return false;
 
+    /* Get focusable elements */
+
+    let focusSelector = 'a, area, input, select, textarea, button, [tabindex], iframe',
+    		navFocusableItems = Array.from( this.nav.querySelectorAll( focusSelector ) );
+
+    if( navFocusableItems.length ) {
+    	this._focusableItems = Array.from( document.querySelectorAll( focusSelector ) );
+
+    	this._focusableItems = this._focusableItems.filter( item => {
+    		if( navFocusableItems.indexOf( item ) == -1 )
+    			return true;
+
+    		return false;
+    	} );
+    }
+
 		/* Event listeners */
 
-		this.button.addEventListener( 'click', this._clickHandler.bind( this ) );
-		this.nav.addEventListener( 'keydown', this._keyDownHandler.bind( this ) );
-		this.overflow.addEventListener( 'focusout', this._overflowFocusHandler.bind( this ) );
+		this._clickHandler = this._click.bind( this );
+		this._keyDownHandler = this._keyDown.bind( this );
+		this._resizeHandler = this._resize.bind( this );
+
+		this.button.addEventListener( 'click', this._clickHandler );
+		this.nav.addEventListener( 'keydown', this._keyDownHandler );
 
 		if( this.overlay )
-			this.overlay.addEventListener( 'click', this._clickHandler.bind( this ) );
+			this.overlay.addEventListener( 'click', this._clickHandler );
 
-		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
+		window.addEventListener( 'resize', this._resizeHandler );
 
 		// set up overflow groups
 		this.items.forEach( ( item, index ) => {
@@ -280,23 +295,8 @@ export default class Nav {
 			overflowGroupIndex++;
 			overflow = this._overflowing( this._listIndexes[overflowGroupIndex] );
 
-			if( !overflow ) {
-				// get last child in list
-				let lastChild = overflowGroup[overflowGroup.length - 1],
-						descendents = lastChild.getElementsByTagName( '*' );
-
-				// reverse loop through descendents to find last focusable element
-				for( let i = descendents.length - 1; i >= 0; i-- ) {
-					let d = descendents[i];
-
-					if( d.tagName === 'A' || d.tagName === 'BUTTON' ) {
-						this._lastOverflowFocus = d;
-						break;
-					}
-				}
-			} else {
+			if( overflow )
 				lastOverflowGroupIndex = overflowGroupIndex;
-			}
 		}
 
 		this._listIndexes[lastOverflowGroupIndex].forEach( ( index ) => {
@@ -314,6 +314,9 @@ export default class Nav {
 		} else {
 			this._toggle( true, false );
 		}
+
+		if( !this._navOpen ) 
+			toggleFocusability( true, this._focusableItems );
 
 		this.onSet.call( this );
 
@@ -358,9 +361,9 @@ export default class Nav {
 
 	_disableBodyScroll( disable = true ) {
 		if( disable ) {
-			addClass( this._body, this.bodyOverflowHiddenClass );
+			this._body.classList.add( this.bodyOverflowHiddenClass );
 		} else {
-			removeClass( this._body, this.bodyOverflowHiddenClass );
+			this._body.classList.remove( this.bodyOverflowHiddenClass );
 		}
 	}
 
@@ -373,6 +376,8 @@ export default class Nav {
 		this.onToggle.call( this );
 
 		this._navOpen = !close;
+
+		toggleFocusability( !this._navOpen, this._focusableItems );
 
 		if( close === false ) {
 			cascade( [
@@ -442,37 +447,29 @@ export default class Nav {
 
 	/* When click on button / overlay */
 
-	_clickHandler( e ) {
+	_click( e ) {
 		e.preventDefault();
+
 		this._toggle( this._navOpen );
 	}
 
 	/* If hit escape while nav open close */
 
-	_keyDownHandler( e ) {
+	_keyDown( e ) {
 		let key = e.key || e.keyCode || e.which || e.code;
 
 		if( this._esc.indexOf( key ) !== -1 )
 			this._toggle();
 	}
 
-	/* Last element focus close nav */
-
-	_overflowFocusHandler( e ) {
-		if( e.target === this._lastOverflowFocus )
-			this._toggle();
-	}
-
 	/* Viewport resize */
 
-	_resizeHandler() {
+	_resize() {
 		// throttles resize event
 		clearTimeout( this._resizeTimer );
 
 		this._resizeTimer = setTimeout( () => {
 			let viewportWidth = window.innerWidth;
-
-			this._viewportHeight = window.innerHeight;
 
 			if( viewportWidth != this._viewportWidth ) {
 				this._viewportWidth = viewportWidth;
@@ -483,6 +480,18 @@ export default class Nav {
 			this._setNav();
 			this.onResize.call( this );
 		}, 100 );
+	}
+
+ /*
+	* Public methods
+	* --------------
+	*/
+
+	addFocusableItem( item ) {
+		if( !item )
+			return;
+
+		this._focusableItems.push( item );
 	}
 
 } // end Nav

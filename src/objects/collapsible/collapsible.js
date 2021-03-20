@@ -4,7 +4,7 @@
  * -------
  */
 
-import { mergeObjects, prefix } from '../../utils/utils';
+import { mergeObjects } from '../../utils/utils';
 
 /*
  * Collapse height of specified element by trigger elements
@@ -29,6 +29,7 @@ export default class Collapsible {
 		this.container = null;
 		this.collapsible = null;
 		this.trigger = null;
+		this.closeOnLastBlur = true;
 		this.nestedInstances = [];
 		this.accordianInstances = [];
 		this.transitionDuration = 300;
@@ -61,6 +62,11 @@ export default class Collapsible {
 			Escape: 'ESC'
 		};
 
+		// for this.closeOnLastBlur
+		this._focusableItems = [];
+		this._lastFocusableItem = null;
+
+		// for accordian
 		this._nestedInstancesCallbacks = [];
 
 	 /*
@@ -87,9 +93,21 @@ export default class Collapsible {
 		if( !this.collapsible || !this.trigger )
 			return false;
 
+    // get focusable elements
+    this._focusableItems = Array.from( this.container.querySelectorAll( 'a, area, input, select, textarea, button, [tabindex], iframe' ) );
+
+    if( this.closeOnLastBlur ) {
+      this._blurHandler = this._blur.bind( this );
+      this.container.addEventListener( 'focusout', this._blurHandler );
+    }
+
 		// event listeners
-		this.collapsible.addEventListener( 'keydown', this._keyDownHandler.bind( this ) );
-		this.trigger.addEventListener( 'click', this._triggerHandler.bind( this ) );
+		this._keyDownHandler = this._keyDown.bind( this );
+		this._triggerHandler = this._trigger.bind( this );
+		this._resizeHandler = this._resize.bind( this );
+
+		this.collapsible.addEventListener( 'keydown', this._keyDownHandler );
+		this.trigger.addEventListener( 'click', this._triggerHandler );
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
@@ -192,7 +210,7 @@ export default class Collapsible {
 	* --------------
 	*/
 
-	_resizeHandler() {
+	_resize() {
 		if( !this.resize )
 			return;
 
@@ -213,12 +231,12 @@ export default class Collapsible {
 		}, 100 );
 	}
 
-	_triggerHandler() {
+	_trigger() {
 		let open = !this._open;
 		this._toggleCollapsible( open );
 	}
 
-	_keyDownHandler( e ) {
+	_keyDown( e ) {
 		let key = e.key || e.keyCode || e.which || e.code;
 
 		if( !this._keyCodes.hasOwnProperty( key ) )
@@ -231,6 +249,14 @@ export default class Collapsible {
 			this.trigger.focus();
 		}
 	}
+
+  _blur() {
+    setTimeout( () => {
+      // close if tabbed outside container
+      if( !this._focusableItems.includes( document.activeElement ) )
+        this._toggleCollapsible( false );
+    }, 0 );
+  }
 
  /*
 	* Public methods
