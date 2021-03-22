@@ -249,6 +249,9 @@ export default class LoadMore {
 			} );
 		}
 
+		if( show ) 
+			this.insertInto.innerHTML = '';
+
 		// show nothing found message
 		if( this.noResults.containers.length > 0 ) {
 			this.noResults.containers.forEach( ( c ) => {
@@ -362,7 +365,7 @@ export default class LoadMore {
 					if( reset )
 						this._noResults();
 
-					this._afterResponse( reset, rowCount, total );
+					this._afterResponse( reset, 0, 0 );
 
 					return;
 				}
@@ -416,7 +419,7 @@ export default class LoadMore {
 						}, 0 );
 					} );
 				} else {
-					if( reset )
+					if( reset ) 
 						this._noResults();
 
 					this._afterResponse( reset, rowCount, total );

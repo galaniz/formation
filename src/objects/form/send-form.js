@@ -57,7 +57,7 @@ export default class SendForm {
 			textContainer: null,
 			text: {
 				error: 'Oops! Looks like something went wrong. Please try again later.',
-				success: 'Successfully submitted!'
+				success: 'Successfully sent!'
 			}
 		};
 
