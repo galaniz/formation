@@ -37,13 +37,13 @@ export default class Modal {
 	this.close = null;
 	this.scaleTransition = false;
 	this.scaleTransitionDelay = 300;
-	this.bodyOverflowHiddenClass = 'u-overflow-hidden';
+	this.bodyOverflowHiddenClass = 'u-o-h';
 	this.onToggle = () => {};
 
 	// merge default variables with args
 	mergeObjects( this, args );
 
-	 /*
+ /*
 	* Internal variables
 	* ------------------
 	*/
@@ -170,10 +170,10 @@ export default class Modal {
 	_setTransforms() {
 		if( this.scaleTransition ) {
 			let prop = this._open ? 'open' : 'close',
-				sX = this._matrix[prop].sX,
-				sY = this._matrix[prop].sY,
-				tX = this._matrix[prop].tX,
-				tY = this._matrix[prop].tY;
+					sX = this._matrix[prop].sX,
+					sY = this._matrix[prop].sY,
+					tX = this._matrix[prop].tX,
+					tY = this._matrix[prop].tY;
 
 			prefix( 'transform', this.window, `matrix( ${ sX }, 0, 0, ${ sY }, ${ tX }, ${ tY } )` );
 		}

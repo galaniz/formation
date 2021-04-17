@@ -1,6 +1,6 @@
 
 /*
- * Nav icon: seven
+ * Nav Icon: Seven
  * ---------------
  */
 
@@ -19,7 +19,7 @@
 	}
 
 	.c-nav__button:not( [data-show] ) & {
-		animation: _navIconGrowShrinkCopy 300ms;
+		animation: _aNavIconGrowShrinkCopy 300ms;
 	}
 
 	.c-nav__button[data-show] & {
@@ -33,11 +33,11 @@
 			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
 		}
 		
-		animation: _navIconGrowShrink 300ms;
+		animation: _aNavIconGrowShrink 300ms;
 	}
 }
 
-@keyframes _navIconGrowShrinkCopy {
+@keyframes _aNavIconGrowShrinkCopy {
 	0% { 
 		transform: scale( 1 ); 
 	}
@@ -49,7 +49,7 @@
 	}
 }
 
-@keyframes _navIconGrowShrink {
+@keyframes _aNavIconGrowShrink {
 	0% { 
 		transform: scale( 1 ); 
 	}

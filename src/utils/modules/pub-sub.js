@@ -18,7 +18,7 @@ let subscriptions = {};
 
 const publish = ( name, args = [] ) => {
 	if( !subscriptions.hasOwnProperty( name ) )
-			return;
+		return;
 
 	let callbacks = subscriptions[name];
 

@@ -100,8 +100,8 @@ _Example:_
 ```js
 let filter = ( args, inputs ) => {
   inputs.forEach( ( input ) => {
-    if( input.hasAttribute( 'data-something' ) )
-      args['something'] = true;
+  if( input.hasAttribute( 'data-something' ) )
+    args['something'] = true;
   } );
 
   return args;
@@ -116,7 +116,7 @@ Clear value of input.
 
 _Parameters:_
 
-* `exclude`    
+* `exclude`  
 List of input names to exclude from being cleared.  
 _Type:_ `array`  
 _Default:_ `[]`

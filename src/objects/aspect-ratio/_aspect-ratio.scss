@@ -13,8 +13,8 @@
 	@extend %u-overflow-hidden;
 
 	&::before {
+		@extend %u-content-empty;
 		@extend %u-display-block;
-		content: '';
 		padding-top: 100%;
 	}
 

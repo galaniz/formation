@@ -9,14 +9,14 @@
 @mixin pageLoaderFallback( $selectors: '#js-page-loader, #js-page-transition' ) {
   #{ $selectors } {
     .no-js & {
-      animation-name: _pageLoaderFadeOut;
+      animation-name: _aPageLoaderFadeOut;
       animation-duration: 1000ms;
-      animation-delay: 8000ms;
+      animation-delay: 2500ms;
       animation-fill-mode: forwards;
     }
   }
 
-  @keyframes _pageLoaderFadeOut {
+  @keyframes _aPageLoaderFadeOut {
     0% { opacity: 1; }
     25% { opacity: 1; }
     50% { opacity: 1; }

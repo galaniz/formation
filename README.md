@@ -21,9 +21,3 @@ A collection of front end components and utilities.
 ### [Objects](/src/objects)
 
 ### [Animate](/src/animate)
-
-### To Do
-
-* Lightbox
-* Form Slider
-* Visible class needs work - fix sticky

@@ -10,7 +10,7 @@
 			@each $p, $w in $v {
 				$g-props: _addProp( $g-props, (
 					custom: (
-						name: "font-weight-#{$p}",
+						name: "font-weight-#{ $p }",
 						prop: (
 							font-weight: $w
 						)
@@ -20,7 +20,7 @@
 		} @else {
 			$g-props: _addProp( $g-props, (
 				custom: (
-					name: "font-family-#{$k}",
+					name: "font-family-#{ $k }",
 					prop: (
 						font-family: $v
 					)
@@ -39,27 +39,45 @@
 	$transitions: map-get( $g-transitions, 'def' );
 
 	@if( type-of( $transitions ) == 'map' ) {
-		$duration: map-get( $transitions, 'duration' );
+		$durations: map-get( $transitions, 'durations' );
+		$duration: map-get( $durations, 'def' );
 		$timingFunction: map-get( $transitions, 'timingFunction' );
 		$timingFunctionCubic: map-get( $transitions, 'timingFunctionCubic' );
 
 		$g-props: _addProp( $g-props, ( transition-property: opacity ) ) !global;
 		$g-props: _addProp( $g-props, ( transition-property: transform ) ) !global;
 
-		$g-props: _addProp( $g-props, (
-			custom: (
-				name: 'transition-duration',
-				prop: (
-					transition-duration: $duration
+		@each $k, $v in $durations {
+			$name: 'transition-duration';
+
+			@if $k != def {
+				$name: $name + '-' + $k;
+			}
+
+			$g-props: _addProp( $g-props, (
+				custom: (
+					name: $name,
+					prop: (
+						transition-duration: $v
+					)
 				)
-			)
-		) ) !global;
+			) ) !global;
+	  }
 
 		$g-props: _addProp( $g-props, (
 			custom: (
 				name: 'transition-property-opacity-transform',
 				prop: (
 					transition-property: 'opacity, transform'
+				)
+			)
+		) ) !global;
+
+		$g-props: _addProp( $g-props, (
+			custom: (
+				name: 'transition-timing-function',
+				prop: (
+					transition-timing-function: $timingFunction
 				)
 			)
 		) ) !global;
@@ -77,7 +95,7 @@
 			custom: (
 				name: 'transition-opacity-transform-ease',
 				prop: (
-					transition: "opacity #{$duration} #{$timingFunction}, transform #{$duration} #{$timingFunction}"
+					transition: "opacity #{ $duration } #{ $timingFunction }, transform #{ $duration } #{ $timingFunction }"
 				)
 			)
 		) ) !global;
@@ -86,7 +104,7 @@
 			custom: (
 				name: 'transition-transform-ease',
 				prop: (
-					transition: "transform #{$duration} #{$timingFunction}"
+					transition: "transform #{ $duration } #{ $timingFunction }"
 				)
 			)
 		) ) !global;
@@ -95,7 +113,7 @@
 			custom: (
 				name: 'transition-opacity-ease',
 				prop: (
-					transition: "opacity #{$duration} #{$timingFunction}"
+					transition: "opacity #{ $duration } #{ $timingFunction }"
 				)
 			)
 		) ) !global;
@@ -118,7 +136,7 @@
 
 		%u-#{ $name } {
 			@each $key, $value in $prop {
-				@if( type-of( $value ) == string ) {
+				@if( type-of( $value ) == string and $name != 'content-empty' ) {
 					#{ $key }: unquote( $value );
 				} @else {
 					#{ $key }: $value;

@@ -10,22 +10,9 @@
 	}
 }
 
-.o-collapsible__icon {
-	@extend %u-display-none;
-
-	.o-collapsible__trigger[aria-expanded="true"] &[data-type="close"] {
-		@extend %u-display-block;
-	}
-
-	.o-collapsible__trigger[aria-expanded="false"] &[data-type="open"] {
-		@extend %u-display-block;
-	}
-}
-
-.o-collapsible__content {
+.o-collapsible__main {
 	.o-collapsible[data-set] > & {
 		@extend %u-overflow-hidden;
-		box-sizing: content-box;
 		transition: height #{ $g-defDuration } #{ $g-defTimingFunction };
 		will-change: height;
 	}

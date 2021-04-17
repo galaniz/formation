@@ -4,28 +4,28 @@
  * -----
  */
 
-.o-table {
+#{ $g-tableSelector } {
 	@extend %u-width-100;
   border-collapse: collapse;
   border-spacing: 0;
 
-  .o-table__label::before {
+  td[data-label]::before {
 		content: attr( data-label );
 		@extend %u-display-none;
 		@extend %u-float-left;
   }
 
 	&[data-collapse="true"] {
-		& thead {
-			@extend %u-display-none;
+		thead {
+			@extend %u-visually-hidden;
 		}
 
-		& td {
+		td {
 			@extend %u-display-flex;
 		}
 
-		& tr,
-		& .o-table__label::before {
+		tr,
+		td[data-label]::before {
 			@extend %u-display-block;
 		}
 	}

@@ -9,12 +9,12 @@
 $g-colors: mapRecursiveMerge(
 	(
 		primary: (
-			base: #1DE9B6,
-			light: #A7FFEB,
-			dark: #00BFA5
+			base: #888888,
+			light: #AAAAAA,
+			dark: #666666
 		),
 		foreground: (
-			base: #1E1E1E,
+			base: #222222,
 			light: #444444,
 			dark: #000000
 		),
@@ -75,12 +75,14 @@ $g-grid: mapRecursiveMerge(
 $g-breakpoints: mapRecursiveMerge(
 	(
 		0: 0px,
+		400: 400px,
 		500: 500px,
 		600: 600px,
 		700: 700px,
 		800: 800px,
 		900: 900px,
-		1000: 1000px
+		1000: 1000px,
+		1200: 1200px
 	),
 	$g-breakpoints
 );
@@ -105,7 +107,8 @@ $g-containers: mapRecursiveMerge(
 		$suffix: #{ capitalize( $c ) };
 	}
 
-	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width + ( $g-containerPadding * 2 )  ), $g-breakpoints );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
+	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 ) ), $g-breakpoints );
 }
 
 /* Transitions */
@@ -113,7 +116,9 @@ $g-containers: mapRecursiveMerge(
 $g-transitions: mapRecursiveMerge(
 	(
 		def: (
-			duration: 300ms,
+			durations: (
+				def: 300ms
+			),
 			timingFunction: 'ease-in-out',
 			timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
 		),
@@ -159,7 +164,7 @@ $g-transitions: mapRecursiveMerge(
 );
 
 $g-defTransitions: map-get( $g-transitions, 'def' );
-$g-defDuration: map-get( $g-defTransitions, 'duration' );
+$g-defDuration: map-get( map-get( $g-defTransitions, 'durations' ), 'def' );
 $g-defTimingFunction: map-get( $g-defTransitions, 'timingFunction' );
 
 /* Z index */

@@ -15,7 +15,7 @@ export const hasClass = ( item, classes, all = true ) => {
   let currentClasses = item.className.split( ' ' ),
       hasClasses = all;
       classes = classes.split( ' ' );
-      
+    
   classes.forEach( ( c ) => {
     let classPos = currentClasses.indexOf( c ); 
 

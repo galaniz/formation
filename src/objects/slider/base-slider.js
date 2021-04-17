@@ -83,7 +83,7 @@ export default class BaseSlider {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -174,7 +174,7 @@ export default class BaseSlider {
 
 			const setupNavItem = ( item = null, i = 0, classes = '' ) => {
 				let active = i == this.currentIndex ? true : false,
-					setClass = classes ? true : false;
+						setClass = classes ? true : false;
 
 				if( active )
 					item.setAttribute( 'data-active', '' );
@@ -285,7 +285,7 @@ export default class BaseSlider {
 		return lastIndex;
 	}
 
-	 /*
+ /*
 	* Go to slide
 	* -----------
 	*/
@@ -312,7 +312,7 @@ export default class BaseSlider {
 			this._autoStart = now;
 
 		let progress = now - this._autoStart,
-			timeFraction = progress / this.autoplaySpeed;
+				timeFraction = progress / this.autoplaySpeed;
 
 		if( timeFraction >= 1 ) {
 			this._goTo( this.currentIndex + 1 );
@@ -368,7 +368,7 @@ export default class BaseSlider {
 		this._goTo( this._getNextIndex( this.currentIndex ) );
 	}
 
-	 /*
+ /*
 	* Public methods
 	* ---------------
 	*/

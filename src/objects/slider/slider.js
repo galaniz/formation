@@ -9,8 +9,11 @@ import { prefix } from '../../utils/utils';
 import BaseSlider from './base-slider';
 
 /*
- * Slider ( based on siema )
+ * Slider 
  * ------
+ *
+ * Based on Siema: https://github.com/pawelgrzybek/siema
+ *
  */
 
 export default class Slider extends BaseSlider {
@@ -148,7 +151,7 @@ export default class Slider extends BaseSlider {
 		this._goTo( this.currentIndex, true );
 	}
 
-	 /*
+ /*
 	* Parent methods
 	* --------------
 	*/

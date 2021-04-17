@@ -4,10 +4,10 @@
  * --------------------
  *
  * @param args [object] { 
- *    @prop method [string]
- *    @prop url [string]
- *    @prop headers [object]
- *    @prop body [string] url encoded or [form data]
+ *  @prop method [string]
+ *  @prop url [string]
+ *  @prop headers [object]
+ *  @prop body [string] url encoded or [form data]
  * }
  *
  * @return [promise] with response / error passed to it
@@ -33,7 +33,7 @@ export const request = ( args ) => {
           reject( 'Oops something went wrong.' );
         }
       } else {
-          reject( xhr );
+        reject( xhr );
       }
     };
 

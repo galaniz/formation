@@ -13,6 +13,8 @@ import { show } from './modules/show';
 import { prefix } from './modules/prefix';
 import { objectFit } from './modules/object-fit';
 import { disableButtonLoader } from './modules/disable-button-loader';
+import { usingMouse } from './modules/using-mouse';
+import { toggleFocusability } from './modules/toggle-focusability';
 
 /* Get values from DOM */
 
@@ -62,5 +64,7 @@ export {
   request,
   cascade,
   publish,
-  subscribe
+  subscribe,
+  usingMouse,
+  toggleFocusability
 };

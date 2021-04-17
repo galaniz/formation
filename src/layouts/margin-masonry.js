@@ -14,17 +14,17 @@ import { getScrollY } from '../utils/utils';
 
 export default class MarginMasonry {
 
-  /*
-	 * Constructor
-	 * -----------
-	 */
+ /*
+  * Constructor
+  * -----------
+  */
 
   constructor( args ) {
 
-    /*
-     * Public variables
-     * ----------------
-     */
+   /*
+    * Public variables
+    * ----------------
+    */
 
     this.container = null;
     this.items = null;
@@ -34,10 +34,10 @@ export default class MarginMasonry {
     // merge default variables with args
     mergeObjects( this, args );
 
-    /*
-     * Internal variables
-     * ------------------
-     */
+   /*
+    * Internal variables
+    * ------------------
+    */
 
     this._itemInfo = [];
     this._rows = {};
@@ -53,10 +53,10 @@ export default class MarginMasonry {
     this._viewportWidth = window.innerWidth;
     this._viewportHeight = window.innerHeight;
 
-    /*
-     * Initialize
-     * ----------
-     */
+   /*
+    * Initialize
+    * ----------
+    */
 
     let init = this._initialize();
 
@@ -64,10 +64,10 @@ export default class MarginMasonry {
       return false;
   }
 
-  /*
-	 * Initialize
-	 * ----------
-	 */
+ /*
+  * Initialize
+  * ----------
+  */
 
   _initialize() {
     // check that required variables not null
@@ -105,10 +105,10 @@ export default class MarginMasonry {
     return true;
   }
 
-  /*
-	 * Internal helpers
-	 * ----------------
-	 */
+ /*
+  * Internal helpers
+  * ----------------
+  */
 
   _setVars( init = false ) {
 
@@ -168,13 +168,13 @@ export default class MarginMasonry {
           height = rect.height;
 
       if( !this._rows.hasOwnProperty( offsetTop ) )
-        this._rows[offsetTop] = {
-          items: [],
-          ogHeights: [],
-          ogHeight: 0,
-          heights: [],
-          height: 0
-        };
+      this._rows[offsetTop] = {
+        items: [],
+        ogHeights: [],
+        ogHeight: 0,
+        heights: [],
+        height: 0
+      };
 
       let indexInRow = this._rows[offsetTop].items.push( item );
 
@@ -260,10 +260,10 @@ export default class MarginMasonry {
     this._containerParent.appendChild( frag );
   }
 
-  /*
- 	 * Event callbacks
- 	 * ---------------
- 	 */
+ /*
+  * Event callbacks
+  * ---------------
+  */
 
   _resize() {
     // throttles resize event
