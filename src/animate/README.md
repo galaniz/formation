@@ -34,18 +34,18 @@ _Parameters:_
 
 <table>
   <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Default</th>
-      <th>Description</th>
-    </tr>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><code>parallax</code></td>
-      <td><code>object</code></td>
-      <td>
+  <tr>
+    <td><code>parallax</code></td>
+    <td><code>object</code></td>
+    <td>
 <pre lang="js">
 {
   rate: 0.2,
@@ -54,9 +54,9 @@ _Parameters:_
   z: 0
 }
 </pre>
-      </td>
-      <td></td>
-    </tr>
+    </td>
+    <td></td>
+  </tr>
   </tbody>
 </table>
 

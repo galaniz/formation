@@ -28,8 +28,8 @@ const _imageLoaded = ( image ) => {
 
 export const imagesLoaded = ( images = [], done = () => {} ) => {
   if( images.length == 0 ) {
-      done( false );
-      return;
+    done( false );
+    return;
   }
 
 	Promise.all( images.map( _imageLoaded ) )

@@ -14,13 +14,13 @@ export const objectFit = ( images = [], type = 'cover' ) => {
     let classes = image.className;
 
     if( type == 'contain' ) {
-      classes = classes.replace( 'js-object-contain', '' );
-      classes = classes.replace( 'u-object-contain', '' );
-      classes += ' u-object-contain-fallback';
+      classes = classes.replace( 'js-obf-cn', '' );
+      classes = classes.replace( 'u-obf-cn', '' );
+      classes += ' u-obf-cn-f';
     } else {
-      classes = classes.replace( 'js-object-cover', '' );
-      classes = classes.replace( 'u-object-cover', '' );
-      classes += ' u-object-cover-fallback';
+      classes = classes.replace( 'js-obf-cv', '' );
+      classes = classes.replace( 'u-obf-cv', '' );
+      classes += ' u-obf-cv-f';
     }
 
     image.insertAdjacentHTML( 'afterend',

@@ -1,16 +1,16 @@
 
 /*
- * Nav icon: five
+ * Nav Icon: Five
  * --------------
  */
 
  .c-nav-icon[data-num="5"] {
  	& .c-nav-icon__top {
- 		animation: 300ms ease forwards _collapseRotateTopReverse;
+ 		animation: 300ms ease forwards _aCollapseRotateTopReverse;
  	}
 
  	& .c-nav-icon__bottom {
- 		animation: 300ms ease forwards _collapseRotateBottomReverse;
+ 		animation: 300ms ease forwards _aCollapseRotateBottomReverse;
  	}
 
  	& .c-nav-icon__middle {
@@ -25,15 +25,15 @@
  		}
 
  		& .c-nav-icon__top {
- 			animation: 300ms ease forwards _collapseRotateTop;
+ 			animation: 300ms ease forwards _aCollapseRotateTop;
  		}
  		
  		& .c-nav-icon__bottom {
- 			animation: 300ms ease forwards _collapseRotateBottom;
+ 			animation: 300ms ease forwards _aCollapseRotateBottom;
  		}
  	}
 
- 	@keyframes _collapseRotateTopReverse {
+ 	@keyframes _aCollapseRotateTopReverse {
  		0% {
  			transform: translateY( $_y ) rotate( 45deg );
  		}
@@ -42,7 +42,7 @@
  		}
  	}
 
- 	@keyframes _collapseRotateBottomReverse {
+ 	@keyframes _aCollapseRotateBottomReverse {
  		0% {
  			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
  		}
@@ -51,7 +51,7 @@
  		}
  	}
 
- 	@keyframes _collapseRotateTop {
+ 	@keyframes _aCollapseRotateTop {
  		0% {
  			transform: translateY( $_y );
  		}
@@ -60,7 +60,7 @@
  		}
  	}
 
- 	@keyframes _collapseRotateBottom {
+ 	@keyframes _aCollapseRotateBottom {
  		0% {
  			transform: translateY( 0 ) rotate( 0 );
  		}

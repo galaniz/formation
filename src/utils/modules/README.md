@@ -130,7 +130,7 @@ _Type:_ `boolean`
 _Default:_ `true`
 
 * `disable`  
-Disable or enable button.    
+Disable or enable button.  
 _Type:_ `boolean`  
 _Default:_ `false`
 
@@ -225,10 +225,10 @@ _Example:_
 ```js
 let meta = [
   {
-    prop: 'link',
-    selector: '.o-link',
-    all: true, // querySelectorAll instead of querySelector
-    array: true
+  prop: 'link',
+  selector: '.o-link',
+  all: true, // querySelectorAll instead of querySelector
+  array: true
   }
 ];
 ```
@@ -262,25 +262,25 @@ _Example:_
 ```js
 cascade( [
   {
-    action: ( i, done ) => {
-      doThis();
+  action: ( i, done ) => {
+    doThis();
 
-      let target = 10;
+    let target = 10;
 
-      cascade( [
-        {
-          action: ( j ) => {
-            doThisOtherThing();
+    cascade( [
+    {
+      action: ( j ) => {
+      doThisOtherThing();
 
-            if( j === target - 1 )
-              done(); // optional
-          },
-          delay: 100,
-          increment: 50
-        }
-      ], target );
-    },
-    delay: 300
+      if( j === target - 1 )
+        done(); // optional
+      },
+      delay: 100,
+      increment: 50
+    }
+    ], target );
+  },
+  delay: 300
   }
 ] );
 ```
@@ -330,7 +330,7 @@ _Required:_ true
 * `_key` (for iteration)  
 _Type:_ `string`
 
-* `_list` (for iteration)    
+* `_list` (for iteration)  
 _Type:_ `array`  
 _Default:_ `[]`   
 
@@ -351,14 +351,14 @@ _Required:_ true
   method: 'POST', // or 'GET'
   url: 'http://someapi.com',
   headers: {
-    'Content-type': 'application/json'
+  'Content-type': 'application/json'
   },
   body: JSON.stringify( { // string or formData
-    id: 928349,
-    data: {
-      x: 98984,
-      y: 36748
-    }
+  id: 928349,
+  data: {
+    x: 98984,
+    y: 36748
+  }
   } )
 }
 ```

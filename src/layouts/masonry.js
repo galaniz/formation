@@ -119,10 +119,10 @@ export default class Masonry {
 		this._arrange();
 	}
 
-	/*
-	 * Determine columns from what range currently in
-	 * ----------------------------------------------
-	 */
+ /*
+	* Determine columns from what range currently in
+	* ----------------------------------------------
+	*/
 
 	_arrange() {
 		let currentRange;
@@ -141,10 +141,10 @@ export default class Masonry {
 		this._wrapItems( currentRange.cols );
 	}
 
-	/*
-	 * Wrap and unwrap helper methods
-	 * ------------------------------
-	 */
+ /*
+	* Wrap and unwrap helper methods
+	* ------------------------------
+	*/
 
 	_wrapItems( cols ) {
 		let fragment = document.createDocumentFragment(),
@@ -216,10 +216,10 @@ export default class Masonry {
 		smColContainer.appendChild( this.items[lastVisualItemIndex] );
 	}
 
-	/*
-	 * Event Handlers
-	 * --------------
-	 */
+ /*
+	* Event Handlers
+	* --------------
+	*/
 
 	_resizeHandler() {
 		// throttles resize event
@@ -238,10 +238,10 @@ export default class Masonry {
 		}, 100 );
 	}
 
-	/*
-	 * Public methods
-	 * --------------
-	 */
+ /*
+	* Public methods
+	* --------------
+	*/
 
 	addItems( items ) {
 		items = Array.from( items );

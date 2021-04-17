@@ -76,7 +76,7 @@ export default class LoadMore {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -249,6 +249,9 @@ export default class LoadMore {
 			} );
 		}
 
+		if( show ) 
+			this.insertInto.innerHTML = '';
+
 		// show nothing found message
 		if( this.noResults.containers.length > 0 ) {
 			this.noResults.containers.forEach( ( c ) => {
@@ -362,7 +365,7 @@ export default class LoadMore {
 					if( reset )
 						this._noResults();
 
-					this._afterResponse( reset, rowCount, total );
+					this._afterResponse( reset, 0, 0 );
 
 					return;
 				}
@@ -387,13 +390,13 @@ export default class LoadMore {
 					}
 
 					let table = this.insertInto.tagName == 'TBODY',
-						docFragment = document.createDocumentFragment(),
-						div = document.createElement( table ? 'TBODY' : 'DIV' );
+							docFragment = document.createDocumentFragment(),
+							div = document.createElement( table ? 'TBODY' : 'DIV' );
 
 					div.innerHTML = output;
 
 					let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
-						insertedItems = Array.from( div.children );
+							insertedItems = Array.from( div.children );
 
 					imagesLoaded( imgs, ( data ) => {
 						this.onInsert.call( this, insertedItems );
@@ -416,7 +419,7 @@ export default class LoadMore {
 						}, 0 );
 					} );
 				} else {
-					if( reset )
+					if( reset ) 
 						this._noResults();
 
 					this._afterResponse( reset, rowCount, total );

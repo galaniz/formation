@@ -35,11 +35,11 @@ export const prefix = ( type, item, val ) => {
 			item.style.transition = val;
 		},
 		transitionDelay() {
-      item.style.webkitTransitionDelay = val;
-      item.style.MozTransitionDelay = val;
-      item.style.msTransitionDelay = val;
-      item.style.OTransitionDelay = val;
-      item.style.transitionDelay = val; 
+	    item.style.webkitTransitionDelay = val;
+	    item.style.MozTransitionDelay = val;
+	    item.style.msTransitionDelay = val;
+	    item.style.OTransitionDelay = val;
+	    item.style.transitionDelay = val; 
 		}
 	}
 

@@ -42,7 +42,7 @@ export default class FloatLabel {
 			return false;
 	}
 
-	 /*
+ /*
 	* Initialize
 	* ----------
 	*/
@@ -62,14 +62,14 @@ export default class FloatLabel {
 		return true;
 	}
 
-	/*
-	 * Event Handlers
-	 * --------------
-	 */
+ /*
+	* Event Handlers
+	* --------------
+	*/
 
 	_inputHandler( e ) {
 		let type = e !== undefined ? e.type : false,
-			float = false;
+				float = false;
 
 		if( type == 'focus' ) {
 			float = true;

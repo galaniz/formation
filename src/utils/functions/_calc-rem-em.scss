@@ -21,6 +21,6 @@
  */
 
 @function calcEm( $px ) {
-  $em: $px / $g-context-em;
+  $em: $px / $g-contextEm;
   @return ( $em + em );
 }

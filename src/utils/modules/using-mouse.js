@@ -1,11 +1,11 @@
 
 /*
- * Add class to body if using mouse
- * --------------------------------
- * source: https://bit.ly/2GpioBO
+ * Add attr to body if using mouse
+ * -------------------------------
+ * ssource: https://bit.ly/2GpioBO
  */
 
-const usingMouse = () => {
+export const usingMouse = () => {
 	let body = document.body;
 
 	body.setAttribute( 'data-using-mouse', '' );
@@ -17,6 +17,8 @@ const usingMouse = () => {
 
 	let tab = [9, 'Tab'];
 
+	window.focus(); // to prevent keydown delay
+
 	// check for tabbing to remove class
 	body.addEventListener( 'keydown', ( e ) => {
 		let key = e.key || e.keyCode || e.which || e.code;
@@ -26,5 +28,3 @@ const usingMouse = () => {
 		}
 	} );
 };
-
-export default usingMouse;

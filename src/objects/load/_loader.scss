@@ -4,7 +4,7 @@
  * ------
  */
 
-#{ $g-loader-selector } {
+#{ $g-loaderSelector } {
 	transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction } 10ms, z-index 0ms #{ $g-defTimingFunction };
 	@extend %u-position-absolute;
 	@extend %u-top-0;

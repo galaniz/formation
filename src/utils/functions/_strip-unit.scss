@@ -14,11 +14,11 @@
   $oneUnit: 1px;
   
   @if( str-index( $n, 'em' ) ) {
-    $oneUnit: 1em;
+  	$oneUnit: 1em;
   }
   
   @if( str-index( $n, 'rem' ) ) {
-    $oneUnit: 1rem;
+  	$oneUnit: 1rem;
   }
   
   @return $number / $oneUnit;
