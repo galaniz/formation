@@ -4,8 +4,6 @@
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --optimize-minimize -p",
-    "watch": "webpack --optimize-minimize -p --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
