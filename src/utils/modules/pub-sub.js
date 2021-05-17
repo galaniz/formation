@@ -23,7 +23,7 @@ const publish = ( name, args = [] ) => {
 	let callbacks = subscriptions[name];
 
 	if( callbacks )
-		callbacks.forEach( ( callback ) => {
+		callbacks.forEach( callback => {
 			callback( args );
 		} );
 };

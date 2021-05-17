@@ -84,13 +84,13 @@ export default class LoadMore {
 	_initialize() {
 		// check that required variables not null
 		if( !this.url ||
-			!this.button ||
-			!this.loader ||
-			!this.type ||
-			!this.offset ||
-			!this.total ||
-			!this.insertInto )
-			return false;
+				!this.button ||
+				!this.loader ||
+				!this.type ||
+				!this.offset ||
+				!this.total ||
+				!this.insertInto )
+				return false;
 
 		if( !this.buttonContainer )
 			this.buttonContainer = this.button;
@@ -114,8 +114,8 @@ export default class LoadMore {
 		// add event listeners
 		this.button.addEventListener( 'click', this._load.bind( this ) );
 
-		if( this.filters.length > 0 ) {
-			this.filters.forEach( ( f ) => {
+		if( this.filters.length ) {
+			this.filters.forEach( f => {
 				if( f.type == 'listbox' ) {
 					f.item.onChange( ( item, val ) => {
 						this._data.filters[item.id] = {
@@ -125,41 +125,45 @@ export default class LoadMore {
 						this._load( 'reset' );
 					} );
 				} else {
+					let args = { currentTarget: f.item };
+
 					if( f.type === 'search' ) {
-						let searchArgs = { currentTarget: f.item },
-								submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
+						let submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
 
 						if( submitSearchSelector ) {
 							let submitSearch = document.querySelector( submitSearchSelector );
 
 							if( submitSearch )
 								submitSearch.addEventListener( 'click', () => {
-									this._filter( searchArgs );
+									this._filter( args );
 								} );
 						}
 
-						f.item.addEventListener( 'keydown', ( e ) => {
+						f.item.addEventListener( 'keydown', e => {
 							let key = e.key || e.keyCode || e.which || e.code;
 
 							if( [13, 'Enter'].indexOf( key ) !== -1 )
-								this._filter( searchArgs );
+								this._filter( args );
 						} );
 					} else {
-						 f.item.addEventListener( 'change', this._filter.bind( this ) );
+						f.item.addEventListener( 'change', this._filter.bind( this ) );
 					}
+
+					// init ( if selected add to data filter attribute )
+					this._filter( args, true );
 				}
 			} );
 		}
 
 		// back to all results
 		if( this.noResults.buttons ) {
-			this.noResults.buttons.forEach( ( b ) => {
+			this.noResults.buttons.forEach( b => {
 				b.addEventListener( 'click', () => {
 					this._data.filters = {};
 
 					// clear filters
-					if( this.filters.length > 0 ) {
-						this.filters.forEach( ( f ) => {
+					if( this.filters.length ) {
+						this.filters.forEach( f => {
 							if( f.type == 'listbox' ) {
 								f.item.clear();
 							} else {
@@ -176,7 +180,7 @@ export default class LoadMore {
 									case 'select':
 										let opts = Array.from( f.item.options );
 
-										opts.forEach( ( o ) => {
+										opts.forEach( o => {
 											let s = false;
 
 											if( o.defaultSelected )
@@ -235,11 +239,11 @@ export default class LoadMore {
 	// when no results ( filters )
 	_noResults( show = true ) {
 		// disable / enable filters
-		if( this.filters.length > 0 ) {
+		if( this.filters.length ) {
 			if( this.filtersForm )
 				this.filtersForm.setAttribute( 'data-disabled', show ? 'true' : 'false' );
 
-			this.filters.forEach( ( f ) => {
+			this.filters.forEach( f => {
 				if( f.type == 'listbox' ) {
 					f.item.disable( show ? true : false );
 				} else {
@@ -253,8 +257,8 @@ export default class LoadMore {
 			this.insertInto.innerHTML = '';
 
 		// show nothing found message
-		if( this.noResults.containers.length > 0 ) {
-			this.noResults.containers.forEach( ( c ) => {
+		if( this.noResults.containers.length ) {
+			this.noResults.containers.forEach( c => {
 				c.style.display = show ? 'block' : 'none';
 			} );
 		}
@@ -285,12 +289,13 @@ export default class LoadMore {
 	* --------------
 	*/
 
-	_filter( e ) {
+	_filter( e, init = false ) {
 		let item = e.currentTarget,
 				id = item.id,
 				value = item.value,
 				operator = item.getAttribute( 'data-operator' ),
-				type = this._getType( item );
+				type = this._getType( item ),
+				selected = false;
 
 		// if radio and not checked give inactive
 		if( type == 'radio' ) {
@@ -300,7 +305,7 @@ export default class LoadMore {
 				this._sameName = Array.from( document.getElementsByName( item.name ) );
 
 			if( this._sameName ) {
-				this._sameName.forEach( ( s ) => {
+				this._sameName.forEach( s => {
 					let inactive = true;
 
 					if( item.checked && s == item )
@@ -315,12 +320,28 @@ export default class LoadMore {
 			}
 		}
 
-		this._data.filters[id] = {
-			value: item.value,
-			operator: operator
-		};
+		if( init ) {
+			switch( type ) {
+				case 'checkbox':
+				case 'radio':
+					if( item.checked )
+						selected = true;
 
-		this._load( 'reset' );
+					break;
+				default:
+					if( value )
+						selected = true;
+			}
+		}
+
+		if( !init || selected )
+			this._data.filters[id] = {
+				value: item.value,
+				operator: operator
+			};
+
+		if( !init )
+			this._load( 'reset' );
 	}
 
 	_load( e ) {
@@ -398,15 +419,15 @@ export default class LoadMore {
 					let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
 							insertedItems = Array.from( div.children );
 
-					imagesLoaded( imgs, ( data ) => {
+					imagesLoaded( imgs, data => {
 						this.onInsert.call( this, insertedItems );
 
 						if( table ) {
-							insertedItems.forEach( ( item ) => {
+							insertedItems.forEach( item => {
 								this.insertInto.appendChild( item );
 							} );
 						} else {
-							insertedItems.forEach( ( item ) => {
+							insertedItems.forEach( item => {
 								docFragment.appendChild( item );
 							} );
 
