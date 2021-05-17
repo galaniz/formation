@@ -10,8 +10,9 @@ export const objectFit = ( images = [], type = 'cover' ) => {
   if( images.length == 0 )
     return;
 
-  images.forEach( ( image ) => {
-    let classes = image.className;
+  images.forEach( image => {
+    let classes = image.className,
+        dataAttrs = '';
 
     if( type == 'contain' ) {
       classes = classes.replace( 'js-obf-cn', '' );
@@ -23,8 +24,24 @@ export const objectFit = ( images = [], type = 'cover' ) => {
       classes += ' u-obf-cv-f';
     }
 
+    if( image.hasAttributes() ) {
+      let attrs = Array.from( image.attributes );
+
+      attrs = attrs.filter( a => {
+        return a.name.startsWith( 'data' );
+      } );
+
+      if( attrs.length ) {
+        dataAttrs = attrs.map( a => {
+          return `${ a.name }="${ a.value }"`;
+        } );
+
+        dataAttrs = ' ' + dataAttrs.join( ' ' );
+      }
+    }
+
     image.insertAdjacentHTML( 'afterend',
-      `<div class="${ classes }" style="background-image: url(${ image.src })"></div>`
+      `<div class="${ classes }" style="background-image: url(${ image.src })"${ dataAttrs }></div>`
     );
   } );
 };

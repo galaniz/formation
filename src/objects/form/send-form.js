@@ -56,8 +56,8 @@ export default class SendForm {
 			container: null,
 			textContainer: null,
 			text: {
-				error: 'Oops! Looks like something went wrong. Please try again later.',
-				success: 'Successfully sent!'
+				error: '',
+				success: ''
 			}
 		};
 
@@ -74,6 +74,10 @@ export default class SendForm {
 
 		// keep track of error / success
 		this._error = false;
+
+		// default messages
+		this._defaultErrorMessage = 'Oops! Looks like something went wrong. Please try again later.';
+		this._defaultSuccessMessage = 'Successfully sent!';
 
 	 /*
 		* Initialize
@@ -92,25 +96,31 @@ export default class SendForm {
 	*/
 
 	_initialize() {
-		// check that required variables not null
-		let requiredError = false;
-
-		recurseObject( this,
-			( prop, value ) => {
-				if( prop != 'errorClass' && prop != 'filterInputs' && prop != 'data' && !value ) {
-					requiredError = true;
-				}
-			},
-			( prop, value ) => {
-				if( prop.indexOf( '_' ) > -1 )
-					return false;
-
-				return true;
-			}
-		);
-
-		if( requiredError )
+		// check that required variables not empty / null
+		if( !this.id ||
+				!this.form || 
+				!this.groupClass ||
+				!this.fieldClass ||
+				!this.labelClass || 
+				!this.submit || 
+				!this.inputs ||
+				!this.loader || 
+				!this.siteKey ||
+				!this.url )
 			return false;
+
+		// default messages if none
+		if( !this.result.text.hasOwnProperty( 'error' ) )
+			this.result.text.error = this._defaultErrorMessage;
+
+		if( !this.result.text.error )
+			this.result.text.error = this._defaultErrorMessage;
+
+		if( !this.result.text.hasOwnProperty( 'success' ) )
+			this.result.text.success = this._defaultSuccessMessage;
+
+		if( !this.result.text.success )
+			this.result.text.success = this._defaultSuccessMessage;
 
 		// prepare for validation
 		this._form = new Form( {

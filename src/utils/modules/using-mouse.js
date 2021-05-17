@@ -2,17 +2,23 @@
 /*
  * Add attr to body if using mouse
  * -------------------------------
- * ssource: https://bit.ly/2GpioBO
+ * source: https://bit.ly/2GpioBO
  */
+
+/* Dependencies */
+
+import { publish } from './pub-sub';
 
 export const usingMouse = () => {
 	let body = document.body;
 
 	body.setAttribute( 'data-using-mouse', '' );
+	publish( 'tabState', [false] );
 
 	// mouse is being used
 	body.addEventListener( 'mousedown', () => {
 		body.setAttribute( 'data-using-mouse', '' );
+		publish( 'tabState', [false] );
 	} );
 
 	let tab = [9, 'Tab'];
@@ -25,6 +31,7 @@ export const usingMouse = () => {
 
 		if( tab.indexOf( key ) !== -1 ) {
 			body.removeAttribute( 'data-using-mouse' );
+			publish( 'tabState', [true] );
 		}
 	} );
 };

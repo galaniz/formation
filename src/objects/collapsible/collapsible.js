@@ -4,7 +4,7 @@
  * -------
  */
 
-import { mergeObjects } from '../../utils/utils';
+import { mergeObjects, subscribe } from '../../utils/utils';
 
 /*
  * Collapse height of specified element by trigger elements
@@ -30,9 +30,9 @@ export default class Collapsible {
 		this.collapsible = null;
 		this.trigger = null;
 		this.closeOnLastBlur = true;
-		this.nestedInstances = [];
 		this.accordianInstances = [];
 		this.transitionDuration = 300;
+		this.startOpen = false;
 		this.resize = true;
 
 		// merge default variables with args
@@ -65,9 +65,11 @@ export default class Collapsible {
 		// for this.closeOnLastBlur
 		this._focusableItems = [];
 		this._lastFocusableItem = null;
+		this._tabbing = false;
 
-		// for accordian
-		this._nestedInstancesCallbacks = [];
+		subscribe( 'tabState', t => {
+			this._tabbing = t[0];
+		} );
 
 	 /*
 		* Initialize
@@ -111,20 +113,9 @@ export default class Collapsible {
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
 
-		if( this.nestedInstances.length ) {
-			this.nestedInstances.forEach( ( n ) => {
-				const c = () => {
-					this._setCollapsibleHeight();
-					this._toggleCollapsible( this._open );
-				};
-
-				n._nestedInstancesCallbacks.push( c );
-			} );
-		}
-
 		window.addEventListener( 'load', () => {
 			this._setCollapsibleHeight();
-			this._toggleCollapsible( false );
+			this._toggleCollapsible( this.startOpen );
 			this._setContainer();
 		} );
 
@@ -135,15 +126,6 @@ export default class Collapsible {
 	* Internal helpers
 	* ----------------
 	*/
-
-	_onSet() {
-		if( !this._nestedInstancesCallbacks.length )
-			return;
-
-		this._nestedInstancesCallbacks.forEach( ( n ) => {
-			n();
-		} );
-	}
 
 	_setContainer() {
 		if( !this.container )
@@ -174,7 +156,7 @@ export default class Collapsible {
 
 		if( open ) {
 			if( this.accordianInstances.length ) {
-				this.accordianInstances.forEach( ( a ) => {
+				this.accordianInstances.forEach( a => {
 					if( a._open )
 						a.toggle( false );
 				} );
@@ -189,7 +171,6 @@ export default class Collapsible {
 
 			setTimeout( () => {
 				this.collapsible.style.height = '';
-				this._onSet();
 			}, this.transitionDuration );
 		} else {
 			setTimeout( () => {
@@ -198,8 +179,6 @@ export default class Collapsible {
 				setTimeout( () => {
 					if( this.container )
 						this.container.removeAttribute( 'data-expanded' );
-
-					this._onSet();
 				}, this.transitionDuration );
 			}, this.transitionDuration );
 		}
@@ -252,9 +231,9 @@ export default class Collapsible {
 
   _blur() {
     setTimeout( () => {
-      // close if tabbed outside container
-      if( !this._focusableItems.includes( document.activeElement ) )
-        this._toggleCollapsible( false );
+    	// close if focus outside
+  		if( this._tabbing && !this._focusableItems.includes( document.activeElement ) && this._open ) 
+      	this._toggleCollapsible( false );
     }, 0 );
   }
 

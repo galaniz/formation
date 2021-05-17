@@ -1,0 +1,27 @@
+
+version: 2.1
+
+jobs:
+  publish-release:
+    docker:
+      - image: circleci/node:latest
+    steps: 
+      - checkout
+      - run:
+          name: Install npm
+          command: npm install
+      - run:
+          name: Authenticate
+          command: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+      - run:
+          name: Publish package
+          command: npm run release
+
+workflows:
+  version: 2.1
+  publish_release:
+    jobs:
+      - publish-release:
+          filters:
+            branches:
+              only: master
