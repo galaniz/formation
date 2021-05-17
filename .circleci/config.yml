@@ -8,10 +8,13 @@ jobs:
     steps: 
       - checkout
       - run:
+          name: GitHub auth
+          command: export GITHUB_TOKEN=$GITHUB_TOKEN
+      - run:
           name: Install npm
           command: npm install
       - run:
-          name: Authenticate
+          name: Npm auth
           command: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
       - run:
           name: Publish package
