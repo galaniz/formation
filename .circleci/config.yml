@@ -7,18 +7,17 @@ jobs:
       - image: circleci/node:latest
     steps: 
       - checkout
-      - run:
-          name: GitHub auth
-          command: export GITHUB_TOKEN=$GITHUB_TOKEN
-      - run:
-          name: Install npm
-          command: npm install
+      - name: Git config
+        run: |
+          git config user.name "${GITHUB_USER}"
+          git config user.email "${GITHUB_EMAIL}"
       - run:
           name: Npm auth
           command: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-      - run:
-          name: Publish package
-          command: npm run release
+      - run: npm install
+      - run: npm run release
+        env:
+          GITHUB_TOKEN: ${{ GITHUB_TOKEN }}
 
 workflows:
   version: 2.1
@@ -27,4 +26,4 @@ workflows:
       - publish-release:
           filters:
             branches:
-              only: master
+              only: dev
