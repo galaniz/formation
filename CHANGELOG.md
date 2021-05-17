@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [2.0.1] - 2021-05-16
 
 ### Added
-- CircleCI and Release It to automate releases.
+- CircleCI and Release It package to automate releases.
 - Rule to remove select caret.
 - Rule for flex shrink.
 - Publish tab state change in `usingMouse` module.
