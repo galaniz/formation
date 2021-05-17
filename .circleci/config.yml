@@ -22,4 +22,4 @@ workflows:
       - publish-release:
           filters:
             branches:
-              only: dev
+              only: master
