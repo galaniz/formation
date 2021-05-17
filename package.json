@@ -22,7 +22,8 @@
   },
   "release-it": {
     "git": {
-      "requireCommits": true
+      "requireCommits": true,
+      "commitMessage": "Release ${version} ci skip",
     },
     "github": {
       "release": true
