@@ -7,7 +7,6 @@
 import {
 	addClass,
 	removeClass,
-	recurseObject,
 	mergeObjects,
 	disableButtonLoader,
 	request

@@ -21,3 +21,15 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Default error/success messages undefined in `SendForm` class.
 - `Collapsible` behaving accordian style when not specified.
+
+## [2.1.6] - 2021-05-24
+
+### Added
+- Browser history functionality to `LoadMore`.
+
+### Changed
+- Clean up setting of filters and generally break up functions into smaller ones in `LoadMore`.
+
+### Removed
+- `recurseObject` import in `SendForm`.
+- unused `decrement` option in `LoadMore` (wait for pagination support).

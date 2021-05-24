@@ -51,7 +51,6 @@ export default class LoadMore {
 		this.type = '';
 		this.offset = 0;
 		this.ajaxPpp = 0;
-		this.decrement = false;
 		this.total = 0;
 
 		this.insertInto = null;
@@ -59,8 +58,15 @@ export default class LoadMore {
 		this.onInsert = () => {};
 		this.afterInsert = () => {};
 
-		// internal variables
-		this._sameName = null;
+		this.changePushUrlParams = () => {};
+
+	 /*
+		* Internal variables
+		* ------------------
+		*/
+
+		this._urlSupported = true;
+		this._url = '';
 
 		// merge default variables with args
 		mergeObjects( this, args );
@@ -92,6 +98,15 @@ export default class LoadMore {
 				!this.insertInto )
 				return false;
 
+		// check if URL constructor supported
+		if( typeof window.URL !== 'function' || 
+				typeof URL.createObjectURL !== 'function' || 
+				typeof URL.revokeObjectURL !== 'function' )
+        this._urlSupported = false;
+
+    if( this._urlSupported )
+    	this._url = new URL( window.location );
+
 		if( !this.buttonContainer )
 			this.buttonContainer = this.button;
 
@@ -113,22 +128,26 @@ export default class LoadMore {
 
 		// add event listeners
 		this.button.addEventListener( 'click', this._load.bind( this ) );
+		window.onpopstate = this._popState.bind( this );
 
+		// set filters
 		if( this.filters.length ) {
 			this.filters.forEach( f => {
-				if( f.type == 'listbox' ) {
-					f.item.onChange( ( item, val ) => {
-						this._data.filters[item.id] = {
+				let type = this._getType( f );
+
+				if( type == 'listbox' ) {
+					f.onChange( ( ff, val ) => {
+						this._data.filters[ff.id] = {
 							value: val
 						};
 
 						this._load( 'reset' );
 					} );
 				} else {
-					let args = { currentTarget: f.item };
+					let args = { currentTarget: f };
 
-					if( f.type === 'search' ) {
-						let submitSearchSelector = f.item.getAttribute( 'data-submit-selector' );
+					if( type === 'search' ) {
+						let submitSearchSelector = f.getAttribute( 'data-submit-selector' );
 
 						if( submitSearchSelector ) {
 							let submitSearch = document.querySelector( submitSearchSelector );
@@ -139,18 +158,18 @@ export default class LoadMore {
 								} );
 						}
 
-						f.item.addEventListener( 'keydown', e => {
+						f.addEventListener( 'keydown', e => {
 							let key = e.key || e.keyCode || e.which || e.code;
 
 							if( [13, 'Enter'].indexOf( key ) !== -1 )
 								this._filter( args );
 						} );
 					} else {
-						f.item.addEventListener( 'change', this._filter.bind( this ) );
+						f.addEventListener( 'change', this._filter.bind( this ) );
 					}
 
 					// init ( if selected add to data filter attribute )
-					this._filter( args, true );
+					this._filter( args, 'init' );
 				}
 			} );
 		}
@@ -164,36 +183,7 @@ export default class LoadMore {
 					// clear filters
 					if( this.filters.length ) {
 						this.filters.forEach( f => {
-							if( f.type == 'listbox' ) {
-								f.item.clear();
-							} else {
-								f.item.removeAttribute( 'data-inactive' );
-
-								let type = this._getType( f.item );
-
-								switch( type ) {
-									case 'checkbox':
-									case 'radio':
-										f.item.checked = false;
-
-										break;
-									case 'select':
-										let opts = Array.from( f.item.options );
-
-										opts.forEach( o => {
-											let s = false;
-
-											if( o.defaultSelected )
-												s = true;
-
-											o.selected = s;
-										} );
-
-										break;
-									default:
-										f.item.value = '';
-								}
-							}
+							this._setFilter( f, 'null' );
 						} );
 					}
 
@@ -201,6 +191,8 @@ export default class LoadMore {
 				} );
 			} );
 		}
+
+		this._pushState( 'init', this.insertInto.innerHTML ); // push for intial state
 
 		return true;
 	}
@@ -216,16 +208,101 @@ export default class LoadMore {
 		this._data.postCount = 0;
 	}
 
+	// get input type
 	_getType( input ) {
-		let type = input.tagName.toLowerCase();
+		let type = '',
+				loadMoreType = input.getAttribute( 'data-load-more-type' );
 
-		if( type === 'input' )
-			type = input.type;
+		if( !loadMoreType ) {
+			if( input.type == 'listbox' ) {
+				type = 'listbox';
+			} else {
+				type = input.tagName.toLowerCase();
+
+				if( type === 'input' )
+					type = input.type;
+			}
+
+			input.setAttribute( 'data-load-more-type', type );
+		} else {
+			type = loadMoreType;
+		}
 
 		return type;
 	}
 
-	_showFilterLoader( show = true, delay = false ) {
+	// set filter input
+	_setFilter( f, compareValue = undefined, state = 'default' ) { // if compareValue undefined than clear input
+		let id = f.id,
+				value = f.value,
+				operator = f.getAttribute( 'data-operator' ),
+				type = this._getType( f );
+
+		if( type == 'radio' )
+			id = f.name;
+
+		if( state === 'init' ) {
+			compareValue = 'null';
+			
+			switch( type ) {
+				case 'checkbox':
+					if( f.checked )
+						compareValue = value;
+
+					break;
+				case 'radio':
+					let r = Array.from( document.querySelectorAll( `[name="${ id }"]` ) );
+
+					r.forEach( rr => {
+						if( rr.checked )
+							compareValue = rr.value;
+					} );
+
+					break;
+				default:
+					if( value )
+						compareValue = value;
+			}
+		}
+
+		let equalToCompareVal = value === compareValue;
+
+		if( equalToCompareVal ) {
+			// selected
+			this._data.filters[id] = {
+				value: value,
+				operator: operator
+			};
+		}
+
+		if( type == 'listbox' ) {
+			if( !equalToCompareVal )
+				f.clear();
+
+			// if value...
+		} else {
+			switch( type ) {
+				case 'checkbox':
+				case 'radio':
+					f.checked = equalToCompareVal;
+
+					break;
+				case 'select':
+					let opts = Array.from( f.options );
+
+					opts.forEach( o => {
+						o.selected = o.value === compareValue;
+					} );
+
+					break;
+				default:
+					f.value = equalToCompareVal ? value : '';
+			}
+		}
+	}
+
+	// show / hide filter loader
+	_showFilterLoader( show = true ) {
 		if( !this.filtersLoader )
 			return;
 
@@ -233,6 +310,16 @@ export default class LoadMore {
 			this.filtersLoader.removeAttribute( 'data-hide' );
 		} else {
 			this.filtersLoader.setAttribute( 'data-hide', '' );
+		}
+	}
+
+	// show / hide button
+	_showButton() {
+		// hide load more button if posts are greater than or equal to total post count
+		if( this._data.postCount >= this._data.total ) {
+			this.buttonContainer.style.display = 'none';
+		} else {
+			this.buttonContainer.style.display = 'block';
 		}
 	}
 
@@ -244,11 +331,13 @@ export default class LoadMore {
 				this.filtersForm.setAttribute( 'data-disabled', show ? 'true' : 'false' );
 
 			this.filters.forEach( f => {
-				if( f.type == 'listbox' ) {
-					f.item.disable( show ? true : false );
+				let type = this._getType( f );
+
+				if( type == 'listbox' ) {
+					f.disable( show ? true : false );
 				} else {
-					f.item.disabled = show ? true : false;
-					f.item.setAttribute( 'aria-disabled', show ? 'true' : 'false' );
+					f.disabled = show ? true : false;
+					f.setAttribute( 'aria-disabled', show ? 'true' : 'false' );
 				}
 			} );
 		}
@@ -265,7 +354,7 @@ export default class LoadMore {
 	}
 
 	// after response set vars / items
-	_afterResponse( reset, rowCount, total ) {
+	_afterResponse( reset, rowCount, total, state = 'default', output = '' ) {
 		this._data.postCount += rowCount;
 
 		// get new total
@@ -274,14 +363,80 @@ export default class LoadMore {
 			this._data.total = total;
 		}
 
-		// hide load more button if posts are greater than or equal to total post count
-		if( this._data.postCount >= this._data.total ) {
-			this.buttonContainer.style.display = 'none';
-		} else {
-			this.buttonContainer.style.display = 'block';
+		this._showButton();
+		this._showFilterLoader( false );
+
+		// history entry
+		this._pushState( state, output );
+	}
+
+	// add url and data to browser history
+	_pushState( state, output ) {
+		let url = '',
+				data = {
+					data: this._data,
+					state: state,
+					html: output ? this.insertInto.innerHTML : ''
+				};
+
+		if( this._urlSupported && this._url && state !== 'init' ) {
+			let urlParams = this.changePushUrlParams( state, this._data ); // object
+
+			for( let u in urlParams ) {
+				let v = urlParams[u];
+
+				if( Array.isArray( v ) )
+					v = JSON.stringify( v );
+
+				if( v == 'load_more_delete_param' ) {
+					this._url.searchParams.delete( u );
+				} else {
+					this._url.searchParams.set( u, v );
+				}
+			}
+
+			url = this._url;
 		}
 
-		this._showFilterLoader( false );
+		if( url ) {
+			window.history.pushState( data, '', url );
+		} else {
+			window.history.pushState( data, '' );
+		}
+	}
+
+	// add output to insertInto element
+	_insertOutput( output = '', done = () => {} ) {
+		let table = this.insertInto.tagName == 'TBODY',
+				docFragment = document.createDocumentFragment(),
+				div = document.createElement( table ? 'TBODY' : 'DIV' );
+
+		div.innerHTML = output;
+
+		let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
+				insertedItems = Array.from( div.children );
+
+		imagesLoaded( imgs, data => {
+			this.onInsert.call( this, insertedItems );
+
+			if( table ) {
+				insertedItems.forEach( item => {
+					this.insertInto.appendChild( item );
+				} );
+			} else {
+				insertedItems.forEach( item => {
+					docFragment.appendChild( item );
+				} );
+
+				this.insertInto.appendChild( docFragment );
+			}
+
+			done();
+
+			setTimeout( () => {
+				this.afterInsert.call( this, insertedItems );
+			}, 0 );
+		} );
 	}
 
  /*
@@ -289,75 +444,61 @@ export default class LoadMore {
 	* --------------
 	*/
 
-	_filter( e, init = false ) {
-		let item = e.currentTarget,
-				id = item.id,
-				value = item.value,
-				operator = item.getAttribute( 'data-operator' ),
-				type = this._getType( item ),
-				selected = false;
+	_filter( e, state = 'default' ) {
+		let f = e.currentTarget,
+				compareValue = f.value;
 
-		// if radio and not checked give inactive
-		if( type == 'radio' ) {
-			id = item.name;
+		this._setFilter( f, compareValue, state );
 
-			if( !this._sameName )
-				this._sameName = Array.from( document.getElementsByName( item.name ) );
-
-			if( this._sameName ) {
-				this._sameName.forEach( s => {
-					let inactive = true;
-
-					if( item.checked && s == item )
-						inactive = false;
-
-					if( inactive ) {
-						s.setAttribute( 'data-inactive', '' );
-					} else {
-						s.removeAttribute( 'data-inactive' );
-					}
-				} );
-			}
-		}
-
-		if( init ) {
-			switch( type ) {
-				case 'checkbox':
-				case 'radio':
-					if( item.checked )
-						selected = true;
-
-					break;
-				default:
-					if( value )
-						selected = true;
-			}
-		}
-
-		if( !init || selected )
-			this._data.filters[id] = {
-				value: item.value,
-				operator: operator
-			};
-
-		if( !init )
+		if( state !== 'init' )
 			this._load( 'reset' );
 	}
 
-	_load( e ) {
-		let reset = false;
+	_popState( e ) {
+		if( e.state ) {
+			this._data = Object.assign( this._data, e.state.data );
 
-		if( e !== undefined ) {
-			if( e !== 'reset' && e !== 'reset-no-res' ) {
-				e.preventDefault();
-			} else {
-				reset = true;
+			// output
+			this._history = e.state.html;
+			this._load( 'history' );
+
+			if( this.filters.length ) {
+				this.filters.forEach( f => {
+					let id = f.id,
+							type = this._getType( f );
+
+					if( type == 'radio' )
+						id = f.name;
+
+					let compareValue = 'null';
+
+					if( this._data.filters.hasOwnProperty( id ) )
+						compareValue = this._data.filters[id].value;
+
+					this._setFilter( f, compareValue );	
+				} );
 			}
 		}
+	}
 
+	_load( e ) {
+		if( e !== undefined && !( typeof e == 'string' || e instanceof String ) )
+			e.preventDefault();
+
+		// set states
+		let state = 'default',
+				reset = false;
+
+		if( typeof e == 'string' || e instanceof String )
+			state = e;
+
+		if( e === 'reset' || e === 'reset-no-res' )
+			reset = true;
+
+		// reset
 		if( reset ) {
 			this._reset();
-			this._showFilterLoader( true, e == 'reset' ? true : false );
+			this._showFilterLoader( true );
 		}
 
 		this._noResults( false );
@@ -365,99 +506,87 @@ export default class LoadMore {
 		// disable button
 		disableButtonLoader( this.button, this.loader, false, true );
 
-		// get data as url encoded string
-		let encodedData = urlEncode( this._data );
+		if( e == 'history' ) {
+			// enable button
+			disableButtonLoader( this.button, this.loader );
 
-		console.log( 'DATA', this._data );
+			this.insertInto.innerHTML = '';
 
-		setTimeout( () => {
-			// fetch more posts
-			request( {
-				method: 'POST',
-				url: this.url,
-				headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-				body: encodedData
-			} )
-			.then( response => {
-				// enable button
-				disableButtonLoader( this.button, this.loader );
+			if( this._history ) {
+				this._insertOutput( this._history );
+			} else {
+				this._noResults();
+			}
 
-				if( !response ) {
+			this._showButton();
+			this._showFilterLoader( false );
+		} else {
+			// get data as url encoded string
+			let encodedData = urlEncode( this._data );
+
+			console.log( 'DATA', this._data );
+
+			setTimeout( () => {
+				// fetch more posts
+				request( {
+					method: 'POST',
+					url: this.url,
+					headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+					body: encodedData
+				} )
+				.then( response => {
+					// enable button
+					disableButtonLoader( this.button, this.loader );
+
+					if( !response ) {
+						if( reset )
+							this._noResults();
+
+						this._afterResponse( reset, 0, 0, state );
+
+						return;
+					}
+
+					let result = JSON.parse( response ),
+							rowCount = result.row_count,
+							output = result.output,
+							total = parseInt( result.total );
+
+					console.log( 'RESULT', result );
+
+					if( reset )
+						this.insertInto.innerHTML = '';
+
+					if( rowCount > 0 && output != '' ) {
+						let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
+
+						this._data.offset += o;
+
+						this._insertOutput( output, () => {
+							setTimeout( () => {
+								this._afterResponse( reset, rowCount, total, state, output );
+							}, 0 );
+						} );
+					} else {
+						if( reset ) 
+							this._noResults();
+
+						this._afterResponse( reset, rowCount, total, state );
+					}
+				} )
+				.catch( xhr => {
+					console.log( 'ERROR', xhr );
+
 					if( reset )
 						this._noResults();
 
-					this._afterResponse( reset, 0, 0 );
+					// enable button
+					disableButtonLoader( this.button, this.loader );
 
-					return;
-				}
-
-				let result = JSON.parse( response ),
-						rowCount = result.row_count,
-						output = result.output,
-						total = parseInt( result.total );
-
-				console.log( 'RESULT', result );
-
-				if( reset )
-					this.insertInto.innerHTML = '';
-
-				if( rowCount > 0 && output != '' ) {
-					let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
-
-					if( this.decrement ) {
-						this._data.offset -= o;
-					} else {
-						this._data.offset += o;
-					}
-
-					let table = this.insertInto.tagName == 'TBODY',
-							docFragment = document.createDocumentFragment(),
-							div = document.createElement( table ? 'TBODY' : 'DIV' );
-
-					div.innerHTML = output;
-
-					let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
-							insertedItems = Array.from( div.children );
-
-					imagesLoaded( imgs, data => {
-						this.onInsert.call( this, insertedItems );
-
-						if( table ) {
-							insertedItems.forEach( item => {
-								this.insertInto.appendChild( item );
-							} );
-						} else {
-							insertedItems.forEach( item => {
-								docFragment.appendChild( item );
-							} );
-
-							this.insertInto.appendChild( docFragment );
-						}
-
-						setTimeout( () => {
-							this._afterResponse( reset, rowCount, total );
-							this.afterInsert.call( this, insertedItems );
-						}, 0 );
-					} );
-				} else {
-					if( reset ) 
-						this._noResults();
-
-					this._afterResponse( reset, rowCount, total );
-				}
-			} )
-			.catch( xhr => {
-				console.log( 'ERROR', xhr );
-
-				if( reset )
-					this._noResults();
-
-				// enable button
-				disableButtonLoader( this.button, this.loader );
-
-				this._showFilterLoader( false );
-			} );
-		}, 0 );
+					this._showFilterLoader( false );
+				} );
+			}, 0 );
+		}
 	}
 
 } // end LoadMore
