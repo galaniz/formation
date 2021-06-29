@@ -33,3 +33,20 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - `recurseObject` import in `SendForm`.
 - unused `decrement` option in `LoadMore` (wait for pagination support).
+
+## [2.1.7] - 2021-06-29
+
+### Added
+- Event source in data attribute for `Collapsible`.
+
+### Removed
+- Unnecessary variables and function calls in `Nav`.
+
+### Changed
+- Use `math.div` instead of / for division in `calcRem` and `stripUnit`.
+- Replace `disableButtonLoader` with simpler `setLoaders`.
+- Update `SendForm` with `setLoaders`.
+- Rework `LoadMore` to include prev/next pagination, save to browser history and break up into more functions.
+
+### Fixed
+- Disabled inputs incorrect state reset in `toggleFocusability`.

@@ -12,7 +12,7 @@ import { removeClass } from './modules/remove-class';
 import { show } from './modules/show';
 import { prefix } from './modules/prefix';
 import { objectFit } from './modules/object-fit';
-import { disableButtonLoader } from './modules/disable-button-loader';
+import { setLoaders } from './modules/set-loaders';
 import { usingMouse } from './modules/using-mouse';
 import { toggleFocusability } from './modules/toggle-focusability';
 
@@ -51,7 +51,7 @@ export {
   removeClass, 
   hasClass, 
   show,
-  disableButtonLoader,
+  setLoaders,
   prefix,
   objectFit,
   closest,

@@ -312,11 +312,8 @@ export default class Nav {
 					this.nav.setAttribute( 'data-overflow-all', '' );
 			}
 		} else {
-			this._toggle( true, false );
+			this._toggle( true );
 		}
-
-		if( !this._navOpen ) 
-			toggleFocusability( true, this._focusableItems );
 
 		this.onSet.call( this );
 
@@ -372,7 +369,7 @@ export default class Nav {
 	* ------------------------------
 	*/
 
-	_toggle( close = true, setNavOpen = true ) {
+	_toggle( close = true ) {
 		this.onToggle.call( this );
 
 		this._navOpen = !close;

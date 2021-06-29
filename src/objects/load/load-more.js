@@ -8,9 +8,10 @@
 import {
 	mergeObjects,
 	request,
-	disableButtonLoader,
+	setLoaders,
 	urlEncode,
-	imagesLoaded
+	imagesLoaded,
+	getScrollY
 } from '../../utils/utils';
 
 /*
@@ -32,41 +33,59 @@ export default class LoadMore {
 		* ----------------
 		*/
 
-		this.url = '';
-		this.button = null;
-		this.buttonContainer = null;
-		this.loader = null;
-
-		this.data = {};
+		this.next = null;
+		this.nextContainer = null; // no pagination
+		this.prev = null; // pagination
+		this.current = null; // pagination
+		this.tot = null; // pagination
 
 		this.filters = [];
-		this.filtersLoader = null;
 		this.filtersForm = null;
+
+		this.loaders = [];
 
 		this.noResults = {
 			containers: [],
 			buttons: []
 		};
 
-		this.type = '';
-		this.offset = 0;
-		this.ajaxPpp = 0;
-		this.total = 0;
+		this.error = null;
+
+		this.url = '';
+		this.data = {};
+
+		this.ppp = 0; // per page
+		this.page = 1; // pagination
+		this.total = 0; // pagination total pages else total number of items
 
 		this.insertInto = null;
 		this.insertLocation = 'beforeend';
 		this.onInsert = () => {};
 		this.afterInsert = () => {};
 
-		this.changePushUrlParams = () => {};
+		this.filterPushUrlParams = () => [];
+		this.filterPostData = () => this._data;
 
 	 /*
 		* Internal variables
 		* ------------------
 		*/
 
+		// for pushState
 		this._urlSupported = true;
 		this._url = '';
+
+		// if prev and pagination
+		this._pagination = false;
+
+		// for scrolling back to top for pagination
+		this._insertIntoY = 0;
+
+		// store initial count
+		this._initCount = 0;
+
+		// buttons for setLoaders
+		this._controls = [];
 
 		// merge default variables with args
 		mergeObjects( this, args );
@@ -89,11 +108,9 @@ export default class LoadMore {
 
 	_initialize() {
 		// check that required variables not null
-		if( !this.url ||
-				!this.button ||
-				!this.loader ||
-				!this.type ||
-				!this.offset ||
+		if( !this.next ||
+				!this.url ||
+				!this.ppp ||
 				!this.total ||
 				!this.insertInto )
 				return false;
@@ -107,28 +124,55 @@ export default class LoadMore {
     if( this._urlSupported )
     	this._url = new URL( window.location );
 
-		if( !this.buttonContainer )
-			this.buttonContainer = this.button;
+    // check for pagination
+    if( this.prev && this.current ) {
+    	this._pagination = true;
 
-		// internal variables
-		this._ogOffset = this.offset;
+    	this.prev.setAttribute( 'data-pag-prev', '' );
+    	this.next.setAttribute( 'data-pag-next', '' );
+    }
+
+    // for hiding when nothing more to load
+		if( !this.nextContainer && !this._pagination )
+			this.nextContainer = this.next;
+
+		if( !this._pagination ) {
+			// set buttons for setLoaders
+			this._controls.push( this.next ); 
+
+			if( this.prev )
+				this._controls.push( this.prev ); 
+		}
+
+		// data
+		this._initCount = this.insertInto.children.length;
 
 		this._data = {
-			postCount: this.offset,
-			offset: this._ogOffset,
-			ppp: this.ajaxPpp ? this.ajaxPpp : this._ogOffset,
+			ppp: this.ppp,
 			total: this.total,
-			type: this.type,
+			count: this._initCount,
 			filters: {}
 		};
+
+		if( this._pagination ) {
+			this._data.page = this.page;
+			this._data.count = this._getCount();
+		} else {
+			this._data.offset = this._initCount;
+		}
 
 		// append public data
 		for( let d in this.data )
 			this._data[d] = this.data[d];
 
 		// add event listeners
-		this.button.addEventListener( 'click', this._load.bind( this ) );
-		window.onpopstate = this._popState.bind( this );
+		this.next.addEventListener( 'click', this._load.bind( this ) );
+
+		if( this.prev )
+			this.prev.addEventListener( 'click', this._load.bind( this ) );
+
+		if( this._pagination )
+			window.onpopstate = this._popState.bind( this );
 
 		// set filters
 		if( this.filters.length ) {
@@ -172,6 +216,10 @@ export default class LoadMore {
 					this._filter( args, 'init' );
 				}
 			} );
+
+			// disable if no items to start
+			if( !this._initCount )
+				this._disableFilters( true );
 		}
 
 		// back to all results
@@ -192,21 +240,35 @@ export default class LoadMore {
 			} );
 		}
 
-		this._pushState( 'init', this.insertInto.innerHTML ); // push for intial state
+		// push for initial state
+		this._pushState( 'init', this.insertInto.innerHTML );
+
+		// set controls for initial state + get insert y
+		window.addEventListener( 'load', () => {
+			this._setControls();
+			this._getInsertIntoY();
+		} );
+
+		if( this._pagination ) {
+			let resizeTimer;
+
+			window.addEventListener( 'resize', () => {
+				// throttles resize event
+				clearTimeout( resizeTimer );
+
+				resizeTimer = setTimeout( () => {
+					this._getInsertIntoY();
+				}, 100 );
+			} );
+		}
 
 		return true;
 	}
 
  /*
-	* Helpers
+	* Getters
 	* -------
 	*/
-
-	// when filters change reset offset, postCount and total
-	_reset() {
-		this._data.offset = 0;
-		this._data.postCount = 0;
-	}
 
 	// get input type
 	_getType( input ) {
@@ -230,6 +292,29 @@ export default class LoadMore {
 
 		return type;
 	}
+
+	// get item count
+	_getCount() {
+		let c = this.insertInto.children.length;
+
+		// for page beyond first add previous page item counts
+		if( this._pagination ) {
+			if( this._data.page > 1 )
+				c += this.ppp * ( this._data.page - 1 );
+		}
+
+		return c;
+	}
+
+	// get insertInto y position
+	_getInsertIntoY() {
+		this._insertIntoY = this.insertInto.getBoundingClientRect().y + getScrollY();
+	}
+
+ /*
+	* Setters
+	* -------
+	*/
 
 	// set filter input
 	_setFilter( f, compareValue = undefined, state = 'default' ) { // if compareValue undefined than clear input
@@ -301,112 +386,35 @@ export default class LoadMore {
 		}
 	}
 
-	// show / hide filter loader
-	_showFilterLoader( show = true ) {
-		if( !this.filtersLoader )
-			return;
+	// set display/disable of prev/next
+	_setControls() {
+		if( this._data.count >= this._data.total ) {
+			if( this.nextContainer )
+				this.nextContainer.style.display = 'none';
 
-		if( show ) {
-			this.filtersLoader.removeAttribute( 'data-hide' );
-		} else {
-			this.filtersLoader.setAttribute( 'data-hide', '' );
-		}
-	}
-
-	// show / hide button
-	_showButton() {
-		// hide load more button if posts are greater than or equal to total post count
-		if( this._data.postCount >= this._data.total ) {
-			this.buttonContainer.style.display = 'none';
-		} else {
-			this.buttonContainer.style.display = 'block';
-		}
-	}
-
-	// when no results ( filters )
-	_noResults( show = true ) {
-		// disable / enable filters
-		if( this.filters.length ) {
-			if( this.filtersForm )
-				this.filtersForm.setAttribute( 'data-disabled', show ? 'true' : 'false' );
-
-			this.filters.forEach( f => {
-				let type = this._getType( f );
-
-				if( type == 'listbox' ) {
-					f.disable( show ? true : false );
-				} else {
-					f.disabled = show ? true : false;
-					f.setAttribute( 'aria-disabled', show ? 'true' : 'false' );
-				}
-			} );
-		}
-
-		if( show ) 
-			this.insertInto.innerHTML = '';
-
-		// show nothing found message
-		if( this.noResults.containers.length ) {
-			this.noResults.containers.forEach( c => {
-				c.style.display = show ? 'block' : 'none';
-			} );
-		}
-	}
-
-	// after response set vars / items
-	_afterResponse( reset, rowCount, total, state = 'default', output = '' ) {
-		this._data.postCount += rowCount;
-
-		// get new total
-		if( reset ) {
-			this._data.offset = rowCount;
-			this._data.total = total;
-		}
-
-		this._showButton();
-		this._showFilterLoader( false );
-
-		// history entry
-		this._pushState( state, output );
-	}
-
-	// add url and data to browser history
-	_pushState( state, output ) {
-		let url = '',
-				data = {
-					data: this._data,
-					state: state,
-					html: output ? this.insertInto.innerHTML : ''
-				};
-
-		if( this._urlSupported && this._url && state !== 'init' ) {
-			let urlParams = this.changePushUrlParams( state, this._data ); // object
-
-			for( let u in urlParams ) {
-				let v = urlParams[u];
-
-				if( Array.isArray( v ) )
-					v = JSON.stringify( v );
-
-				if( v == 'load_more_delete_param' ) {
-					this._url.searchParams.delete( u );
-				} else {
-					this._url.searchParams.set( u, v );
-				}
+			if( this._pagination ) {
+				this.next.disabled = true;
+				this.prev.disabled = this._data.page == 1 ? true : false; // account for one page
 			}
+		} else {
+			if( this.nextContainer )
+				this.nextContainer.style.display = 'block';
 
-			url = this._url;
+			if( this._pagination ) {
+				this.next.disabled = false;
+				this.prev.disabled = this._data.page == 1 ? true : false; // account for one page
+			}
 		}
 
-		if( url ) {
-			window.history.pushState( data, '', url );
-		} else {
-			window.history.pushState( data, '' );
+		// no items disable both
+		if( !this._data.count && this._pagination ) {
+			this.next.disabled = true;
+			this.prev.disabled = true;
 		}
 	}
 
 	// add output to insertInto element
-	_insertOutput( output = '', done = () => {} ) {
+	_setOutput( output = '', done = () => {} ) {
 		let table = this.insertInto.tagName == 'TBODY',
 				docFragment = document.createDocumentFragment(),
 				div = document.createElement( table ? 'TBODY' : 'DIV' );
@@ -428,6 +436,9 @@ export default class LoadMore {
 					docFragment.appendChild( item );
 				} );
 
+				if( this._pagination )
+					this.insertInto.innerHTML = '';
+
 				this.insertInto.appendChild( docFragment );
 			}
 
@@ -437,6 +448,142 @@ export default class LoadMore {
 				this.afterInsert.call( this, insertedItems );
 			}, 0 );
 		} );
+	}
+
+	// set pagination numbers
+	_setPagNum( total ) {
+		if( this.current )
+			this.current.textContent = total ? this._data.page : 0;
+
+		if( this.tot )
+			this.tot.textContent = Math.ceil( total / this.ppp );
+	}
+
+ /*
+	* No results
+	* ----------
+	*/
+
+	// when filters change reset offset/page and count
+	_reset() {
+		this._data.count = 0;
+
+		if( this._pagination ) {
+			this._data.page = 1;
+		} else {
+			this._data.offset = 0;
+		}
+	}
+
+	// disable/enable filters
+	_disableFilters( show = true ) {
+		if( this.filters.length ) {
+			if( this.filtersForm )
+				this.filtersForm.setAttribute( 'data-disabled', show ? 'true' : 'false' );
+
+			this.filters.forEach( f => {
+				let type = this._getType( f );
+
+				if( type == 'listbox' ) {
+					f.disable( show ? true : false );
+				} else {
+					f.disabled = show ? true : false;
+					f.setAttribute( 'aria-disabled', show ? 'true' : 'false' );
+				}
+			} );
+		}
+	}
+
+	// when no results
+	_noResults( show = true ) {
+		this._disableFilters( show );
+
+		if( show ) 
+			this.insertInto.innerHTML = '';
+
+		// show nothing found message
+		if( this.noResults.containers.length ) {
+			this.noResults.containers.forEach( c => {
+				c.style.display = show ? 'block' : 'none';
+			} );
+		}
+	}
+
+	// when error
+	_error( show = true ) {
+		this._disableFilters( show );
+
+		if( this.error )
+			this.error.style.display = show ? 'block' : 'none';
+	}
+
+ /*
+	* Push to browser history if pagination
+	* -------------------------------------
+	*/
+
+	// add url and data to browser history
+	_pushState( state, output ) {
+		if( !this._pagination )
+			return;
+
+		let url = '',
+				data = {
+					data: this._data,
+					state: state,
+					html: output ? this.insertInto.innerHTML : ''
+				};
+
+		if( this._urlSupported && this._url ) {
+			let params = this.filterPushUrlParams( state, this._data );
+
+			for( let u in params ) {
+				let v = params[u];
+
+				if( v == 'load_more_delete_param' ) {
+					this._url.searchParams.delete( u );
+				} else {
+					this._url.searchParams.set( u, v );
+				}
+			}
+
+			url = this._url;
+		}
+
+		if( url ) {
+			window.history.pushState( data, '', url );
+		} else {
+			window.history.pushState( data, '' );
+		}
+	}
+
+ /*
+	* Update state after response
+	* ---------------------------
+	*/
+
+	// after response set vars/items
+	_afterResponse( args = {} ) {
+		let a = Object.assign( {
+	    reset: false,
+	    total: 0,
+	    state: 'default',
+	    output: ''
+	  }, args );
+
+	  this._data.count = this._getCount();
+
+		// get new total 
+		if( a.reset )
+			this._data.total = a.total;
+
+		this._setControls();
+		this._setPagNum( a.total );
+
+		setLoaders( this.loaders, this._controls, false );
+
+		// history entry
+		this._pushState( a.state, a.output );
 	}
 
  /*
@@ -455,6 +602,9 @@ export default class LoadMore {
 	}
 
 	_popState( e ) {
+		if( !this._pagination )
+			return;
+
 		if( e.state ) {
 			this._data = Object.assign( this._data, e.state.data );
 
@@ -482,8 +632,14 @@ export default class LoadMore {
 	}
 
 	_load( e ) {
-		if( e !== undefined && !( typeof e == 'string' || e instanceof String ) )
+		// if pagination
+		let nextPag = false;
+
+		if( e !== undefined && !( typeof e == 'string' || e instanceof String ) ) {
 			e.preventDefault();
+
+			nextPag = e.currentTarget.hasAttribute( 'data-pag-next' );
+		}
 
 		// set states
 		let state = 'default',
@@ -496,38 +652,45 @@ export default class LoadMore {
 			reset = true;
 
 		// reset
-		if( reset ) {
+		if( reset )
 			this._reset();
-			this._showFilterLoader( true );
-		}
 
 		this._noResults( false );
+		this._error( false );
 
-		// disable button
-		disableButtonLoader( this.button, this.loader, false, true );
+		setLoaders( this.loaders, this._controls, true );
 
 		if( e == 'history' ) {
-			// enable button
-			disableButtonLoader( this.button, this.loader );
-
 			this.insertInto.innerHTML = '';
 
 			if( this._history ) {
-				this._insertOutput( this._history );
+				this._setOutput( this._history );
 			} else {
 				this._noResults();
 			}
 
-			this._showButton();
-			this._showFilterLoader( false );
+			this._setControls();
+			setLoaders( this.loaders, this._controls, false );
 		} else {
+			// update page fetching
+			if( this._pagination ) {
+				if( nextPag ) {
+					this._data.page += 1;
+				} else {
+					this._data.page -= 1;
+
+					if( this._data.page < 1 )
+						this._data.page = 1;
+				}
+			}
+
 			// get data as url encoded string
-			let encodedData = urlEncode( this._data );
+			let encodedData = urlEncode( this.filterPostData( this._data ) );
 
 			console.log( 'DATA', this._data );
 
 			setTimeout( () => {
-				// fetch more posts
+				// fetch more items
 				request( {
 					method: 'POST',
 					url: this.url,
@@ -535,14 +698,15 @@ export default class LoadMore {
 					body: encodedData
 				} )
 				.then( response => {
-					// enable button
-					disableButtonLoader( this.button, this.loader );
-
 					if( !response ) {
 						if( reset )
 							this._noResults();
 
-						this._afterResponse( reset, 0, 0, state );
+						this._afterResponse( {
+							reset: reset, 
+							total: 0, 
+							state: state
+						} );
 
 						return;
 					}
@@ -558,32 +722,46 @@ export default class LoadMore {
 						this.insertInto.innerHTML = '';
 
 					if( rowCount > 0 && output != '' ) {
-						let o = this.ajaxPpp ? this.ajaxPpp : this._ogOffset;
+						if( !this._pagination )
+							this._data.offset += this.ppp;
 
-						this._data.offset += o;
+						this._setOutput( output, () => {
+							if( this._pagination )
+								window.scrollTo( 0, this._insertIntoY );
 
-						this._insertOutput( output, () => {
 							setTimeout( () => {
-								this._afterResponse( reset, rowCount, total, state, output );
+								this._afterResponse( {
+							    reset: reset,
+							    total: total,
+							    state: state,
+							    output: output
+							  } );
 							}, 0 );
 						} );
 					} else {
 						if( reset ) 
 							this._noResults();
 
-						this._afterResponse( reset, rowCount, total, state );
+						this._afterResponse( {
+							reset: reset,  
+							total: total, 
+							state: state
+						} );
 					}
 				} )
 				.catch( xhr => {
 					console.log( 'ERROR', xhr );
 
-					if( reset )
-						this._noResults();
+					this._data.total = 0;
+					this._data.count = 0;
+					this._data.page = 1;
 
-					// enable button
-					disableButtonLoader( this.button, this.loader );
+					this._setControls();
+					this._setPagNum( 0 );
 
-					this._showFilterLoader( false );
+					this._error( true );
+
+					setLoaders( this.loaders, this._controls, false );
 				} );
 			}, 0 );
 		}

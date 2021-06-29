@@ -32,12 +32,10 @@ export const toggleFocusability = ( on = true, items = [] ) => {
 			}
 
 			if( formTags.indexOf( item.tagName ) != -1 ) {
-			  item.removeAttribute( 'disabled', true );
-
-			  if( item.hasAttribute( 'data-context-inert-disabled' ) ) {
-			    item.setAttribute( 'disabled', item.getAttribute( 'data-context-inert-disabled' ) );
-			    item.removeAttribute( 'data-context-inert-disabled' );
-			  }
+				if( item.hasAttribute( 'data-context-inert-disabled' ) ) {
+					let v = item.getAttribute( 'data-context-inert-disabled' );
+					item.disabled = v === 'true' ? true : false;
+				}
 			}
 		} else {
 			let ariaHiddenValue = item.getAttribute( 'aria-hidden' );
@@ -59,10 +57,8 @@ export const toggleFocusability = ( on = true, items = [] ) => {
 	    }
 
 	    if( formTags.indexOf( item.tagName ) != -1 ) {
-	      if( item.hasAttribute( 'disabled' ) )
-	        item.setAttribute( 'data-context-inert-disabled', item.getAttribute( 'disabled' ) );
-
-	      item.setAttribute( 'disabled', true );
+	      item.setAttribute( 'data-context-inert-disabled', item.disabled );
+	      item.disabled = true;
 	    }
 		}
 	} );

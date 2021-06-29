@@ -1,4 +1,6 @@
 
+@use "sass:math";
+
 /* 
  * Convert to rem units
  * --------------------
@@ -8,7 +10,7 @@
  */
 
 @function calcRem( $px ) {
-  $rem: $px / $g-context;
+  $rem: math.div( $px, $g-context );
   @return ( $rem + 0rem );
 }
 

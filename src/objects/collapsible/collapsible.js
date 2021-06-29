@@ -147,9 +147,11 @@ export default class Collapsible {
 		this._collapsibleHeight = this.collapsible.clientHeight;
 	}
 
-	_toggleCollapsible( open = true ) {
+	_toggleCollapsible( open = true, source = '' ) {
 		if( !this._set )
 			return;
+
+		console.log('OPEN', open);
 
 		this._open = open;
 		this.trigger.setAttribute( 'aria-expanded', open );
@@ -167,7 +169,7 @@ export default class Collapsible {
 
 		if( open ) {
 			if( this.container )
-				this.container.setAttribute( 'data-expanded', '' );
+				this.container.setAttribute( 'data-expanded', 'true' );
 
 			setTimeout( () => {
 				this.collapsible.style.height = '';
@@ -178,10 +180,13 @@ export default class Collapsible {
 
 				setTimeout( () => {
 					if( this.container )
-						this.container.removeAttribute( 'data-expanded' );
+						this.container.setAttribute( 'data-expanded', 'false' );
 				}, this.transitionDuration );
 			}, this.transitionDuration );
 		}
+
+		if( this.container )
+			this.container.setAttribute( 'data-source', source );
 	}
 
  /*
@@ -212,7 +217,7 @@ export default class Collapsible {
 
 	_trigger() {
 		let open = !this._open;
-		this._toggleCollapsible( open );
+		this._toggleCollapsible( open, 'tap' );
 	}
 
 	_keyDown( e ) {
@@ -224,7 +229,7 @@ export default class Collapsible {
 		let keyCode = this._keyCodes[key];
 
 		if( keyCode === 'ESC' ) {
-			this._toggleCollapsible( false );
+			this._toggleCollapsible( false, 'key' );
 			this.trigger.focus();
 		}
 	}
@@ -233,7 +238,7 @@ export default class Collapsible {
     setTimeout( () => {
     	// close if focus outside
   		if( this._tabbing && !this._focusableItems.includes( document.activeElement ) && this._open ) 
-      	this._toggleCollapsible( false );
+      	this._toggleCollapsible( false, 'blur' );
     }, 0 );
   }
 

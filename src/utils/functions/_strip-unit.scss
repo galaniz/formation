@@ -1,4 +1,6 @@
 
+@use "sass:math";
+
 /*
  * Strip unit from number
  * ----------------------
@@ -21,5 +23,5 @@
   	$oneUnit: 1rem;
   }
   
-  @return $number / $oneUnit;
+  @return math.div( $number, $oneUnit );
 }
