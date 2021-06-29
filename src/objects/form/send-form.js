@@ -8,7 +8,7 @@ import {
 	addClass,
 	removeClass,
 	mergeObjects,
-	disableButtonLoader,
+	setLoaders,
 	request
 } from '../../utils/utils';
 
@@ -43,7 +43,7 @@ export default class SendForm {
 		this.inputs = null;
 		this.filterInputs = false;
 		this.data = {};
-		this.loader = null;
+		this.loaders = [];
 		this.shake = false;
 		this.siteKey = '';
 		this.url = '';
@@ -103,7 +103,7 @@ export default class SendForm {
 				!this.labelClass || 
 				!this.submit || 
 				!this.inputs ||
-				!this.loader || 
+				!this.loaders || 
 				!this.siteKey ||
 				!this.url )
 			return false;
@@ -149,6 +149,8 @@ export default class SendForm {
 		this.result.textContainer.textContent = message;
 		this.result.container.setAttribute( 'data-type', error ? 'error' : 'success' );
 		this._error = error;
+
+		setLoaders( this.loaders, [this.submit], false );
 	}
 
  /*
@@ -174,8 +176,7 @@ export default class SendForm {
 			return;
 		}
 
-		// disable button
-		disableButtonLoader( this.submit, this.loader, false, true );
+		setLoaders( this.loaders, [this.submit], true );
 
 		// hide results container
 		this.result.container.removeAttribute( 'data-type' );
@@ -204,9 +205,6 @@ export default class SendForm {
 			.then( response => {
 				console.log( 'RESPONSE', response );
 
-				// enable button
-				disableButtonLoader( this.submit, this.loader );
-
 				try {
 					this.success.call( this, JSON.parse( response ) );
 					this._displayResult();
@@ -216,9 +214,6 @@ export default class SendForm {
 			} )
 			.catch( xhr => {
 				console.log( 'ERROR', xhr );
-
-				// enable button
-				disableButtonLoader( this.submit, this.loader );
 
 				this._displayResult( true );
 				this.error();
