@@ -50,3 +50,11 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Disabled inputs incorrect state reset in `toggleFocusability`.
+
+## [2.1.8] - 2021-06-29
+
+### Added
+- Scrollable table styles.
+
+### Fixed
+- Collapsible styles add visiblity property so not focusable unless open.

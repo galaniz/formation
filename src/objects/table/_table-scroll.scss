@@ -1,0 +1,15 @@
+
+/*
+ * Table Scroll
+ * ------------
+ */
+
+#{ $g-tableScrollSelector } {
+	overflow-x: auto;
+	
+	table {
+		@extend %u-width-100;
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	}
+}
