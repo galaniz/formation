@@ -11,9 +11,16 @@
 }
 
 .o-collapsible__main {
+	@extend %u-visibility-hidden;
+	transition: visibility 0ms #{ $g-defTimingFunction } #{ $g-defDuration }, height #{ $g-defDuration } #{ $g-defTimingFunction } 10ms;
+
 	.o-collapsible[data-set] > & {
 		@extend %u-overflow-hidden;
-		transition: height #{ $g-defDuration } #{ $g-defTimingFunction };
 		will-change: height;
+	}
+
+	.o-collapsible[data-expanded="true"] > & {
+		@extend %u-visibility-visible;
+		transition: visibility 0ms #{ $g-defTimingFunction } 10ms, height #{ $g-defDuration } #{ $g-defTimingFunction };
 	}
 }
