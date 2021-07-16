@@ -726,8 +726,13 @@ export default class LoadMore {
 							this._data.offset += this.ppp;
 
 						this._setOutput( output, () => {
-							if( this._pagination )
+							if( this._pagination ) {
+								document.documentElement.style.scrollBehavior = 'auto';
+
 								window.scrollTo( 0, this._insertIntoY );
+
+								document.documentElement.style.scrollBehavior = '';
+							}
 
 							setTimeout( () => {
 								this._afterResponse( {

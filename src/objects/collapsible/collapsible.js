@@ -151,8 +151,6 @@ export default class Collapsible {
 		if( !this._set )
 			return;
 
-		console.log('OPEN', open);
-
 		this._open = open;
 		this.trigger.setAttribute( 'aria-expanded', open );
 
