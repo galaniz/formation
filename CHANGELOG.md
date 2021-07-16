@@ -58,3 +58,17 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Collapsible styles add visiblity property so not focusable unless open.
+
+## [2.1.9] - 2021-07-15
+
+### Added
+- Param for delay on `pageLoaderFallback` mixin.
+- Auto scroll behaviour for `LoadMore`.
+- Optional `onValidate` arg for `Form`.
+- Form instance method for `SendForm`.
+
+### Changed
+- Simplify `stripUnit` function.
+
+### Removed
+- Position styles from nav overflow

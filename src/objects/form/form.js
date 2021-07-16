@@ -39,6 +39,7 @@ export default class Form {
 		this.errorShake = false;
 		this.errorClass = '';
 		this.errorShakeClass = 'a-shake';
+		this.onValidate = () => {};
 
 		// merge default variables with args
 		mergeObjects( this, args );
@@ -245,6 +246,8 @@ export default class Form {
 		// save valid state and values in inputGroup
 		inputGroup.values = values;
 		inputGroup.valid = valid;
+
+		this.onValidate();
 
 		return validGroup;
 	}

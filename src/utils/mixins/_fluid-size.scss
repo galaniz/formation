@@ -3,10 +3,11 @@
  * Fluid sizes ( font-size, padding, margins... )
  * ----------------------------------------------
  *
- * @param [number] $minVW
- * @param [number] $maxVW
- * @param [number] $minSize
- * @param [number] $maxSize
+ * @param [string] $prop
+ * @param [list] $sizes
+ * @param [list] $widths
+ * @param [list] $otherValues
+ * @param [bool] $important
  */
 
 @mixin fluidSize( $prop, $sizes, $widths, $important: false, $otherValues: null ) {

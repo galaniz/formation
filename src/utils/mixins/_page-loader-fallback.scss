@@ -6,12 +6,12 @@
  * @param [string] $selectors
  */
 
-@mixin pageLoaderFallback( $selectors: '#js-page-loader, #js-page-transition' ) {
+@mixin pageLoaderFallback( $delay: 2500ms, $selectors: '#js-page-loader, #js-page-transition' ) {
   #{ $selectors } {
     .no-js & {
       animation-name: _aPageLoaderFadeOut;
       animation-duration: 1000ms;
-      animation-delay: 2500ms;
+      animation-delay: $delay;
       animation-fill-mode: forwards;
     }
   }

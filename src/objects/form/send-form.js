@@ -237,4 +237,8 @@ export default class SendForm {
 		this.result.container.removeAttribute( 'data-type' );
 	}
 
+	getFormInstance() {
+		return this._form;
+	}
+
 } // end SendForm

@@ -12,16 +12,9 @@
  */
 
 @function stripUnit( $number ) {
-  $n: "#{$number}";
-  $oneUnit: 1px;
-  
-  @if( str-index( $n, 'em' ) ) {
-  	$oneUnit: 1em;
+  @if( type-of( $number ) == 'number' and not unitless( $number ) ) {
+    @return math.div( $number, $number * 0 + 1 );
   }
-  
-  @if( str-index( $n, 'rem' ) ) {
-  	$oneUnit: 1rem;
-  }
-  
-  @return math.div( $number, $oneUnit );
+
+  @return $number;
 }

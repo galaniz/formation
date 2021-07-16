@@ -6,11 +6,9 @@
 
 .c-nav-overflow {
 	@extend %u-visibility-hidden;
-	@extend %u-position-absolute;
 	
 	.c-nav[data-open] & {
 		@extend %u-visibility-visible;
-		@extend %u-position-relative;
 	}
 }
 
