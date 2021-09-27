@@ -8,7 +8,7 @@ import {
 	mergeObjects,
 	cascade,
 	toggleFocusability
-} from '../../utils/utils';
+} from '../../utils';
 
 /*
  * Opens and closes nav
@@ -38,7 +38,7 @@ export default class Nav {
 		this.button = null;
 		this.overlay = null;
 		this.transition = null;
-		this.bodyOverflowHiddenClass = 'u-o-h';
+		this.overflowHiddenClass = 'u-o-h';
 		this.onSet = () => {};
 		this.onReset = () => {};
 		this.afterReset = () => {};
@@ -61,7 +61,7 @@ export default class Nav {
 		* ---------------------------------------------
 		*/
 
-		this._body = document.body;
+		this._html = document.documentElement;
 		this._viewportWidth = window.innerWidth;
 
 		// escape key for closing nav
@@ -352,15 +352,15 @@ export default class Nav {
 	}
 
  /*
-	* Prevent body scroll when open mobile navigation
-	* -----------------------------------------------
+	* Prevent scroll when open mobile navigation
+	* ------------------------------------------
 	*/
 
-	_disableBodyScroll( disable = true ) {
+	_disableScroll( disable = true ) {
 		if( disable ) {
-			this._body.classList.add( this.bodyOverflowHiddenClass );
+			this._html.classList.add( this.overflowHiddenClass );
 		} else {
-			this._body.classList.remove( this.bodyOverflowHiddenClass );
+			this._html.classList.remove( this.overflowHiddenClass );
 		}
 	}
 
@@ -382,7 +382,7 @@ export default class Nav {
 					action: () => {
 						this.button.setAttribute( 'data-show', '' );
 
-						this._disableBodyScroll();
+						this._disableScroll();
 
 						this.button.setAttribute( 'aria-expanded', 'true' );
 						this.nav.setAttribute( 'data-open', '' );
@@ -424,7 +424,7 @@ export default class Nav {
 					action: () => {
 						this.nav.removeAttribute( 'data-open' );
 
-						this._disableBodyScroll( false );
+						this._disableScroll( false );
 						this.button.setAttribute( 'aria-expanded', 'false' );
 					}
 				},

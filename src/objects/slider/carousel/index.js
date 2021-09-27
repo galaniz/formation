@@ -4,19 +4,19 @@
  * -------
  */
 
-import { prefix } from '../../utils/utils';
+import { prefix } from '../../../utils';
 
-import BaseSlider from './base-slider';
+import Slider from '../index';
 
 /*
- * Slider 
- * ------
+ * Slider/Carousel 
+ * ---------------
  *
  * Based on Siema: https://github.com/pawelgrzybek/siema
  *
  */
 
-export default class Slider extends BaseSlider {
+export default class Carousel extends Slider {
 
  /*
 	* Constructor
@@ -505,4 +505,4 @@ export default class Slider extends BaseSlider {
 		}, 100 );
 	}
 
-} // end Slider
+} // end Carousel

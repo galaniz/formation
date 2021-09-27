@@ -149,13 +149,13 @@ Possible values: `'cover'` `'contain'`
 _Type:_ `string`  
 _Default:_ `'cover'`
 
-#### `imagesLoaded( images, done )`
+#### `assetsLoaded( assets, done )`
 
-Check if images are loaded.
+Check if assets (images, iframes, videos) are loaded.
 
 _Parameters:_
 
-* `images`  
+* `assets`  
 _Type:_ `array` of `HTMLElement`   
 _Required:_ true
 

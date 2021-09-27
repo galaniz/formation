@@ -4,16 +4,16 @@
  * -------
  */
 
-import { prefix } from '../../utils/utils';
+import { prefix } from '../../../utils';
 
-import BaseSlider from './base-slider';
+import Slider from '../index';
 
 /*
- * Slider that fades in and out
- * ----------------------------
+ * Slider/Fade ( slides fade in and out )
+ * -----------
  */
 
-export default class FadeSlider extends BaseSlider {
+export default class Fade extends Slider {
 
  /*
 	* Constructor

@@ -3,12 +3,12 @@
  * Small publish / subscribe to events module
  * ------------------------------------------
  *
- * Publish
+ * publish
  *
  * @param name [string]
  * @param args [array] pass to callback function
  *
- * Subscribe
+ * subscribe
  *
  * @param name [string] ( same as publish name )
  * @param callback [function]

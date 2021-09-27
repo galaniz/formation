@@ -9,7 +9,7 @@ import {
 	removeClass, 
 	prefix,
 	mergeObjects
-} from '../../utils/utils';
+} from '../../utils';
 
 /*
  * Open / close modals

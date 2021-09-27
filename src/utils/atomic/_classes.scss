@@ -38,20 +38,39 @@ $_1px: calcRem( 1px );
 	@extend %u-position-relative;
 }
 
+.u-p-a {
+	@extend %u-position-absolute;
+
+	&[data-p="all"] {
+		@extend %u-left-0;
+		@extend %u-right-0;
+		@extend %u-top-0;
+		@extend %u-bottom-0;
+	}
+
+	&[data-p-l] {
+		@extend %u-left-0;
+	}
+
+	&[data-p-r] {
+		@extend %u-right-0;
+	}
+
+	&[data-p-t] {
+		@extend %u-top-0;
+	}
+
+	&[data-p-b] {
+		@extend %u-bottom-0;
+	}
+}
+
 .u-p-c {
 	@extend %u-position-absolute;
 	@extend %u-position-vertical-center;
 	@extend %u-left-0;
 	@extend %u-right-0;
 	@extend %u-margin-auto;
-}
-
-.u-p-a {
-	@extend %u-position-absolute;
-	@extend %u-left-0;
-	@extend %u-right-0;
-	@extend %u-top-0;
-	@extend %u-bottom-0;
 }
 
 /* Overflow */

@@ -10,16 +10,16 @@ import {
 	mergeObjects,
 	setLoaders,
 	request
-} from '../../utils/utils';
+} from '../../../utils';
 
-import Form from './form';
+import Form from '../index';
 
 /*
  * Handle validating and sending forms with Google reCAPTCHA
  * ---------------------------------------------------------
  */
 
-export default class SendForm {
+export default class Send {
 
  /*
 	* Constructor
@@ -241,4 +241,4 @@ export default class SendForm {
 		return this._form;
 	}
 
-} // end SendForm
+} // end Send
