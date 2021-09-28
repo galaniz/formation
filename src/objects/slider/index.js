@@ -4,14 +4,14 @@
  * -------
  */
 
-import { mergeObjects } from '../../utils/utils';
+import { mergeObjects } from '../../utils';
 
 /*
- * Base slider ( to create fade / carousel sliders )
+ * Slider base ( to create fade / carousel sliders )
  * -----------
  */
 
-export default class BaseSlider {
+export default class Slider {
 
  /*
 	* Constructor
@@ -377,4 +377,4 @@ export default class BaseSlider {
 		this._goTo( index );
 	}
 
-} // end BaseSlider
+} // end Slider

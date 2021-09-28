@@ -9,7 +9,7 @@ import {
 	mergeObjects,
 	getScrollY,
 	subscribe
-} from '../utils/utils';
+} from '../../utils';
 
 /*
  * Monitor when item is visible in viewport

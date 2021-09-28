@@ -4,8 +4,7 @@
  * -------
  */
 
-import { mergeObjects } from '../utils/utils';
-import { getScrollY } from '../utils/utils';
+import { mergeObjects, getScrollY } from '../../utils';
 
 /*
  * Create masonry layout with negative margins

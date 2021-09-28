@@ -4,7 +4,7 @@
  * -------
  */
 
-import { mergeObjects, subscribe } from '../../utils/utils';
+import { mergeObjects, subscribe } from '../../utils';
 
 /*
  * Collapse height of specified element by trigger elements
@@ -29,9 +29,8 @@ export default class Collapsible {
 		this.container = null;
 		this.collapsible = null;
 		this.trigger = null;
-		this.closeOnLastBlur = true;
+		this.closeOnLastBlur = false;
 		this.accordianInstances = [];
-		this.transitionDuration = 300;
 		this.startOpen = false;
 		this.resize = true;
 
@@ -56,15 +55,8 @@ export default class Collapsible {
 		// keep track of state
 		this._open = false;
 
-		// for keydown event
-		this._keyCodes = {
-			27: 'ESC',
-			Escape: 'ESC'
-		};
-
 		// for this.closeOnLastBlur
 		this._focusableItems = [];
-		this._lastFocusableItem = null;
 		this._tabbing = false;
 
 		subscribe( 'tabState', t => {
@@ -100,15 +92,13 @@ export default class Collapsible {
 
     if( this.closeOnLastBlur ) {
       this._blurHandler = this._blur.bind( this );
-      this.container.addEventListener( 'focusout', this._blurHandler );
+      document.addEventListener( 'focusout', this._blurHandler );
     }
 
 		// event listeners
-		this._keyDownHandler = this._keyDown.bind( this );
 		this._triggerHandler = this._trigger.bind( this );
 		this._resizeHandler = this._resize.bind( this );
 
-		this.collapsible.addEventListener( 'keydown', this._keyDownHandler );
 		this.trigger.addEventListener( 'click', this._triggerHandler );
 
 		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
@@ -139,7 +129,7 @@ export default class Collapsible {
 	}
 
 	_setCollapsibleHeight() {
-		this.collapsible.style.height = '';
+		this.collapsible.style.height = 'auto';
 
 		if( !this._set )
 			return;
@@ -155,6 +145,10 @@ export default class Collapsible {
 		this.trigger.setAttribute( 'aria-expanded', open );
 
 		if( open ) {
+			if( this.trigger !== document.activeElement && source === 'tap' ) {
+				this.trigger.focus(); // ios safari not focusing on buttons
+			}
+
 			if( this.accordianInstances.length ) {
 				this.accordianInstances.forEach( a => {
 					if( a._open )
@@ -163,24 +157,16 @@ export default class Collapsible {
 			}
 		}
 
-		this.collapsible.style.height = this._collapsibleHeight + 'px';
-
 		if( open ) {
 			if( this.container )
 				this.container.setAttribute( 'data-expanded', 'true' );
 
-			setTimeout( () => {
-				this.collapsible.style.height = '';
-			}, this.transitionDuration );
+			this.collapsible.style.height = this._collapsibleHeight + 'px';
 		} else {
-			setTimeout( () => {
-				this.collapsible.style.height = 0;
+			if( this.container )
+				this.container.setAttribute( 'data-expanded', 'false' );
 
-				setTimeout( () => {
-					if( this.container )
-						this.container.setAttribute( 'data-expanded', 'false' );
-				}, this.transitionDuration );
-			}, this.transitionDuration );
+			this.collapsible.style.height = '';
 		}
 
 		if( this.container )
@@ -218,25 +204,12 @@ export default class Collapsible {
 		this._toggleCollapsible( open, 'tap' );
 	}
 
-	_keyDown( e ) {
-		let key = e.key || e.keyCode || e.which || e.code;
-
-		if( !this._keyCodes.hasOwnProperty( key ) )
-			return;
-
-		let keyCode = this._keyCodes[key];
-
-		if( keyCode === 'ESC' ) {
-			this._toggleCollapsible( false, 'key' );
-			this.trigger.focus();
-		}
-	}
-
   _blur() {
     setTimeout( () => {
     	// close if focus outside
-  		if( this._tabbing && !this._focusableItems.includes( document.activeElement ) && this._open ) 
+  		if( !this._focusableItems.includes( document.activeElement ) && this._open ) {
       	this._toggleCollapsible( false, 'blur' );
+  		}
     }, 0 );
   }
 

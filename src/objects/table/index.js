@@ -4,7 +4,7 @@
  * -------
  */
 
-import { mergeObjects } from '../../utils/utils';
+import { mergeObjects } from '../../utils';
 
 /*
  * Collapse table dynamically

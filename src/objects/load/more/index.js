@@ -4,22 +4,21 @@
  * -------
  */
 
-// functions
 import {
 	mergeObjects,
 	request,
 	setLoaders,
 	urlEncode,
-	imagesLoaded,
+	assetsLoaded,
 	getScrollY
-} from '../../utils/utils';
+} from '../../../utils';
 
 /*
  * Load more content
  * -----------------
  */
 
-export default class LoadMore {
+export default class More {
 
  /*
 	* Constructor
@@ -424,7 +423,7 @@ export default class LoadMore {
 		let imgs = Array.from( div.getElementsByTagName( 'img' ) ),
 				insertedItems = Array.from( div.children );
 
-		imagesLoaded( imgs, data => {
+		assetsLoaded( imgs, data => {
 			this.onInsert.call( this, insertedItems );
 
 			if( table ) {
@@ -727,11 +726,13 @@ export default class LoadMore {
 
 						this._setOutput( output, () => {
 							if( this._pagination ) {
-								document.documentElement.style.scrollBehavior = 'auto';
+								document.documentElement.setAttribute( 'data-load-scroll', '' );
 
 								window.scrollTo( 0, this._insertIntoY );
 
-								document.documentElement.style.scrollBehavior = '';
+								setTimeout( () => {
+									document.documentElement.removeAttribute( 'data-load-scroll' );
+								}, 0 );
 							}
 
 							setTimeout( () => {
@@ -772,4 +773,4 @@ export default class LoadMore {
 		}
 	}
 
-} // end LoadMore
+} // end More

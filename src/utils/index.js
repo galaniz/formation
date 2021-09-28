@@ -24,7 +24,7 @@ import { setElements } from './modules/set-elements';
 
 /* Check DOM */
 
-import { imagesLoaded } from './modules/images-loaded';
+import { assetLoaded, assetsLoaded } from './modules/assets-loaded';
 
 /* Object helpers */
 
@@ -40,6 +40,7 @@ import { request } from './modules/request';
 
 import { cascade } from './modules/cascade';
 import { publish, subscribe } from './modules/pub-sub';
+import { setCookie, getCookie } from './modules/cookie';
 
 /*
  * Export
@@ -57,7 +58,8 @@ export {
   closest,
   getScrollY,
   setElements,
-  imagesLoaded,
+  assetLoaded,
+  assetsLoaded,
   mergeObjects,
   recurseObject,
   urlEncode,
@@ -66,5 +68,7 @@ export {
   publish,
   subscribe,
   usingMouse,
-  toggleFocusability
+  toggleFocusability,
+  setCookie,
+  getCookie
 };

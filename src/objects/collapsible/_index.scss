@@ -12,6 +12,7 @@
 
 .o-collapsible__main {
 	@extend %u-visibility-hidden;
+	height: 0;
 	transition: visibility 0ms #{ $g-defTimingFunction } #{ $g-defDuration }, height #{ $g-defDuration } #{ $g-defTimingFunction } 10ms;
 
 	.o-collapsible[data-set] > & {

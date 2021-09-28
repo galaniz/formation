@@ -1,0 +1,15 @@
+
+/*
+ * Lazy load
+ * ---------
+ */
+
+.o-lazy {
+	@extend %u-opacity-0;
+	transition: opacity 200ms linear;
+
+  &[data-loaded="true"],
+  &[data-loaded="err"] {
+    @extend %u-opacity-1;
+  }
+}

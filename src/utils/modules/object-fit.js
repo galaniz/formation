@@ -11,8 +11,10 @@ export const objectFit = ( images = [], type = 'cover' ) => {
     return;
 
   images.forEach( image => {
-    let classes = image.className,
-        dataAttrs = '';
+    let classes = image.className;
+    let lazy = image.hasAttribute( 'data-src' );
+    let src = lazy ? image.getAttribute( 'data-src' ) : image.src;
+    let dataAttrs = '';
 
     if( type == 'contain' ) {
       classes = classes.replace( 'js-obf-cn', '' );
@@ -22,6 +24,10 @@ export const objectFit = ( images = [], type = 'cover' ) => {
       classes = classes.replace( 'js-obf-cv', '' );
       classes = classes.replace( 'u-obf-cv', '' );
       classes += ' u-obf-cv-f';
+    }
+
+    if( lazy ) {
+      classes = classes.replace( 'o-lazy', '' );
     }
 
     if( image.hasAttributes() ) {
@@ -41,7 +47,7 @@ export const objectFit = ( images = [], type = 'cover' ) => {
     }
 
     image.insertAdjacentHTML( 'afterend',
-      `<div class="${ classes }" style="background-image: url(${ image.src })"${ dataAttrs }></div>`
+      `<div class="${ classes }" style="background-image: url(${ src })"${ dataAttrs }></div>`
     );
   } );
 };
