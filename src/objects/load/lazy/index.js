@@ -96,6 +96,12 @@ export default class Lazy {
 
 		item.src = url;
 
+		if( item.hasAttribute( 'data-srcset' ) )
+			item.srcset = item.getAttribute( 'data-srcset' );
+
+		if( item.hasAttribute( 'data-sizes' ) )
+			item.sizes = item.getAttribute( 'data-sizes' );
+
 		assetLoaded( item )
     .then( asset => {
     	item.setAttribute( 'data-loaded', true );
