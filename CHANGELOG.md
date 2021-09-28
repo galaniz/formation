@@ -73,7 +73,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Position styles from nav overflow
 
-## [2.2.0] - 2021-09-28
+## [2.1.10] - 2021-09-28
 
 ### Added
 - `Lazy` class to lazy load assets (images, videos and iframes).
