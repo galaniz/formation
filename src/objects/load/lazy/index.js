@@ -4,7 +4,6 @@
  * -------
  */
 
-// functions
 import { assetLoaded } from '../../../utils';
 
 /*

@@ -72,3 +72,14 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Position styles from nav overflow
+
+## [2.2.0] - 2021-09-28
+
+### Added
+- `Lazy` class to lazy load assets (images, videos and iframes).
+- `Remove` class to remove dom element based on cookie, condition and click trigger.
+
+### Changed
+- Folder structure (folder/index pattern).
+- `imagesLoaded` to `assetLoaded` and `assetsLoaded` to include videos and iframes.
+- `objectFit` ignore `Lazy` class attributes.
