@@ -12,7 +12,7 @@ A collection of front end components and utilities.
 
 #### JavaScript
 * [Modules](/src/utils/modules)
-* [Utils](/src/utils/utils.js) (all modules in one file)
+* [Utils](/src/utils/index.js) (all modules in one file)
 
 ### [Configuration](/src/config)
 
