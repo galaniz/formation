@@ -1,12 +1,16 @@
 
 /*
- * Get color from $g-colors map
- * ----------------------------
+ * Get color from $colors map
+ * --------------------------
  *
  * @param [string] $color
  * @return [string]
  */
 
+/* Dependencies */
+
+@use '../../config' as frm;
+
 @function getColor( $color: 'background-light' ) {
-	@return map-get( $g-colors, $color );
+	@return map-get( frm.$colors, $color );
 }

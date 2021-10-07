@@ -6,8 +6,8 @@
 
 /* Dependencies */
 
-@import 'mixins';
+@use 'mixins';
 
 /* Output classes */
 
-@include _transitionScale();
+@include mixins.transitionScale();

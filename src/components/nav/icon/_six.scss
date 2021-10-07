@@ -4,6 +4,10 @@
  * -------------
  */
 
+/* Dependencies */
+
+@use '../../../config' as frm;
+
 .c-nav-icon[data-num="6"] {
 
 	/* Lines */ 
@@ -44,7 +48,7 @@
 	}
 
 	& .c-nav-icon__cross {
-		$_w: calcRem( mapDeepGet( $g-nav, 'icon', 'width' ) * 0.90 );
+		$_w: calcRem( mapDeepGet( frm.$nav, 'icon', 'width' ) * 0.90 );
 
 		@extend %u-margin-auto;
 		@extend %u-left-0;

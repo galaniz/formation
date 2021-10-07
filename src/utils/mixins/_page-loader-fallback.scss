@@ -17,10 +17,22 @@
   }
 
   @keyframes _aPageLoaderFadeOut {
-    0% { opacity: 1; }
-    25% { opacity: 1; }
-    50% { opacity: 1; }
-    75% { opacity: 1; }
+    0% { 
+      opacity: 1; 
+    }
+
+    25% { 
+      opacity: 1; 
+    }
+
+    50% { 
+      opacity: 1; 
+    }
+
+    75% { 
+      opacity: 1; 
+    }
+    
     100% {
       opacity: 0;
       z-index: -1;

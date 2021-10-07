@@ -6,44 +6,47 @@
 
 /* Dependencies */
 
-@import 'functions';
-@import 'mixins';
+@use 'functions';
+@use 'mixins';
+@use '../functions/calc-rem-em' as f;
+@use '../mixins/grayscale' as m;
+@use '../../config/variables' as frm;
 
 /* Overflow */
 
-$g-props: _addProp( $g-props, ( overflow: hidden ) );
-$g-props: _addProp( $g-props, ( overflow: scroll ) );
-$g-props: _addProp( $g-props, ( overflow-y: auto ) );
-$g-props: _addProp( $g-props, ( overflow-x: hidden ) );
+frm.$props: functions.addProp( frm.$props, ( overflow: hidden ) );
+frm.$props: functions.addProp( frm.$props, ( overflow: scroll ) );
+frm.$props: functions.addProp( frm.$props, ( overflow-y: auto ) );
+frm.$props: functions.addProp( frm.$props, ( overflow-x: hidden ) );
 
 /* Floats */
 
-$g-props: _addProp( $g-props, ( float: left ) );
-$g-props: _addProp( $g-props, ( float: right ) );
+frm.$props: functions.addProp( frm.$props, ( float: left ) );
+frm.$props: functions.addProp( frm.$props, ( float: right ) );
 
 /* Display */
 
-$g-props: _addProp( $g-props, ( display: none ) );
-$g-props: _addProp( $g-props, ( display: block ) );
-$g-props: _addProp( $g-props, ( display: inline-block ) );
-$g-props: _addProp( $g-props, ( display: flex ) );
-$g-props: _addProp( $g-props, ( display: table ) );
-$g-props: _addProp( $g-props, ( display: table-row  ) );
-$g-props: _addProp( $g-props, ( display: table-cell ) );
+frm.$props: functions.addProp( frm.$props, ( display: none ) );
+frm.$props: functions.addProp( frm.$props, ( display: block ) );
+frm.$props: functions.addProp( frm.$props, ( display: inline-block ) );
+frm.$props: functions.addProp( frm.$props, ( display: flex ) );
+frm.$props: functions.addProp( frm.$props, ( display: table ) );
+frm.$props: functions.addProp( frm.$props, ( display: table-row  ) );
+frm.$props: functions.addProp( frm.$props, ( display: table-cell ) );
 
 /* Flexbox */
 
-$g-props: _addProp( $g-props, ( flex-shrink: 0 ) );
-$g-props: _addProp( $g-props, ( flex-grow: 1 ) );
+frm.$props: functions.addProp( frm.$props, ( flex-shrink: 0 ) );
+frm.$props: functions.addProp( frm.$props, ( flex-grow: 1 ) );
 
 /* Visibility */
 
-$g-props: _addProp( $g-props, ( visibility: hidden ) );
-$g-props: _addProp( $g-props, ( visibility: visible ) );
+frm.$props: functions.addProp( frm.$props, ( visibility: hidden ) );
+frm.$props: functions.addProp( frm.$props, ( visibility: visible ) );
 
 /* Content */
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: content-empty,
 		prop: (
@@ -54,14 +57,14 @@ $g-props: _addProp( $g-props, (
 
 /* Position */
 
-$g-props: _addProp( $g-props, ( position: relative ) );
-$g-props: _addProp( $g-props, ( position: absolute ) );
-$g-props: _addProp( $g-props, ( position: fixed ) );
-$g-props: _addProp( $g-props, ( top: 0 ) );
-$g-props: _addProp( $g-props, ( bottom: 0 ) );
-$g-props: _addProp( $g-props, ( left: 0 ) );
-$g-props: _addProp( $g-props, ( right: 0 ) );
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, ( position: relative ) );
+frm.$props: functions.addProp( frm.$props, ( position: absolute ) );
+frm.$props: functions.addProp( frm.$props, ( position: fixed ) );
+frm.$props: functions.addProp( frm.$props, ( top: 0 ) );
+frm.$props: functions.addProp( frm.$props, ( bottom: 0 ) );
+frm.$props: functions.addProp( frm.$props, ( left: 0 ) );
+frm.$props: functions.addProp( frm.$props, ( right: 0 ) );
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: position-vertical-center,
 		prop: (
@@ -74,27 +77,27 @@ $g-props: _addProp( $g-props, (
 
 /* Text align */
 
-$g-props: _addProp( $g-props, ( text-align: left ) );
-$g-props: _addProp( $g-props, ( text-align: right ) );
-$g-props: _addProp( $g-props, ( text-align: center ) );
-$g-props: _addProp( $g-props, ( text-align: justify ) );
-$g-props: _addProp( $g-props, ( text-transform: uppercase ) );
+frm.$props: functions.addProp( frm.$props, ( text-align: left ) );
+frm.$props: functions.addProp( frm.$props, ( text-align: right ) );
+frm.$props: functions.addProp( frm.$props, ( text-align: center ) );
+frm.$props: functions.addProp( frm.$props, ( text-align: justify ) );
+frm.$props: functions.addProp( frm.$props, ( text-transform: uppercase ) );
 
 /* Vertical align */
 
-$g-props: _addProp( $g-props, ( vertical-align: bottom ) );
-$g-props: _addProp( $g-props, ( vertical-align: middle ) );
-$g-props: _addProp( $g-props, ( vertical-align: top ) );
+frm.$props: functions.addProp( frm.$props, ( vertical-align: bottom ) );
+frm.$props: functions.addProp( frm.$props, ( vertical-align: middle ) );
+frm.$props: functions.addProp( frm.$props, ( vertical-align: top ) );
 
 /* Margin */
 
-$g-props: _addProp( $g-props, ( margin: auto ) );
-$g-props: _addProp( $g-props, ( margin-right: auto ) );
-$g-props: _addProp( $g-props, ( margin-left: auto ) );
+frm.$props: functions.addProp( frm.$props, ( margin: auto ) );
+frm.$props: functions.addProp( frm.$props, ( margin-right: auto ) );
+frm.$props: functions.addProp( frm.$props, ( margin-left: auto ) );
 
 /* Border radius */
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: border-radius-100,
 		prop: (
@@ -105,11 +108,11 @@ $g-props: _addProp( $g-props, (
 
 /* Fonts */
 
-@include _fontProps();
+@include mixins.fontProps( frm.$fonts, frm.$props );
 
 /* Transform origin */
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: transform-origin-0-0,
 		prop: (
@@ -118,7 +121,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: transform-origin-0-100,
 		prop: (
@@ -127,7 +130,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: transform-origin-100-0,
 		prop: (
@@ -136,7 +139,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: transform-origin-100-100,
 		prop: (
@@ -147,19 +150,19 @@ $g-props: _addProp( $g-props, (
 
 /* Opacity */
 
-$g-props: _addProp( $g-props, ( opacity: 0 ) );
-$g-props: _addProp( $g-props, ( opacity: 1 ) );
+frm.$props: functions.addProp( frm.$props, ( opacity: 0 ) );
+frm.$props: functions.addProp( frm.$props, ( opacity: 1 ) );
 
 /* Transitions */
 
-@include _transitionProps();
+@include mixins.transitionProps( frm.$transitions, frm.$props );
 
 /* Width / height */
 
-$g-props: _addProp( $g-props, ( width: inherit ) );
-$g-props: _addProp( $g-props, ( height: inherit ) );
+frm.$props: functions.addProp( frm.$props, ( width: inherit ) );
+frm.$props: functions.addProp( frm.$props, ( height: inherit ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: width-100,
 		prop: (
@@ -168,7 +171,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: width-100vw,
 		prop: (
@@ -177,7 +180,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: height-100,
 		prop: (
@@ -186,7 +189,7 @@ $g-props: _addProp( $g-props, (
 	)
 ) );
 
-$g-props: _addProp( $g-props, (
+frm.$props: functions.addProp( frm.$props, (
 	custom: (
 		name: height-100vh,
 		prop: (
@@ -197,17 +200,17 @@ $g-props: _addProp( $g-props, (
 
 /* Colors */
 
-$g-props: _addProp( $g-props, ( color: inherit ) );
-$g-props: _addProp( $g-props, ( background-color: inherit ) );
+frm.$props: functions.addProp( frm.$props, ( color: inherit ) );
+frm.$props: functions.addProp( frm.$props, ( background-color: inherit ) );
 
 // save $colors
-$colorsCopy: $g-colors;
+$colorsCopy: frm.$colors;
 
 // convert nested colors to one level map
-$g-colors: _mapFlatten( $g-colors, (), 'color' );
+frm.$colors: functions.mapFlatten( frm.$colors, (), 'color' );
 
-@each $name, $value in $g-colors {
-	$g-props: _addProp( $g-props, (
+@each $name, $value in frm.$colors {
+	frm.$props: functions.addProp( frm.$props, (
 		custom: (
 			name: $name,
 			prop: (
@@ -216,7 +219,7 @@ $g-colors: _mapFlatten( $g-colors, (), 'color' );
 		)
 	) );
 
-	$g-props: _addProp( $g-props, (
+	frm.$props: functions.addProp( frm.$props, (
 		custom: (
 			name: "background-#{ $name }",
 			prop: (
@@ -225,7 +228,7 @@ $g-colors: _mapFlatten( $g-colors, (), 'color' );
 		)
 	) );
 
-	$g-props: _addProp( $g-props, (
+	frm.$props: functions.addProp( frm.$props, (
 		custom: (
 			name: "fill-#{ $name }",
 			prop: (
@@ -234,7 +237,7 @@ $g-colors: _mapFlatten( $g-colors, (), 'color' );
 		)
 	) );
 
-	$g-props: _addProp( $g-props, (
+	frm.$props: functions.addProp( frm.$props, (
 		custom: (
 			name: "border-#{ $name }",
 			prop: (
@@ -245,19 +248,19 @@ $g-colors: _mapFlatten( $g-colors, (), 'color' );
 }
 
 // convert nested colors to one level map without prefix
-$g-colors: _mapFlatten( $colorsCopy, (), '' );
+frm.$colors: functions.mapFlatten( $colorsCopy, (), '' );
 
 // convert properties to placeholders
-@each $prop in $g-props {
+@each $prop in frm.$props {
 	@each $key, $value in $prop {
-		@include _makeUtil( $key, $value );
+		@include mixins.makeUtil( $key, $value );
 	}
 }
 
 /* Grayscale ( work around for duplicate key issue ) */
 
 %u-grayscale {
-	@include grayscale();
+	@include m.grayscale();
 }
 
 /* Visually hidden */
@@ -265,10 +268,10 @@ $g-colors: _mapFlatten( $colorsCopy, (), '' );
 %u-visually-hidden {
 	@extend %u-position-absolute;
 	@extend %u-overflow-hidden;
-	left: calcRem( -10000px );
+	left: f.calcRem( -10000px );
 	top: auto;
-	width: calcRem( 1px );
-	height: calcRem( 1px );
+	width: f.calcRem( 1px );
+	height: f.calcRem( 1px );
 }
 
 /* Touch area of 50px */
@@ -278,8 +281,8 @@ $g-colors: _mapFlatten( $colorsCopy, (), '' );
 		@extend %u-content-empty;
 		@extend %u-position-absolute;
 		transform: translate( -50%, -50% );
-		width: calcRem( 50px );
-		height: calcRem( 50px );
+		width: f.calcRem( 50px );
+		height: f.calcRem( 50px );
 		top: 50%;
 		left: 50%;
 	}

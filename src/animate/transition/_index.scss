@@ -4,6 +4,10 @@
  * ----------
  */
 
+/* Dependencies */
+
+@use '../../config' as frm;
+
 .a-transition {
 	@extend %u-position-fixed;
 	@extend %u-top-0;
@@ -13,6 +17,6 @@
 	z-index: -1;
 	
 	&[data-show] {
-		z-index: map-get( $g-zIndex, 'transition' );
+		z-index: map-get( frm.$zIndex, 'transition' );
 	}
 }

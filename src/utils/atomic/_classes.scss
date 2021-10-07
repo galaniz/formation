@@ -4,9 +4,13 @@
  * ---------------
  */
 
+/* Dependencies */
+
+@use '../functions/calc-rem-em' as f;
+
 /* Hide */
 
-$_1px: calcRem( 1px );
+$_1px: f.calcRem( 1px );
 
 .u-v-h {
 	@extend %u-visually-hidden;

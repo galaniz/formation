@@ -6,50 +6,50 @@
 
 /* Colors  */
 
-$g-colors: () !default;
+$colors: () !default;
 
 /* Fonts */
 
-$g-fonts: () !default;
+$fonts: () !default;
 
 /* Breakpoints */
 
-$g-breakpoints: () !default;
+$breakpoints: () !default;
 
 /* Layout containers and padding */
 
-$g-containers: () !default;
-$g-containerPadding: 25px !default;
+$containers: () !default;
+$containerPadding: 25px !default;
 
 /* Grid system */
 
-$g-grid: () !default;
-$g-gridOverwrite: false !default;
+$grid: () !default;
+$gridOverwrite: false !default;
 
 /* Utility properties */
 
-$g-props: [] !default;
+$props: [] !default;
 
 /* Rem/em context */
 
-$g-context: 16px !default;
-$g-contextEm: 16px !default;
+$context: 16px !default;
+$contextEm: 16px !default;
 
 /* Aspect ratio padding */
 
-$g-aspectRatioPadding: () !default;
+$aspectRatioPadding: () !default;
 
 /* Transitions */
 
-$g-transitions: () !default;
+$transitions: () !default;
 
 /* Z index */
 
-$g-zIndex: () !default;
+$zIndex: () !default;
 
 /* Nav */
 
-$g-nav: (
+$nav: (
 	icon: (
 		width: 35px,
 		lineWidth: 2px,
@@ -59,12 +59,12 @@ $g-nav: (
 
 /* Loader */
 
-$g-loaderSelector: '.o-loader' !default;
+$loaderSelector: '.o-loader' !default;
 
 /* Table */
 
-$g-tableSelector: '.o-table' !default;
+$tableSelector: '.o-table' !default;
 
 /* Table Scroll */
 
-$g-tableScrollSelector: '.o-table-scroll' !default;
+$tableScrollSelector: '.o-table-scroll' !default;

@@ -10,13 +10,17 @@
  * @param [bool] $important
  */
 
+/* Dependencies */
+
+@use '../../config' as frm;
+
 @mixin fluidSize( $prop, $sizes, $widths, $important: false, $otherValues: null ) {
   $lastIndex: length( $sizes );
 
   @each $s in $sizes {
     $i: index( $sizes, $s );
     $w: nth( $widths, $i );
-    $ww: calcRem( map-get( $g-breakpoints, nth( $widths, $i ) ) );
+    $ww: calcRem( map-get( frm.$breakpoints, nth( $widths, $i ) ) );
     $o: null;
     $m: null;
 
@@ -39,7 +43,7 @@
     } @else {
       $nextS: nth( $sizes, $i + 1 );
       $nextW: nth( $widths, $i + 1 );
-      $nextWw: calcRem( map-get( $g-breakpoints, nth( $widths, $i + 1 ) ) );
+      $nextWw: calcRem( map-get( frm.$breakpoints, nth( $widths, $i + 1 ) ) );
 
       @include breakpointMin( $w ) {
         #{$prop}: calc( #{ $s } + ( ( 100vw - #{ $ww } ) / ( #{ stripUnit( $nextWw ) } - #{ stripUnit( $ww ) } ) ) * ( #{ stripUnit( $nextS ) } - #{ stripUnit( $s ) } ) ) $o $m;

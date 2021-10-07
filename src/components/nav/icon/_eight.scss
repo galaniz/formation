@@ -4,9 +4,13 @@
  * ---------------
  */
 
+/* Dependencies */
+
+@use '../../../config' as frm;
+
 .c-nav-icon[data-num="8"] {
-	$_x: calcRem( ( mapDeepGet( $g-nav, 'icon', 'width' ) / 2 ) - ( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) / 2 ) );
-	$_y: calcRem( $_y + ( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) / 2 ) + 0.5px ); // 0.5 to make x more precise
+	$_x: calcRem( ( mapDeepGet( frm.$nav, 'icon', 'width' ) / 2 ) - ( mapDeepGet( frm.$nav, 'icon', 'lineWidth' ) / 2 ) );
+	$_y: calcRem( $_y + ( mapDeepGet( frm.$nav, 'icon', 'lineWidth' ) / 2 ) + 0.5px ); // 0.5 to make x more precise
 
 	transform: rotate( 0deg );
 

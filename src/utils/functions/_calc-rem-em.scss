@@ -1,5 +1,8 @@
 
+/* Dependencies */
+
 @use "sass:math";
+@use '../../config' as frm;
 
 /* 
  * Convert to rem units
@@ -10,7 +13,7 @@
  */
 
 @function calcRem( $px ) {
-  $rem: math.div( $px, $g-context );
+  $rem: math.div( $px, frm.$context );
   @return ( $rem + 0rem );
 }
 
@@ -23,6 +26,6 @@
  */
 
 @function calcEm( $px ) {
-  $em: $px / $g-contextEm;
+  $em: $px / frm.$contextEm;
   @return ( $em + em );
 }

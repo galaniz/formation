@@ -9,7 +9,7 @@
  * @return [list] comma separated
  */
 
-@function _addProp( $list, $prop ) {
+@function addProp( $list, $prop ) {
 	$newList: append( $list, $prop, comma );
 	@return $newList;
 }
@@ -26,7 +26,7 @@
  * @return [map]
  */
 
-@function _mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
+@function mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
 	@each $key, $value in $map {
 		@if( type-of( $value ) == map ) {
 			$nPrefix: "#{ $key }";
@@ -45,7 +45,7 @@
 				$nPrefix: "#{ $newPrefix }#{ $k }";
 			}
 
-			$newMap: _mapFlatten( $value, $newMap, $prefix, $nPrefix );
+			$newMap: mapFlatten( $value, $newMap, $prefix, $nPrefix );
 		} @else {
 			$newKey: "#{ $key }";
 

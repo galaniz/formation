@@ -4,8 +4,11 @@
  * ------
  */
 
-#{ $g-loaderSelector } {
-	transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction } 10ms, z-index 0ms #{ $g-defTimingFunction };
+/* Dependencies */
+
+@use '../../../config' as frm;
+
+#{ frm.$loaderSelector } {
 	@extend %u-position-absolute;
 	@extend %u-top-0;
 	@extend %u-bottom-0;
@@ -13,16 +16,21 @@
 	@extend %u-right-0;
 	@extend %u-opacity-1;
 	@extend %u-background-color-inherit;
-	z-index: mapDeepGet( $g-zIndex, 'loader', 'def' );
+	z-index: mapDeepGet( frm.$zIndex, 'loader', 'def' );
+	transition: 
+		opacity #{ frm.$defDuration } #{ frm.$defTimingFunction } 10ms, 
+		z-index 0ms #{ frm.$defTimingFunction };
 
 	&[data-hide] {
 		@extend %u-opacity-0;
-		transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction }, z-index 0ms #{ $g-defTimingFunction } #{ $g-defDuration };
 		z-index: -1 !important;
+		transition: 
+			opacity #{ frm.$defDuration } #{ frm.$defTimingFunction }, 
+			z-index 0ms #{ frm.$defTimingFunction } #{ frm.$defDuration };
 	}
 
 	&[data-page] {
 		@extend %u-position-fixed;
-		z-index: mapDeepGet( $g-zIndex, 'loader', 'page' );
+		z-index: mapDeepGet( frm.$zIndex, 'loader', 'page' );
 	}
 }

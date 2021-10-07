@@ -4,13 +4,17 @@
  * ---------
  */
 
+/* Dependencies */
+
+@use '../config' as frm;
+
 .c-skip-link {
 	@extend %u-display-block;
 	@extend %u-position-absolute;
 	@extend %u-top-0;
 	@extend %u-left-0;
 	@extend %u-right-0;
-	z-index: map-get( $g-zIndex, 'skipLink' );
+	z-index: map-get( frm.$zIndex, 'skipLink' );
 	transform: translateY( -150% );
 
 	&:focus {

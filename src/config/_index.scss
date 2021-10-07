@@ -4,9 +4,14 @@
  * ------
  */
 
+/* Dependencies */
+
+@use 'variables' as frm;
+@forward 'variables';
+
 /* Colors */
 
-$g-colors: mapRecursiveMerge(
+frm.$colors: mapRecursiveMerge(
 	(
 		primary: (
 			base: #888888,
@@ -24,12 +29,12 @@ $g-colors: mapRecursiveMerge(
 			dark: #EEEEEE
 		)
 	),
-	$g-colors
+	frm.$colors
 );
 
 /* Fonts */
 
-$g-fonts: mapRecursiveMerge(
+frm.$fonts: mapRecursiveMerge(
 	(
 		primary: (
 			Helvetica,
@@ -40,12 +45,12 @@ $g-fonts: mapRecursiveMerge(
 			normal: 400
 		)
 	),
-	$g-fonts
+	frm.$fonts
 );
 
 /* Grid */
 
-$g-grid: mapRecursiveMerge(
+frm.$grid: mapRecursiveMerge(
 	(
 		25: (
 			600: 50%,
@@ -67,12 +72,12 @@ $g-grid: mapRecursiveMerge(
 			900: 75%
 		)
 	),
-	$g-grid
+	frm.$grid
 );
 
 /* Breakpoints */
 
-$g-breakpoints: mapRecursiveMerge(
+frm.$breakpoints: mapRecursiveMerge(
 	(
 		0: 0px,
 		400: 400px,
@@ -84,22 +89,22 @@ $g-breakpoints: mapRecursiveMerge(
 		1000: 1000px,
 		1200: 1200px
 	),
-	$g-breakpoints
+	frm.$breakpoints
 );
 
 /* Containers */
 
-$g-containers: mapRecursiveMerge(
+frm.$containers: mapRecursiveMerge(
 	(
 		def: 1200px,
 		sm: 800px,
 		lg: 1920px
 	),
-	$g-containers
+	frm.$containers
 );
 
 // append to breakpoints
-@each $c, $width in $g-containers {
+@each $c, $width in frm.$containers {
 	$k: inspect( $c );
 	$suffix: '';
 
@@ -107,13 +112,13 @@ $g-containers: mapRecursiveMerge(
 		$suffix: #{ capitalize( $c ) };
 	}
 
-	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
-	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 ) ), $g-breakpoints );
+	frm.$breakpoints: map-merge( ( "container#{ $suffix }": $width  ), frm.$breakpoints );
+	frm.$breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( frm.$containerPadding * 2 ) ), frm.$breakpoints );
 }
 
 /* Transitions */
 
-$g-transitions: mapRecursiveMerge(
+frm.$transitions: mapRecursiveMerge(
 	(
 		def: (
 			durations: (
@@ -160,16 +165,16 @@ $g-transitions: mapRecursiveMerge(
 			)
 		)
 	),
-	$g-transitions
+	frm.$transitions
 );
 
-$g-defTransitions: map-get( $g-transitions, 'def' );
-$g-defDuration: map-get( map-get( $g-defTransitions, 'durations' ), 'def' );
-$g-defTimingFunction: map-get( $g-defTransitions, 'timingFunction' );
+frm.$defTransitions: map-get( frm.$transitions, 'def' );
+frm.$defDuration: map-get( map-get( frm.$defTransitions, 'durations' ), 'def' );
+frm.$defTimingFunction: map-get( frm.$defTransitions, 'timingFunction' );
 
 /* Z index */
 
-$g-zIndex: mapRecursiveMerge(
+frm.$zIndex: mapRecursiveMerge(
 	(
 		skipLink: 100,
 		transition: 100,
@@ -180,5 +185,5 @@ $g-zIndex: mapRecursiveMerge(
 			page: 110
 		)
 	),
-	$g-zIndex
+	frm.$zIndex
 );

@@ -37,6 +37,7 @@
  		0% {
  			transform: translateY( $_y ) rotate( 45deg );
  		}
+
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
@@ -46,6 +47,7 @@
  		0% {
  			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
  		}
+
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
@@ -55,6 +57,7 @@
  		0% {
  			transform: translateY( $_y );
  		}
+
  		100% {
  			transform: translateY( $_y ) rotate( 45deg );
  		}
@@ -64,9 +67,11 @@
  		0% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
+
  		1% {
  			transform: translateY( #{ $_y * -1 } );
  		}
+    
  		100% {
  			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
  		}

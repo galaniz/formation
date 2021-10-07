@@ -6,20 +6,20 @@
 
 /* Dependencies */
 
-@import 'mixins';
+@use 'mixins';
 
 /* Container */
 
-@include _makeContainers();
+@include mixins.makeContainers();
 
 /* Grid */
 
-@include _makeGrid();
+@include mixins.makeGrid();
 
 /* Breakout */
 
-@import 'breakout';
+@use 'breakout';
 
 /* Flexbox */
 
-@import 'flex';
+@use 'flex';

@@ -4,7 +4,11 @@
  * ------------
  */
 
-#{ $g-tableScrollSelector } {
+/* Dependencies */
+
+@use '../../../config' as frm;
+
+#{ frm.$tableScrollSelector } {
 	overflow-x: auto;
 	
 	table {

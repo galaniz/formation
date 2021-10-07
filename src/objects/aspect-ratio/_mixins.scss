@@ -4,8 +4,12 @@
  * --------------------
  */
 
-@mixin _aspectRatioPadding() {
-  @each $p in $g-aspectRatioPadding {
+/* Dependencies */
+
+@use '../../../config' as frm;
+
+@mixin aspectRatioPadding() {
+  @each $p in frm.$aspectRatioPadding {
 	  &[data-p="#{ $p * 100 }"]::before {
 	    padding-top: percentage( $p );
 	  }

@@ -4,13 +4,17 @@
  * -----
  */
 
+/* Dependencies */
+
+@use '../../../config' as frm;
+
 .o-modal {
 	@extend %u-position-fixed;
 	@extend %u-top-0;
 	@extend %u-left-0;
 	@extend %u-visibility-hidden;
-	z-index: map-get( $g-zIndex, 'modal' );
-	transition: visibility 0ms #{ $g-defTimingFunction } #{ $g-defDuration };
+	z-index: map-get( frm.$zIndex, 'modal' );
+	transition: visibility 0ms #{ frm.$defTimingFunction } #{ frm.$defDuration };
 
 	&[data-center] {
 		@extend %u-display-flex;
@@ -19,8 +23,8 @@
 	}
 
 	&[aria-hidden="false"] {
-		transition: visibility 0ms #{ $g-defTimingFunction };
 		@extend %u-visibility-visible;
+		transition: visibility 0ms #{ frm.$defTimingFunction };
 	}
 }
 
@@ -31,11 +35,11 @@
 	@extend %u-right-0;
 	@extend %u-bottom-0;
 	@extend %u-opacity-0;
-	transition: opacity #{ $g-defDuration } #{ $g-defTimingFunction };
+	transition: opacity #{ frm.$defDuration } #{ frm.$defTimingFunction };
 
 	.o-modal[aria-hidden="false"] & {
 		@extend %u-opacity-1;
-		transition: opacity #{ $g-defDuration} #{ $g-defTimingFunction } 10ms;
+		transition: opacity #{ frm.$defDuration} #{ frm.$defTimingFunction } 10ms;
 	}
 }
 
