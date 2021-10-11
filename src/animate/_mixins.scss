@@ -1,7 +1,11 @@
 
-/* Dependencies */
+/*
+ * Imports
+ * -------
+ */
 
-@use '../config' as frm;
+@use 'sass:map';
+@use 'sass:string';
 
 /* 
  * Set transform for hovers
@@ -18,7 +22,7 @@
   &.a-hover:hover,
   &.a-hover:focus,
   &.a-hover:active {
-    transform: unquote( $value ) !important;
+    transform: string.unquote( $value ) !important;
   }
 }
 
@@ -46,11 +50,11 @@
 
       @if $k == def {
         & {
-          transform: unquote( $transform );
+          transform: string.unquote( $transform );
         }
       } @else {
         #{$dataAttr} {
-          transform: unquote( $transform );
+          transform: string.unquote( $transform );
         }
       }
 
@@ -59,11 +63,11 @@
       &[data-reverse] {
         @if $k == def {
           & {
-            transform: unquote( $transformReverse );
+            transform: string.unquote( $transformReverse );
           }
         } @else {
           #{$dataAttr} {
-            transform: unquote( $transformReverse );
+            transform: string.unquote( $transformReverse );
           }
         }
 
@@ -77,7 +81,7 @@
   .js &[data-vis] {
     &,
     &[data-reverse] {
-      transform: unquote( $showTransform );
+      transform: string.unquote( $showTransform );
     }
   }
 }
@@ -93,10 +97,10 @@
 @mixin transitionDurations( $durations ) {
   @each $k, $v in $durations {
     @if $k == def {
-      transition-duration: unquote( $v );
+      transition-duration: string.unquote( $v );
     } @else {
       &[data-d="#{$k}"] {
-        transition-duration: unquote( $v );
+        transition-duration: string.unquote( $v );
       }
     }
   }
@@ -107,11 +111,11 @@
  * -----------------------------------
  */
 
-@mixin transitionFade() {
-  $fade: map-get( frm.$transitions, 'fade' );
-  $durations: map-get( $fade, 'durations' );
-  $y: map-get( $fade, 'y' );
-  $x: map-get( $fade, 'x' );
+@mixin transitionFade( $transitions ) {
+  $fade: map.get( $transitions, 'fade' );
+  $durations: map.get( $fade, 'durations' );
+  $y: map.get( $fade, 'y' );
+  $x: map.get( $fade, 'x' );
 
   .a-fade-in,  
   .a-fade-in-y,
@@ -149,11 +153,11 @@
  * ------------------------------------
  */
 
-@mixin transitionScale() {
-  $scale: map-get( frm.$transitions, 'scale' );
-  $durations: map-get( $scale, 'durations' );
-  $in: map-get( $scale, 'in' );
-  $out: map-get( $scale, 'out' );
+@mixin transitionScale( $transitions ) {
+  $scale: map.get( $transitions, 'scale' );
+  $durations: map.get( $scale, 'durations' );
+  $in: map.get( $scale, 'in' );
+  $out: map.get( $scale, 'out' );
 
   .a-scale-in,
   .a-scale-out {

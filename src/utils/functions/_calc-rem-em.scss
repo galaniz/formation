@@ -1,8 +1,11 @@
 
-/* Dependencies */
+/*
+ * Imports
+ * -------
+ */
 
-@use "sass:math";
-@use '../../config' as frm;
+@use 'sass:math';
+@use '../../config' as con;
 
 /* 
  * Convert to rem units
@@ -13,7 +16,7 @@
  */
 
 @function calcRem( $px ) {
-  $rem: math.div( $px, frm.$context );
+  $rem: math.div( $px, con.$context );
   @return ( $rem + 0rem );
 }
 
@@ -26,6 +29,6 @@
  */
 
 @function calcEm( $px ) {
-  $em: $px / frm.$contextEm;
+  $em: math.div( $px, con.$contextEm );
   @return ( $em + em );
 }

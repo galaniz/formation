@@ -1,14 +1,19 @@
 
-/* Dependencies */
+/*
+ * Imports
+ * -------
+ */
 
-@use '../config' as frm;
+@use 'sass:meta';
+@use '../utils/functions' as func;
+@use '../utils/mixins' as mix;
 
 /*
  * Make container classes with breakpoints
  * ---------------------------------------
  */
 
-@mixin makeContainers() {
+@mixin makeContainers( $containers, $containerPadding ) {
 	%u-margin-padding-0 {
 		&[data-left] {
 			margin-left: 0;
@@ -21,25 +26,25 @@
 		}
 	}
 
-	@each $c, $width in frm.$containers {
-		$k: inspect( $c );
+	@each $c, $width in $containers {
+		$k: meta.inspect( $c );
 		$d: '';
 		$suffix: '';
 
 		@if $k != 'def' {
 			$d: '-';
-			$suffix: capitalize( $c );
+			$suffix: func.capitalize( $c );
 		} @else {
 			$k: '';
 		}
 
-		.l-container#{$d}#{$k} {
+		.l-container#{ $d }#{ $k } {
 			@extend %u-margin-right-auto;
 			@extend %u-margin-left-auto;
 			@extend %u-margin-padding-0;
-			max-width: calcRem( $width + ( frm.$containerPadding * 2 ) );
-			padding-left: calcRem( frm.$containerPadding );
-			padding-right: calcRem( frm.$containerPadding );
+			max-width: func.calcRem( $width + ( $containerPadding * 2 ) );
+			padding-left: func.calcRem( $containerPadding );
+			padding-right: func.calcRem( $containerPadding );
 		}
 	}
 }
@@ -49,23 +54,23 @@
  * ----------------------------------
  */
 
-@mixin makeGrid() {
+@mixin makeGrid( $grid, $gridOverwrite ) {
 	.l-100 {
 		@extend %u-width-100;
 	}
 
-	$grid: frm.$grid;
+	$grid: $grid;
 
-	@if type-of( frm.$gridOverwrite ) == 'map' {
-		$grid: frm.$gridOverwrite;
+	@if meta.type-of( $gridOverwrite ) == map {
+		$grid: $gridOverwrite;
 	} 
 
 	@each $g, $v in $grid {
-		.l-#{$g} {
+		.l-#{ $g } {
 			@extend %u-width-100;
 			
 			@each $bk, $width in $v {
-				@include breakpointMin( $bk ) {
+				@include mix.breakpointMin( $bk ) {
 					width: $width;
 				}
 			}

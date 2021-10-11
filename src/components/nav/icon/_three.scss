@@ -1,5 +1,13 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'index' as icon;
+@use '../../../config' as con;
+
+/*
  * Nav Icon: Three
  * ---------------
  */
@@ -23,7 +31,7 @@
 		transform: rotate( 45deg );
 
 		& .c-nav-icon__top {
-			transform: translateY( $_y );
+			transform: translateY( icon.$y );
 		}
 
 		& .c-nav-icon__middle {
@@ -31,7 +39,7 @@
 		}
 		
 		& .c-nav-icon__bottom {
-			transform: translateY( #{ $_y * -1 } ) rotate( 90deg );
+			transform: translateY( #{ icon.$y * -1 } ) rotate( 90deg );
 		}
 	}
 }

@@ -1,5 +1,13 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'index' as icon;
+@use '../../../config' as con;
+
+/*
  * Nav Icon: Seven
  * ---------------
  */
@@ -24,7 +32,7 @@
 
 	.c-nav__button[data-show] & {
 		& .c-nav-icon__top {
-			transform: translateY( $_y ) rotate( 45deg );
+			transform: translateY( icon.$y ) rotate( 45deg );
 		}
 
 		& .c-nav-icon__middle {
@@ -32,7 +40,7 @@
 		}
 
 		& .c-nav-icon__bottom {
-			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
+			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
 		}
 		
 		animation: _aNavIconGrowShrink 300ms;

@@ -1,14 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../config' as con;
+
+/*
  * Table
  * -----
  */
 
-/* Dependencies */
-
-@use '../../config' as frm;
-
-#{ frm.$tableSelector } {
+#{ con.$tableSelector } {
 	@extend %u-width-100;
   border-collapse: collapse;
   border-spacing: 0;

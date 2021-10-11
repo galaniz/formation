@@ -1,17 +1,20 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:math';
+
+/*
  * Aspect ratio padding
  * --------------------
  */
 
-/* Dependencies */
-
-@use '../../../config' as frm;
-
-@mixin aspectRatioPadding() {
-  @each $p in frm.$aspectRatioPadding {
+@mixin aspectRatioPadding( $aspectRatioPadding ) {
+  @each $p in $aspectRatioPadding {
 	  &[data-p="#{ $p * 100 }"]::before {
-	    padding-top: percentage( $p );
+	    padding-top: math.percentage( $p );
 	  }
   }
 }

@@ -1,13 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'mixins' as mix;
+@use '../config' as con;
+
+/*
  * Fade in and out
  * ---------------
  */
 
-/* Dependencies */
-
-@use 'mixins';
-
 /* Output classes */
 
-@include mixins.transitionFade();
+@include mix.transitionFade( con.$transitions );

@@ -1,12 +1,16 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'mixins' as mix;
+@use '../../config' as con;
+
+/*
  * Aspect ratio
  * ------------
  */
-
-/* Dependencies */
-
-@use 'mixins';
 
 .o-aspect-ratio {
 	@extend %u-position-relative;
@@ -18,7 +22,7 @@
 		padding-top: 100%;
 	}
 
-	@include mixins.aspectRatioPadding();
+	@include mix.aspectRatioPadding( con.$aspectRatioPadding );
 	
 	&[data-circle] {
 		@extend %u-border-radius-100;

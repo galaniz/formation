@@ -1,14 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../../config' as con;
+
+/*
  * Table Scroll
  * ------------
  */
 
-/* Dependencies */
-
-@use '../../../config' as frm;
-
-#{ frm.$tableScrollSelector } {
+#{ con.$tableScrollSelector } {
 	overflow-x: auto;
 	
 	table {

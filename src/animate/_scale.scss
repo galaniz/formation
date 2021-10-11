@@ -1,13 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'mixins' as mix;
+@use '../config' as con;
+
+/*
  * Scale in and out
  * ----------------
  */
 
-/* Dependencies */
-
-@use 'mixins';
-
 /* Output classes */
 
-@include mixins.transitionScale();
+@include mix.transitionScale( con.$transitions );

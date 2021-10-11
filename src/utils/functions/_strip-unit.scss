@@ -1,7 +1,11 @@
 
-/* Dependencies */
+/*
+ * Imports
+ * -------
+ */
 
 @use "sass:math";
+@use "sass:meta";
 
 /*
  * Strip unit from number
@@ -14,7 +18,7 @@
  */
 
 @function stripUnit( $number ) {
-  @if( type-of( $number ) == 'number' and not unitless( $number ) ) {
+  @if( meta.type-of( $number ) == number and not math.is-unitless( $number ) ) {
     @return math.div( $number, $number * 0 + 1 );
   }
 

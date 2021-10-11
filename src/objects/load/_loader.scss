@@ -1,14 +1,18 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../config' as con;
+@use '../../utils/functions' as func;
+
+/*
  * Loader
  * ------
  */
 
-/* Dependencies */
-
-@use '../../../config' as frm;
-
-#{ frm.$loaderSelector } {
+#{ con.$loaderSelector } {
 	@extend %u-position-absolute;
 	@extend %u-top-0;
 	@extend %u-bottom-0;
@@ -16,21 +20,21 @@
 	@extend %u-right-0;
 	@extend %u-opacity-1;
 	@extend %u-background-color-inherit;
-	z-index: mapDeepGet( frm.$zIndex, 'loader', 'def' );
+	z-index: func.mapDeepGet( con.$zIndex, 'loader', 'def' );
 	transition: 
-		opacity #{ frm.$defDuration } #{ frm.$defTimingFunction } 10ms, 
-		z-index 0ms #{ frm.$defTimingFunction };
+		opacity #{ con.$defDuration } #{ con.$defTimingFunction } 10ms, 
+		z-index 0ms #{ con.$defTimingFunction };
 
 	&[data-hide] {
 		@extend %u-opacity-0;
 		z-index: -1 !important;
 		transition: 
-			opacity #{ frm.$defDuration } #{ frm.$defTimingFunction }, 
-			z-index 0ms #{ frm.$defTimingFunction } #{ frm.$defDuration };
+			opacity #{ con.$defDuration } #{ con.$defTimingFunction }, 
+			z-index 0ms #{ con.$defTimingFunction } #{ con.$defDuration };
 	}
 
 	&[data-page] {
 		@extend %u-position-fixed;
-		z-index: mapDeepGet( frm.$zIndex, 'loader', 'page' );
+		z-index: func.mapDeepGet( con.$zIndex, 'loader', 'page' );
 	}
 }

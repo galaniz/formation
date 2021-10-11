@@ -1,16 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../config' as con;
+
+/*
  * Utility classes
  * ---------------
  */
 
-/* Dependencies */
-
-@use '../functions/calc-rem-em' as f;
-
 /* Hide */
-
-$_1px: f.calcRem( 1px );
 
 .u-v-h {
 	@extend %u-visually-hidden;
@@ -19,11 +20,11 @@ $_1px: f.calcRem( 1px );
 .u-h-i {
 	@extend %u-position-absolute;
 	@extend %u-overflow-hidden;
-	width: $_1px;
-	height: $_1px;
+	width: 0.063rem;
+	height: 0.063rem;
 	padding: 0;
 	border: 0;
-	clip: rect( $_1px $_1px $_1px $_1px );
+	clip: rect( 0.063rem 0.063rem 0.063rem 0.063rem );
 }
 
 /* Dimensions */

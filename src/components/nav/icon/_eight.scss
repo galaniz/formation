@@ -1,16 +1,22 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'index' as icon;
+@use '../../../config' as con;
+@use '../../../utils/functions/map as m;
+@use '../../../utils/functions/calc-rem-em as c;
+
+/*
  * Nav Icon: Eight
  * ---------------
  */
 
-/* Dependencies */
-
-@use '../../../config' as frm;
-
 .c-nav-icon[data-num="8"] {
-	$_x: calcRem( ( mapDeepGet( frm.$nav, 'icon', 'width' ) / 2 ) - ( mapDeepGet( frm.$nav, 'icon', 'lineWidth' ) / 2 ) );
-	$_y: calcRem( $_y + ( mapDeepGet( frm.$nav, 'icon', 'lineWidth' ) / 2 ) + 0.5px ); // 0.5 to make x more precise
+	$_x: c.calcRem( ( m.mapDeepGet( con.$nav, 'icon', 'width' ) / 2 ) - ( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) / 2 ) );
+	$_y: c.calcRem( icon.$y + ( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) / 2 ) + 0.5px ); // 0.5 to make x more precise
 
 	transform: rotate( 0deg );
 

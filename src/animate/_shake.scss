@@ -1,5 +1,12 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../utils/functions/calc-rem-em as c;
+
+/*
  * Shake animation
  * ---------------
  */
@@ -10,18 +17,18 @@
 
 @keyframes _aShake {
 	10%, 90% {
-		transform: translate3d( #{ calcRem( -1px ) }, 0, 0 );
+		transform: translate3d( #{ c.calcRem( -1px ) }, 0, 0 );
 	}
 
 	20%, 80% {
-		transform: translate3d( #{ calcRem( 2px ) }, 0, 0 );
+		transform: translate3d( #{ c.calcRem( 2px ) }, 0, 0 );
 	}
 
 	30%, 50%, 70% {
-		transform: translate3d( #{ calcRem( -4px ) }, 0, 0 );
+		transform: translate3d( #{ c.calcRem( -4px ) }, 0, 0 );
 	}
 
 	40%, 60% {
-		transform: translate3d( #{ calcRem( 4px ) }, 0, 0 );
+		transform: translate3d( #{ c.calcRem( 4px ) }, 0, 0 );
 	}
 }

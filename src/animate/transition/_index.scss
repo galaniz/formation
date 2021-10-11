@@ -1,12 +1,16 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use '../../config' as con;
+
+/*
  * Transition
  * ----------
  */
-
-/* Dependencies */
-
-@use '../../config' as frm;
 
 .a-transition {
 	@extend %u-position-fixed;
@@ -17,6 +21,6 @@
 	z-index: -1;
 	
 	&[data-show] {
-		z-index: map-get( frm.$zIndex, 'transition' );
+		z-index: map.get( con.$zIndex, 'transition' );
 	}
 }
