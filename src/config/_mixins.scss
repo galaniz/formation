@@ -38,7 +38,7 @@
 
     @if( $selector ) {
       %u-#{ $name } {
-        #{ selector } {
+        #{ $selector } {
           @each $key, $value in $prop {
             @if( meta.type-of( $value ) == string and $name != 'content-empty' ) {
               #{ $key }: string.unquote( $value );
