@@ -83,3 +83,8 @@ All notable changes to this project will be documented in this file.
 - Folder structure (folder/index pattern).
 - `imagesLoaded` to `assetLoaded` and `assetsLoaded` to include videos and iframes.
 - `objectFit` ignore `Lazy` class attributes.
+
+## [2.1.11] - 2021-10-25
+
+### Changed
+- Update to use `@use`/`@forward` instead of `@import`.
