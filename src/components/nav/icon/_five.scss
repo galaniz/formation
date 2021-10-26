@@ -1,5 +1,13 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'index' as icon;
+@use '../../../config' as con;
+
+/*
  * Nav Icon: Five
  * --------------
  */
@@ -35,8 +43,9 @@
 
  	@keyframes _aCollapseRotateTopReverse {
  		0% {
- 			transform: translateY( $_y ) rotate( 45deg );
+ 			transform: translateY( icon.$y ) rotate( 45deg );
  		}
+
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
@@ -44,8 +53,9 @@
 
  	@keyframes _aCollapseRotateBottomReverse {
  		0% {
- 			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
+ 			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
  		}
+
  		100% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
@@ -53,10 +63,11 @@
 
  	@keyframes _aCollapseRotateTop {
  		0% {
- 			transform: translateY( $_y );
+ 			transform: translateY( icon.$y );
  		}
+
  		100% {
- 			transform: translateY( $_y ) rotate( 45deg );
+ 			transform: translateY( icon.$y ) rotate( 45deg );
  		}
  	}
 
@@ -64,11 +75,13 @@
  		0% {
  			transform: translateY( 0 ) rotate( 0 );
  		}
+
  		1% {
- 			transform: translateY( #{ $_y * -1 } );
+ 			transform: translateY( #{ icon.$y * -1 } );
  		}
+    
  		100% {
- 			transform: translateY( #{ $_y * -1 } ) rotate( -45deg );
+ 			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
  		}
  	}
- }
+}

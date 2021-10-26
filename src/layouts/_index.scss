@@ -1,25 +1,26 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'mixins' as mix;
+@use '../config' as con;
+
+/*
  * Layouts
  * -------
  */
 
-/* Dependencies */
+/* Breakout + Flex */
 
-@import 'mixins';
+@use 'breakout';
+@use 'flex';
 
 /* Container */
 
-@include _makeContainers();
+@include mix.makeContainers( con.$containers, con.$containerPadding );
 
 /* Grid */
 
-@include _makeGrid();
-
-/* Breakout */
-
-@import 'breakout';
-
-/* Flexbox */
-
-@import 'flex';
+@include mix.makeGrid( con.$grid, con.$gridOverwrite );

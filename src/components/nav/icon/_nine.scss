@@ -1,11 +1,20 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'index' as icon;
+@use '../../../config' as con;
+@use '../../../utils/functions/calc-rem-em as c;
+
+/*
  * Nav Icon: Nine
  * --------------
  */
 
 .c-nav-icon[data-num="9"] {
-	$_y: calcRem( $_y + 0.5px ); // 0.5 to make corner sharp
+	$_y: c.calcRem( icon.$y + 0.5px ); // 0.5 to make corner sharp
 
 	& .c-nav-icon__top,
 	& .c-nav-icon__bottom {

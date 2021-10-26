@@ -1,12 +1,100 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'functions' as func;
+@use 'mixins' as mix;
+@use '../utils/functions/capitalize' as c;
+@use '../utils/functions/map' as m;
+@use '../utils/mixins/grayscale' as g;
+
+/*
  * Config
  * ------
  */
 
+/* Colors  */
+
+$colors: () !default;
+
+/* Fonts */
+
+$fonts: () !default;
+
+/* Placeholders */
+
+$placeholders: () !default;
+
+/* Breakpoints */
+
+$breakpoints: () !default;
+
+/* Layout containers and padding */
+
+$containers: () !default;
+$containerPadding: 25px !default;
+
+/* Grid system */
+
+$grid: () !default;
+$gridOverwrite: false !default;
+
+/* Rem/em context */
+
+$context: 16px !default;
+$contextEm: 16px !default;
+
+/* Aspect ratio padding */
+
+$aspectRatioPadding: () !default;
+
+/* Transitions */
+
+$transitions: () !default;
+
+/* Z index */
+
+$zIndex: () !default;
+
+/* Nav */
+
+$nav: (
+	icon: (
+		width: 35px,
+		lineWidth: 2px,
+		margin: 8px
+	)
+) !default;
+
+/* Loader */
+
+$loaderSelector: '.o-loader' !default;
+
+/* Table */
+
+$tableSelector: '.o-table' !default;
+
+/* Table Scroll */
+
+$tableScrollSelector: '.o-table-scroll' !default;
+
+/* Vars custom */
+
+$vars: () !default;
+
+/*
+ * Merge maps
+ * ----------
+ */
+
 /* Colors */
 
-$g-colors: mapRecursiveMerge(
+$colors: m.mapRecursiveMerge(
 	(
 		primary: (
 			base: #888888,
@@ -24,12 +112,12 @@ $g-colors: mapRecursiveMerge(
 			dark: #EEEEEE
 		)
 	),
-	$g-colors
+	$colors
 );
 
 /* Fonts */
 
-$g-fonts: mapRecursiveMerge(
+$fonts: m.mapRecursiveMerge(
 	(
 		primary: (
 			Helvetica,
@@ -40,12 +128,12 @@ $g-fonts: mapRecursiveMerge(
 			normal: 400
 		)
 	),
-	$g-fonts
+	$fonts
 );
 
 /* Grid */
 
-$g-grid: mapRecursiveMerge(
+$grid: m.mapRecursiveMerge(
 	(
 		25: (
 			600: 50%,
@@ -67,12 +155,12 @@ $g-grid: mapRecursiveMerge(
 			900: 75%
 		)
 	),
-	$g-grid
+	$grid
 );
 
 /* Breakpoints */
 
-$g-breakpoints: mapRecursiveMerge(
+$breakpoints: m.mapRecursiveMerge(
 	(
 		0: 0px,
 		400: 400px,
@@ -84,36 +172,36 @@ $g-breakpoints: mapRecursiveMerge(
 		1000: 1000px,
 		1200: 1200px
 	),
-	$g-breakpoints
+	$breakpoints
 );
 
 /* Containers */
 
-$g-containers: mapRecursiveMerge(
+$containers: m.mapRecursiveMerge(
 	(
 		def: 1200px,
 		sm: 800px,
 		lg: 1920px
 	),
-	$g-containers
+	$containers
 );
 
 // append to breakpoints
-@each $c, $width in $g-containers {
-	$k: inspect( $c );
+@each $c, $width in $containers {
+	$k: meta.inspect( $c );
 	$suffix: '';
 
 	@if $c != 'def' {
-		$suffix: #{ capitalize( $c ) };
+		$suffix: #{ c.capitalize( $c ) };
 	}
 
-	$g-breakpoints: map-merge( ( "container#{ $suffix }": $width  ), $g-breakpoints );
-	$g-breakpoints: map-merge( ( "container#{ $suffix }WithPadding": $width + ( $g-containerPadding * 2 ) ), $g-breakpoints );
+	$breakpoints: map.merge( ( "container#{ $suffix }": $width  ), $breakpoints );
+	$breakpoints: map.merge( ( "container#{ $suffix }WithPadding": $width + ( $containerPadding * 2 ) ), $breakpoints );
 }
 
 /* Transitions */
 
-$g-transitions: mapRecursiveMerge(
+$transitions: m.mapRecursiveMerge(
 	(
 		def: (
 			durations: (
@@ -160,16 +248,18 @@ $g-transitions: mapRecursiveMerge(
 			)
 		)
 	),
-	$g-transitions
+	$transitions
 );
 
-$g-defTransitions: map-get( $g-transitions, 'def' );
-$g-defDuration: map-get( map-get( $g-defTransitions, 'durations' ), 'def' );
-$g-defTimingFunction: map-get( $g-defTransitions, 'timingFunction' );
+$defTransitions: map.get( $transitions, 'def' );
+$defDurations: map.get( $defTransitions, 'durations' );
+$defDuration: map.get( $defDurations, 'def' );
+$defTimingFunction: map.get( $defTransitions, 'timingFunction' );
+$defTimingFunctionCubic: map.get( $defTransitions, 'timingFunctionCubic' );
 
 /* Z index */
 
-$g-zIndex: mapRecursiveMerge(
+$zIndex: m.mapRecursiveMerge(
 	(
 		skipLink: 100,
 		transition: 100,
@@ -180,5 +270,381 @@ $g-zIndex: mapRecursiveMerge(
 			page: 110
 		)
 	),
-	$g-zIndex
+	$zIndex
 );
+
+/*
+ * Placeholders
+ * ------------
+ */
+
+/* Overflow */
+
+@include mix.setPlaceholder( 'overflow-hidden' ) {
+	overflow: hidden;
+}
+
+@include mix.setPlaceholder( 'overflow-scroll' ) {
+	overflow: scroll;
+}
+
+@include mix.setPlaceholder( 'overflow-y-auto' ) {
+	overflow-y: auto;
+}
+
+@include mix.setPlaceholder( 'overflow-x-hidden' ) {
+	overflow-x: hidden;
+}
+
+/* Floats */
+
+@include mix.setPlaceholder( 'float-left' ) {
+	float: left;
+}
+
+@include mix.setPlaceholder( 'float-right' ) {
+	float: right;
+}
+
+/* Display */
+
+@include mix.setPlaceholder( 'display-none' ) {
+	display: none;
+}
+
+@include mix.setPlaceholder( 'display-block' ) {
+	display: block;
+}
+
+@include mix.setPlaceholder( 'display-inline-block' ) {
+	display: inline-block;
+}
+
+@include mix.setPlaceholder( 'display-flex' ) {
+	display: flex;
+}
+
+@include mix.setPlaceholder( 'display-table' ) {
+	display: table;
+}
+
+@include mix.setPlaceholder( 'display-table-row' ) {
+	display: table-row;
+}
+
+@include mix.setPlaceholder( 'display-table-cell' ) {
+	display: table-cell;
+}
+
+/* Flexbox */
+
+@include mix.setPlaceholder( 'flex-shrink-0' ) {
+	flex-shrink: 0;
+}
+
+@include mix.setPlaceholder( 'flex-grow-1' ) {
+	flex-grow: 1;
+}
+
+/* Visibility */
+
+@include mix.setPlaceholder( 'visibility-hidden' ) {
+	visibility: hidden;
+}
+
+@include mix.setPlaceholder( 'visibility-visible' ) {
+	visibility: visible;
+}
+
+/* Content */
+
+@include mix.setPlaceholder( 'content-empty' ) {
+	content: '';
+}
+
+/* Position */
+
+@include mix.setPlaceholder( 'position-relative' ) {
+	position: relative;
+}
+
+@include mix.setPlaceholder( 'position-absolute' ) {
+	position: absolute;
+}
+
+@include mix.setPlaceholder( 'position-fixed' ) {
+	position: fixed;
+}
+
+@include mix.setPlaceholder( 'top-0' ) {
+	top: 0;
+}
+
+@include mix.setPlaceholder( 'bottom-0' ) {
+	bottom: 0;
+}
+
+@include mix.setPlaceholder( 'left-0' ) {
+	left: 0;
+}
+
+@include mix.setPlaceholder( 'right-0' ) {
+	right: 0;
+}
+
+@include mix.setPlaceholder( 'position-vertical-center' ) {
+	top: 50%;
+	transform: translateY( -50% );
+	bottom: auto;
+}
+
+/* Text align */
+
+@include mix.setPlaceholder( 'text-align-left' ) {
+	text-align: left;
+}
+
+@include mix.setPlaceholder( 'text-align-right' ) {
+	text-align: right;
+}
+
+@include mix.setPlaceholder( 'text-align-center' ) {
+	text-align: center;
+}
+
+@include mix.setPlaceholder( 'text-align-justify' ) {
+	text-align: justify;
+}
+
+@include mix.setPlaceholder( 'text-transform-uppercase' ) {
+	text-transform: uppercase;
+}
+
+/* Vertical align */
+
+@include mix.setPlaceholder( 'vertical-align-bottom' ) {
+	vertical-align: bottom;
+}
+
+@include mix.setPlaceholder( 'vertical-align-middle' ) {
+	vertical-align: middle;
+}
+
+@include mix.setPlaceholder( 'vertical-align-top' ) {
+	vertical-align: top;
+}
+
+/* Margin */
+
+@include mix.setPlaceholder( 'margin-auto' ) {
+	margin: auto;
+}
+
+@include mix.setPlaceholder( 'margin-right-auto' ) {
+	margin-right: auto;
+}
+
+@include mix.setPlaceholder( 'margin-left-auto' ) {
+	margin-left: auto;
+}
+
+/* Border radius */
+
+@include mix.setPlaceholder( 'border-radius-100' ) {
+	border-radius: 100%;
+}
+
+/* Transform origin */
+
+@include mix.setPlaceholder( 'transform-origin-0-0' ) {
+	transform-origin: 0% 0%;
+}
+
+@include mix.setPlaceholder( 'transform-origin-0-100' ) {
+	transform-origin: 0% 100%;
+}
+
+@include mix.setPlaceholder( 'transform-origin-100-0' ) {
+	transform-origin: 100% 0%;
+}
+
+@include mix.setPlaceholder( 'transform-origin-100-100' ) {
+	transform-origin: 100% 100%;
+}
+
+/* Opacity */
+
+@include mix.setPlaceholder( 'opacity-0' ) {
+	opacity: 0;
+}
+
+@include mix.setPlaceholder( 'opacity-1' ) {
+	opacity: 1;
+}
+
+/* Width / height */
+
+@include mix.setPlaceholder( 'width-inherit' ) {
+	width: inherit;
+}
+
+@include mix.setPlaceholder( 'height-inherit' ) {
+	height: inherit;
+}
+
+@include mix.setPlaceholder( 'width-100' ) {
+	width: 100%;
+}
+
+@include mix.setPlaceholder( 'width-100vw' ) {
+	width: 100vw;
+}
+
+@include mix.setPlaceholder( 'height-100' ) {
+	height: 100%;
+}
+
+@include mix.setPlaceholder( 'height-100vh' ) {
+	height: 100vh;
+}
+
+/* Grayscale */
+
+@include mix.setPlaceholder( 'grayscale' ) {
+	@include g.grayscale();
+}
+
+/* Visually hidden */
+
+@include mix.setPlaceholder( 'visually-hidden' ) {
+	@extend %u-position-absolute;
+	@extend %u-overflow-hidden;
+	left: -625rem;
+	top: auto;
+	width: 0.063rem;
+	height: 0.063rem;
+}
+
+/* Touch target 50px */
+
+@include mix.setPlaceholder( 'touch-50' ) {
+	&::before {
+		@extend %u-content-empty;
+		@extend %u-position-absolute;
+		transform: translate( -50%, -50% );
+		width: 3.125rem;
+		height: 3.125rem;
+		top: 50%;
+		left: 50%;
+	}
+}
+
+/* Colors */
+
+@include mix.setPlaceholder( 'color-inherit' ) {
+	color: inherit;
+}
+
+@include mix.setPlaceholder( 'background-color-inherit' ) {
+	background-color: inherit;
+}
+
+// convert nested colors to one level map
+$colorsFlatPrefix: func.mapFlatten( $colors, (), 'color' );
+
+@each $name, $value in $colorsFlatPrefix {
+	@include mix.setPlaceholder( $name ) {
+		color: $value;
+	}
+
+	@include mix.setPlaceholder( "background-#{ $name }" ) {
+		background-color: $value;
+	}
+
+	@include mix.setPlaceholder( "fill-#{ $name }" ) {
+		fill: $value;
+	}
+
+	@include mix.setPlaceholder( "border-#{ $name }" ) {
+		border-color: $value;
+	}
+}
+
+// convert nested colors to one level map without prefix
+$colorsFlat: func.mapFlatten( $colors, (), '' );
+
+/* Fonts */
+
+@if( meta.type-of( $fonts ) == map ) {
+	@each $k, $v in $fonts {
+		@if $k == weight {
+			@each $p, $w in $v {
+				@include mix.setPlaceholder( "font-weight-#{ $p }" ) {
+					font-weight: $w;
+				}
+			}
+		} @else {
+			@include mix.setPlaceholder( "font-family-#{ $k }" ) {
+				font-family: $v;
+			}
+		}
+	}
+}
+
+/* Transitions */
+
+@if( meta.type-of( $defTransitions ) == map ) {
+	@include mix.setPlaceholder( 'transition-property-opacity' ) {
+		transition-property: opacity;
+	}
+
+	@include mix.setPlaceholder( 'transition-property-transform' ) {
+		transition-property: transform;
+	}
+
+	@each $k, $v in $defDurations {
+		$name: 'transition-duration';
+
+		@if $k != def {
+			$name: $name + '-' + $k;
+		}
+
+		@include mix.setPlaceholder( $name ) {
+			transition-duration: $v;
+		}
+  }
+
+	@include mix.setPlaceholder( 'transition-property-opacity-transform' ) {
+		transition-property: opacity, transform;
+	}
+
+	@include mix.setPlaceholder( 'transition-timing-function' ) {
+		transition-timing-function: $defTimingFunction;
+	}
+
+	@include mix.setPlaceholder( 'transition-timing-function-cubic' ) {
+		transition-timing-function: $defTimingFunctionCubic;
+	}
+
+	@include mix.setPlaceholder( 'transition-opacity-transform-ease' ) {
+		transition: opacity #{ $defDuration } #{ $defTimingFunction }, transform #{ $defDuration } #{ $defTimingFunction };
+	}
+
+	@include mix.setPlaceholder( 'transition-transform-ease' ) {
+		transition: transform #{ $defDuration } #{ $defTimingFunction };
+	}
+
+	@include mix.setPlaceholder( 'transition-opacity-ease' ) {
+		transition: opacity #{ $defDuration } #{ $defTimingFunction };
+	}
+}
+
+/* Placeholders */
+
+@if( meta.type-of( $placeholders ) == list ) {
+	@each $p in $placeholders {
+		@each $k, $v in $p {
+			@include mix.makePlaceholder( $k, $v );
+		}
+	}
+}

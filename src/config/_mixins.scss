@@ -1,0 +1,71 @@
+
+/*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+
+/*
+ * Set placeholder
+ * ---------------
+ *
+ * @param [string] $name
+ */
+
+@mixin setPlaceholder( $name ) {
+	%u-#{ $name } {
+		@content;
+	}
+}
+
+/*
+ * Make placeholder
+ * ----------------
+ *
+ * @param [string] $key
+ * @param [string/map] $value
+ */
+
+@mixin makePlaceholder( $key, $value ) {
+  @if $key == custom {
+    $map: $value;
+    $name: map.get( $map, 'name' );
+    $prop: map.get( $map, 'prop' );
+    $selector: map.get( $map, 'selector' );
+
+    @if( $selector ) {
+      %u-#{ $name } {
+        #{ $selector } {
+          @each $key, $value in $prop {
+            @if( meta.type-of( $value ) == string and $name != 'content-empty' ) {
+              #{ $key }: string.unquote( $value );
+            } @else {
+              #{ $key }: $value;
+            }
+          }
+        }
+      }
+    } @else {
+      %u-#{ $name } {
+        @each $key, $value in $prop {
+          @if( meta.type-of( $value ) == string and $name != 'content-empty' ) {
+            #{ $key }: string.unquote( $value );
+          } @else {
+            #{ $key }: $value;
+          }
+        }
+      }
+    }
+  } @else {
+    %u-#{ $key }-#{ $value } {
+      @if( meta.type-of( $value ) == string ) {
+        #{ $key }: string.unquote( $value );
+      } @else {
+        #{ $key }: $value;
+      }
+    }
+  }
+}

@@ -1,5 +1,12 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../functions/calc-rem-em' as c;
+
+/*
  * Font size in rem units
  * ----------------------
  *
@@ -9,8 +16,8 @@
 
 @mixin fontRem( $size, $important: false ) {
   @if $important {
-  	font-size: calcRem( $size ) !important;
+  	font-size: c.calcRem( $size ) !important;
   } @else {
-  	font-size: calcRem( $size );
+  	font-size: c.calcRem( $size );
   }
 }

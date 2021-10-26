@@ -1,5 +1,13 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use '../config' as con;
+
+/*
  * Skip Link
  * ---------
  */
@@ -10,7 +18,7 @@
 	@extend %u-top-0;
 	@extend %u-left-0;
 	@extend %u-right-0;
-	z-index: map-get( $g-zIndex, 'skipLink' );
+	z-index: map.get( con.$zIndex, 'skipLink' );
 	transform: translateY( -150% );
 
 	&:focus {

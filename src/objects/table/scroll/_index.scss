@@ -1,10 +1,17 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../../config' as con;
+
+/*
  * Table Scroll
  * ------------
  */
 
-#{ $g-tableScrollSelector } {
+#{ con.$tableScrollSelector } {
 	overflow-x: auto;
 	
 	table {

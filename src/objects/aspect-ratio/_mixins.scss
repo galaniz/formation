@@ -1,13 +1,20 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:math';
+
+/*
  * Aspect ratio padding
  * --------------------
  */
 
-@mixin _aspectRatioPadding() {
-  @each $p in $g-aspectRatioPadding {
+@mixin aspectRatioPadding( $aspectRatioPadding ) {
+  @each $p in $aspectRatioPadding {
 	  &[data-p="#{ $p * 100 }"]::before {
-	    padding-top: percentage( $p );
+	    padding-top: math.percentage( $p );
 	  }
   }
 }

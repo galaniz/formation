@@ -1,32 +1,41 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../../config' as con;
+@use '../../../utils/functions/map' as m;
+@use '../../../utils/functions/calc-rem-em' as c;
+
+/*
  * Nav Icon
  * --------
  */
 
-$_y: calcRem( mapDeepGet( $g-nav, 'icon', 'margin' ) + mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
+$y: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'margin' ) + m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) );
 
 .c-nav-icon {
 	@extend %u-position-relative;
 	@extend %u-margin-auto;
-	width: calcRem( mapDeepGet( $g-nav, 'icon', 'width' ) );
+	width: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'width' ) );
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom,
 .c-nav-icon__right {
-	height: calcRem( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
+	height: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) );
 }
 
 .c-nav-icon__left {
-	width: calcRem( mapDeepGet( $g-nav, 'icon', 'lineWidth' ) );
+	width: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) );
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom {
-	margin: calcRem( mapDeepGet( $g-nav, 'icon', 'margin' ) ) auto;
+	margin: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'margin' ) ) auto;
 }
 
 .c-nav-icon__top {

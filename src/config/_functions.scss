@@ -1,18 +1,11 @@
 
-/* 
- * Append to list
- * --------------
- *
- * @param [list] $arr
- * @param [list] $prop
- *
- * @return [list] comma separated
+/*
+ * Imports
+ * -------
  */
 
-@function _addProp( $list, $prop ) {
-	$newList: append( $list, $prop, comma );
-	@return $newList;
-}
+@use 'sass:map';
+@use 'sass:meta';
 
 /* 
  * Convert map to one level map
@@ -26,9 +19,9 @@
  * @return [map]
  */
 
-@function _mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
+@function mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
 	@each $key, $value in $map {
-		@if( type-of( $value ) == map ) {
+		@if( meta.type-of( $value ) == map ) {
 			$nPrefix: "#{ $key }";
 
 			@if( $newPrefix ) {
@@ -45,7 +38,7 @@
 				$nPrefix: "#{ $newPrefix }#{ $k }";
 			}
 
-			$newMap: _mapFlatten( $value, $newMap, $prefix, $nPrefix );
+			$newMap: mapFlatten( $value, $newMap, $prefix, $nPrefix );
 		} @else {
 			$newKey: "#{ $key }";
 
@@ -61,11 +54,11 @@
 				}   
 			}
 
-			$newMap: map-merge( $newMap, ( $newKey: $value ) );
+			$newMap: map.merge( $newMap, ( $newKey: $value ) );
 		}
 	}
 
-	$newMap: map-merge( $newMap, $newMap );
+	$newMap: map.merge( $newMap, $newMap );
 
 	@return $newMap;
 }

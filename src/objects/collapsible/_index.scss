@@ -1,5 +1,12 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../config' as con;
+
+/*
  * Collapsible
  * -----------
  */
@@ -13,7 +20,7 @@
 .o-collapsible__main {
 	@extend %u-visibility-hidden;
 	height: 0;
-	transition: visibility 0ms #{ $g-defTimingFunction } #{ $g-defDuration }, height #{ $g-defDuration } #{ $g-defTimingFunction } 10ms;
+	transition: visibility 0ms #{ con.$defTimingFunction } #{ con.$defDuration }, height #{ con.$defDuration } #{ con.$defTimingFunction } 10ms;
 
 	.o-collapsible[data-set] > & {
 		@extend %u-overflow-hidden;
@@ -22,6 +29,6 @@
 
 	.o-collapsible[data-expanded="true"] > & {
 		@extend %u-visibility-visible;
-		transition: visibility 0ms #{ $g-defTimingFunction } 10ms, height #{ $g-defDuration } #{ $g-defTimingFunction };
+		transition: visibility 0ms #{ con.$defTimingFunction } 10ms, height #{ con.$defDuration } #{ con.$defTimingFunction };
 	}
 }

@@ -31,7 +31,8 @@ select {
 	}
 }
 
-// clears the 'X' from ie
+// Clears the 'X' from ie
+
 input::-ms-clear,
 input::-ms-reveal {
 	display: none;
@@ -39,7 +40,8 @@ input::-ms-reveal {
 	height: 0;
 }
 
-// clears the 'X' from chrome
+// Clears the 'X' from chrome
+
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,

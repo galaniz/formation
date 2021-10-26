@@ -1,4 +1,11 @@
 
+/*
+ * Imports
+ * -------
+ */
+
+@use 'sass:string';
+
 /* 
  * Capitalize string
  * -----------------
@@ -8,5 +15,5 @@
  */
 
 @function capitalize( $str ) {
-	@return to-upper-case( str-slice( $str, 1, 1 ) ) + str-slice( $str, 2 );
+	@return string.to-upper-case( string.slice( $str, 1, 1 ) ) + string.slice( $str, 2 );
 }

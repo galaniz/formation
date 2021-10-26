@@ -1,5 +1,11 @@
 
-@use "sass:math";
+/*
+ * Imports
+ * -------
+ */
+
+@use 'sass:math';
+@use '../../config' as con;
 
 /* 
  * Convert to rem units
@@ -10,7 +16,7 @@
  */
 
 @function calcRem( $px ) {
-  $rem: math.div( $px, $g-context );
+  $rem: math.div( $px, con.$context );
   @return ( $rem + 0rem );
 }
 
@@ -23,6 +29,6 @@
  */
 
 @function calcEm( $px ) {
-  $em: $px / $g-contextEm;
+  $em: math.div( $px, con.$contextEm );
   @return ( $em + em );
 }

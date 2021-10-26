@@ -1,5 +1,14 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use '../../../config' as con;
+@use '../../../utils/functions/map as m;
+@use '../../../utils/functions/calc-rem-em as c;
+
+/*
  * Nav Icon: Six
  * -------------
  */
@@ -44,7 +53,7 @@
 	}
 
 	& .c-nav-icon__cross {
-		$_w: calcRem( mapDeepGet( $g-nav, 'icon', 'width' ) * 0.90 );
+		$_w: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'width' ) * 0.90 );
 
 		@extend %u-margin-auto;
 		@extend %u-left-0;

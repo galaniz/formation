@@ -1,4 +1,13 @@
 
+/*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use '../../config' as con;
+@use '../functions/calc-rem-em' as c;
+
 /* 
  * Min media query
  * ---------------
@@ -7,10 +16,10 @@
  */
 
 @mixin breakpointMin( $min ) { 
-	@if map-has-key( $g-breakpoints, $min ) {
-		$bk-rem: calcRem( map-get( $g-breakpoints, $min ) );
+	@if map.has-key( con.$breakpoints, $min ) {
+		$bkRem: c.calcRem( map.get( con.$breakpoints, $min ) );
 
-		@media only screen and ( min-width: #{ $bk-rem } ) {
+		@media only screen and ( min-width: #{ $bkRem } ) {
 			@content;
 		}
 	} @else {
@@ -26,10 +35,10 @@
  */
 
 @mixin breakpointMax( $max ) {
-	@if map-has-key( $g-breakpoints, $max ) {
-		$bk-rem: calcRem( map-get( $g-breakpoints, $max ) );
+	@if map.has-key( con.$breakpoints, $max ) {
+		$bkRem: c.calcRem( map.get( con.$breakpoints, $max ) );
 
-		@media only screen and ( max-width: #{ $bk-rem } ) {
+		@media only screen and ( max-width: #{ $bkRem } ) {
 			@content;
 		}
 	} @else {
@@ -46,11 +55,11 @@
  */
 
 @mixin breakpointMinMax( $min, $max ) { 
-	@if map-has-key( $g-breakpoints, $min ) and map-has-key( $g-breakpoints, $max ) {
-		$bk-min-rem: calcRem( map-get( $g-breakpoints, $min ) );
-		$bk-max-rem: calcRem( map-get( $g-breakpoints, $max ) );
+	@if map.has-key( con.$breakpoints, $min ) and map.has-key( con.$breakpoints, $max ) {
+		$bkMinRem: c.calcRem( map.get( con.$breakpoints, $min ) );
+		$bkMaxRem: c.calcRem( map.get( con.$breakpoints, $max ) );
 
-		@media only screen and ( max-width: #{ $bk-max-rem } ) and ( min-width: #{ $bk-min-rem } ) {
+		@media only screen and ( max-width: #{ $bkMaxRem } ) and ( min-width: #{ $bkMinRem } ) {
 			@content;
 		}
 	} @else {

@@ -1,5 +1,13 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use '../../config' as con;
+
+/*
  * Transition
  * ----------
  */
@@ -13,6 +21,6 @@
 	z-index: -1;
 	
 	&[data-show] {
-		z-index: map-get( $g-zIndex, 'transition' );
+		z-index: map.get( con.$zIndex, 'transition' );
 	}
 }

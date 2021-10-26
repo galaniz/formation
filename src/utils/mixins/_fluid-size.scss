@@ -1,5 +1,18 @@
 
 /*
+ * Imports
+ * -------
+ */
+
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:list';
+@use '../../config' as con;
+@use '../functions/strip-unit' as s;
+@use '../functions/calc-rem-em' as c;
+@use 'breakpoint' as b;
+
+/*
  * Fluid sizes ( font-size, padding, margins... )
  * ----------------------------------------------
  *
@@ -11,17 +24,17 @@
  */
 
 @mixin fluidSize( $prop, $sizes, $widths, $important: false, $otherValues: null ) {
-  $lastIndex: length( $sizes );
+  $lastIndex: list.length( $sizes );
 
   @each $s in $sizes {
-    $i: index( $sizes, $s );
-    $w: nth( $widths, $i );
-    $ww: calcRem( map-get( $g-breakpoints, nth( $widths, $i ) ) );
+    $i: list.index( $sizes, $s );
+    $w: list.nth( $widths, $i );
+    $ww: c.calcRem( map.get( con.$breakpoints, list.nth( $widths, $i ) ) );
     $o: null;
     $m: null;
 
-    @if type-of( $otherValues ) == 'list' {
-      $o: nth( $widths, $i );
+    @if meta.type-of( $otherValues ) == 'list' {
+      $o: list.nth( $widths, $i );
     }
 
     @if $important {
@@ -33,16 +46,16 @@
     }
 
     @if $i == $lastIndex {
-      @include breakpointMin( $w ) {
+      @include b.breakpointMin( $w ) {
         #{$prop}: $s $o $m;
       }
     } @else {
-      $nextS: nth( $sizes, $i + 1 );
-      $nextW: nth( $widths, $i + 1 );
-      $nextWw: calcRem( map-get( $g-breakpoints, nth( $widths, $i + 1 ) ) );
+      $nextS: list.nth( $sizes, $i + 1 );
+      $nextW: list.nth( $widths, $i + 1 );
+      $nextWw: c.calcRem( map.get( con.$breakpoints, list.nth( $widths, $i + 1 ) ) );
 
-      @include breakpointMin( $w ) {
-        #{$prop}: calc( #{ $s } + ( ( 100vw - #{ $ww } ) / ( #{ stripUnit( $nextWw ) } - #{ stripUnit( $ww ) } ) ) * ( #{ stripUnit( $nextS ) } - #{ stripUnit( $s ) } ) ) $o $m;
+      @include b.breakpointMin( $w ) {
+        #{$prop}: calc( #{ $s } + ( ( 100vw - #{ $ww } ) / ( #{ s.stripUnit( $nextWw ) } - #{ s.stripUnit( $ww ) } ) ) * ( #{ s.stripUnit( $nextS ) } - #{ s.stripUnit( $s ) } ) ) $o $m;
       }
     }
   }
