@@ -1,380 +1,375 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects: slider base (to create fade/carousel sliders)
+ *
+ * @param args [object] {
+ *  @param slider [HTMLElement]
+ *  @param items nodelist of [HTMLElement]
+ *  @param loop [boolean]
+ *  @param autoplay [boolean]
+ *  @param autoplaySpeed [int]
+ *  @param prev [HTMLElement]
+ *  @param next [HTMLElement]
+ *  @param nav [HTMLElement]
+ *  @param navItemClass [string]
+ *  @param currentIndex [int]
+ * }
  */
 
-import { mergeObjects } from '../../utils';
-
-/*
- * Slider base ( to create fade / carousel sliders )
- * -----------
- */
-
-export default class Slider {
-
- /*
-	* Constructor
-	* -----------
-	*/
-
-	constructor( args = {} ) {
-
-	 /*
-		* Public variables
-		* ----------------
-		*/
-
-		this.slider = null;
-		this.items = null;
-		this.loop = false;
-		this.autoplay = false;
-		this.autoplaySpeed = 8000;
-		this.prev = null;
-		this.next = null;
-		this.nav = null;
-		this.navItemClass = '';
-		this.currentIndex = 0;
-
-	 /*
-		* Internal variables
-		* ------------------
-		*/
-
-		this._lastIndex = 0;
-
-		this._autoStart = 0;
-		this._goToAutoplay = this._goToAuto.bind( this );
-
-		this._pause = false;
-		this._requestId;
+/* Imports */
 
-		this._navItems = [];
-		this._navItemsLen = 0;
-		this._dotsLen = 0;
-		this._dotsLastIndex = 0;
+import { mergeObjects } from '../../utils'
 
-		// visible slides
-		this._perPage = 1;
+/* Class */
 
-		// for key events
-		this._KEYS = {
-			ArrowLeft: 'LEFT',
-			37: 'LEFT',
-			ArrowRight: 'RIGHT',
-			39: 'RIGHT',
-			Home: 'HOME',
-			36: 'HOME',
-			End: 'END',
-			35: 'END'
-		};
+class Slider {
+  /**
+   * Constructor
+   */
 
-		// merge default variables with args
-		mergeObjects( this, args );
+  constructor (args = {}) {
+    /**
+     * Public variables
+     */
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    this.slider = null
+    this.items = null
+    this.loop = false
+    this.autoplay = false
+    this.autoplaySpeed = 8000
+    this.prev = null
+    this.next = null
+    this.nav = null
+    this.navItemClass = ''
+    this.currentIndex = 0
 
-		let init = this._initialize();
+    /**
+     * Internal variables
+     */
 
-		if( !init )
-			return false;
-	}
+    this._lastIndex = 0
 
- /*
-	* Initialize
-	* ----------
-	*/
+    this._autoStart = 0
+    this._goToAutoplay = this._goToAuto.bind(this)
 
-	_initialize() {
-		// check for required
-		if( !this.slider || !this.items )
-			return false;
+    this._pause = false
+    this._requestId = null
 
-		this.items = Array.from( this.items );
+    this._navItems = []
+    this._navItemsLen = 0
+    this._dotsLen = 0
+    this._dotsLastIndex = 0
 
-		this._lastIndex = this.items.length - 1;
+    /* Visible slides */
 
-		/* Auto play event listeners and animations */
+    this._perPage = 1
 
-		if( this.autoplay ) {
-			if( this._autoplayDurationsLen == 0 ) {
-				this.slider.addEventListener( 'mouseenter', () => {
-					this._pause = true;
-				} );
+    /* For key events */
 
-				this.slider.addEventListener( 'mouseleave', () => {
-					this._pause = false;
+    this._KEYS = {
+      ArrowLeft: 'LEFT',
+      37: 'LEFT',
+      ArrowRight: 'RIGHT',
+      39: 'RIGHT',
+      Home: 'HOME',
+      36: 'HOME',
+      End: 'END',
+      35: 'END'
+    }
 
-					// restart animation
-					window.requestAnimationFrame( this._goToAutoplay );
-				} );
-			}
+    /* Merge default variables with args */
 
-			// check when window inactive
-			window.addEventListener( 'blur', () => {
-				this._pause = true;
-			} );
+    mergeObjects(this, args)
 
-			window.addEventListener( 'focus', () => {
-				this._pause = false;
+    /**
+     * Initialize
+     */
 
-				// restart animation
-				window.requestAnimationFrame( this._goToAutoplay );
-			} );
+    const init = this._initialize()
 
-			window.requestAnimationFrame( this._goToAutoplay );
-		}
+    if (!init) { return false }
+  }
 
-		/* Keyboard navigation */
+  /**
+   * Initialize
+   */
 
-		this.slider.tabIndex = 0;
-		this.slider.addEventListener( 'keydown', this._keyNav.bind( this ) );
+  _initialize () {
+    /* Check for required */
 
-		return true;
-	}
+    if (!this.slider || !this.items) { return false }
 
- /*
-	* Helpers
-	* -------
-	*/
+    this.items = Array.from(this.items)
 
-	_getPrevIndex( index ) {
-		let prevIndex = index - 1;
+    this._lastIndex = this.items.length - 1
 
-		if( index <= 0 )
-			prevIndex = this.loop ? this._dotsLastIndex : 0;
+    /* Auto play event listeners and animations */
 
-		return prevIndex;
-	}
+    if (this.autoplay) {
+      if (this._autoplayDurationsLen === 0) {
+        this.slider.addEventListener('mouseenter', () => {
+          this._pause = true
+        })
 
-	_getNextIndex( index ) {
-		let nextIndex = index + 1;
+        this.slider.addEventListener('mouseleave', () => {
+          this._pause = false
 
-		if( index >= this._dotsLastIndex )
-			nextIndex = this.loop ? 0 : this._dotsLastIndex;
+          /* Restart animation */
 
-		return nextIndex;
-	}
+          window.requestAnimationFrame(this._goToAutoplay)
+        })
+      }
 
-	_setUpNav( resize = false ) {
-		this._dotsLen = ( this.items.length - this._perPage ) + 1;
-		this._dotsLastIndex = this._dotsLen - 1;
+      /* Check when window inactive */
 
-		if( this.nav && this.navItemClass ) {
-			if( resize ) {
-				this.nav.innerHTML = '';
-				this._navItems = [];
-				this._navItemsLen = 0;
-			}
+      window.addEventListener('blur', () => {
+        this._pause = true
+      })
 
-			let navItems = Array.from( this.nav.querySelectorAll( '.' + this.navItemClass ) );
+      window.addEventListener('focus', () => {
+        this._pause = false
 
-			const setupNavItem = ( item = null, i = 0, classes = '' ) => {
-				let active = i == this.currentIndex ? true : false,
-						setClass = classes ? true : false;
+        /* Restart animation */
 
-				if( active )
-					item.setAttribute( 'data-active', '' );
+        window.requestAnimationFrame(this._goToAutoplay)
+      })
 
-				if( setClass )
-					item.setAttribute( 'class', classes );
+      window.requestAnimationFrame(this._goToAutoplay)
+    }
 
-				item.setAttribute( 'data-index', i );
-				item.addEventListener( 'click', this._nav.bind( this ) );
+    /* Keyboard navigation */
 
-				this._navItems.push( item );
-			};
+    this.slider.tabIndex = 0
+    this.slider.addEventListener('keydown', this._keyNav.bind(this))
 
-			if( navItems.length === 0 ) {
-				navItems = document.createDocumentFragment();
+    return true
+  }
 
-				if( this._dotsLen > 1 ) {
-					for( let i = 0; i < this._dotsLen; i++ ) {
-						let navItem = document.createElement( 'button' );
+  /**
+   * Helpers
+   */
 
-						navItem.type = 'button';
-						navItem.textContent = i;
+  _getPrevIndex (index) {
+    let prevIndex = index - 1
 
-						setupNavItem( navItem, i, this.navItemClass );
+    if (index <= 0) { prevIndex = this.loop ? this._dotsLastIndex : 0 }
 
-						navItems.appendChild( navItem );
-					}
+    return prevIndex
+  }
 
-					this.nav.appendChild( navItems );
-					this.slider.setAttribute( 'data-has-dots', 'true' );
-				} else {
-					this.slider.removeAttribute( 'data-has-dots' );
-				}
-			} else {
-				this.slider.setAttribute( 'data-has-dots', 'true' );
+  _getNextIndex (index) {
+    let nextIndex = index + 1
 
-				navItems.forEach( ( item, i ) => {
-					setupNavItem( item, i );
-				} );
-			}
+    if (index >= this._dotsLastIndex) { nextIndex = this.loop ? 0 : this._dotsLastIndex }
 
-			this._navItemsLen = this._navItems.length;
-		}
+    return nextIndex
+  }
 
-		/* Prev / next navigation */
+  _setUpNav (resize = false) {
+    this._dotsLen = (this.items.length - this._perPage) + 1
+    this._dotsLastIndex = this._dotsLen - 1
 
-		if( this._dotsLen > 1 ) {
-			if( !resize ) {
-				if( this.prev )
-					this.prev.addEventListener( 'click', this._prev.bind( this ) );
+    if (this.nav && this.navItemClass) {
+      if (resize) {
+        this.nav.innerHTML = ''
+        this._navItems = []
+        this._navItemsLen = 0
+      }
 
-				if( this.next )
-					this.next.addEventListener( 'click', this._next.bind( this ) );
-			}
-		} else {
-			if( this.prev )
-				this.prev.style.display = 'none';
+      let navItems = Array.from(this.nav.querySelectorAll('.' + this.navItemClass))
 
-			if( this.next )
-				this.next.style.display = 'none';
-		}
-	}
+      const setupNavItem = (item = null, i = 0, classes = '') => {
+        const active = i === this.currentIndex
+        const setClass = !!classes
 
-	_setNav( index = null, lastIndex = null ) {
-		if( this._navItemsLen ) {
-			if( index !== null && lastIndex !== null ) {
-				this._navItems[lastIndex].removeAttribute( 'data-active' );
-				this._navItems[index].setAttribute( 'data-active', '' );
-			}
-		}
+        if (active) { item.setAttribute('data-active', '') }
 
-		if( this.prev && !this.loop ) {
-			let disable = false;
+        if (setClass) { item.setAttribute('class', classes) }
 
-			if( index <= 0 )
-				disable = true;
+        item.setAttribute('data-index', i)
+        item.addEventListener('click', this._nav.bind(this))
 
-			this.prev.disabled = disable;
-		}
+        this._navItems.push(item)
+      }
 
-		if( this.next && !this.loop ) {
-			let disable = false;
+      if (navItems.length === 0) {
+        navItems = document.createDocumentFragment()
 
-			if( index >= this._dotsLastIndex  )
-				disable = true;
+        if (this._dotsLen > 1) {
+          for (let i = 0; i < this._dotsLen; i++) {
+            const navItem = document.createElement('button')
 
-			this.next.disabled = disable;
-		}
-	}
+            navItem.type = 'button'
+            navItem.textContent = i
 
-	_doGoTo( index ) {
-		if( index < 0 )
-			index = this.loop ? this._dotsLastIndex : 0;
+            setupNavItem(navItem, i, this.navItemClass)
 
-		if( index > this._dotsLastIndex )
-			index = this.loop ? 0 : this._dotsLastIndex;
+            navItems.appendChild(navItem)
+          }
 
-		let lastIndex = this.currentIndex;
+          this.nav.appendChild(navItems)
+          this.slider.setAttribute('data-has-dots', 'true')
+        } else {
+          this.slider.removeAttribute('data-has-dots')
+        }
+      } else {
+        this.slider.setAttribute('data-has-dots', 'true')
 
-		/* Set nav items / prev next buttons */
+        navItems.forEach((item, i) => {
+          setupNavItem(item, i)
+        })
+      }
 
-		this._setNav( index, lastIndex );
+      this._navItemsLen = this._navItems.length
+    }
 
-		/* Set current */
+    /* Prev/next navigation */
 
-		this.currentIndex = index;
+    if (this._dotsLen > 1) {
+      if (!resize) {
+        if (this.prev) { this.prev.addEventListener('click', this._prev.bind(this)) }
 
-		return lastIndex;
-	}
+        if (this.next) { this.next.addEventListener('click', this._next.bind(this)) }
+      }
+    } else {
+      if (this.prev) { this.prev.style.display = 'none' }
 
- /*
-	* Go to slide
-	* -----------
-	*/
+      if (this.next) { this.next.style.display = 'none' }
+    }
+  }
 
-	_goTo( index, init = false ) {
-		if( index === undefined || index === null )
-			return;
+  _setNav (index = null, lastIndex = null) {
+    if (this._navItemsLen) {
+      if (index !== null && lastIndex !== null) {
+        this._navItems[lastIndex].removeAttribute('data-active')
+        this._navItems[index].setAttribute('data-active', '')
+      }
+    }
 
-		this._doGoTo( index );
-	}
+    if (this.prev && !this.loop) {
+      let disable = false
 
-	_goToAuto( now ) {
-		// cancel animation
-		if( this._pause ) {
-			if( this._requestId ) {
-				window.cancelAnimationFrame( this._requestId );
-				this._requestId = false;
-				this._autoStart = 0;
-				return;
-			}
-		}
+      if (index <= 0) { disable = true }
 
-		if( !this._autoStart )
-			this._autoStart = now;
+      this.prev.disabled = disable
+    }
 
-		let progress = now - this._autoStart,
-				timeFraction = progress / this.autoplaySpeed;
+    if (this.next && !this.loop) {
+      let disable = false
 
-		if( timeFraction >= 1 ) {
-			this._goTo( this.currentIndex + 1 );
+      if (index >= this._dotsLastIndex) { disable = true }
 
-			// start timer again
-			this._autoStart = now;
-		}
+      this.next.disabled = disable
+    }
+  }
 
-		this._requestId = window.requestAnimationFrame( this._goToAutoplay );
-	}
+  _doGoTo (index) {
+    if (index < 0) { index = this.loop ? this._dotsLastIndex : 0 }
 
- /*
-	* Event callbacks
-	* ---------------
-	*/
+    if (index > this._dotsLastIndex) { index = this.loop ? 0 : this._dotsLastIndex }
 
-	_nav( e ) {
-		e.preventDefault();
-		this._goTo( parseInt( e.currentTarget.getAttribute( 'data-index' ) ) );
-	}
+    const lastIndex = this.currentIndex
 
-	_keyNav( e ) {
-		let key = e.key || e.keyCode || e.which || e.code,
-				index = null;
+    /* Set nav items/prev next buttons */
 
-		switch( this._KEYS[key] ) {
-			case 'LEFT':
-				index = this.currentIndex - 1;
-				break;
-			case 'RIGHT':
-				index = this.currentIndex + 1;
-				break;
-			case 'HOME':
-				index = 0;
-				break;
-			case 'END':
-				index = this._dotsLastIndex;
-				break;
-		}
+    this._setNav(index, lastIndex)
 
-		if( index !== null ) {
-			this._goTo( index );
-		}
-	}
+    /* Set current */
 
-	_prev( e ) {
-		e.preventDefault();
-		this._goTo( this._getPrevIndex( this.currentIndex ) );
-	}
+    this.currentIndex = index
 
-	_next( e ) {
-		e.preventDefault();
-		this._goTo( this._getNextIndex( this.currentIndex ) );
-	}
+    return lastIndex
+  }
 
- /*
-	* Public methods
-	* ---------------
-	*/
+  /**
+   * Go to slide
+   */
 
-	goTo( index ) {
-		this._goTo( index );
-	}
+  _goTo (index, init = false) {
+    if (index === undefined || index === null) { return }
 
-} // end Slider
+    this._doGoTo(index)
+  }
+
+  _goToAuto (now) {
+    /* Cancel animation */
+
+    if (this._pause) {
+      if (this._requestId) {
+        window.cancelAnimationFrame(this._requestId)
+        this._requestId = false
+        this._autoStart = 0
+        return
+      }
+    }
+
+    if (!this._autoStart) { this._autoStart = now }
+
+    const progress = now - this._autoStart
+    const timeFraction = progress / this.autoplaySpeed
+
+    if (timeFraction >= 1) {
+      this._goTo(this.currentIndex + 1)
+
+      /* Start timer again */
+
+      this._autoStart = now
+    }
+
+    this._requestId = window.requestAnimationFrame(this._goToAutoplay)
+  }
+
+  /**
+   * Event handlers
+   */
+
+  _nav (e) {
+    e.preventDefault()
+    this._goTo(parseInt(e.currentTarget.getAttribute('data-index')))
+  }
+
+  _keyNav (e) {
+    const key = e.key || e.keyCode || e.which || e.code
+    let index = null
+
+    switch (this._KEYS[key]) {
+      case 'LEFT':
+        index = this.currentIndex - 1
+        break
+      case 'RIGHT':
+        index = this.currentIndex + 1
+        break
+      case 'HOME':
+        index = 0
+        break
+      case 'END':
+        index = this._dotsLastIndex
+        break
+    }
+
+    if (index !== null) {
+      this._goTo(index)
+    }
+  }
+
+  _prev (e) {
+    e.preventDefault()
+    this._goTo(this._getPrevIndex(this.currentIndex))
+  }
+
+  _next (e) {
+    e.preventDefault()
+    this._goTo(this._getNextIndex(this.currentIndex))
+  }
+
+  /**
+   * Public methods
+   */
+
+  goTo (index) {
+    this._goTo(index)
+  }
+} // End Slider
+
+/* Exports */
+
+export default Slider

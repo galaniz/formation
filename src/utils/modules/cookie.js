@@ -1,7 +1,5 @@
-
-/*
- * Set and get browser cookie
- * --------------------------
+/**
+ * Utility modules: set and get browser cookie
  *
  * setCookie
  *
@@ -15,33 +13,37 @@
  * @return [string]
  */
 
-const setCookie = ( name, value, expirationDays ) => {
-	let expires = '';
+/* Modules */
 
-	if( expirationDays ) {
-	  const d = new Date();
+const setCookie = (name, value, expirationDays) => {
+  let expires = ''
 
-	  d.setTime( d.getTime() + expirationDays * 24 * 60 * 60 * 1000 );
-	  
-	  expires = `expires=${ d.toUTCString() };`;
-	}
+  if (expirationDays) {
+    const d = new Date()
 
-  document.cookie = `${ name }=${ value };${ expires }path=/`;
-};
+    d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000)
 
-const getCookie = ( name ) => {
-  const cookies = document.cookie.split( ';' );
-
-  for( let i = 0; i < cookies.length; i++ ) {
-  	let cookie = cookies[i];
-  	let c = cookie.split( '=' );
-
-  	if( c[0].trim() === name ) {
-  		return c[1];
-  	}
+    expires = `expires=${d.toUTCString()};`
   }
 
-  return '';
-};
+  document.cookie = `${name}=${value};${expires}path=/`
+}
 
-export { setCookie, getCookie };
+const getCookie = (name) => {
+  const cookies = document.cookie.split(';')
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i]
+    const c = cookie.split('=')
+
+    if (c[0].trim() === name) {
+      return c[1]
+    }
+  }
+
+  return ''
+}
+
+/* Exports */
+
+export { setCookie, getCookie }

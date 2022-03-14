@@ -1,36 +1,37 @@
-
-/*
- * Check if element contains class(es)
- * -----------------------------------
- * 
+/**
+ * Utility modules: check if element contains class(es)
+ *
  * @param item [HTMLElement]
  * @param classes [string] of classes separated by space
  * @param all [boolean] contains all classes
  */
 
-export const hasClass = ( item, classes, all = true ) => {
-  if( !item || !classes )
-    return;
+/* Module */
 
-  let currentClasses = item.className.split( ' ' ),
-      hasClasses = all;
-      classes = classes.split( ' ' );
-    
-  classes.forEach( ( c ) => {
-    let classPos = currentClasses.indexOf( c ); 
+const hasClass = (item, classes, all = true) => {
+  if (!item || !classes) { return }
 
-    if( all ) {
-      if( classPos === -1 ) {
-        hasClasses = false;
-        return;
+  const currentClasses = item.className.split(' ')
+  let hasClasses = all
+  classes = classes.split(' ')
+
+  classes.forEach((c) => {
+    const classPos = currentClasses.indexOf(c)
+
+    if (all) {
+      if (classPos === -1) {
+        hasClasses = false
       }
     } else {
-      if( classPos !== -1 ) {
-        hasClasses = true;
-        return;
+      if (classPos !== -1) {
+        hasClasses = true
       }
     }
-  } );
+  })
 
-  return hasClasses;
-};
+  return hasClasses
+}
+
+/* Exports */
+
+export { hasClass }

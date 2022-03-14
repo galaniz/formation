@@ -1,20 +1,17 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility functions: get color from $colors map
  */
 
-@use 'sass:map';
-@use '../../config' as con;
+@use "sass:map";
+@use "../../config" as con;
 
-/*
- * Get color from $colors map
- * --------------------------
+/**
+ * Function
  *
  * @param [string] $color
  * @return [string]
  */
- 
-@function getColor( $color: 'background-light' ) {
-	@return map.get( con.$colorsFlat, $color );
+
+@function get-color($color: "background-light") {
+  @return map.get(con.$colors-flat, $color);
 }

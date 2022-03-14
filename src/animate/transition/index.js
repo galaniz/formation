@@ -1,52 +1,59 @@
-
-/*
- * Complete page transition on link click
- * --------------------------------------
+/**
+ * Animate: transition page on link click
+ *
+ * @param links [array] of [HTMLElement]
+ * @param transitionElement [HTMLElement]
+ * @param delay [int]
+ * @param init [boolean] or [function]
+ * @param beforeShow [boolean] or [function]
  */
 
-let t = null,
-		d = 800,
-		run = true,
-		b = () => {};
+/* Variables */
 
-const clickHandler = ( e ) => {
-	e.preventDefault();
+let t = null
+let d = 800
+let run = true
+let b = () => {}
 
-	if( !run )
-		return;
+/* Event handlers */
 
-	let url = e.currentTarget.href;
+const clickHandler = (e) => {
+  e.preventDefault()
 
-	b();
+  if (!run) { return }
 
-	t.setAttribute( 'data-show', '' );
+  const url = e.currentTarget.href
 
-	setTimeout( () => {
-		window.location = url;
-	}, d );
-};
+  b()
 
-const transition = ( links = [], transitionElement = null, delay = 800, init = false, beforeShow = false ) => {
-	if( !links || !transitionElement )
-		return;
+  t.setAttribute('data-show', '')
 
-	t = transitionElement;
-	d = delay;
+  setTimeout(() => {
+    window.location = url
+  }, d)
+}
 
-	if( beforeShow )
-		b = beforeShow;
+/* Modules */
 
-	links.forEach( ( link ) => {
-		if( link.href.indexOf( '#' ) == -1 )
-			link.addEventListener( 'click', clickHandler );
-	} );
+const transition = (links = [], transitionElement = null, delay = 800, init = false, beforeShow = false) => {
+  if (!links || !transitionElement) { return }
 
-	if( init )
-		init();
-};
+  t = transitionElement
+  d = delay
 
-const setTransitionRun = ( r ) => {
-	run = r;
-};
+  if (beforeShow) { b = beforeShow }
 
-export { transition, setTransitionRun };
+  links.forEach((link) => {
+    if (link.href.indexOf('#') === -1) { link.addEventListener('click', clickHandler) }
+  })
+
+  if (init) { init() }
+}
+
+const setTransitionRun = (r) => {
+  run = r
+}
+
+/* Exports */
+
+export { transition, setTransitionRun }

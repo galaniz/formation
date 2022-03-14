@@ -1,53 +1,53 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects aspect ratio
  */
 
-@use 'mixins' as mix;
-@use '../../config' as con;
+/* Imports */
 
-/*
- * Aspect ratio
- * ------------
- */
+@use "mixins" as mix;
+@use "../../config" as con;
+
+/* Styles */
 
 .o-aspect-ratio {
-	@extend %u-position-relative;
-	@extend %u-overflow-hidden;
+  @extend %u-position-relative;
+  @extend %u-overflow-hidden;
 
-	&::before {
-		@extend %u-content-empty;
-		@extend %u-display-block;
-		padding-top: 100%;
-	}
+  &::before {
+    @extend %u-content-empty;
+    @extend %u-display-block;
 
-	@include mix.aspectRatioPadding( con.$aspectRatioPadding );
-	
-	&[data-circle] {
-		@extend %u-border-radius-100;
-		-webkit-mask-image: -webkit-radial-gradient( white, black );
-	}
+    padding-top: 100%;
+  }
+
+  @include mix.aspect-ratio-padding(con.$aspect-ratio-padding);
+
+  &[data-circle] {
+    @extend %u-border-radius-100;
+
+    mask-image: radial-gradient(white, black);
+  }
 }
 
 .o-aspect-ratio__media {
-	@extend %u-position-absolute;
-	@extend %u-top-0;
-	@extend %u-left-0;
-	@extend %u-right-0;
-	@extend %u-width-100;
-	@extend %u-height-100;
-	object-fit: cover;
+  @extend %u-position-absolute;
+  @extend %u-top-0;
+  @extend %u-left-0;
+  @extend %u-width-100;
+  @extend %u-height-100;
+
+  object-fit: cover;
 }
 
 .o-aspect-ratio__video {
-	@extend %u-position-absolute;
-	top: 50%;
-	left: 50%;
-	width: auto;
-	min-width: 100%;
-	height: auto;
-	min-height: 100%;
-	transform: translateX( -50% ) translateY( -50% );
-	max-width: none;
+  @extend %u-position-absolute;
+
+  top: 50%;
+  left: 50%;
+  width: auto;
+  min-width: 100%;
+  height: auto;
+  min-height: 100%;
+  transform: translateX(-50%) translateY(-50%);
+  max-width: none;
 }

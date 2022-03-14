@@ -1,20 +1,21 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects aspect ratio: mixins
  */
 
-@use 'sass:math';
+/* Imports */
 
-/*
- * Aspect ratio padding
- * --------------------
+@use "sass:math";
+
+/**
+ * Output padding as a percentage
+ *
+ * @param [map] $aspect-ratio-padding
  */
 
-@mixin aspectRatioPadding( $aspectRatioPadding ) {
-  @each $p in $aspectRatioPadding {
-	  &[data-p="#{ $p * 100 }"]::before {
-	    padding-top: math.percentage( $p );
-	  }
+@mixin aspect-ratio-padding($aspect-ratio-padding) {
+  @each $p in $aspect-ratio-padding {
+    &[data-p="#{$p * 100}"]::before {
+      padding-top: math.percentage($p);
+    }
   }
 }

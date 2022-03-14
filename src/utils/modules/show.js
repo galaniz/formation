@@ -1,17 +1,20 @@
-
-/*
- * Show / hide html element
- * ------------------------
- * 
+/**
+ * Utility modules: show/hide html element
+ *
  * @param item [HTMLElement]
  * @param show [boolean]
  */
 
-export const show = ( item, show = true ) => {
-	if( !item )
-		return; 
+/* Module */
 
-	let display = show ? 'block' : 'none';
+const show = (item, show = true) => {
+  if (!item) { return }
 
-	item.style.display = display;
-};
+  const display = show ? 'block' : 'none'
+
+  item.style.display = display
+}
+
+/* Exports */
+
+export { show }

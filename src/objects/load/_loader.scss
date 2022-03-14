@@ -1,40 +1,40 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects loader
  */
 
-@use '../../config' as con;
-@use '../../utils/functions' as func;
+/* Imports */
 
-/*
- * Loader
- * ------
- */
+@use "sass:map";
+@use "../../config" as con;
 
-#{ con.$loaderSelector } {
-	@extend %u-position-absolute;
-	@extend %u-top-0;
-	@extend %u-bottom-0;
-	@extend %u-left-0;
-	@extend %u-right-0;
-	@extend %u-opacity-1;
-	@extend %u-background-color-inherit;
-	z-index: func.mapDeepGet( con.$zIndex, 'loader', 'def' );
-	transition: 
-		opacity #{ con.$defDuration } #{ con.$defTimingFunction } 10ms, 
-		z-index 0ms #{ con.$defTimingFunction };
+/* Styles */
 
-	&[data-hide] {
-		@extend %u-opacity-0;
-		z-index: -1 !important;
-		transition: 
-			opacity #{ con.$defDuration } #{ con.$defTimingFunction }, 
-			z-index 0ms #{ con.$defTimingFunction } #{ con.$defDuration };
-	}
+.o-loader {
+  @extend %u-position-absolute;
+  @extend %u-top-0;
+  @extend %u-bottom-0;
+  @extend %u-left-0;
+  @extend %u-right-0;
+  @extend %u-opacity-1;
+  @extend %u-background-color-inherit;
 
-	&[data-page] {
-		@extend %u-position-fixed;
-		z-index: func.mapDeepGet( con.$zIndex, 'loader', 'page' );
-	}
+  z-index: map.get(con.$z-index, "loader", "def");
+  transition:
+    opacity #{con.$def-duration} #{con.$def-timing-function} 10ms,
+    z-index 0ms #{con.$def-timing-function};
+
+  &[data-page] {
+    @extend %u-position-fixed;
+
+    z-index: map.get(con.$z-index, "loader", "page");
+  }
+
+  &[data-hide] {
+    @extend %u-opacity-0;
+
+    z-index: -1;
+    transition:
+      opacity #{con.$def-duration} #{con.$def-timing-function},
+      z-index 0ms #{con.$def-timing-function} #{con.$def-duration};
+  }
 }

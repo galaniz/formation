@@ -1,23 +1,17 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility mixins: font size in rem units
  */
 
-@use '../functions/calc-rem-em' as c;
+/* Imports */
 
-/*
- * Font size in rem units
- * ----------------------
+@use "../functions/calc-rem" as c;
+
+/**
+ * Mixin
  *
  * @param [number] $size
- * @param [boolean] $important
  */
 
-@mixin fontRem( $size, $important: false ) {
-  @if $important {
-  	font-size: c.calcRem( $size ) !important;
-  } @else {
-  	font-size: c.calcRem( $size );
-  }
+@mixin font-rem($size) {
+  font-size: c.calc-rem($size);
 }

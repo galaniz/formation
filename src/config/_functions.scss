@@ -1,64 +1,63 @@
-
-/*
- * Imports
- * -------
+/**
+ * Config: functions
  */
 
-@use 'sass:map';
-@use 'sass:meta';
+/* Imports */
 
-/* 
+@use "sass:map";
+@use "sass:meta";
+
+/**
  * Convert map to one level map
- * ----------------------------
  *
  * @param [map] $map
- * @param [map] $newMap
+ * @param [map] $new-map
  * @param [string] $prefix
- * @param [null/string] $newPrefix
+ * @param [null/string] $new-prefix
  *
  * @return [map]
  */
 
-@function mapFlatten( $map, $newMap, $prefix: '', $newPrefix: null ) {
-	@each $key, $value in $map {
-		@if( meta.type-of( $value ) == map ) {
-			$nPrefix: "#{ $key }";
+@function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {
+  @each $key, $value in $map {
+    @if meta.type-of($value) == map {
+      $n-prefix: "#{$key}";
 
-			@if( $newPrefix ) {
-				$k: "#{ $key }";
+      @if $new-prefix {
+        $k: "#{$key}";
 
-				@if( $key != '' ) {
-					$k: "-#{ $key }";
-				}
+        @if $key != "" {
+          $k: "-#{$key}";
+        }
 
-				@if( $key == def ) {
-					$k: '';
-				}
-				
-				$nPrefix: "#{ $newPrefix }#{ $k }";
-			}
+        @if $key == def {
+          $k: "";
+        }
 
-			$newMap: mapFlatten( $value, $newMap, $prefix, $nPrefix );
-		} @else {
-			$newKey: "#{ $key }";
+        $n-prefix: "#{$new-prefix}#{$k}";
+      }
 
-			@if( $prefix != '' ) {
-				$newKey: "#{ $prefix }-#{ $key }";
-			}
+      $new-map: map-flatten($value, $new-map, $prefix, $n-prefix);
+    } @else {
+      $new-key: "#{$key}";
 
-			@if( $newPrefix ) {
-				@if( $prefix != '' ) {
-					$newKey: "#{ $prefix }-#{ $newPrefix }-#{ $key }";
-				} @else {
-					$newKey: "#{ $newPrefix }-#{ $key }";
-				}   
-			}
+      @if $prefix != "" {
+        $new-key: "#{$prefix}-#{$key}";
+      }
 
-			$newMap: map.merge( $newMap, ( $newKey: $value ) );
-		}
-	}
+      @if $new-prefix {
+        @if $prefix != "" {
+          $new-key: "#{$prefix}-#{$new-prefix}-#{$key}";
+        } @else {
+          $new-key: "#{$new-prefix}-#{$key}";
+        }
+      }
 
-	$newMap: map.merge( $newMap, $newMap );
+      $new-map: map.merge($new-map, ($new-key: $value));
+    }
+  }
 
-	@return $newMap;
+  $new-map: map.merge($new-map, $new-map);
+
+  @return $new-map;
 }

@@ -1,258 +1,268 @@
-
-/*
- * Imports
- * -------
+/**
+ * Layouts: masonry by placing items into columns
+ *
+ * @param args [object] {
+ *  @param container [HTMLElement]
+ *  @param items nodelist of [HTMLElement]
+ *  @param breakpoints [array]
+ *  @param column [object] {
+ *   @param tag [string]
+ *   @param class [string]
+ *  }
+ * }
  */
 
-import { mergeObjects } from '../../utils';
+/* Imports */
 
-/*
- * Places items into columns to emulate masonry effect
- * ---------------------------------------------------
- */
+import { mergeObjects } from '../../utils'
 
-export default class Masonry {
+/* Class */
 
- /*
-	* Constructor
-	* -----------
-	*/
+class Masonry {
+  /**
+   * Constructor
+   */
 
-	constructor( args ) {
+  constructor (args) {
+    /**
+     * Public variables
+     */
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+    this.container = null
+    this.items = null
+    this.breakpoints = []
+    this.column = {
+      tag: 'div',
+      class: ''
+    }
 
-		this.container = null;
-		this.items = null;
-		this.breakpoints = [];
-		this.column = {
-			tag: 'div',
-			class: ''
-		};
+    mergeObjects(this, args)
 
-		// merge default variables with args
-		mergeObjects( this, args );
+    /**
+     * Internal variables (more set in init)
+     */
 
-	 /*
-		* Internal variables ( more set in init )
-		* ------------------
-		*/
+    /* Store break point ranges */
 
-		// store break point ranges
-		this._bkRanges = [];
+    this._bkRanges = []
 
-		// for throttling resize event
-		this._resizeTimer;
+    /* For throttling resize event */
 
-		// for resize event and arrange
-		this._viewportWidth = window.innerWidth;
+    this._resizeTimer = null
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    /* For resize event and arrange */
 
-		let init = this._initialize();
+    this._viewportWidth = window.innerWidth
 
-		if( !init )
-			return false;
-	}
+    /**
+     * Initialize
+     */
 
- /*
-	* Initialize
-	* ----------
-	*/
+    const init = this._initialize()
 
-	_initialize() {
-		// check that required variables not null
-		if( !this.container || !this.items || this.items.length === 0 )
-			return false;
+    if (!init) { return false }
+  }
 
-		// convert items to array
-		this.items = Array.from( this.items );
+  /**
+   * Initialize
+   */
 
-		// store number of items
-		this._itemsLength = this.items.length;
+  _initialize () {
+    /* Check that required variables not null */
 
-		// set breakpoint ranges
-		let breakpointLength = this.breakpoints.length;
+    if (!this.container || !this.items || this.items.length === 0) { return false }
 
-		this.breakpoints.forEach( ( bk, i ) => {
-			let low = 0,
-					high = bk.width,
-					cols = 1;
+    /* Convert items to array */
 
-			if( i > 0 ) {
-				low = this.breakpoints[i - 1]['width'];
-				cols = this.breakpoints[i - 1]['cols'];
-			}
+    this.items = Array.from(this.items)
 
-			this._bkRanges.push( {
-				high: high,
-				low: low,
-				cols: cols
-			} );
+    /* Store number of items */
 
-			if( i == breakpointLength - 1 ) {
-				low = bk.width;
-				high = 99999;
-				cols = bk.cols;
+    this._itemsLength = this.items.length
 
-				this._bkRanges.push( {
-					high: high,
-					low: low,
-					cols: cols
-				} );
-			}
-		} );
+    /* Set breakpoint ranges */
 
-		// store number of breakpoint ranges
-		this._bkRangesLength = this._bkRanges.length;
+    const breakpointLength = this.breakpoints.length
 
-		// event listeners
-		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
+    this.breakpoints.forEach((bk, i) => {
+      let low = 0
+      let high = bk.width
+      let cols = 1
 
-		// arrange into columns
-		this._arrange();
-	}
+      if (i > 0) {
+        low = this.breakpoints[i - 1].width
+        cols = this.breakpoints[i - 1].cols
+      }
 
- /*
-	* Determine columns from what range currently in
-	* ----------------------------------------------
-	*/
+      this._bkRanges.push({
+        high: high,
+        low: low,
+        cols: cols
+      })
 
-	_arrange() {
-		let currentRange;
+      if (i === breakpointLength - 1) {
+        low = bk.width
+        high = 99999
+        cols = bk.cols
 
-		for( let i = 0; i < this._bkRangesLength; i++ ) {
-			let bkRange = this._bkRanges[i],
-					low = bkRange.low,
-					high = bkRange.high;
+        this._bkRanges.push({
+          high: high,
+          low: low,
+          cols: cols
+        })
+      }
+    })
 
-			if( this._viewportWidth >= low && this._viewportWidth < high ) {
-				currentRange = this._bkRanges[i];
-				break;
-			}
-		}
+    /* Store number of breakpoint ranges */
 
-		this._wrapItems( currentRange.cols );
-	}
+    this._bkRangesLength = this._bkRanges.length
 
- /*
-	* Wrap and unwrap helper methods
-	* ------------------------------
-	*/
+    /* Event listeners */
 
-	_wrapItems( cols ) {
-		let fragment = document.createDocumentFragment(),
-				interval = Math.round( this._itemsLength / cols ),
-				colItems = {},
-				colHeights = [],
-				colKeys = [],
-				itemCols = [],
-				itemHeights = [],
-				indexTracker = 0;
+    window.addEventListener('resize', this._resizeHandler.bind(this))
 
-		for( let i = 0; i < cols; i++ ) {
-			colItems[i] = [];
-			colHeights[i] = 0;
-			colKeys.push( i );
-		}
+    /* Arrange into columns */
 
-		this.items.forEach( ( item, index ) => {
-			itemCols[index] = indexTracker;
-			colItems[indexTracker].push( item );
+    this._arrange()
+  }
 
-			indexTracker++;
+  /**
+   * Determine columns from what current range
+   */
 
-			if( colKeys.indexOf( indexTracker ) == -1 )
-				indexTracker = 0;
+  _arrange () {
+    let currentRange
 
-			indexTracker = colKeys[indexTracker];
-		} );
+    for (let i = 0; i < this._bkRangesLength; i++) {
+      const bkRange = this._bkRanges[i]
+      const low = bkRange.low
+      const high = bkRange.high
 
-		for( let index in colItems ) {
-			let elem = document.createElement( this.column.tag );
-					elem.setAttribute( 'class', this.column.class );
+      if (this._viewportWidth >= low && this._viewportWidth < high) {
+        currentRange = this._bkRanges[i]
+        break
+      }
+    }
 
-			colItems[index].forEach( ( item ) => {
-				elem.appendChild( item );
-			} );
+    this._wrapItems(currentRange.cols)
+  }
 
-			fragment.appendChild( elem );
-		}
+  /**
+   * Wrap and unwrap helper methods
+   */
 
-		this.container.innerHTML = '';
-		this.container.appendChild( fragment );
+  _wrapItems (cols) {
+    const fragment = document.createDocumentFragment()
+    const colItems = {}
+    const colHeights = []
+    const colKeys = []
+    const itemCols = []
+    const itemHeights = []
+    let indexTracker = 0
 
-		/* Hack for trying to equalize column heights a bit */
+    for (let i = 0; i < cols; i++) {
+      colItems[i] = []
+      colHeights[i] = 0
+      colKeys.push(i)
+    }
 
-		// get offsets of all items
-		let offsets = [];
+    this.items.forEach((item, index) => {
+      itemCols[index] = indexTracker
+      colItems[indexTracker].push(item)
 
-		this.items.forEach( ( item, index ) => {
-			offsets.push( item.offsetTop );
+      indexTracker++
 
-			let itemHeight = item.clientHeight;
-			
-			colHeights[itemCols[index]] += itemHeight;
-			itemHeights[index] = itemHeight;
-		} );
+      if (colKeys.indexOf(indexTracker) === -1) { indexTracker = 0 }
 
-		// get last item (visually)
-		let maxOffset = Math.max( ...offsets ),
-				lastVisualItemIndex = offsets.indexOf( maxOffset );
+      indexTracker = colKeys[indexTracker]
+    })
 
-		colHeights[itemCols[lastVisualItemIndex]] -= itemHeights[lastVisualItemIndex];
+    for (const index in colItems) {
+      const elem = document.createElement(this.column.tag)
+      elem.setAttribute('class', this.column.class)
 
-		// Get smallest column
-		let smCol = Math.min( ...colHeights ),
-				smColIndex = colHeights.indexOf( smCol ),
-				smColContainer = this.container.children[smColIndex];
+      colItems[index].forEach((item) => {
+        elem.appendChild(item)
+      })
 
-		smColContainer.appendChild( this.items[lastVisualItemIndex] );
-	}
+      fragment.appendChild(elem)
+    }
 
- /*
-	* Event Handlers
-	* --------------
-	*/
+    this.container.innerHTML = ''
+    this.container.appendChild(fragment)
 
-	_resizeHandler() {
-		// throttles resize event
-		clearTimeout( this._resizeTimer );
+    /**
+     * Hack for trying to equalize column heights a bit
+     */
 
-		this._resizeTimer = setTimeout( () => {
-			let viewportWidth = window.innerWidth;
+    /* Get offsets of all items */
 
-			if( viewportWidth != this._viewportWidth ) {
-				this._viewportWidth = viewportWidth;
-			} else {
-				return;
-			}
+    const offsets = []
 
-			this._arrange();
-		}, 100 );
-	}
+    this.items.forEach((item, index) => {
+      offsets.push(item.offsetTop)
 
- /*
-	* Public methods
-	* --------------
-	*/
+      const itemHeight = item.clientHeight
 
-	addItems( items ) {
-		items = Array.from( items );
+      colHeights[itemCols[index]] += itemHeight
+      itemHeights[index] = itemHeight
+    })
 
-		items.forEach( ( item ) => {
-			this.items.push( item );
-		} );
+    /* Get last item (visually) */
 
-		this._itemsLength = this.items.length;
+    const maxOffset = Math.max(...offsets)
+    const lastVisualItemIndex = offsets.indexOf(maxOffset)
 
-		this._arrange();
-	}
+    colHeights[itemCols[lastVisualItemIndex]] -= itemHeights[lastVisualItemIndex]
 
-} // end Masonry
+    /* Get smallest column */
+
+    const smCol = Math.min(...colHeights)
+    const smColIndex = colHeights.indexOf(smCol)
+    const smColContainer = this.container.children[smColIndex]
+
+    smColContainer.appendChild(this.items[lastVisualItemIndex])
+  }
+
+  /**
+   * Event handlers
+   */
+
+  _resizeHandler () {
+    /* Throttles resize event */
+
+    clearTimeout(this._resizeTimer)
+
+    this._resizeTimer = setTimeout(() => {
+      const viewportWidth = window.innerWidth
+
+      if (viewportWidth !== this._viewportWidth) {
+        this._viewportWidth = viewportWidth
+      } else {
+        return
+      }
+
+      this._arrange()
+    }, 100)
+  }
+
+  /**
+   * Public methods
+   */
+
+  addItems (items) {
+    items = Array.from(items)
+
+    items.forEach((item) => {
+      this.items.push(item)
+    })
+
+    this._itemsLength = this.items.length
+
+    this._arrange()
+  }
+} // End Masonry
+
+/* Exports */
+
+export default Masonry

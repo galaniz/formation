@@ -1,38 +1,33 @@
-
-/*
- * Imports
- * -------
- */
-
-@use '../config';
-
-/*
+/**
  * Base
- * ----
  */
+
+/* Imports */
+
+@use "../config";
+
+/* Styles */
 
 * {
-	@extend %u-color-inherit;
+  @extend %u-color-inherit;
 }
 
 *,
-*:before,
-*:after {
-	box-sizing: border-box;
-	-webkit-tap-highlight-color: transparent;
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body {
-	-ms-overflow-style: -ms-autohiding-scrollbar;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	overscroll-behavior-y: none;
-	font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+  font-size: 100%;
 
-	&.u-o-h {
-		-webkit-overflow-scrolling: touch;
-	}
+  &.u-o-h {
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Resets */
@@ -53,8 +48,29 @@ textarea,
 button,
 fieldset,
 figure {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Links */
+
+a {
+  text-decoration: none;
+
+  h1 &,
+  h2 &,
+  h3 &,
+  h4 &,
+  h5 &,
+  h6 & {
+    @extend %u-color-inherit;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    outline: 0;
+  }
 }
 
 /* Misc resets */
@@ -64,69 +80,38 @@ iframe,
 img,
 object,
 video {
-	max-width: 100%;
+  max-width: 100%;
 }
 
 embed,
 img,
 object,
 video {
-	height: auto;
+  height: auto;
 }
 
 img {
-	@extend %u-display-block;
+  @extend %u-display-block;
 }
 
-address{
-	font-style: normal;
+address {
+  font-style: normal;
 }
 
 main,
 time {
-	@extend %u-display-block;
-}
-
-/* Links */
-
-a {
-	text-decoration: none;
-	
-	&:hover,
-	&:active,
-	&:focus {
-		outline: 0;
-	}
-}
-
-/* Headings */
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	& a {
-		@extend %u-color-inherit;
-	}
+  @extend %u-display-block;
 }
 
 /* Lists */
 
 ol,
 ul {
-	list-style: none;
+  list-style: none;
 }
 
 /* Svg */
 
 svg {
-	fill: inherit;
-}
-
-/* Hide recaptcha badge */
-
-.grecaptcha-badge {
-	width: 0 !important;
+  fill: inherit;
 }

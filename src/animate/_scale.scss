@@ -1,17 +1,12 @@
-
-/*
- * Imports
- * -------
+/**
+ * Animate: scale in and out
  */
 
-@use 'mixins' as mix;
-@use '../config' as con;
+/* Imports */
 
-/*
- * Scale in and out
- * ----------------
- */
+@use "mixins" as mix;
+@use "../config" as con;
 
 /* Output classes */
 
-@include mix.transitionScale( con.$transitions );
+@include mix.transition-scale(con.$transitions);

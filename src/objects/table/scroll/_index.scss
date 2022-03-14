@@ -1,22 +1,20 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects table scroll
  */
 
-@use '../../../config' as con;
+/* Imports */
 
-/*
- * Table Scroll
- * ------------
- */
+@use "../../../config" as con;
 
-#{ con.$tableScrollSelector } {
-	overflow-x: auto;
-	
-	table {
-		@extend %u-width-100;
-	  border-collapse: collapse;
-	  border-spacing: 0;
-	}
+/* Styles */
+
+.o-table-scroll {
+  overflow-x: auto;
+
+  table {
+    @extend %u-width-100;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 }

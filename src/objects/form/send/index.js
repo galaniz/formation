@@ -1,244 +1,269 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects form: send and validate form with Google reCAPTCHA
+ *
+ * @param args [object] {
+ *  @param id [string]
+ *  @param form [HTMLElement]
+ *  @param groupClass [string]
+ *  @param fieldClass [string]
+ *  @param labelClass [string]
+ *  @param errorClass [string]
+ *  @param submit [HTMLElement]
+ *  @param inputs nodelist of [HTMLElement]
+ *  @param filterInputs [boolean]
+ *  @param data [object]
+ *  @param loaders [array]
+ *  @param shake [boolean]
+ *  @param siteKey [string]
+ *  @param url [string]
+ *  @param success [function]
+ *  @param error [function]
+ *  @param result [object] {
+ *   @param container [HTMLElement]
+ *   @param textContainer [HTMLElement]
+ *   @param text [object] {
+ *    @param error [string]
+ *    @param success [string]
+ *   }
+ *  }
+ * }
  */
+
+/* Imports */
 
 import {
-	addClass,
-	removeClass,
-	mergeObjects,
-	setLoaders,
-	request
-} from '../../../utils';
+  addClass,
+  removeClass,
+  mergeObjects,
+  setLoaders,
+  request
+} from '../../../utils'
 
-import Form from '../index';
+import Form from '../index'
 
-/*
- * Handle validating and sending forms with Google reCAPTCHA
- * ---------------------------------------------------------
- */
+/* Class */
 
-export default class Send {
+class Send {
+  /**
+   * Constructor
+   */
 
- /*
-	* Constructor
-	* -----------
-	*/
+  constructor (args) {
+    /*
+     * Public variables
+     */
 
-	constructor( args ) {
+    this.id = ''
+    this.form = null
+    this.groupClass = ''
+    this.fieldClass = ''
+    this.labelClass = ''
+    this.errorClass = ''
+    this.submit = null
+    this.inputs = null
+    this.filterInputs = false
+    this.data = {}
+    this.loaders = []
+    this.shake = false
+    this.siteKey = ''
+    this.url = ''
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+    this.success = () => {}
+    this.error = () => {}
 
-		this.id = '';
-		this.form = null;
-		this.groupClass = '';
-		this.fieldClass = '';
-		this.labelClass = '';
-		this.errorClass = '';
-		this.submit = null;
-		this.inputs = null;
-		this.filterInputs = false;
-		this.data = {};
-		this.loaders = [];
-		this.shake = false;
-		this.siteKey = '';
-		this.url = '';
+    this.result = {
+      container: null,
+      textContainer: null,
+      text: {
+        error: '',
+        success: ''
+      }
+    }
 
-		this.success = () => {};
-		this.error = () => {};
+    /* Merge default variables with args */
 
-		this.result = {
-			container: null,
-			textContainer: null,
-			text: {
-				error: '',
-				success: ''
-			}
-		};
+    mergeObjects(this, args)
 
-		// merge default variables with args
-		mergeObjects( this, args );
+    /**
+     * Internal variables
+     */
 
-	 /*
-		* Internal variables
-		* ------------------
-		*/
+    /* Form for validation */
 
-		// form for validation
-		this._form = null;
+    this._form = null
 
-		// keep track of error / success
-		this._error = false;
+    /* Keep track of error/success */
 
-		// default messages
-		this._defaultErrorMessage = 'Oops! Looks like something went wrong. Please try again later.';
-		this._defaultSuccessMessage = 'Successfully sent!';
+    this._error = false
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    /* Default messages */
 
-		let init = this._initialize();
+    this._defaultErrorMessage = 'Oops! Looks like something went wrong. Please try again later.'
+    this._defaultSuccessMessage = 'Successfully sent!'
 
-		if( !init )
-			return false;
-	}
+    /**
+     * Initialize
+     */
 
- /*
-	* Initialize
-	* ----------
-	*/
+    const init = this._initialize()
 
-	_initialize() {
-		// check that required variables not empty / null
-		if( !this.id ||
-				!this.form || 
-				!this.groupClass ||
-				!this.fieldClass ||
-				!this.labelClass || 
-				!this.submit || 
-				!this.inputs ||
-				!this.loaders || 
-				!this.siteKey ||
-				!this.url )
-			return false;
+    if (!init) { return false }
+  }
 
-		// default messages if none
-		if( !this.result.text.hasOwnProperty( 'error' ) )
-			this.result.text.error = this._defaultErrorMessage;
+  /**
+   * Initialize
+   */
 
-		if( !this.result.text.error )
-			this.result.text.error = this._defaultErrorMessage;
+  _initialize () {
+    /* Check that required variables not empty/null */
 
-		if( !this.result.text.hasOwnProperty( 'success' ) )
-			this.result.text.success = this._defaultSuccessMessage;
+    if (!this.id || !this.form || !this.groupClass || !this.fieldClass || !this.labelClass || !this.submit || !this.inputs || !this.loaders || !this.siteKey || !this.url) {
+      return false
+    }
 
-		if( !this.result.text.success )
-			this.result.text.success = this._defaultSuccessMessage;
+    /* Default messages if none */
 
-		// prepare for validation
-		this._form = new Form( {
-			groupClass: this.groupClass,
-			fieldClass: this.fieldClass,
-			labelClass: this.labelClass,
-			errorClass: this.errorClass,
-			errorShake: this.shake,
-			inputs: this.inputs
-		} );
+    if (!Object.getOwnPropertyDescriptor(this.result.text, 'error')) {
+      this.result.text.error = this._defaultErrorMessage
+    }
 
-		// add event listeners
-		this.form.addEventListener( 'submit', this._submit.bind( this ) );
+    if (!this.result.text.error) {
+      this.result.text.error = this._defaultErrorMessage
+    }
 
-		return true;
-	}
+    if (!Object.getOwnPropertyDescriptor(this.result.text, 'success')) {
+      this.result.text.success = this._defaultSuccessMessage
+    }
 
- /*
-	* Helper methods
-	* --------------
-	*/
+    if (!this.result.text.success) {
+      this.result.text.success = this._defaultSuccessMessage
+    }
 
-	// display results of form submission
-	_displayResult( error = false ) {
-		let message = error ? this.result.text.error : this.result.text.success;
+    /* Prepare for validation */
 
-		this.result.textContainer.textContent = message;
-		this.result.container.setAttribute( 'data-type', error ? 'error' : 'success' );
-		this._error = error;
+    this._form = new Form({
+      groupClass: this.groupClass,
+      fieldClass: this.fieldClass,
+      labelClass: this.labelClass,
+      errorClass: this.errorClass,
+      errorShake: this.shake,
+      inputs: this.inputs
+    })
 
-		setLoaders( this.loaders, [this.submit], false );
-	}
+    /* Add event listeners */
 
- /*
-	* Event Handlers
-	* --------------
-	*/
+    this.form.addEventListener('submit', this._submit.bind(this))
 
-	_submit( e ) {
-		e.preventDefault();
+    return true
+  }
 
-		// on change for inputs
-		this._form.submitted = true;
+  /**
+   * Helper methods
+   */
 
-		if( this.shake )
-			removeClass( this.submit, 'a-shake' );
+  /* Display results of form submission */
 
-		let valid = this._form.validate();
+  _displayResult (error = false) {
+    const message = error ? this.result.text.error : this.result.text.success
 
-		if( !valid ) {
-			if( this.shake )
-				addClass( this.submit, 'a-shake' );
+    this.result.textContainer.textContent = message
+    this.result.container.setAttribute('data-type', error ? 'error' : 'success')
+    this._error = error
 
-			return;
-		}
+    setLoaders(this.loaders, [this.submit], false)
+  }
 
-		setLoaders( this.loaders, [this.submit], true );
+  /**
+   * Event handlers
+   */
 
-		// hide results container
-		this.result.container.removeAttribute( 'data-type' );
+  _submit (e) {
+    e.preventDefault()
 
-		let formValues = this._form.getFormValues( true, this.filterInputs ),
-				data = `id=${ this.id }&${ formValues }`;
+    /* On change for inputs */
 
-		if( this.data ) {
-			for( let d in this.data ) {
-				data += `&${ d }=${ this.data[d] }`;
-			}
-		}
+    this._form.submitted = true
 
-		// get recaptcha token to send to server
-		grecaptcha.execute( this.siteKey, { action: 'send_form' } ).then( ( token ) => {
-			data += `&recaptcha=${ token }`;
+    if (this.shake) { removeClass(this.submit, 'a-shake') }
 
-			console.log( 'DATA', data );
+    const valid = this._form.validate()
 
-			request( {
-				method: 'POST',
-				url: this.url,
-				headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-				body: data
-			} )
-			.then( response => {
-				console.log( 'RESPONSE', response );
+    if (!valid) {
+      if (this.shake) { addClass(this.submit, 'a-shake') }
 
-				try {
-					this.success.call( this, JSON.parse( response ) );
-					this._displayResult();
-				} catch( e ) {
-					this._displayResult( true );
-				}
-			} )
-			.catch( xhr => {
-				console.log( 'ERROR', xhr );
+      return
+    }
 
-				this._displayResult( true );
-				this.error();
-			} );
-		} );
-	}
+    setLoaders(this.loaders, [this.submit], true)
 
- /*
-	* Public methods
-	* --------------
-	*/
+    /* Hide results container */
 
-	clear( exclude = [] ) {
-		if( this._form )
-			this._form.clear( exclude );
+    this.result.container.removeAttribute('data-type')
 
-		// end loader
-		this.loader.setAttribute( 'data-hide', '' );
+    const formValues = this._form.getFormValues(true, this.filterInputs)
+    let data = `id=${this.id}&${formValues}`
 
-		// hide results container
-		this.result.container.removeAttribute( 'data-type' );
-	}
+    if (this.data) {
+      for (const d in this.data) {
+        data += `&${d}=${this.data[d]}`
+      }
+    }
 
-	getFormInstance() {
-		return this._form;
-	}
+    /* Get recaptcha token to send to server */
 
-} // end Send
+    if (Object.getOwnPropertyDescriptor(window, 'grecaptcha')) {
+      window.grecaptcha.execute(this.siteKey, { action: 'send_form' }).then((token) => {
+        data += `&recaptcha=${token}`
+
+        console.log('DATA', data)
+
+        request({
+          method: 'POST',
+          url: this.url,
+          headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+          body: data
+        })
+          .then(response => {
+            console.log('RESPONSE', response)
+
+            try {
+              this.success(JSON.parse(response))
+              this._displayResult()
+            } catch (e) {
+              this._displayResult(true)
+            }
+          })
+          .catch(xhr => {
+            console.log('ERROR', xhr)
+
+            this._displayResult(true)
+            this.error()
+          })
+      })
+    }
+  }
+
+  /**
+   * Public methods
+   */
+
+  clear (exclude = []) {
+    if (this._form) { this._form.clear(exclude) }
+
+    /* End loader */
+
+    this.loader.setAttribute('data-hide', '')
+
+    /* Hide results container */
+
+    this.result.container.removeAttribute('data-type')
+  }
+
+  getFormInstance () {
+    return this._form
+  }
+} // End Send
+
+/* Exports */
+
+export default Send

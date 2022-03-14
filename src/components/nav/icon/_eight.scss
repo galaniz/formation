@@ -1,56 +1,55 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: eight
  */
 
-@use 'index' as icon;
-@use '../../../config' as con;
-@use '../../../utils/functions/map as m;
-@use '../../../utils/functions/calc-rem-em as c;
+/* Imports */
 
-/*
- * Nav Icon: Eight
- * ---------------
- */
+@use "sass:map";
+@use "index" as icon;
+@use "../../../config" as con;
+@use "../../../utils/functions/calc-rem" as c;
+
+/* Styles */
 
 .c-nav-icon[data-num="8"] {
-	$_x: c.calcRem( ( m.mapDeepGet( con.$nav, 'icon', 'width' ) / 2 ) - ( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) / 2 ) );
-	$_y: c.calcRem( icon.$y + ( m.mapDeepGet( con.$nav, 'icon', 'lineWidth' ) / 2 ) + 0.5px ); // 0.5 to make x more precise
+  $x: c.calc-rem((map.get(con.$nav, "icon", "width") / 2) - (map.get(con.$nav, "icon", "line-width") / 2));
+  $y: c.calc-rem(icon.$y + (map.get(con.$nav, "icon", "line-width") / 2) + 0.5px); // 0.5 to make x more precise
 
-	transform: rotate( 0deg );
+  transform: rotate(0deg);
 
-	&,
-	& .c-nav-icon__top,
-	& .c-nav-icon__middle,
-	& .c-nav-icon__bottom {
-		transition: transform 200ms ease;
-	}
+  &,
+  & .c-nav-icon__top,
+  & .c-nav-icon__middle,
+  & .c-nav-icon__bottom {
+    transition: transform 200ms ease;
+  }
 
-	& .c-nav-icon__top,
-	& .c-nav-icon__bottom {
-		width: 50%;
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__bottom {
+    width: 50%;
+  }
 
-	& .c-nav-icon__top {
-		@extend %u-transform-origin-0-0;
-		margin-right: 50%;
-	}
+  & .c-nav-icon__top {
+    @extend %u-transform-origin-0-0;
 
-	& .c-nav-icon__bottom {
-		@extend %u-transform-origin-100-100;
-		margin-left: 50%;
-	}
+    margin-right: 50%;
+  }
 
-	.c-nav__button[data-show] & {
-		transform: rotate( -45deg );
+  & .c-nav-icon__bottom {
+    @extend %u-transform-origin-100-100;
 
-		& .c-nav-icon__top {
-			transform: translate( $_x, $_y ) rotate( -90deg );
-		}
-		
-		& .c-nav-icon__bottom {
-			transform: translate( #{ $_x * -1 }, #{ $_y * -1 } ) rotate( -90deg );
-		}
-	}
+    margin-left: 50%;
+  }
+
+  .c-nav__button[data-show] & {
+    transform: rotate(-45deg);
+
+    & .c-nav-icon__top {
+      transform: translate($x, $y) rotate(-90deg);
+    }
+
+    & .c-nav-icon__bottom {
+      transform: translate(#{$x * -1}, #{$y * -1}) rotate(-90deg);
+    }
+  }
 }

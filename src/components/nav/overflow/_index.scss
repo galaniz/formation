@@ -1,26 +1,23 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav overflow
  */
 
-@use '../../../config';
+/* Imports */
 
-/*
- * Menu for overflowing links
- * --------------------------
- */
+@use "../../../config";
+
+/* Styles */
 
 .c-nav-overflow {
-	@extend %u-visibility-hidden;
-	
-	.c-nav[data-open] & {
-		@extend %u-visibility-visible;
-	}
+  @extend %u-visibility-hidden;
+
+  .c-nav[data-open] & {
+    @extend %u-visibility-visible;
+  }
 }
 
 .c-nav-overflow__list {
-	&:empty {
-		@extend %u-display-none;
-	}
+  &:empty {
+    @extend %u-display-none;
+  }
 }

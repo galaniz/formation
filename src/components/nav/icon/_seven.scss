@@ -1,76 +1,74 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: seven
  */
 
-@use 'index' as icon;
-@use '../../../config' as con;
+/* Imports */
 
-/*
- * Nav Icon: Seven
- * ---------------
- */
+@use "index" as icon;
+@use "../../../config" as con;
+
+/* Styles */
 
 .c-nav-icon[data-num="7"] {
-	transition: transform 200ms ease;
+  transition: transform 200ms ease;
 
-	& .c-nav-icon__top,
-	& .c-nav-icon__bottom {
-		transform: translateY( 0 ) rotate( 0deg );
-		transition: transform 0s ease 150ms;
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__bottom {
+    transform: translateY(0) rotate(0deg);
+    transition: transform 0s ease 150ms;
+  }
 
-	& .c-nav-icon__middle {
-		@extend %u-opacity-1;
-		transition: opacity 0s ease 150ms;
-	}
+  & .c-nav-icon__middle {
+    @extend %u-opacity-1;
 
-	.c-nav__button:not( [data-show] ) & {
-		animation: _aNavIconGrowShrinkCopy 300ms;
-	}
+    transition: opacity 0s ease 150ms;
+  }
 
-	.c-nav__button[data-show] & {
-		& .c-nav-icon__top {
-			transform: translateY( icon.$y ) rotate( 45deg );
-		}
+  .c-nav__button:not([data-show]) & {
+    animation: a-nav-icon-grow-shrink-copy 300ms;
+  }
 
-		& .c-nav-icon__middle {
-			@extend %u-opacity-0;
-		}
+  .c-nav__button[data-show] & {
+    & .c-nav-icon__top {
+      transform: translateY(icon.$y) rotate(45deg);
+    }
 
-		& .c-nav-icon__bottom {
-			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
-		}
-		
-		animation: _aNavIconGrowShrink 300ms;
-	}
-}
+    & .c-nav-icon__middle {
+      @extend %u-opacity-0;
+    }
 
-@keyframes _aNavIconGrowShrinkCopy {
-	0% { 
-		transform: scale( 1 ); 
-	}
+    & .c-nav-icon__bottom {
+      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
+    }
 
-	50% { 
-		transform: scale( 0.20 ); 
-	}
+    animation: a-nav-icon-grow-shrink 300ms;
+  }
 
-	100% { 
-		transform: scale( 1 );
-	}
-}
+  @keyframes a-nav-icon-grow-shrink-copy {
+    0% {
+      transform: scale(1);
+    }
 
-@keyframes _aNavIconGrowShrink {
-	0% { 
-		transform: scale( 1 ); 
-	}
+    50% {
+      transform: scale(0.2);
+    }
 
-	50% { 
-		transform: scale( 0.20 ); 
-	}
-	
-	100% { 
-		transform: scale( 1 );
-	}
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes a-nav-icon-grow-shrink {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(0.2);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
 }

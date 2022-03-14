@@ -1,39 +1,38 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects table
  */
 
-@use '../../config' as con;
+/* Imports */
 
-/*
- * Table
- * -----
- */
+@use "../../config" as con;
 
-#{ con.$tableSelector } {
-	@extend %u-width-100;
+/* Styles */
+
+.o-table {
+  @extend %u-width-100;
+
   border-collapse: collapse;
   border-spacing: 0;
 
   td[data-label]::before {
-		content: attr( data-label );
-		@extend %u-display-none;
-		@extend %u-float-left;
+    content: attr(data-label);
+
+    @extend %u-display-none;
+    @extend %u-float-left;
   }
 
-	&[data-collapse="true"] {
-		thead {
-			@extend %u-visually-hidden;
-		}
+  &[data-collapse="true"] {
+    thead {
+      @extend %u-visually-hidden;
+    }
 
-		td {
-			@extend %u-display-flex;
-		}
+    td {
+      @extend %u-display-flex;
+    }
 
-		tr,
-		td[data-label]::before {
-			@extend %u-display-block;
-		}
-	}
+    tr,
+    td[data-label]::before {
+      @extend %u-display-block;
+    }
+  }
 }

@@ -1,54 +1,58 @@
-
-/*
- * Call functions sequentially and with delay
- * ------------------------------------------
+/**
+ * Utility modules: call functions sequentially & with delay
  *
  * @param events [array] of objects {
- *	@prop action [function] with optional callback
- *	@prop delay [int]
+ *  @prop action [function] with optional callback
+ *  @prop delay [int]
  *  @prop increment [int]
  * }
  * @param repeat [int]
  */
 
-export const cascade = ( events, repeat = 1 ) => {
-	let eventsLength = events.length,
-			increment = 0,
-			delay = 0;
+/* Module */
 
-	for( let j = 0; j < repeat; j++ ) {
-		const recursive = ( i ) => {
-			if( i < eventsLength ) {
-				let event = events[i],
-						eventDelay = event.hasOwnProperty( 'delay' ) ? event.delay : delay;
+const cascade = (events, repeat = 1) => {
+  const eventsLength = events.length
+  let increment = 0
+  let delay = 0
 
-				if( event.hasOwnProperty( 'increment' ) ) {
-					if( !increment && eventDelay )
-						delay = eventDelay;
+  for (let j = 0; j < repeat; j++) {
+    const recursive = (i) => {
+      if (i < eventsLength) {
+        const event = events[i]
+        const eventDelay = Object.getOwnPropertyDescriptor(event, 'delay') ? event.delay : delay
 
-					increment = event.increment;
-				} else {
-					delay = eventDelay;
-				}
+        if (Object.getOwnPropertyDescriptor(event, 'increment')) {
+          if (!increment && eventDelay) { delay = eventDelay }
 
-				setTimeout( () => {
-					let indexArg = repeat > 1 ? j : i;
+          increment = event.increment
+        } else {
+          delay = eventDelay
+        }
 
-					// check if contains two args ( second arg is done callback )
-					if( event.action.length === 2 ) {
-						event.action( indexArg, () => {
-							recursive( i + 1 );
-						} );
-					} else {
-						event.action( indexArg );
-						recursive( i + 1 );
-					}
-				}, delay );
+        setTimeout(() => {
+          const indexArg = repeat > 1 ? j : i
 
-				delay += increment;
-			}
-		};
+          /* Check if contains two args (second arg is done callback) */
 
-		recursive( 0 );
-	}
-};
+          if (event.action.length === 2) {
+            event.action(indexArg, () => {
+              recursive(i + 1)
+            })
+          } else {
+            event.action(indexArg)
+            recursive(i + 1)
+          }
+        }, delay)
+
+        delay += increment
+      }
+    }
+
+    recursive(0)
+  }
+}
+
+/* Exports */
+
+export { cascade }

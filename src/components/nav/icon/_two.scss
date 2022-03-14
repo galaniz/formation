@@ -1,40 +1,38 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: two
  */
 
-@use 'index' as icon;
-@use '../../../config' as con;
+/* Imports */
 
-/*
- * Nav Icon: Two
- * -------------
- */
+@use "index" as icon;
+@use "../../../config" as con;
+
+/* Styles */
 
 .c-nav-icon[data-num="2"] {
-	& .c-nav-icon__top,
-	& .c-nav-icon__bottom {
-		transform: translateY( 0 );
-		transition: transform 175ms ease;
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__bottom {
+    transform: translateY(0);
+    transition: transform 175ms ease;
+  }
 
-	& .c-nav-icon__middle {
-		@extend %u-opacity-1;
-		transition: opacity 175ms ease;
-	}
+  & .c-nav-icon__middle {
+    @extend %u-opacity-1;
 
-	.c-nav__button[data-show] & {
-		& .c-nav-icon__top {
-			transform: translateY( icon.$y );
-		}
+    transition: opacity 175ms ease;
+  }
 
-		& .c-nav-icon__middle {
-			@extend %u-opacity-0;
-		}
-		
-		& .c-nav-icon__bottom {
-			transform: translateY( #{ icon.$y * -1 } );
-		}
-	}
+  .c-nav__button[data-show] & {
+    & .c-nav-icon__top {
+      transform: translateY(icon.$y);
+    }
+
+    & .c-nav-icon__middle {
+      @extend %u-opacity-0;
+    }
+
+    & .c-nav-icon__bottom {
+      transform: translateY(#{icon.$y * -1});
+    }
+  }
 }

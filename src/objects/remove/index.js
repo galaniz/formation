@@ -1,144 +1,146 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects: remove elements (if cookie or other condition + trigger click)
+ *
+ * @param args [object] {
+ *  @param item [HTMLElement]
+ *  @param trigger [HTMLElement]
+ *  @param condition [function]
+ *  @param cookie [object] {
+ *   @param name [string]
+ *   @param value [string]
+ *   @param expirationDays [string]
+ *  }
+ * }
  */
+
+/* Imports */
 
 import {
   setCookie,
   getCookie,
   mergeObjects
-} from '../../utils';
+} from '../../utils'
 
-/*
- * Remove elements ( if cookie or other condition + trigger click )
- * ---------------
- */
+/* Class */
 
-export default class Remove {
+class Remove {
+  /**
+   * Constructor
+   */
 
- /*
-	* Constructor
-	* -----------
-	*/
+  constructor (args) {
+    /**
+     * Public variables
+     */
 
-	constructor( args ) {
+    this.item = null
+    this.trigger = null
+    this.condition = () => {}
+    this.cookie = {
+      name: '',
+      value: '',
+      expirationDays: ''
+    }
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+    /* Merge default variables with args */
 
-		this.item = null;
-		this.trigger = null;
-		this.condition = () => {};
-		this.cookie = {
-			name: '',
-			value: '',
-			expirationDays: ''
-		};
+    mergeObjects(this, args)
 
-		// merge default variables with args
-		mergeObjects( this, args );
+    /**
+     * Internal variables
+     */
 
-	 /*
-		* Internal variables
-		* ------------------
-		*/
+    this._hide = false
 
-		this._hide = false;
+    /**
+     * Initialize
+     */
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    const init = this._initialize()
 
-		let init = this._initialize();
+    if (!init) { return false }
+  }
 
-		if( !init ) 
-			return false;
-	}
+  /**
+   * Initialize
+   */
 
- /*
-	* Initialize
-	* ----------
-	*/
+  _initialize () {
+    /* Check that required variables not null */
 
-	_initialize() {
-		// check that required variables not null
-		if( !this.item || !this.trigger )
-			return false;
+    if (!this.item || !this.trigger) { return false }
 
-		if( this.cookie.name )
-			this._cookieCondition = true;
+    if (this.cookie.name) { this._cookieCondition = true }
 
-		// add event listeners
-		this.trigger.addEventListener( 'click', this._clickHandler.bind( this ) );
+    /* Add event listeners */
 
-		// set display
-		this._setDisplay( true );
+    this.trigger.addEventListener('click', this._clickHandler.bind(this))
 
-		window.addEventListener( 'load', () => {
-			this._remove();
-		} );
-	
-		return true;
-	}
+    /* Set display */
 
- /*
-	* Helpers
-	* -------
-	*/
+    this._setDisplay(true)
 
-	_setDisplay( init = false, hide = false ) {
-		if( init ) {
-			if( this.cookie.name ) {
-				this._hide = getCookie( this.cookie.name ) ? true : false;
-			} else {
-				this._hide = this.condition( true ); // init true
-			}
-		} else {
-			this._hide = hide;
-		} 
-	}
+    window.addEventListener('load', () => {
+      this._remove()
+    })
 
-	_remove() {
-		if( this._hide ) {
-			this.item.parentNode.removeChild( this.item );
-		}
-	}
+    return true
+  }
 
- /*
-	* Event callbacks
-	* ---------------
-	*/
+  /**
+   * Helpers
+   */
 
-	_clickHandler( e ) {
-		let hide = false;
+  _setDisplay (init = false, hide = false) {
+    if (init) {
+      if (this.cookie.name) {
+        this._hide = !!getCookie(this.cookie.name)
+      } else {
+        this._hide = this.condition(true) // init true
+      }
+    } else {
+      this._hide = hide
+    }
+  }
 
-		if( this.cookie.name ) {
-			setCookie( 
-				this.cookie.name, 
-				this.cookie.value, 
-				this.cookie.expirationDays 
-			);
-			
-			hide = true;
-		} else {
-			hide = this.condition( false ); // init false
-		}
+  _remove () {
+    if (this._hide) {
+      this.item.parentNode.removeChild(this.item)
+    }
+  }
 
-		this._setDisplay( false, hide );
-		this._remove();
-	}
+  /**
+   * Event handlers
+   */
 
- /*
-	* Public methods
-	* ---------------
-	*/
+  _clickHandler (e) {
+    let hide = false
 
-	getHide() {
-		return this._hide;
-	}
+    if (this.cookie.name) {
+      setCookie(
+        this.cookie.name,
+        this.cookie.value,
+        this.cookie.expirationDays
+      )
 
-} // end Remove
+      hide = true
+    } else {
+      hide = this.condition(false) // init false
+    }
+
+    this._setDisplay(false, hide)
+    this._remove()
+  }
+
+  /**
+   * Public methods
+   */
+
+  getHide () {
+    return this._hide
+  }
+} // End Remove
+
+/* Exports */
+
+export default Remove

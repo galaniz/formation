@@ -37,7 +37,7 @@ _Parameters:_
 
 ## Skip Link
 
-### `skipLink( link )`
+### `skip-link(link)`
 
 Add/remove `--show` class from link on focus/blur.
 

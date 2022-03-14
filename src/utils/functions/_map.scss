@@ -1,52 +1,38 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility functions: recursively set nested map
  */
 
-@use 'sass:map';
-@use 'sass:meta';
+/* Imports */
 
-/* 
- * Get nested map
- * --------------
+@use "sass:map";
+@use "sass:meta";
+
+/**
+ * Function
  *
- * @param [map] $map
- * @param [list] $keys
+ * Source: https://github.com/pentzzsolt/sass-recursive-map.merge
+ *
+ * @param [map] $parent-map
+ * @param [map] $child-map
  *
  * @return [map]
  */
 
-@function mapDeepGet( $map, $keys... ) {
-  @each $key in $keys {
-  	$map: map.get( $map, $key );
+@function map-recursive-merge($parent-map, $child-map) {
+  $result: $parent-map;
+
+  @each $key, $value in $child-map {
+    $has-key: map.has-key($result, $key);
+    $res: map.get($result, $key);
+    $type-res: meta.type-of($res);
+    $type-val: meta.type-of($value);
+
+    @if not $has-key or meta.type-of($res) != $type-val or not ($type-res == map and $type-val == map) {
+      $result: map.merge($result, ($key: $value));
+    } @else {
+      $result: map.merge($result, ($key: map-recursive-merge(map.get($result, $key), $value)));
+    }
   }
-  
-  @return $map;
-}
 
-/* 
- * Recursively set nested map
- * --------------------------
- *
- * @param [map] $parentMap
- * @param [map] $childMap
- *
- * source: https://github.com/pentzzsolt/sass-recursive-map.merge
- *
- * @return [map]
- */
-
-@function mapRecursiveMerge( $parentMap, $childMap ) {
-	$result: $parentMap;
-	
-	@each $key, $value in $childMap {
-		@if( not map.has-key( $result, $key ) ) or ( meta.type-of( map.get( $result, $key ) ) != meta.type-of( $value ) ) or ( not ( meta.type-of( map.get( $result, $key ) ) == map and meta.type-of( $value ) == map ) ) {
-			$result: map.merge( $result, ( $key: $value ) );
-		} @else {
-			$result: map.merge( $result, ( $key: mapRecursiveMerge( map.get( $result, $key ), $value ) ) );
-		}
-	}
-
-	@return $result;
+  @return $result;
 }

@@ -1,113 +1,102 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects load: lazy (images + iframes)
+ *
+ * @param args [array] of [HTMLElement]
  */
 
-import { assetLoaded } from '../../../utils';
+/* Imports */
 
-/*
- * Lazy load ( images + iframes )
- * ---------
- */
+import { assetLoaded } from '../../../utils'
 
-export default class Lazy {
+/* Class */
 
- /*
-	* Constructor
-	* -----------
-	*/
+class Lazy {
+  /**
+   * Constructor
+   */
 
-	constructor( items = [] ) {
+  constructor (items = []) {
+    /* Public variables */
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+    this.items = items
 
-		this.items = items;
+    /* Initialize */
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    const init = this._initialize()
 
-		let init = this._initialize();
+    if (!init) { return false }
+  }
 
-		if( !init )
-			return false;
-	}
+  /**
+   * Initialize
+   */
 
- /*
-	* Initialize
-	* ----------
-	*/
+  _initialize () {
+    /* Check that required variables not null */
 
-	_initialize() {
-		// check that required variables not null
-		if( !this.items.length ) return false;
+    if (!this.items.length) return false
 
-		// check if IntersectionObserver is supported
+    /* Check if IntersectionObserver is supported */
 
-		let ioSupported = false;
+    let ioSupported = false
 
-		if (
-      "IntersectionObserver" in window &&
-      "IntersectionObserverEntry" in window &&
-      "intersectionRatio" in window.IntersectionObserverEntry.prototype
+    if (
+      'IntersectionObserver' in window &&
+      'IntersectionObserverEntry' in window &&
+      'intersectionRatio' in window.IntersectionObserverEntry.prototype
     ) {
-      this._ioSupported = true;
+      ioSupported = true
     }
 
-    this.items.forEach( item => {
-	    if( this._ioSupported ) {
-	      this._show( item );
-	    } else {
-	      this._setSrc( item );
-	    }
-    } );
-	}
+    this.items.forEach(item => {
+      if (ioSupported) {
+        this._show(item)
+      } else {
+        this._setSrc(item)
+      }
+    })
+  }
 
- /*
-	* Set src and show asset
-	* ----------------------
-	*/
+  /**
+   * Set src and show asset
+   */
 
-	// source: https://web.dev/lazy-loading-images/
-	_show( item ) {
-		const observer = new IntersectionObserver( ( entries, obs ) => {
-      entries.forEach( entry => {
-        if( entry.isIntersecting ) {
-          this._setSrc( item );
-          observer.unobserve( item );
+  /* Source: https://web.dev/lazy-loading-images/ */
+
+  _show (item) {
+    const observer = new window.IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this._setSrc(item)
+          observer.unobserve(item)
         }
-      } );
-    } );
+      })
+    })
 
-    observer.observe( item );
-	}
+    observer.observe(item)
+  }
 
-	_setSrc( item ) {
-		const url = item.getAttribute( 'data-src' );
+  _setSrc (item) {
+    const url = item.getAttribute('data-src')
 
-		if( !url )
-			return;
+    if (!url) { return }
 
-		item.src = url;
+    item.src = url
 
-		if( item.hasAttribute( 'data-srcset' ) )
-			item.srcset = item.getAttribute( 'data-srcset' );
+    if (item.hasAttribute('data-srcset')) { item.srcset = item.getAttribute('data-srcset') }
 
-		if( item.hasAttribute( 'data-sizes' ) )
-			item.sizes = item.getAttribute( 'data-sizes' );
+    if (item.hasAttribute('data-sizes')) { item.sizes = item.getAttribute('data-sizes') }
 
-		assetLoaded( item )
-    .then( asset => {
-    	item.setAttribute( 'data-loaded', true );
-    } )
-    .catch( err => {
-    	item.setAttribute( 'data-loaded', 'err' );
-    } );
-	}
+    assetLoaded(item)
+      .then(asset => {
+        item.setAttribute('data-loaded', true)
+      })
+      .catch(() => {
+        item.setAttribute('data-loaded', 'err')
+      })
+  }
+} // End Lazy
 
-} // end Lazy
+/* Exports */
+
+export default Lazy

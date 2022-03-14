@@ -1,68 +1,65 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility mixins: media queries
  */
 
-@use 'sass:map';
-@use '../../config' as con;
-@use '../functions/calc-rem-em' as c;
+/* Imports */
 
-/* 
+@use "sass:map";
+@use "../../config" as con;
+@use "../functions/calc-rem" as c;
+
+/**
  * Min media query
- * ---------------
  *
  * @param [string/number] $min
  */
 
-@mixin breakpointMin( $min ) { 
-	@if map.has-key( con.$breakpoints, $min ) {
-		$bkRem: c.calcRem( map.get( con.$breakpoints, $min ) );
+@mixin breakpoint-min($min) {
+  @if map.has-key(con.$breakpoints, $min) {
+    $bk-rem: c.calc-rem(map.get(con.$breakpoints, $min));
 
-		@media only screen and ( min-width: #{ $bkRem } ) {
-			@content;
-		}
-	} @else {
-		@warn "#{$min} does not exist in breakpoints map.";
-	}
+    @media only screen and (min-width: #{$bk-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$min} does not exist in breakpoints map.";
+  }
 }
 
-/* 
+/**
  * Max media query
- * ---------------
  *
  * @param [string/number] $max
  */
 
-@mixin breakpointMax( $max ) {
-	@if map.has-key( con.$breakpoints, $max ) {
-		$bkRem: c.calcRem( map.get( con.$breakpoints, $max ) );
+@mixin breakpoint-max($max) {
+  @if map.has-key(con.$breakpoints, $max) {
+    $bk-rem: c.calc-rem(map.get(con.$breakpoints, $max));
 
-		@media only screen and ( max-width: #{ $bkRem } ) {
-			@content;
-		}
-	} @else {
-		@warn "#{$max} does not exist in breakpoints map.";
-	}
+    @media only screen and (max-width: #{$bk-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$max} does not exist in breakpoints map.";
+  }
 }
 
-/* 
+/**
  * Min/max media query
- * -------------------
  *
  * @param [string/number] $min
  * @param [string/number] $max
  */
 
-@mixin breakpointMinMax( $min, $max ) { 
-	@if map.has-key( con.$breakpoints, $min ) and map.has-key( con.$breakpoints, $max ) {
-		$bkMinRem: c.calcRem( map.get( con.$breakpoints, $min ) );
-		$bkMaxRem: c.calcRem( map.get( con.$breakpoints, $max ) );
+@mixin breakpoint-min-max($min, $max) {
+  @if map.has-key(con.$breakpoints, $min) and map.has-key(con.$breakpoints, $max) {
+    $bk-min-rem: c.calc-rem(map.get(con.$breakpoints, $min));
+    $bk-max-rem: c.calc-rem(map.get(con.$breakpoints, $max));
 
-		@media only screen and ( max-width: #{ $bkMaxRem } ) and ( min-width: #{ $bkMinRem } ) {
-			@content;
-		}
-	} @else {
-		@warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
-	}
+    @media only screen and (max-width: #{$bk-max-rem}) and (min-width: #{$bk-min-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+  }
 }

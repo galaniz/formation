@@ -1,32 +1,31 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility mixins: gradient
  */
 
-@use 'sass:list';
+/* Imports */
 
-/*
- * Gradient
- * --------
+@use "sass:list";
+
+/**
+ * Mixin
  *
  * @param [string] $direction
  * @param [boolean] $image
- * @param [list] of maps $colorStops
+ * @param [list] of maps $color-stops
  */
 
-@mixin linearGradient( $direction: to left, $image: false, $colorStops... ) {
+@mixin linear-gradient($direction: to left, $image: false, $color-stops...) {
   @if $image {
-    background-image: list.nth( list.nth( $colorStops, 1 ), 1 );
-    background-image: -moz-linear-gradient( $direction, $colorStops );
-    background-image: -webkit-linear-gradient( $direction, $colorStops );
-    background-image: -o-linear-gradient( $direction, $colorStops );
-    background-image: linear-gradient( $direction, $colorStops );
+    background-image: list.nth(list.nth($color-stops, 1), 1);
+    background-image: linear-gradient($direction, $color-stops);
+    background-image: linear-gradient($direction, $color-stops);
+    background-image: linear-gradient($direction, $color-stops);
+    background-image: linear-gradient($direction, $color-stops);
   } @else {
-    background: list.nth( list.nth( $colorStops, 1 ), 1 );
-    background: -moz-linear-gradient( $direction, $colorStops );
-    background: -webkit-linear-gradient( $direction, $colorStops );
-    background: -o-linear-gradient( $direction, $colorStops );
-    background: linear-gradient( $direction, $colorStops );
+    background: list.nth(list.nth($color-stops, 1), 1);
+    background: linear-gradient($direction, $color-stops);
+    background: linear-gradient($direction, $color-stops);
+    background: linear-gradient($direction, $color-stops);
+    background: linear-gradient($direction, $color-stops);
   }
 }

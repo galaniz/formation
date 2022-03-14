@@ -1,7 +1,5 @@
-
-/*
- * Merge objects only one nested level deep
- * ----------------------------------------
+/**
+ * Utility modules: merge objects only one nested level deep
  *
  * @dependency Object.assign()
  *
@@ -11,26 +9,32 @@
  * @return [object] x
  */
 
-export const mergeObjects = ( x, y ) => {
-  for( let i in y ) {
-    // if not null or an html element and an object run again
-    if( y[i] !== undefined &&
+/* Module */
+
+const mergeObjects = (x, y) => {
+  for (const i in y) {
+    /* If not null or an html element and an object run again */
+
+    if (y[i] !== undefined &&
       y[i] !== false &&
       y[i] !== null &&
-      !Array.isArray( y[i] ) &&
-      typeof( y[i] ) == 'object' &&
-      !( y[i] instanceof HTMLElement ) &&
-      !( y[i] instanceof HTMLCollection ) &&
-      !( y[i] instanceof NodeList ) &&
-      !( y[i] instanceof SVGElement ) ) {
-      if( x.hasOwnProperty( i ) ) {
-        x[i] = Object.assign( x[i], y[i] );
+      !Array.isArray(y[i]) &&
+      typeof (y[i]) === 'object' &&
+      !(y[i] instanceof window.HTMLElement) &&
+      !(y[i] instanceof window.HTMLCollection) &&
+      !(y[i] instanceof window.NodeList) &&
+      !(y[i] instanceof window.SVGElement)) {
+      if (Object.getOwnPropertyDescriptor(x, i)) {
+        x[i] = Object.assign(x[i], y[i])
       }
     } else {
-      if( x.hasOwnProperty( i ) )
-        x[i] = y[i];
+      if (Object.getOwnPropertyDescriptor(x, i)) { x[i] = y[i] }
     }
   }
 
-  return x;
-};
+  return x
+}
+
+/* Exports */
+
+export { mergeObjects }

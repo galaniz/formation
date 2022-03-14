@@ -1,17 +1,12 @@
-
-/*
- * Imports
- * -------
+/**
+ * Animate: fade in and out
  */
 
-@use 'mixins' as mix;
-@use '../config' as con;
+/* Imports */
 
-/*
- * Fade in and out
- * ---------------
- */
+@use "mixins" as mix;
+@use "../config" as con;
 
 /* Output classes */
 
-@include mix.transitionFade( con.$transitions );
+@include mix.transition-fade(con.$transitions);

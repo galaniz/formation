@@ -1,25 +1,27 @@
-
-/*
- * Remove class(es) from element
- * -----------------------------
- * 
+/**
+ * Utility modules: remove class(es) from element
+ *
  * @param item [HTMLElement]
  * @param classes [string] of classes separated by space
  */
 
-export const removeClass = ( item, classes ) => {
-	if( !item || !classes )
-		return;
+/* Module */
 
-	let currentClasses = item.className.split( ' ' );
-			classes = classes.split( ' ' );
+const removeClass = (item, classes) => {
+  if (!item || !classes) { return }
 
-	classes.forEach( ( c ) => {
-		let classPos = currentClasses.indexOf( c ); 
+  const currentClasses = item.className.split(' ')
+  classes = classes.split(' ')
 
-		if( classPos != -1 )
-			currentClasses.splice( classPos, 1 );
-	} );
+  classes.forEach((c) => {
+    const classPos = currentClasses.indexOf(c)
 
-	item.className = currentClasses.join( ' ' );
-};
+    if (classPos !== -1) { currentClasses.splice(classPos, 1) }
+  })
+
+  item.className = currentClasses.join(' ')
+}
+
+/* Exports */
+
+export { removeClass }

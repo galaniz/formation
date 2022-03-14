@@ -1,27 +1,25 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components: skip link
  */
 
-@use 'sass:map';
-@use '../config' as con;
+/* Imports */
 
-/*
- * Skip Link
- * ---------
- */
+@use "sass:map";
+@use "../config" as con;
+
+/* Styles */
 
 .c-skip-link {
-	@extend %u-display-block;
-	@extend %u-position-absolute;
-	@extend %u-top-0;
-	@extend %u-left-0;
-	@extend %u-right-0;
-	z-index: map.get( con.$zIndex, 'skipLink' );
-	transform: translateY( -150% );
+  @extend %u-display-block;
+  @extend %u-position-absolute;
+  @extend %u-top-0;
+  @extend %u-left-0;
+  @extend %u-right-0;
 
-	&:focus {
-		transform: translateY( 0 );
-	}
+  z-index: map.get(con.$z-index, "skip-link");
+  transform: translateY(-150%);
+
+  &:focus {
+    transform: translateY(0);
+  }
 }

@@ -1,87 +1,86 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: five
  */
 
-@use 'index' as icon;
-@use '../../../config' as con;
+/* Imports */
 
-/*
- * Nav Icon: Five
- * --------------
- */
+@use "index" as icon;
+@use "../../../config" as con;
 
- .c-nav-icon[data-num="5"] {
- 	& .c-nav-icon__top {
- 		animation: 300ms ease forwards _aCollapseRotateTopReverse;
- 	}
+/* Styles */
 
- 	& .c-nav-icon__bottom {
- 		animation: 300ms ease forwards _aCollapseRotateBottomReverse;
- 	}
+.c-nav-icon[data-num="5"] {
+  & .c-nav-icon__top {
+    animation: 300ms ease forwards a-collapse-rotate-top-reverse;
+  }
 
- 	& .c-nav-icon__middle {
- 		@extend %u-opacity-1;
- 		transition: opacity 150ms ease 100ms;
- 	}
+  & .c-nav-icon__bottom {
+    animation: 300ms ease forwards a-collapse-rotate-bottom-reverse;
+  }
 
- 	.c-nav__button[data-show] & {
- 		& .c-nav-icon__middle {
- 			@extend %u-opacity-0;
- 			transition: opacity 150ms ease;
- 		}
+  & .c-nav-icon__middle {
+    @extend %u-opacity-1;
 
- 		& .c-nav-icon__top {
- 			animation: 300ms ease forwards _aCollapseRotateTop;
- 		}
- 		
- 		& .c-nav-icon__bottom {
- 			animation: 300ms ease forwards _aCollapseRotateBottom;
- 		}
- 	}
+    transition: opacity 150ms ease 100ms;
+  }
 
- 	@keyframes _aCollapseRotateTopReverse {
- 		0% {
- 			transform: translateY( icon.$y ) rotate( 45deg );
- 		}
+  .c-nav__button[data-show] & {
+    & .c-nav-icon__middle {
+      @extend %u-opacity-0;
 
- 		100% {
- 			transform: translateY( 0 ) rotate( 0 );
- 		}
- 	}
+      transition: opacity 150ms ease;
+    }
 
- 	@keyframes _aCollapseRotateBottomReverse {
- 		0% {
- 			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
- 		}
+    & .c-nav-icon__top {
+      animation: 300ms ease forwards a-collapse-rotate-top;
+    }
 
- 		100% {
- 			transform: translateY( 0 ) rotate( 0 );
- 		}
- 	}
+    & .c-nav-icon__bottom {
+      animation: 300ms ease forwards a-collapse-rotate-bottom;
+    }
+  }
 
- 	@keyframes _aCollapseRotateTop {
- 		0% {
- 			transform: translateY( icon.$y );
- 		}
+  @keyframes a-collapse-rotate-top-reverse {
+    0% {
+      transform: translateY(icon.$y) rotate(45deg);
+    }
 
- 		100% {
- 			transform: translateY( icon.$y ) rotate( 45deg );
- 		}
- 	}
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+  }
 
- 	@keyframes _aCollapseRotateBottom {
- 		0% {
- 			transform: translateY( 0 ) rotate( 0 );
- 		}
+  @keyframes a-collapse-rotate-bottom-reverse {
+    0% {
+      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
+    }
 
- 		1% {
- 			transform: translateY( #{ icon.$y * -1 } );
- 		}
-    
- 		100% {
- 			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
- 		}
- 	}
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes a-collapse-rotate-top {
+    0% {
+      transform: translateY(icon.$y);
+    }
+
+    100% {
+      transform: translateY(icon.$y) rotate(45deg);
+    }
+  }
+
+  @keyframes a-collapse-rotate-bottom {
+    0% {
+      transform: translateY(0) rotate(0);
+    }
+
+    1% {
+      transform: translateY(#{icon.$y * -1});
+    }
+
+    100% {
+      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
+    }
+  }
 }

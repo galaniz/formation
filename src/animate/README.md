@@ -62,7 +62,7 @@ _Parameters:_
 
 ## Transition
 
-### `transition( links, transitionElement, delay )`
+### `transition(links, transitionElement, delay)`
 
 Complete page transition on link click by `[data-show]` to transitionElement.
 
@@ -80,7 +80,7 @@ _Required:_ true
 _Type:_ `int`  
 _Default:_ `800`
 
-### `setTransitionRun( run )`
+### `setTransitionRun(run)`
 
 Set run variable of module. If false, page transition won't run.
 

@@ -4,7 +4,7 @@
 
 /* Imports */
 
-@use "../config" as con;
+@use "../../config" as con;
 
 /* Hide */
 
@@ -14,13 +14,9 @@
 
 .u-h-i {
   @extend %u-position-absolute;
-  @extend %u-overflow-hidden;
+  @extend %u-opacity-0;
 
-  width: 0.063rem;
-  height: 0.063rem;
-  padding: 0;
-  border: 0;
-  clip: rect(0.063rem 0.063rem 0.063rem 0.063rem);
+  z-index: -1;
 }
 
 /* Dimensions */

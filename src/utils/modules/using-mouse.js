@@ -1,37 +1,44 @@
-
-/*
- * Add attr to body if using mouse
- * -------------------------------
- * source: https://bit.ly/2GpioBO
+/**
+ * Utility modules: add attr to body if using mouse
+ *
+ * Source: https://bit.ly/2GpioBO
  */
 
-/* Dependencies */
+/* Imports */
 
-import { publish } from './pub-sub';
+import { publish } from './pub-sub'
 
-export const usingMouse = () => {
-	let body = document.body;
+/* Module */
 
-	body.setAttribute( 'data-using-mouse', '' );
-	publish( 'tabState', [false] );
+const usingMouse = () => {
+  const body = document.body
 
-	// mouse is being used
-	body.addEventListener( 'mousedown', () => {
-		body.setAttribute( 'data-using-mouse', '' );
-		publish( 'tabState', [false] );
-	} );
+  body.setAttribute('data-using-mouse', '')
+  publish('tabState', [false])
 
-	let tab = [9, 'Tab'];
+  /* Mouse is being used */
 
-	window.focus(); // to prevent keydown delay
+  body.addEventListener('mousedown', () => {
+    body.setAttribute('data-using-mouse', '')
+    publish('tabState', [false])
+  })
 
-	// check for tabbing to remove class
-	body.addEventListener( 'keydown', ( e ) => {
-		let key = e.key || e.keyCode || e.which || e.code;
+  const tab = [9, 'Tab']
 
-		if( tab.indexOf( key ) !== -1 ) {
-			body.removeAttribute( 'data-using-mouse' );
-			publish( 'tabState', [true] );
-		}
-	} );
-};
+  window.focus() // to prevent keydown delay
+
+  /* Check for tabbing to remove attribute */
+
+  body.addEventListener('keydown', (e) => {
+    const key = e.key || e.keyCode || e.which || e.code
+
+    if (tab.indexOf(key) !== -1) {
+      body.removeAttribute('data-using-mouse')
+      publish('tabState', [true])
+    }
+  })
+}
+
+/* Exports */
+
+export { usingMouse }
