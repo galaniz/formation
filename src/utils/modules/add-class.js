@@ -1,32 +1,35 @@
-
-/*
- * Add class(es) to element
- * ------------------------
- * 
+/**
+ * Utility modules: add class(es) to element
+ *
  * @param item [HTMLElement]
  * @param classes [string] of classes separated by space
  */
 
-export const addClass = ( item, classes ) => {
-	if( !item || !classes )
-		return;
+/* Module */
 
-	let currentClasses = item.className;
-	
-	if( currentClasses ) {
-		classes = classes.split( ' ' );
-		currentClasses = currentClasses.split( ' ' );
+const addClass = (item, classes) => {
+  if (!item || !classes) { return }
 
-		classes.forEach( ( c ) => {
-			let classPos = currentClasses.indexOf( c ); 
+  let currentClasses = item.className
 
-			// only add if doesn't exist
-			if( classPos === -1 )
-				currentClasses.splice( classPos, 0, c );
-		} );
+  if (currentClasses) {
+    classes = classes.split(' ')
+    currentClasses = currentClasses.split(' ')
 
-		item.className = currentClasses.join( ' ' );
-	} else {
-		item.setAttribute( 'class', classes );
-	}
-};
+    classes.forEach((c) => {
+      const classPos = currentClasses.indexOf(c)
+
+      /* Only add if doesn't exist */
+
+      if (classPos === -1) { currentClasses.splice(classPos, 0, c) }
+    })
+
+    item.className = currentClasses.join(' ')
+  } else {
+    item.setAttribute('class', classes)
+  }
+}
+
+/* Exports */
+
+export { addClass }

@@ -1,34 +1,38 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects collapsible
  */
 
-@use '../../config' as con;
+/* Imports */
 
-/*
- * Collapsible
- * -----------
- */
+@use "../../config" as con;
+
+/* Styles */
 
 .o-collapsible {
-	&[data-set] {
-		@extend %u-overflow-hidden;
-	}
+  &[data-set] {
+    @extend %u-overflow-hidden;
+  }
 }
 
 .o-collapsible__main {
-	@extend %u-visibility-hidden;
-	height: 0;
-	transition: visibility 0ms #{ con.$defTimingFunction } #{ con.$defDuration }, height #{ con.$defDuration } #{ con.$defTimingFunction } 10ms;
+  @extend %u-visibility-hidden;
 
-	.o-collapsible[data-set] > & {
-		@extend %u-overflow-hidden;
-		will-change: height;
-	}
+  height: 0;
+  transition:
+    visibility 0ms #{con.$def-timing-function} #{con.$def-duration},
+    height #{con.$def-duration } #{con.$def-timing-function} 10ms;
 
-	.o-collapsible[data-expanded="true"] > & {
-		@extend %u-visibility-visible;
-		transition: visibility 0ms #{ con.$defTimingFunction } 10ms, height #{ con.$defDuration } #{ con.$defTimingFunction };
-	}
+  .o-collapsible[data-set] > & {
+    @extend %u-overflow-hidden;
+
+    will-change: height;
+  }
+
+  .o-collapsible[data-expanded="true"] > & {
+    @extend %u-visibility-visible;
+
+    transition:
+      visibility 0ms #{con.$def-timing-function} 10ms,
+      height #{con.$def-duration} #{con.$def-timing-function};
+  }
 }

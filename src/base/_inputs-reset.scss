@@ -1,7 +1,5 @@
-
-/*
- * Input resets
- * ------------
+/**
+ * Base: input resets
  */
 
 input,
@@ -9,44 +7,44 @@ textarea,
 button,
 fieldset,
 select {
-	border: 0;
-	outline: none;
-	background: transparent;
+  border: 0;
+  outline: none;
+  background: transparent;
 }
 
 input,
 textarea,
 button,
 select {
-	appearance: none !important;
-	box-shadow: none !important;
-	border-radius: 0;
-	
-	&:hover,
-	&:active,
-	&:focus {
-		box-shadow: none !important;
-		background-image: none;
-		outline: none;
-	}
+  appearance: none;
+  box-shadow: none;
+  border-radius: 0;
+
+  &:hover,
+  &:active,
+  &:focus {
+    box-shadow: none;
+    background-image: none;
+    outline: none;
+  }
 }
 
-// Clears the 'X' from ie
+/* Clears the "X" from IE */
 
 input::-ms-clear,
 input::-ms-reveal {
-	display: none;
-	width: 0;
-	height: 0;
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-// Clears the 'X' from chrome
+/* Clears the "X" from Chrome */
 
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
-	display: none;
+  display: none;
 }
 
 select::-ms-expand {

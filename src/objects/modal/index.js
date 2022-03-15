@@ -1,282 +1,294 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects: modal
+ *
+ * @param args [object] {
+ *  @param modal [HTMLElement]
+ *  @param window [HTMLElement]
+ *  @param overlay [HTMLElement]
+ *  @param trigger [HTMLElement]
+ *  @param close [HTMLElement]
+ *  @param scaleTransition [boolean]
+ *  @param scaleTransitionDelay [int]
+ *  @param bodyOverflowHiddenClass [string]
+ *  @param onToggle [function]
+ * }
  */
+
+/* Imports */
 
 import {
-	addClass, 
-	removeClass, 
-	prefix,
-	mergeObjects
-} from '../../utils';
+  addClass,
+  removeClass,
+  prefix,
+  mergeObjects
+} from '../../utils'
 
-/*
- * Open / close modals
- * -------------------
- */
+/* Class */
 
-export default class Modal {
+class Modal {
+  /**
+   * Constructor
+   */
 
- /*
-	* Constructor
-	* -----------
-	*/
+  constructor (args) {
+    /**
+     * Public variables
+     */
 
-	constructor( args ) {
+    this.modal = null
+    this.window = null
+    this.overlay = null
+    this.trigger = null
+    this.close = null
+    this.scaleTransition = false
+    this.scaleTransitionDelay = 300
+    this.bodyOverflowHiddenClass = 'u-o-h'
+    this.onToggle = () => {}
 
- /*
-	* Public variables
-	* ----------------
-	*/
+    /* Merge default variables with args */
 
-	this.modal = null;
-	this.window = null;
-	this.overlay = null;
-	this.trigger = null;
-	this.close = null;
-	this.scaleTransition = false;
-	this.scaleTransitionDelay = 300;
-	this.bodyOverflowHiddenClass = 'u-o-h';
-	this.onToggle = () => {};
+    mergeObjects(this, args)
 
-	// merge default variables with args
-	mergeObjects( this, args );
+    /**
+     * Internal variables
+     */
 
- /*
-	* Internal variables
-	* ------------------
-	*/
+    /* For key events */
 
-	// for key events
-	this._KEYS = {
-		9: 'TAB',
-		Tab: 'TAB',
-		27: 'ESC',
-		Escape: 'ESC'
-	};
+    this._KEYS = {
+      9: 'TAB',
+      Tab: 'TAB',
+      27: 'ESC',
+      Escape: 'ESC'
+    }
 
-	// for giving focus to right elements
-	this._focusableItems = [];
-	this._firstFocusableItem = null;
-	this._lastFocusableItem = null;
+    /* For giving focus to right elements */
 
-	// track modal state
-	this._open = false;
+    this._focusableItems = []
+    this._firstFocusableItem = null
+    this._lastFocusableItem = null
 
-	// to prevent body scroll
-	this._body = document.body;
+    /* Track modal state */
 
-	// for throttling resize event
-	this._resizeTimer;
+    this._open = false
 
-	this._viewportWidth = window.innerWidth;
-	this._viewportHeight = window.innerHeight;
+    /* To prevent body scroll */
 
-	this._matrix = {
-		open: {
-			sX: 1,
-			sY: 1,
-			tX: 0,
-			tY: 0,
-		},
-		close: {
-			sX: 1,
-			sY: 1,
-			tX: 0,
-			tY: 0
-		}
-	};
+    this._body = document.body
 
- /*
-	* Initialize
-	* ----------
-	*/
+    /* For throttling resize event */
 
-	let init = this._initialize();
+    this._resizeTimer = null
 
-	if( !init ) 
-		return false;
-	}
+    this._viewportWidth = window.innerWidth
+    this._viewportHeight = window.innerHeight
 
- /*
-	* Initialize
-	* ----------
-	*/
+    this._matrix = {
+      open: {
+        sX: 1,
+        sY: 1,
+        tX: 0,
+        tY: 0
+      },
+      close: {
+        sX: 1,
+        sY: 1,
+        tX: 0,
+        tY: 0
+      }
+    }
 
-	_initialize() {
-		// check that required variables not null
-		if( !this.modal || !this.window || !this.trigger || !this.close )
-			return false;
+    /**
+     * Initialize
+     */
 
-		if( this.scaleTransition && !this.window )
-			return false;
+    const init = this._initialize()
 
-		if( this.scaleTransition ) {
-			this._windowWidth = this.window.clientWidth;
-			this._windowHeight = this.window.clientHeight;
-		}
+    if (!init) { return false }
+  }
 
-		// check if open
-		if( this.modal.getAttribute( 'aria-hidden' ) == 'false' )
-			this._toggle( true );
+  /**
+   * Initialize
+   */
 
-		// add event listeners
-		this.modal.addEventListener( 'keydown', this._keyHandler.bind( this ) );
-		this.trigger.addEventListener( 'click', this._openHandler.bind( this ) );
-		this.close.addEventListener( 'click', this._closeHandler.bind( this ) );
+  _initialize () {
+    /* Check that required variables not null */
 
-		if( this.overlay )
-			this.overlay.addEventListener( 'click', this._closeHandler.bind( this ) );
+    if (!this.modal || !this.window || !this.trigger || !this.close) { return false }
 
-		window.addEventListener( 'resize', this._resizeHandler.bind( this ) );
+    if (this.scaleTransition && !this.window) { return false }
 
-		// get focusable elements in modal
-		this._focusableItems = Array.from( this.window.querySelectorAll( 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]' ) );
-		this._focusableItemsLength = this._focusableItems.length;
+    if (this.scaleTransition) {
+      this._windowWidth = this.window.clientWidth
+      this._windowHeight = this.window.clientHeight
+    }
 
-		this._firstFocusableItem = this._focusableItems[0];
-		this._lastFocusableItem = this._focusableItems[this._focusableItemsLength - 1];
+    /* Check if open */
 
-		return true;
-	}
+    if (this.modal.getAttribute('aria-hidden') === 'false') {
+      this._toggle(true)
+    }
 
- /*
-	* Internal helpers
-	* ----------------
-	*/
+    /* Add event listeners */
 
-	_setMatrix() {
-		let triggerRect = this.trigger.getBoundingClientRect(),
-				xScale = triggerRect.width / this._windowWidth,
-				yScale = triggerRect.height / this._windowHeight;
+    this.modal.addEventListener('keydown', this._keyHandler.bind(this))
+    this.trigger.addEventListener('click', this._openHandler.bind(this))
+    this.close.addEventListener('click', this._closeHandler.bind(this))
 
-		this._matrix = {
-			open: {
-				sX: 1,
-				sY: 1,
-				tX: this._windowWidth < this._viewportWidth ? ( this._viewportWidth - this._windowWidth ) / 2 : 0,
-				tY: this._windowHeight < this._viewportHeight ? ( this._viewportHeight - this._windowHeight ) / 2 : 0,
-			},
-			close: {
-				sX: triggerRect.width / this._windowWidth,
-				sY: triggerRect.height / this._windowHeight,
-				tX: triggerRect.left,
-				tY: triggerRect.top
-			}
-		};
-	}
+    if (this.overlay) {
+      this.overlay.addEventListener('click', this._closeHandler.bind(this))
+    }
 
-	_setTransforms() {
-		if( this.scaleTransition ) {
-			let prop = this._open ? 'open' : 'close',
-					sX = this._matrix[prop].sX,
-					sY = this._matrix[prop].sY,
-					tX = this._matrix[prop].tX,
-					tY = this._matrix[prop].tY;
+    window.addEventListener('resize', this._resizeHandler.bind(this))
 
-			prefix( 'transform', this.window, `matrix( ${ sX }, 0, 0, ${ sY }, ${ tX }, ${ tY } )` );
-		}
-	}
+    /* Get focusable elements in modal */
 
-	// handle classes / transforms to open / close
-	_toggle( open = true ) {
-		this._open = open;
-		this.modal.setAttribute( 'aria-hidden', !open );
+    this._focusableItems = Array.from(this.window.querySelectorAll('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'))
+    this._focusableItemsLength = this._focusableItems.length
 
-		if( open ) {
-			this._firstFocusableItem.focus();
-			addClass( this._body, this.bodyOverflowHiddenClass );
-		} else {
-			this.trigger.focus();
-			removeClass( this._body, this.bodyOverflowHiddenClass );
-		}
+    this._firstFocusableItem = this._focusableItems[0]
+    this._lastFocusableItem = this._focusableItems[this._focusableItemsLength - 1]
 
-		if( this.scaleTransition ) {
-			if( !open )
-				this.modal.removeAttribute( 'data-window-open' );
+    return true
+  }
 
-			setTimeout( () => {
-				this._setTransforms();
-			}, !open ? this.scaleTransitionDelay : 0 );
+  /**
+   * Internal helpers
+   */
 
-			if( open ) {
-				setTimeout( () => {
-					this.modal.setAttribute( 'data-window-open', '' );
-				}, open ? this.scaleTransitionDelay : 0 );
-			}
-		}
+  _setMatrix () {
+    const triggerRect = this.trigger.getBoundingClientRect()
 
-		this.onToggle( open );
-	}
+    this._matrix = {
+      open: {
+        sX: 1,
+        sY: 1,
+        tX: this._windowWidth < this._viewportWidth ? (this._viewportWidth - this._windowWidth) / 2 : 0,
+        tY: this._windowHeight < this._viewportHeight ? (this._viewportHeight - this._windowHeight) / 2 : 0
+      },
+      close: {
+        sX: triggerRect.width / this._windowWidth,
+        sY: triggerRect.height / this._windowHeight,
+        tX: triggerRect.left,
+        tY: triggerRect.top
+      }
+    }
+  }
 
-	_handleBackwardTab( e ) {
-		if( document.activeElement === this._firstFocusableItem ) {
-			e.preventDefault();
-			this._lastFocusableItem.focus();
-		}
-	}
+  _setTransforms () {
+    if (this.scaleTransition) {
+      const prop = this._open ? 'open' : 'close'
+      const sX = this._matrix[prop].sX
+      const sY = this._matrix[prop].sY
+      const tX = this._matrix[prop].tX
+      const tY = this._matrix[prop].tY
 
-	_handleForwardTab( e ) {
-		if( document.activeElement === this._lastFocusableItem ) {
-			e.preventDefault();
-			this._firstFocusableItem.focus();
-		}
-	}
+      prefix('transform', this.window, `matrix(${sX}, 0, 0, ${sY}, ${tX}, ${tY})`)
+    }
+  }
 
- /*
-	* Event callbacks
-	* ---------------
-	*/
+  /* Handle classes/transforms to open/close */
 
-	_keyHandler( e ) {
-		let key = e.keyCode || e.which || e.code || e.key;
+  _toggle (open = true) {
+    this._open = open
+    this.modal.setAttribute('aria-hidden', !open)
 
-		switch( this._KEYS[key] ) {
-		case 'TAB':
-			if( this._focusableItemsLength === 1 ) {
-				e.preventDefault();
-				break;
-			}
+    if (open) {
+      this._firstFocusableItem.focus()
+      addClass(this._body, this.bodyOverflowHiddenClass)
+    } else {
+      this.trigger.focus()
+      removeClass(this._body, this.bodyOverflowHiddenClass)
+    }
 
-			// keep focus in modal
-			if( e.shiftKey ) {
-				this._handleBackwardTab( e );
-			} else {
-				this._handleForwardTab( e );
-			}
+    if (this.scaleTransition) {
+      if (!open) { this.modal.removeAttribute('data-window-open') }
 
-		break;
-		case 'ESC':
-			this._toggle( false );
-			break;
-		}
-	}
+      setTimeout(() => {
+        this._setTransforms()
+      }, !open ? this.scaleTransitionDelay : 0)
 
-	_openHandler( e ) {
-		this._toggle( true );
-	}
+      if (open) {
+        setTimeout(() => {
+          this.modal.setAttribute('data-window-open', '')
+        }, open ? this.scaleTransitionDelay : 0)
+      }
+    }
 
-	_closeHandler( e ) {
-		this._toggle( false );
-	}
+    this.onToggle(open)
+  }
 
-	_resizeHandler() {
-		// throttles resize event
-		clearTimeout( this._resizeTimer );
+  _handleBackwardTab (e) {
+    if (document.activeElement === this._firstFocusableItem) {
+      e.preventDefault()
+      this._lastFocusableItem.focus()
+    }
+  }
 
-		this._resizeTimer = setTimeout( () => {
-			if( this.scaleTransition ) {
-				this._viewportWidth = window.innerWidth;
-				this._viewportHeight = window.innerHeight;
+  _handleForwardTab (e) {
+    if (document.activeElement === this._lastFocusableItem) {
+      e.preventDefault()
+      this._firstFocusableItem.focus()
+    }
+  }
 
-				this._windowWidth = this.window.clientWidth;
-				this._windowHeight = this.window.clientHeight;
+  /**
+   * Event handlers
+   */
 
-				this._setMatrix();
-				this._setTransforms();
-			} 
-		}, 100 );
-	}
+  _keyHandler (e) {
+    const key = e.keyCode || e.which || e.code || e.key
 
-} // end Modal
+    switch (this._KEYS[key]) {
+      case 'TAB':
+        if (this._focusableItemsLength === 1) {
+          e.preventDefault()
+          break
+        }
+
+        /* Keep focus in modal */
+
+        if (e.shiftKey) {
+          this._handleBackwardTab(e)
+        } else {
+          this._handleForwardTab(e)
+        }
+
+        break
+      case 'ESC':
+        this._toggle(false)
+        break
+    }
+  }
+
+  _openHandler (e) {
+    this._toggle(true)
+  }
+
+  _closeHandler (e) {
+    this._toggle(false)
+  }
+
+  _resizeHandler () {
+    /* Throttles resize event */
+
+    clearTimeout(this._resizeTimer)
+
+    this._resizeTimer = setTimeout(() => {
+      if (this.scaleTransition) {
+        this._viewportWidth = window.innerWidth
+        this._viewportHeight = window.innerHeight
+
+        this._windowWidth = this.window.clientWidth
+        this._windowHeight = this.window.clientHeight
+
+        this._setMatrix()
+        this._setTransforms()
+      }
+    }, 100)
+  }
+} // End Modal
+
+/* Exports */
+
+export default Modal

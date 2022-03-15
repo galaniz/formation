@@ -1,54 +1,53 @@
-
-/*
- * Fetch and set elements by selector
- * ----------------------------------
+/**
+ * Utility modules: fetch and set elements by selector
  *
  * @param meta [array] of objects {
- *	@prop prop [string]
- *	@prop selector [string]
- *	@prop all [boolean]
- *	@prop array [boolean]
+ *  @prop prop [string]
+ *  @prop selector [string]
+ *  @prop all [boolean]
+ *  @prop array [boolean]
  * }
  * @param e [object]
  * @param done [function] callback when done recursing through meta and setting e object
  */
 
-export const setElements = ( meta, e, done = () => {} ) => {
-	const recursive = ( i, array, arrayLength, context = document ) => {
-		if( i < arrayLength ) {
-			let m = array[i],
-					all = false,
-					convertToArray = false,
-					el = null;
+/* Module */
 
-			if( m.hasOwnProperty( 'all' ) )
-				all = true;
+const setElements = (meta, e, done = () => {}) => {
+  const recursive = (i, array, arrayLength, context = document) => {
+    if (i < arrayLength) {
+      const m = array[i]
+      let all = false
+      let convertToArray = false
+      let el = null
 
-			if( m.hasOwnProperty( 'array' ) )
-				convertToArray = true;
+      if (Object.getOwnPropertyDescriptor(m, 'all')) { all = true }
 
-			if( all ) {
-				if( context )
-					el = context.querySelectorAll( m.selector );
-			} else {
-				if( context )
-					el = context.querySelector( m.selector );
-			}
+      if (Object.getOwnPropertyDescriptor(m, 'array')) { convertToArray = true }
 
-			if( convertToArray )
-				el = Array.from( el );
+      if (all) {
+        if (context) { el = context.querySelectorAll(m.selector) }
+      } else {
+        if (context) { el = context.querySelector(m.selector) }
+      }
 
-			e[m.prop] = el;
+      if (convertToArray) { el = Array.from(el) }
 
-			if( m.hasOwnProperty( 'descendants' ) )
-				recursive( 0, m.descendants, m.descendants.length, el );
+      e[m.prop] = el
 
-			recursive( i + 1, array, arrayLength );
-		}
+      if (Object.getOwnPropertyDescriptor(m, 'descendants')) {
+        recursive(0, m.descendants, m.descendants.length, el)
+      }
 
-		if( i === meta.length - 1 )
-			done();
-	};
+      recursive(i + 1, array, arrayLength)
+    }
 
-	recursive( 0, meta, meta.length );
-};
+    if (i === meta.length - 1) { done() }
+  }
+
+  recursive(0, meta, meta.length)
+}
+
+/* Exports */
+
+export { setElements }

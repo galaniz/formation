@@ -1,199 +1,200 @@
-
-/*
- * Imports
- * -------
+/**
+ * Animate: transition & transform mixins
  */
 
-@use 'sass:map';
-@use 'sass:string';
+/* Imports */
 
-/* 
+@use "sass:map";
+@use "sass:string";
+
+/**
  * Set transform for hovers
- * ------------------------
  *
  * @param [string] $value
- *
  */
 
-@mixin transformHover( $value ) {
+@mixin transform-hover($value) {
   .a-hover:hover &,
   .a-hover:focus &,
   .a-hover:active &,
   &.a-hover:hover,
   &.a-hover:focus,
   &.a-hover:active {
-    transform: string.unquote( $value ) !important;
+    transform: string.unquote($value);
   }
 }
 
-/* 
+/**
  * Set translate transforms
- * ------------------------
  *
  * @param [map] $values
  * @param [string] $type
- *
  */
 
-@mixin transformTranslate( $values, $type: 'y' ) {
-  $showTransform: "translate#{$type}( 0 )";
+@mixin transform-translate($values, $type: "y") {
+  $show-transform: "translate#{$type}(0)";
 
   @extend %u-transition-property-opacity-transform;
 
   .js & {
     @each $k, $v in $values {
       $p: $v;
-      $reverseP: $v * -1;
-      $transform: "translate#{$type}( #{$p} )";
-      $transformReverse: "translate#{$type}( #{$reverseP} )";
-      $dataAttr: "&[data-#{$type}='#{$k}']";
+      $reverse-p: $v * -1;
+      $transform: "translate#{$type}(#{$p})";
+      $transform-reverse: "translate#{$type}(#{$reverse-p})";
+      $data-attr: "&[data-#{$type}="#{$k}"]";
 
       @if $k == def {
         & {
-          transform: string.unquote( $transform );
+          transform: string.unquote($transform);
         }
       } @else {
-        #{$dataAttr} {
-          transform: string.unquote( $transform );
+        #{$data-attr} {
+          transform: string.unquote($transform);
         }
       }
 
-      @include transformHover( "translate#{$type}( #{$p} )" );
+      @include transform-hover("translate#{$type}(#{$p})");
 
       &[data-reverse] {
         @if $k == def {
           & {
-            transform: string.unquote( $transformReverse );
+            transform: string.unquote($transform-reverse);
           }
         } @else {
-          #{$dataAttr} {
-            transform: string.unquote( $transformReverse );
+          #{$data-attr} {
+            transform: string.unquote($transform-reverse);
           }
         }
 
-        @include transformHover( "translate#{$type}( #{$reverseP} )" );
+        @include transform-hover("translate#{$type}(#{$reverse-p})");
       }
     }
   }
-  
+
   .js [data-vis-all] &,
   .js &[data-show],
   .js &[data-vis] {
     &,
     &[data-reverse] {
-      transform: string.unquote( $showTransform );
+      transform: string.unquote($show-transform);
     }
   }
 }
 
-/* 
+/**
  * Set transition duration property
- * --------------------------------
  *
  * @param [map] $durations
- *
  */
 
-@mixin transitionDurations( $durations ) {
+@mixin transition-durations($durations) {
   @each $k, $v in $durations {
     @if $k == def {
-      transition-duration: string.unquote( $v );
+      transition-duration: string.unquote($v);
     } @else {
       &[data-d="#{$k}"] {
-        transition-duration: string.unquote( $v );
+        transition-duration: string.unquote($v);
       }
     }
   }
 }
 
-/* 
- * Transition / transform fade classes
- * -----------------------------------
+/**
+ * Transition/transform fade classes
  */
 
-@mixin transitionFade( $transitions ) {
-  $fade: map.get( $transitions, 'fade' );
-  $durations: map.get( $fade, 'durations' );
-  $y: map.get( $fade, 'y' );
-  $x: map.get( $fade, 'x' );
-
-  .a-fade-in,  
-  .a-fade-in-y,
-  .a-fade-in-x {
-    @extend %u-transform-origin-0-0;
-    @extend %u-transition-timing-function-cubic;
-    @include transitionDurations( $durations );
-
-    .js & {
-      @extend %u-opacity-0;
-    }
-
-    .js [data-vis-all] &,
-    .js &[data-show],
-    .js &[data-vis] {
-      @extend %u-opacity-1;
-    }
-  }
+@mixin transition-fade($transitions) {
+  $fade: map.get($transitions, "fade");
+  $durations: map.get($fade, "durations");
+  $y: map.get($fade, "y");
+  $x: map.get($fade, "x");
 
   .a-fade-in {
     @extend %u-transition-property-opacity;
   }
 
   .a-fade-in-y {
-    @include transformTranslate( $y, 'y' );  
+    @include transform-translate($y, "y");
   }
 
   .a-fade-in-x {
-    @include transformTranslate( $x, 'x' );
-  }  
-}
+    @include transform-translate($x, "x");
+  }
 
-/* 
- * Transition / transform scale classes
- * ------------------------------------
- */
-
-@mixin transitionScale( $transitions ) {
-  $scale: map.get( $transitions, 'scale' );
-  $durations: map.get( $scale, 'durations' );
-  $in: map.get( $scale, 'in' );
-  $out: map.get( $scale, 'out' );
-
-  .a-scale-in,
-  .a-scale-out {
+  .a-fade-in,
+  .a-fade-in-y,
+  .a-fade-in-x {
+    @extend %u-transform-origin-0-0;
     @extend %u-transition-timing-function-cubic;
-    @extend %u-transition-property-opacity-transform;
-    @include transitionDurations( $durations );
+    @include transition-durations($durations);
 
     .js & {
       @extend %u-opacity-0;
-    }
-  }
-
-  .a-scale-in {
-    @each $k, $v in $in {
-      @if $k == def {
-        .js & {
-          transform: scale( #{$v} );
-        }
-      } @else if $k == hover {
-        @include transformHover( "scale( #{$v} )" );
-      } @else {
-        .js &[data-s="#{$k}"] {
-          transform: scale( #{$v} );
-        }
-      }
     }
 
     .js [data-vis-all] &,
     .js &[data-show],
     .js &[data-vis] {
       @extend %u-opacity-1;
-      transform: scale( 1 );
+    }
+  }
+}
+
+/**
+ * Transition/transform scale classes
+ */
+
+@mixin transition-scale($transitions) {
+  $scale: map.get($transitions, "scale");
+  $durations: map.get($scale, "durations");
+  $in: map.get($scale, "in");
+  $out: map.get($scale, "out");
+
+  .a-scale-in,
+  .a-scale-out {
+    @include transition-durations($durations);
+  }
+
+  .a-scale-in {
+    @extend %u-transition-timing-function-cubic;
+    @extend %u-transition-property-opacity-transform;
+
+    @each $k, $v in $in {
+      @if $k == def {
+        .js & {
+          transform: scale(#{$v});
+        }
+      } @else if $k == hover {
+        @include transform-hover("scale(#{$v})");
+      } @else {
+        .js &[data-s="#{$k}"] {
+          transform: scale(#{$v});
+        }
+      }
+    }
+
+    .js & {
+      @extend %u-opacity-0;
+    }
+
+    .js [data-vis-all] &,
+    .js &[data-show],
+    .js &[data-vis] {
+      @extend %u-opacity-1;
+
+      transform: scale(1);
     }
   }
 
   .a-scale-out {
+    @extend %u-transition-timing-function-cubic;
+    @extend %u-transition-property-opacity-transform;
+
+    .js & {
+      @extend %u-opacity-0;
+    }
+
     .js [data-vis-all] &,
     .js &[data-show],
     .js &[data-vis] {
@@ -201,15 +202,15 @@
 
       @each $k, $v in $out {
         @if $k == def {
-          transform: scale( #{$v} );
+          transform: scale(#{$v});
         } @else {
           &[data-s="#{$k}"] {
-            transform: scale( #{$v} );
+            transform: scale(#{$v});
           }
         }
       }
     }
 
-    @include transformHover( "scale( 1 )" );
+    @include transform-hover("scale(1)");
   }
 }

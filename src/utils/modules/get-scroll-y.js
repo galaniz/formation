@@ -1,14 +1,18 @@
-
-/*
- * Get scroll y position in cross browser way
- * ------------------------------------------
- * 
+/**
+ * Utility modules: get scroll y position in cross browser way
+ *
  * @return [int] scroll y value
  */
 
-export const getScrollY = () => {
-	let supportPageOffset = window.pageXOffset !== undefined,
-			isCSS1Compat = ( ( document.compatMode || '' ) === 'CSS1Compat' );
+/* Module */
 
-	return supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop;
-};
+const getScrollY = () => {
+  const supportPageOffset = window.pageXOffset !== undefined
+  const isCSS1Compat = ((document.compatMode || '') === 'CSS1Compat')
+
+  return supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop
+}
+
+/* Exports */
+
+export { getScrollY }

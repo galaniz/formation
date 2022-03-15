@@ -2,7 +2,7 @@
 
 Utility functions.
 
-#### `addClass( item, classes )`
+#### `addClass(item, classes)`
 
 Add class(es) to element.
 
@@ -17,7 +17,7 @@ List separated by space
 _Type:_ `string`  
 _Required:_ true
 
-#### `hasClass( item, classes, all )`
+#### `hasClass(item, classes, all)`
 
 Check if element contains class(es).
 
@@ -37,7 +37,7 @@ Check if contains all classes.
 _Type:_ `boolean`  
 _Default:_ false
 
-#### `removeClass( item, classes )`
+#### `removeClass(item, classes)`
 
 Remove class(es) from element.
 
@@ -52,7 +52,7 @@ List separated by space
 _Type:_ `string`  
 _Required:_ true
 
-#### `closest( item, className, max = 10 )`
+#### `closest(item, className, max = 10)`
 
 Traverse up DOM until find element with class.
 
@@ -75,7 +75,7 @@ _Default:_ 10
 
 _Return:_ `HTMLElement`
 
-#### `prefix( type, item, val )`
+#### `prefix(type, item, val)`
 
 Prefix transition or transform props on element.
 
@@ -94,7 +94,7 @@ _Required:_ true
 _Type:_ `string`  
 _Required:_ true
 
-#### `show( item, show )`
+#### `show(item, show)`
 
 Show/hide html element.
 
@@ -108,7 +108,7 @@ _Required:_ true
 _Type:_ `boolean`  
 _Default:_ `true`
 
-#### `disableButtonLoader( button, loader, hide, disable )`
+#### `disableButtonLoader(button, loader, hide, disable)`
 
 Disable button/show loader.
 
@@ -134,7 +134,7 @@ Disable or enable button.
 _Type:_ `boolean`  
 _Default:_ `false`
 
-#### `objectFit( images, type )`
+#### `objectFit(images, type)`
 
 Object fit fallback for cover/contain.
 
@@ -149,7 +149,7 @@ Possible values: `'cover'` `'contain'`
 _Type:_ `string`  
 _Default:_ `'cover'`
 
-#### `assetsLoaded( assets, done )`
+#### `assetsLoaded(assets, done)`
 
 Check if assets (images, iframes, videos) are loaded.
 
@@ -175,7 +175,7 @@ Generate unique string of numbers.
 
 _Return:_ `string`
 
-#### `mergeObjects( x, y )`
+#### `mergeObjects(x, y)`
 
 Merge objects one nested level deep.
 
@@ -192,7 +192,7 @@ _Required:_ true
 
 _Return:_ `object` x
 
-#### `recurseObject( obj, callback, condition )`
+#### `recurseObject(obj, callback, condition)`
 
 Loop through object recursively.
 
@@ -211,7 +211,7 @@ Returns boolean.
 _Type:_ `function`  
 _Default:_ `() => true`  
 
-#### `setElements( meta, e, done )`
+#### `setElements(meta, e, done)`
 
 Fetch and set elements by selector.
 
@@ -243,7 +243,7 @@ Callback when done recursing through meta and setting e object.
 _Type:_ `function`  
 _Default:_ `() => {}`  
 
-#### `cascade( events, repeat )`
+#### `cascade(events, repeat)`
 
 Call functions sequentially and with delay.
 
@@ -260,32 +260,32 @@ _Default:_ `0`
 _Example:_
 
 ```js
-cascade( [
+cascade([
   {
-  action: ( i, done ) => {
+  action: (i, done) => {
     doThis();
 
     let target = 10;
 
-    cascade( [
+    cascade([
     {
-      action: ( j ) => {
+      action: (j) => {
       doThisOtherThing();
 
-      if( j === target - 1 )
+      if(j === target - 1)
         done(); // optional
       },
       delay: 100,
       increment: 50
     }
-    ], target );
+    ], target);
   },
   delay: 300
   }
-] );
+]);
 ```
 
-#### `publish( name, args )`
+#### `publish(name, args)`
 
 Publish event by running callback stored in subscriptions by `name`. Import from pub-sub.js
 
@@ -300,7 +300,7 @@ Passed to callback stored in subscriptions.
 _Type:_ `array`  
 _Default:_ `[]`
 
-#### `subscribe( name, callback )`
+#### `subscribe(name, callback)`
 
 Subscribe to event by storing `name` : `callback`. Import from pub-sub.js
 
@@ -317,7 +317,7 @@ _Default:_ `() => {}`
 
 _Return:_ `object` with `remove` method
 
-#### `urlEncode = ( o, _key, _list )`
+#### `urlEncode = (o, _key, _list)`
 
 Recursively convert object key value pairs into url encoded string.
 
@@ -336,7 +336,7 @@ _Default:_ `[]`
 
 _Return:_ `string`
 
-#### `request( args )`
+#### `request(args)`
 
 Handle ajax requests.
 
@@ -353,13 +353,13 @@ _Required:_ true
   headers: {
   'Content-type': 'application/json'
   },
-  body: JSON.stringify( { // string or formData
+  body: JSON.stringify({ // string or formData
   id: 928349,
   data: {
     x: 98984,
     y: 36748
   }
-  } )
+  })
 }
 ```
 _Return:_ `promise` with response/error passed to it.

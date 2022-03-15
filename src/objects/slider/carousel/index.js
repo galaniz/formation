@@ -1,508 +1,488 @@
-
-/*
- * Imports
- * -------
- */
-
-import { prefix } from '../../../utils';
-
-import Slider from '../index';
-
-/*
- * Slider/Carousel 
- * ---------------
+/**
+ * Objects slider: carousel
  *
  * Based on Siema: https://github.com/pawelgrzybek/siema
  *
+ * @see Slider for base params
+ * @param args [object] {
+ *  @param easing [string]
+ *  @param duration [int]
+ *  @param padding [object]
+ *  @param center [boolean]
+ *  @param linkClick [function]
+ *  @param endMove [function]
+ *  @param onResize [function]
+ * }
  */
 
-export default class Carousel extends Slider {
-
- /*
-	* Constructor
-	* -----------
-	*/
-
-	constructor( args = {} ) {
-
-	 /*
-		* Base variables & init
-		* ---------------------
-		*/
-
-		super( args );
+/* Imports */
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+import { prefix } from '../../../utils'
+import Slider from '../index'
 
-		let childDefaults = {
-			easing: 'ease',
-			duration: 500,
-			padding: {},
-			center: false,
-			linkClick: () => {},
-			endMove: () => {},
-			onResize: () => {}
-		};
+/* Class */
+
+class Carousel extends Slider {
+  /**
+   * Constructor
+   */
 
-		for( let prop in childDefaults ) {
-			this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
-		}
+  constructor (args = {}) {
+    /**
+     * Base variables & init
+     */
 
-	 /*
-		* Internal variables
-		* ------------------
-		*/
+    super(args)
 
-		/* Keep track pointer hold and dragging distance */
+    /**
+     * Public variables
+     */
 
-		this._pointerDown = false;
+    const childDefaults = {
+      easing: 'ease',
+      duration: 500,
+      padding: {},
+      center: false,
+      linkClick: () => {},
+      endMove: () => {},
+      onResize: () => {}
+    }
 
-		this._drag = {
-			startX: 0,
-			endX: 0,
-			startY: 0,
-			currentX: 0,
-			maxX: 0,
-			minX: 0,
-			threshold: 0,
-			letItGo: null,
-			preventClick: false
-		};
+    for (const prop in childDefaults) {
+      this[prop] = Object.getOwnPropertyDescriptor(args, prop) ? args[prop] : childDefaults[prop]
+    }
 
-		/* Dimensions */
+    /**
+     * Internal variables
+     */
 
-		this._sliderWidth = 0;
-		this._itemWidth = 0;
-		this._padding = 0;
+    /* Keep track pointer hold and dragging distance */
 
-		/* Resize */
+    this._pointerDown = false
 
-		this._resizeTimer;
+    this._drag = {
+      startX: 0,
+      endX: 0,
+      startY: 0,
+      currentX: 0,
+      maxX: 0,
+      minX: 0,
+      threshold: 0,
+      letItGo: null,
+      preventClick: false
+    }
 
-		/* Links */
+    /* Dimensions */
 
-		this._links = Array.from( this.slider.querySelectorAll( 'a' ) );
+    this._sliderWidth = 0
+    this._itemWidth = 0
+    this._padding = 0
 
-	 /*
-		* Set up
-		* ------
-		*/
+    /* Resize */
 
-		this._setDimensions();
-		this._setUpNav();
+    this._resizeTimer = null
 
-		if( !( this.items.length - this._perPage ) )
-			return;
+    /* Links */
 
-		this.slider.style.cursor = '-webkit-grab';
-		this.slider.style.touchAction = 'pan-y pinch-zoom';
-		this.slider.tabIndex = '0';
+    this._links = Array.from(this.slider.querySelectorAll('a'))
 
-		prefix( 'transform', this.slider, 'translate3d( 0, 0, 0 )' );
-		prefix( 'transformOrigin', this.slider, '0 0' );
+    /**
+     * Set up
+     */
 
-	 /*
-		* Events
-		* ------
-		*/
+    this._setDimensions()
+    this._setUpNav()
 
-		/* Bind all event handlers for referencability */
+    if (!(this.items.length - this._perPage)) { return }
 
-		[
-			'resizeHandler', 
-			'touchstartHandler', 
-			'touchendHandler', 
-			'touchmoveHandler', 
-			'mousedownHandler', 
-			'mouseupHandler', 
-			'mouseleaveHandler', 
-			'mousemoveHandler', 
-			'clickHandler'
-		].forEach( method => {
-			this[`_${ method }`] = this[`_${ method }`].bind( this );
-		} );
+    this.slider.style.cursor = '-webkit-grab'
+    this.slider.style.touchAction = 'pan-y pinch-zoom'
+    this.slider.tabIndex = '0'
 
-		/* Resize */
+    prefix('transform', this.slider, 'translate3d(0, 0, 0)')
+    prefix('transformOrigin', this.slider, '0 0');
 
-		window.addEventListener( 'resize', this._resizeHandler );
+    /**
+     * Events
+     */
 
-		/* Touch */
+    /* Bind all event handlers for referencability */
 
-		this.slider.addEventListener( 'touchstart', this._touchstartHandler );
-		this.slider.addEventListener( 'touchend', this._touchendHandler );
-		this.slider.addEventListener( 'touchmove', this._touchmoveHandler );
+    [
+      'resizeHandler',
+      'touchstartHandler',
+      'touchendHandler',
+      'touchmoveHandler',
+      'mousedownHandler',
+      'mouseupHandler',
+      'mouseleaveHandler',
+      'mousemoveHandler',
+      'clickHandler'
+    ].forEach(method => {
+      this[`_${method}`] = this[`_${method}`].bind(this)
+    })
 
-		/* Mouse */
+    /* Resize */
 
-		this.slider.addEventListener( 'mousedown', this._mousedownHandler );
-		this.slider.addEventListener( 'mouseup', this._mouseupHandler );
-		this.slider.addEventListener( 'mouseleave', this._mouseleaveHandler );
-		this.slider.addEventListener( 'mousemove', this._mousemoveHandler );
+    window.addEventListener('resize', this._resizeHandler)
 
-		/* Click */
+    /* Touch */
 
-		this.slider.addEventListener( 'click', this._clickHandler );
+    this.slider.addEventListener('touchstart', this._touchstartHandler)
+    this.slider.addEventListener('touchend', this._touchendHandler)
+    this.slider.addEventListener('touchmove', this._touchmoveHandler)
 
-		/* Init */
+    /* Mouse */
 
-		this._goTo( this.currentIndex, true );
-	}
+    this.slider.addEventListener('mousedown', this._mousedownHandler)
+    this.slider.addEventListener('mouseup', this._mouseupHandler)
+    this.slider.addEventListener('mouseleave', this._mouseleaveHandler)
+    this.slider.addEventListener('mousemove', this._mousemoveHandler)
 
- /*
-	* Parent methods
-	* --------------
-	*/
+    /* Click */
 
-	_doGoTo( index ) {
-		super._doGoTo( index );
-		this._move();
-	}
+    this.slider.addEventListener('click', this._clickHandler)
 
- /*
-	* Helpers
-	* -------
-	*/
+    /* Init */
 
-	_setWidths( set = true ) {
-		this.slider.style.width = set ? ( this._itemWidth * this.items.length ) + 'px' : '';
+    this._goTo(this.currentIndex, true)
+  }
 
-		this.items.forEach( ( item ) => {
-			item.style.width = set ? this._itemWidth + 'px' : '';
-		} );
-	}
+  /**
+   * Parent methods
+   */
 
-	_setDimensions() {
-		this._setWidths( false );
+  _doGoTo (index) {
+    super._doGoTo(index)
+    this._move()
+  }
 
-		this._sliderWidth = this.slider.clientWidth;
-		this._itemWidth = this.items[0].clientWidth;
+  /**
+   * Helpers
+   */
 
-		this._setWidths( true );
+  _setWidths (set = true) {
+    this.slider.style.width = set ? (this._itemWidth * this.items.length) + 'px' : ''
 
-		// set padding
-		this._resolveObject( '_padding', 'padding' );
+    this.items.forEach((item) => {
+      item.style.width = set ? this._itemWidth + 'px' : ''
+    })
+  }
 
-		// set slides per page
-		this._perPage = Math.round( this._sliderWidth / this._itemWidth );
+  _setDimensions () {
+    this._setWidths(false)
 
-		this._drag.maxX = ( this._itemWidth * this.items.length ) - this._sliderWidth + ( this._padding );
-		this._drag.minX = this._padding;
+    this._sliderWidth = this.slider.clientWidth
+    this._itemWidth = this.items[0].clientWidth
 
-		this._drag.threshold = this._itemWidth / 3;
-	 } 
+    this._setWidths(true)
 
-	_resolveObject( setKey, getKey ) {
-		let viewportWidth = window.innerWidth;
-		this[setKey] = 0;
+    /* Set padding */
 
-		for( let viewport in this[getKey] ) {
-			if( viewportWidth >= viewport ) {
-				this[setKey] = this[getKey][viewport];
-			}
-		}
-	}
+    this._resolveObject('_padding', 'padding')
 
-	_disableTransition() {
-		prefix( 'transition', this.slider, `all 0ms ${ this.easing }` );
-	}
-	
-	_enableTransition() {
-		prefix( 'transition', this.slider, `all ${ this.duration }ms ${ this.easing }` );
-	}
+    /* Set slides per page */
 
-	/* Prevent dragging / swiping on inputs, selects and textareas */
+    this._perPage = Math.round(this._sliderWidth / this._itemWidth)
 
-	_ignore( e ) {
-		let ignore = ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf( e.target.nodeName ) !== -1;
+    this._drag.maxX = (this._itemWidth * this.items.length) - this._sliderWidth + (this._padding)
+    this._drag.minX = this._padding
 
-		if( ignore )
-			return true;
+    this._drag.threshold = this._itemWidth / 3
+  }
 
-		return false;
-	}
+  _resolveObject (setKey, getKey) {
+    const viewportWidth = window.innerWidth
+    this[setKey] = 0
 
-	/* On drag check if link to prevent */
+    for (const viewport in this[getKey]) {
+      if (viewportWidth >= viewport) {
+        this[setKey] = this[getKey][viewport]
+      }
+    }
+  }
 
-	_isLink( target ) {
-		if( target === null || target === undefined )
-			return false;
+  _disableTransition () {
+    prefix('transition', this.slider, `all 0ms ${this.easing}`)
+  }
 
-		let isLink = target.nodeName === 'A';
+  _enableTransition () {
+    prefix('transition', this.slider, `all ${this.duration}ms ${this.easing}`)
+  }
 
-		if( !isLink ) {
-			let t = target,
-					counter = 0,
-					max = 20;
+  /* Prevent dragging/swiping on inputs, selects and textareas */
 
-			while( !isLink ) {
-				t = t.parentElement;
+  _ignore (e) {
+    const ignore = ['TEXTAREA', 'OPTION', 'INPUT', 'SELECT'].indexOf(e.target.nodeName) !== -1
 
-				if( t === null || t === undefined ) {
-					isLink = false;
-					break;
-				}
+    if (ignore) { return true }
 
-				isLink = t.nodeName === 'A';
-				counter++;
+    return false
+  }
 
-				if( counter === max ) {
-					isLink = false;
-					break;
-				}
-			}
+  /* On drag check if link to prevent */
 
-			if( !isLink) {
-				t = target;
-				counter = 0;
-				max = 20;
+  _isLink (target) {
+    if (target === null || target === undefined) { return false }
 
-				while( !isLink ) {
-					t = t.firstChildElement;
+    let isLink = target.nodeName === 'A'
 
-					if( t === null || t === undefined ) {
-						isLink = false;
-							break;
-					}
+    if (!isLink) {
+      let t = target
+      let counter = 0
+      let max = 20
 
-					isLink = t.nodeName === 'A';
-					counter++;
+      while (!isLink) {
+        t = t.parentElement
 
-					if( counter === max ) {
-						isLink = false;
-						break;
-					}
-				}
-			}
-		}
+        if (t === null || t === undefined) {
+          isLink = false
+          break
+        }
 
-		return isLink;
-	}
+        isLink = t.nodeName === 'A'
+        counter++
 
-	/* Clear drag after touchend and mouseup event */
+        if (counter === max) {
+          isLink = false
+          break
+        }
+      }
 
-	_clearDrag() {
-		this._drag.startX = 0;
-		this._drag.endX = 0;
-		this._drag.startY = 0;
-		this._drag.letItGo = null;
-	}
+      if (!isLink) {
+        t = target
+        counter = 0
+        max = 20
 
- /*
-	* Move ( nav click, after drag )
-	* ------------------------------
-	*/
+        while (!isLink) {
+          t = t.firstChildElement
 
-	_move( drag = false ) {
+          if (t === null || t === undefined) {
+            isLink = false
+            break
+          }
 
-		/* Get move state if dragging */
+          isLink = t.nodeName === 'A'
+          counter++
 
-		let ogIndex = this.currentIndex;
+          if (counter === max) {
+            isLink = false
+            break
+          }
+        }
+      }
+    }
 
-		if( drag ) {
-			let dragOffset = this._drag.startX - this._drag.endX;
+    return isLink
+  }
 
-			if( Math.abs( dragOffset ) > this._drag.threshold ) {	
-				let slideNumber = Math.ceil( Math.abs( dragOffset ) / this._itemWidth );
+  /* Clear drag after touchend and mouseup event */
 
-				if( dragOffset > 0 ) {
-					this.currentIndex += slideNumber;
-				} else {
-					this.currentIndex -= slideNumber;
-				}
-			} else {
-				this.currentIndex = this.currentIndex;
-			}
+  _clearDrag () {
+    this._drag.startX = 0
+    this._drag.endX = 0
+    this._drag.startY = 0
+    this._drag.letItGo = null
+  }
 
-			if( this.currentIndex < 0 )
-				this.currentIndex = 0;
+  /**
+   * Move (nav click, after drag)
+   */
 
-			if( this.currentIndex > this._lastIndex )
-				this.currentIndex = this._lastIndex;
-		}
+  _move (drag = false) {
+    /* Get move state if dragging */
 
-		/* Add transition to slider */
+    const ogIndex = this.currentIndex
 
-		this._enableTransition();
+    if (drag) {
+      const dragOffset = this._drag.startX - this._drag.endX
 
-		/* Transform slider */
+      if (Math.abs(dragOffset) > this._drag.threshold) {
+        const slideNumber = Math.ceil(Math.abs(dragOffset) / this._itemWidth)
 
-		let transform = -( ( this.currentIndex * this._itemWidth ) - this._padding );
+        if (dragOffset > 0) {
+          this.currentIndex += slideNumber
+        } else {
+          this.currentIndex -= slideNumber
+        }
+      }
 
-		if( transform > this._drag.minX )
-			transform = this._drag.minX;
+      if (this.currentIndex < 0) { this.currentIndex = 0 }
 
-		if( transform < -( this._drag.maxX ) )
-			transform = -( this._drag.maxX );
+      if (this.currentIndex > this._lastIndex) { this.currentIndex = this._lastIndex }
+    }
 
-		prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
+    /* Add transition to slider */
 
-		/* Save x position */
+    this._enableTransition()
 
-		this._drag.currentX = transform;
+    /* Transform slider */
 
-		/* Set nav buttons */
+    let transform = -((this.currentIndex * this._itemWidth) - this._padding)
 
-		this._setNav( this.currentIndex, ogIndex );
+    if (transform > this._drag.minX) { transform = this._drag.minX }
 
-		this.endMove(); 
-	}
+    if (transform < -(this._drag.maxX)) { transform = -(this._drag.maxX) }
 
- /*
-	* Drag ( mousemove, touchmove )
-	* -----------------------------
-	*/
+    prefix('transform', this.slider, `translate3d(${transform}px, 0, 0)`)
 
-	_dragging() {
-		let dragOffset = ( this._drag.startX - this._drag.endX ),
-				transform = this._drag.currentX - dragOffset,
-				friction = ( ( Math.abs( dragOffset ) / this._drag.maxX ) / this._perPage ) * this._itemWidth;
+    /* Save x position */
 
-		if( transform > this._drag.minX )
-			transform = this._drag.minX + friction;
+    this._drag.currentX = transform
 
-		if( transform < -( this._drag.maxX ) )
-			transform = -( this._drag.maxX + friction );
+    /* Set nav buttons */
 
-		prefix( 'transform', this.slider, `translate3d( ${ transform }px, 0, 0 )` );
-	}
+    this._setNav(this.currentIndex, ogIndex)
 
-	/*
-	 * Event callbacks
-	 * ---------------
-	 */
+    this.endMove()
+  }
 
-	/* Touch */
-	
-	_touchstartHandler( e ) {
-		if( this._ignore( e ) ) 
-			return;
+  /**
+   * Drag (mousemove, touchmove)
+   */
 
-		e.stopPropagation();
+  _dragging () {
+    const dragOffset = (this._drag.startX - this._drag.endX)
+    let transform = this._drag.currentX - dragOffset
+    const friction = ((Math.abs(dragOffset) / this._drag.maxX) / this._perPage) * this._itemWidth
 
-		this._disableTransition();
+    if (transform > this._drag.minX) { transform = this._drag.minX + friction }
 
-		this._pointerDown = true;
-		this._drag.startX = e.touches[0].pageX;
-		this._drag.startY = e.touches[0].pageY;
-	}
-	
-	_touchendHandler( e ) {
-		e.stopPropagation();
-		this._pointerDown = false;
-		
-		if( this._drag.endX )
-			this._move( true );
+    if (transform < -(this._drag.maxX)) { transform = -(this._drag.maxX + friction) }
 
-		this._clearDrag();
-	}
+    prefix('transform', this.slider, `translate3d(${transform}px, 0, 0)`)
+  }
 
-	_touchmoveHandler( e ) {
-		e.stopPropagation();
+  /**
+   * Event handlers
+   */
 
-		if( this._drag.letItGo === null )
-			this._drag.letItGo = Math.abs( this._drag.startY - e.touches[0].pageY ) < Math.abs( this._drag.startX - e.touches[0].pageX );
+  /* Touch */
 
-		if( this._pointerDown && this._drag.letItGo ) {
-			e.preventDefault();
-			this._drag.endX = e.touches[0].pageX;
+  _touchstartHandler (e) {
+    if (this._ignore(e)) { return }
 
-			this._dragging();
-		}
-	}
+    e.stopPropagation()
 
-	/* Mouse */
+    this._disableTransition()
 
-	_mousedownHandler( e ) {
-		if( this._ignore( e ) ) 
-			return;
+    this._pointerDown = true
+    this._drag.startX = e.touches[0].pageX
+    this._drag.startY = e.touches[0].pageY
+  }
 
-		e.stopPropagation();
-		e.preventDefault();
+  _touchendHandler (e) {
+    e.stopPropagation()
+    this._pointerDown = false
 
-		this._disableTransition();
+    if (this._drag.endX) { this._move(true) }
 
-		this._pointerDown = true;
-		this._drag.startX = e.pageX;
-	}
+    this._clearDrag()
+  }
 
-	_mouseupHandler( e ) {
-		e.stopPropagation();
-		this._pointerDown = false;
-		this.slider.style.cursor = '-webkit-grab';
-		
-		if( this._drag.endX ) 
-			this._move( true );
+  _touchmoveHandler (e) {
+    e.stopPropagation()
 
-		this._clearDrag();
-	}
+    if (this._drag.letItGo === null) { this._drag.letItGo = Math.abs(this._drag.startY - e.touches[0].pageY) < Math.abs(this._drag.startX - e.touches[0].pageX) }
 
-	_mousemoveHandler( e ) {
-		e.preventDefault();
-		
-		if( this._pointerDown ) {
+    if (this._pointerDown && this._drag.letItGo) {
+      e.preventDefault()
+      this._drag.endX = e.touches[0].pageX
 
-			/* 
-				Dragged element is a link
-				preventClick prop true
-				detemine browser redirection later
-			*/
+      this._dragging()
+    }
+  }
 
-			let isLink = this._isLink( e.target );
+  /* Mouse */
 
-			if( isLink ) {
-				this._drag.preventClick = true;
-				this.linkClick( true );
-			} else {
-				this.linkClick( false );
-			}
+  _mousedownHandler (e) {
+    if (this._ignore(e)) { return }
 
-			this._drag.endX = e.pageX;
-			this.slider.style.cursor = '-webkit-grabbing';
-			
-			this._dragging();
-		}
-	}
+    e.stopPropagation()
+    e.preventDefault()
 
-	_mouseleaveHandler( e ) {
-		if( this._pointerDown ) {
-			this._pointerDown = false;
-			this.slider.style.cursor = '-webkit-grab';
-			this._drag.endX = e.pageX;
-			this._drag.preventClick = false;
-			this._move( true );
-			this._clearDrag();
-		}
-	}
+    this._disableTransition()
 
-	/* Click */
-	
-	_clickHandler( e ) {
-		/* 
-			Dragged element is a link 
-			prevent browsers from folowing the link
-		*/
+    this._pointerDown = true
+    this._drag.startX = e.pageX
+  }
 
-		if( this._drag.preventClick )
-			e.preventDefault();
+  _mouseupHandler (e) {
+    e.stopPropagation()
+    this._pointerDown = false
+    this.slider.style.cursor = '-webkit-grab'
 
-		this._drag.preventClick = false;
-	}
+    if (this._drag.endX) { this._move(true) }
 
-	/* Resize */
+    this._clearDrag()
+  }
 
-	_resizeHandler() {
-		// throttles resize event
-		clearTimeout( this._resizeTimer );
+  _mousemoveHandler (e) {
+    e.preventDefault()
 
-		this._resizeTimer = setTimeout( () => {
-			this._setDimensions();
-			this._setUpNav( true );
-			this._goTo( this.currentIndex, true );
-			this.onResize();
-		}, 100 );
-	}
+    if (this._pointerDown) {
+      /*
+        Dragged element is a link
+        PreventClick prop true
+        Detemine browser redirection later
+      */
 
-} // end Carousel
+      const isLink = this._isLink(e.target)
+
+      if (isLink) {
+        this._drag.preventClick = true
+        this.linkClick(true)
+      } else {
+        this.linkClick(false)
+      }
+
+      this._drag.endX = e.pageX
+      this.slider.style.cursor = '-webkit-grabbing'
+
+      this._dragging()
+    }
+  }
+
+  _mouseleaveHandler (e) {
+    if (this._pointerDown) {
+      this._pointerDown = false
+      this.slider.style.cursor = '-webkit-grab'
+      this._drag.endX = e.pageX
+      this._drag.preventClick = false
+      this._move(true)
+      this._clearDrag()
+    }
+  }
+
+  /* Click */
+
+  _clickHandler (e) {
+    /*
+      Dragged element is a link
+      Prevent browsers from folowing the link
+    */
+
+    if (this._drag.preventClick) { e.preventDefault() }
+
+    this._drag.preventClick = false
+  }
+
+  /* Resize */
+
+  _resizeHandler () {
+    /* Throttles resize event */
+
+    clearTimeout(this._resizeTimer)
+
+    this._resizeTimer = setTimeout(() => {
+      this._setDimensions()
+      this._setUpNav(true)
+      this._goTo(this.currentIndex, true)
+      this.onResize()
+    }, 100)
+  }
+} // End Carousel
+
+/* Exports */
+
+export default Carousel

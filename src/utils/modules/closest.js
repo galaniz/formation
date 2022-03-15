@@ -1,32 +1,35 @@
-
-/*
- * Traverse up DOM until find element with class
- * ---------------------------------------------
+/**
+ * Utility modules: traverse up DOM until find element with class
  *
  * @param item [HTMLElement]
  * @param className [string]
  */
 
-/* Dependencies */
+/* Imports */
 
-import { hasClass } from './has-class';
+import { hasClass } from './has-class'
 
-export const closest = ( item, className, max = 10 ) => {
-	if( !item || !className )
-		return;
+/* Module */
 
-	let parent = item.parentElement,
-			counter = 0;
+const closest = (item, className, max = 10) => {
+  if (!item || !className) { return }
 
-	while( hasClass( parent, className ) === false ) {
-		parent = parent.parentElement;
-		counter++;
+  let parent = item.parentElement
+  let counter = 0
 
-		if( counter === max ) {
-			parent = false;
-			break;
-		}
-	}
+  while (hasClass(parent, className) === false) {
+    parent = parent.parentElement
+    counter++
 
-	return parent;
-};
+    if (counter === max) {
+      parent = false
+      break
+    }
+  }
+
+  return parent
+}
+
+/* Exports */
+
+export { closest }

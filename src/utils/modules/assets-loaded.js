@@ -1,7 +1,5 @@
-
-/*
- * Check if assets are loaded
- * --------------------------
+/**
+ * Utility modules: check if assets are loaded
  *
  * assetLoaded
  *
@@ -14,53 +12,53 @@
  * @param done callback [function] when finished loading
  */
 
-const assetLoaded = ( asset ) => {
-  let type = asset.tagName;
+/* Modules */
 
-  return new Promise( ( resolve, reject ) => {
-    let proxy = null;
+const assetLoaded = (asset) => {
+  const type = asset.tagName
 
-    if( type === 'IMG' )
-      proxy = new Image();
+  return new Promise((resolve, reject) => {
+    let proxy = null
 
-    if( type === 'IFRAME' )
-      proxy = new Iframe();
+    if (type === 'IMG') { proxy = new window.Image() }
 
-    if( type === 'VIDEO' )
-      proxy = new Video();
+    if (type === 'IFRAME') { proxy = new window.Iframe() }
 
-    proxy.src = asset.src;
+    if (type === 'VIDEO') { proxy = new window.Video() }
+
+    proxy.src = asset.src
 
     const res = () => {
-      resolve( asset );
-    };
+      resolve(asset)
+    }
 
-    const err = ( message ) => {
-      reject( message );
-    };
+    const err = (message) => {
+      reject(message)
+    }
 
-    if( proxy.complete )
-      res();
+    if (proxy.complete) { res() }
 
-    proxy.onload = res;
-    proxy.onerror = err;
-  } );
-};
+    proxy.onload = res
+    proxy.onerror = err
+  })
+}
 
-const assetsLoaded = ( assets = [], done = () => {} ) => {
-  if( assets.length == 0 ) {
-    done( false );
-    return;
+const assetsLoaded = (assets = [], done = () => {}) => {
+  if (assets.length === 0) {
+    done(false)
+    return
   }
 
-	Promise.all( assets.map( assetLoaded ) )
-  .then( data => {
-		done( data );
-	} )
-  .catch( err => {
-    console.log( err );
-    done( false );
-  } );
-};
+  Promise.all(assets.map(assetLoaded))
+    .then(data => {
+      done(data)
+    })
+    .catch(err => {
+      console.log(err)
+      done(false)
+    })
+}
 
-export { assetLoaded, assetsLoaded };
+/* Exports */
+
+export { assetLoaded, assetsLoaded }

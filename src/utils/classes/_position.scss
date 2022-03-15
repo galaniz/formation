@@ -1,0 +1,54 @@
+/**
+ * Utility classes: position
+ */
+
+/* Imports */
+
+@use "../../config" as con;
+
+/* Styles */
+
+.u-p-lt {
+  object-position: left top;
+  background-position: left top;
+}
+
+.u-p-lc {
+  object-position: left center;
+  background-position: left center;
+}
+
+.u-p-lb {
+  object-position: left bottom;
+  background-position: left bottom;
+}
+
+.u-p-ct {
+  object-position: center top;
+  background-position: center top;
+}
+
+.u-p-cc {
+  object-position: center center;
+  background-position: center center;
+}
+
+.u-p-cb {
+  object-position: center bottom;
+  background-position: center bottom;
+}
+
+.u-p-rt {
+  object-position: right top;
+  background-position: right top;
+}
+
+.u-p-rc {
+  object-position: right center;
+  background-position: right center;
+}
+
+.u-p-rb {
+  object-position: right bottom;
+  background-position: right bottom;
+}

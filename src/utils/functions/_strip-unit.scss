@@ -1,25 +1,24 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility functions: strip unit from number
  */
+
+/* Imports */
 
 @use "sass:math";
 @use "sass:meta";
 
-/*
- * Strip unit from number
- * ----------------------
+/**
+ * Function
  *
- * source: https://css-tricks.com/snippets/css/fluid-typography
+ * Source: https://css-tricks.com/snippets/css/fluid-typography
  *
  * @param [number] $number
  * @return [number]
  */
 
-@function stripUnit( $number ) {
-  @if( meta.type-of( $number ) == number and not math.is-unitless( $number ) ) {
-    @return math.div( $number, $number * 0 + 1 );
+@function strip-unit($number) {
+  @if meta.type-of($number) == number and not math.is-unitless($number) {
+    @return math.div($number, $number * 0 + 1);
   }
 
   @return $number;

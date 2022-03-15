@@ -1,93 +1,89 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects form: float labels above inputs
+ *
+ * @param args [object] {
+ *  @param input [HTMLElement]
+ *  @param label [HTMLElement]
+ * }
  */
 
-import { mergeObjects } from '../../../utils';
+/* Imports */
 
-/*
- * Float labels above inputs 
- * -------------------------
- */
+import { mergeObjects } from '../../../utils'
 
-export default class FloatLabel {
+/* Class */
 
- /*
-	* Constructor
-	* -----------
-	*/
+class FloatLabel {
+  /**
+   * Constructor
+   */
 
-	constructor( args ) {
-		
-	 /*
-		* Public variables
-		* ----------------
-		*/
+  constructor (args) {
+    /* Public variables */
 
-		this.input = null;
-		this.label = null;
+    this.input = null
+    this.label = null
 
-		// merge default variables with args
-		mergeObjects( this, args );
+    /* Merge default variables with args */
 
-	 /*
-		* Initialize
-		* ----------
-		*/
+    mergeObjects(this, args)
 
-		let init = this._initialize();
+    /* Initialize */
 
-		if( !init ) 
-			return false;
-	}
+    const init = this._initialize()
 
- /*
-	* Initialize
-	* ----------
-	*/
+    if (!init) { return false }
+  }
 
-	_initialize() {
-		// check that required variables not null
-		if( !this.input || !this.label )
-			return false;
+  /**
+   * Initialize
+   */
 
-		// add event listeners
-		this.input.addEventListener( 'focus', this._inputHandler.bind( this ) );
-		this.input.addEventListener( 'blur', this._inputHandler.bind( this ) );
+  _initialize () {
+    /* Check that required variables not null */
 
-		// init
-		this._inputHandler();
+    if (!this.input || !this.label) { return false }
 
-		return true;
-	}
+    /* Add event listeners */
 
- /*
-	* Event Handlers
-	* --------------
-	*/
+    this.input.addEventListener('focus', this._inputHandler.bind(this))
+    this.input.addEventListener('blur', this._inputHandler.bind(this))
 
-	_inputHandler( e ) {
-		let type = e !== undefined ? e.type : false,
-				float = false;
+    /* Init */
 
-		if( type == 'focus' ) {
-			float = true;
-		} else {
-			let value = this.input.value.trim();
+    this._inputHandler()
 
-			if( value ) {
-				float = true;
-			} else {
-				float = false;
-			}
-		}
+    return true
+  }
 
-		if( float ) {
-			this.label.setAttribute( 'data-float', '' );
-		} else {
-			this.label.removeAttribute( 'data-float' );
-		}
-	}
+  /**
+   * Event handlers
+   */
 
-} // end FloatLabel
+  _inputHandler (e) {
+    const type = e !== undefined ? e.type : false
+    let float = false
+
+    if (type === 'focus') {
+      float = true
+    } else {
+      const value = this.input.value.trim()
+
+      if (value) {
+        float = true
+      } else {
+        float = false
+      }
+    }
+
+    if (float) {
+      this.label.setAttribute('data-float', '')
+    } else {
+      this.label.removeAttribute('data-float')
+    }
+  }
+} // End FloatLabel
+
+/* Exports */
+
+export default FloatLabel

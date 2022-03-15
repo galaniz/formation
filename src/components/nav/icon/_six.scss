@@ -1,117 +1,116 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: six
  */
 
-@use '../../../config' as con;
-@use '../../../utils/functions/map as m;
-@use '../../../utils/functions/calc-rem-em as c;
+/* Imports */
 
-/*
- * Nav Icon: Six
- * -------------
- */
+@use "sass:map";
+@use "../../../config" as con;
+@use "../../../utils/functions/calc-rem" as c;
+
+/* Styles */
 
 .c-nav-icon[data-num="6"] {
+  /* Lines */
 
-	/* Lines */ 
+  & .c-nav-icon__top,
+  & .c-nav-icon__middle,
+  & .c-nav-icon__bottom,
+  & .c-nav-icon__left,
+  & .c-nav-icon__right {
+    transition: transform 200ms ease;
+  }
 
-	& .c-nav-icon__top,
-	& .c-nav-icon__middle,
-	& .c-nav-icon__bottom,
-	& .c-nav-icon__left,
-	& .c-nav-icon__right {
-		transition: transform 200ms ease;
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__middle,
+  & .c-nav-icon__bottom {
+    transform: scaleX(1);
+    transform-origin: 0 50%;
+  }
 
-	& .c-nav-icon__top,
-	& .c-nav-icon__middle,
-	& .c-nav-icon__bottom {
-		transform: scaleX( 1 );
-		transform-origin: 0 50%;
-	}
+  & .c-nav-icon__top {
+    transition-delay: 500ms;
+  }
 
-	& .c-nav-icon__top {
-		transition-delay: 500ms;
-	}
+  & .c-nav-icon__middle {
+    transition-delay: 625ms;
+  }
 
-	& .c-nav-icon__middle {
-		transition-delay: 625ms;
-	}
+  & .c-nav-icon__bottom {
+    transition-delay: 750ms;
+  }
 
-	& .c-nav-icon__bottom {
-		transition-delay: 750ms;
-	}
-	
-	/* Cross */
+  /* Cross */
 
-	& .c-nav-icon__cross,
-	& .c-nav-icon__left,
-	& .c-nav-icon__right {
-		@extend %u-position-absolute;
-	}
+  & .c-nav-icon__cross,
+  & .c-nav-icon__left,
+  & .c-nav-icon__right {
+    @extend %u-position-absolute;
+  }
 
-	& .c-nav-icon__cross {
-		$_w: c.calcRem( m.mapDeepGet( con.$nav, 'icon', 'width' ) * 0.90 );
+  & .c-nav-icon__cross {
+    $w: c.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
 
-		@extend %u-margin-auto;
-		@extend %u-left-0;
-		@extend %u-right-0;
-		@extend %u-top-0;
-		@extend %u-bottom-0;
-		transform: rotate( 45deg );
-		height: $_w;
-		width: $_w;
-	}
+    @extend %u-margin-auto;
+    @extend %u-left-0;
+    @extend %u-right-0;
+    @extend %u-top-0;
+    @extend %u-bottom-0;
 
-	& .c-nav-icon__left,
-	& .c-nav-icon__right {
-		@extend %u-transform-origin-0-0;
-	}
+    transform: rotate(45deg);
+    height: $w;
+    width: $w;
+  }
 
-	& .c-nav-icon__left {
-		@extend %u-top-0;
-		@extend %u-height-100;
-		transform: scaleY( 0 ) translateX( -50% );
-		transition-delay: 0ms;
-		left: 50%;
-	}
+  & .c-nav-icon__left,
+  & .c-nav-icon__right {
+    @extend %u-transform-origin-0-0;
+  }
 
-	& .c-nav-icon__right {
-		@extend %u-width-100;
-		transform: scaleX( 0 ) translateY( -50% );
-		transition-delay: 250ms;
-		top: 50%;
-	}
+  & .c-nav-icon__left {
+    @extend %u-top-0;
+    @extend %u-height-100;
 
-	.c-nav__button[data-show] & {
-		& .c-nav-icon__top,
-		& .c-nav-icon__middle,
-		& .c-nav-icon__bottom {
-			transform: scaleX( 0 );
-		}
+    transform: scaleY(0) translateX(-50%);
+    transition-delay: 0ms;
+    left: 50%;
+  }
 
-		& .c-nav-icon__top {
-			transition-delay: 0ms;
-		}
+  & .c-nav-icon__right {
+    @extend %u-width-100;
 
-		& .c-nav-icon__middle {
-			transition-delay: 125ms;
-		}
+    transform: scaleX(0) translateY(-50%);
+    transition-delay: 250ms;
+    top: 50%;
+  }
 
-		& .c-nav-icon__bottom {
-			transition-delay: 250ms;
-		}
+  .c-nav__button[data-show] & {
+    & .c-nav-icon__top,
+    & .c-nav-icon__middle,
+    & .c-nav-icon__bottom {
+      transform: scaleX(0);
+    }
 
-		& .c-nav-icon__left {
-			transform: scaleY( 1 ) translateX( -50% );
-			transition-delay: 625ms;
-		}
-		
-		& .c-nav-icon__right {
-			transform: scaleX( 1 ) translateY( -50% );
-			transition-delay: 375ms;
-		}
-	}
+    & .c-nav-icon__top {
+      transition-delay: 0ms;
+    }
+
+    & .c-nav-icon__middle {
+      transition-delay: 125ms;
+    }
+
+    & .c-nav-icon__bottom {
+      transition-delay: 250ms;
+    }
+
+    & .c-nav-icon__left {
+      transform: scaleY(1) translateX(-50%);
+      transition-delay: 625ms;
+    }
+
+    & .c-nav-icon__right {
+      transform: scaleX(1) translateY(-50%);
+      transition-delay: 375ms;
+    }
+  }
 }

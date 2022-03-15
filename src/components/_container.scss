@@ -1,17 +1,15 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components: container
  */
 
-@use '../config';
+/* Imports */
 
-/*
- * Main container
- * --------------
- */
+@use "../config";
+
+/* Styles */
 
 .c-container {
-	@extend %u-position-relative;
-	min-height: 100vh;
+  @extend %u-position-relative;
+
+  min-height: 100vh;
 }

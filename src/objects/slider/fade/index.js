@@ -1,89 +1,87 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects slider: fade
+ *
+ * @see Slider for base params
+ * @param args [object] {
+ *  @param transitionDuration [int]
+ *  @param overlayItems [boolean]
+ *  @param showLast [boolean]
+ * }
  */
 
-import { prefix } from '../../../utils';
+/* Imports */
 
-import Slider from '../index';
+import { prefix } from '../../../utils'
+import Slider from '../index'
 
-/*
- * Slider/Fade ( slides fade in and out )
- * -----------
- */
+/* Class */
 
-export default class Fade extends Slider {
+class Fade extends Slider {
+  /**
+   * Constructor
+   */
 
- /*
-	* Constructor
-	* -----------
-	*/
+  constructor (args = {}) {
+    /**
+     * Base variables & init
+     */
 
-	constructor( args = {} ) {
+    super(args)
 
-	 /*
-		* Base variables & init
-		* ---------------------
-		*/
+    /**
+     * Public variables
+     */
 
-		super( args );
+    const childDefaults = {
+      transitionDuration: 500,
+      overlayItems: false,
+      showLast: false
+    }
 
-	 /*
-		* Public variables
-		* ----------------
-		*/
+    for (const prop in childDefaults) {
+      this[prop] = Object.getOwnPropertyDescriptor(args, prop) ? args[prop] : childDefaults[prop]
+    }
 
-		let childDefaults = {
-			transitionDuration: 500,
-			overlayItems: false,
-			showLast: false
-		};
+    /**
+     * Set up
+     */
 
-		for( let prop in childDefaults ) {
-			this[prop] = args.hasOwnProperty( prop ) ? args[prop] : childDefaults[prop];
-		}
+    /* Overlay items on top of each other */
 
-	 /*
-		* Set up
-		* ------
-		*/
+    if (this.overlayItems) {
+      this.items.forEach((item, i) => {
+        prefix('transform', item, `translate(-${i * 100}%)`)
+      })
+    }
 
-		/* Overlay items on top of each other */
+    /* Nav set up */
 
-		if( this.overlayItems ) {
-			this.items.forEach( ( item, i ) => {
-				prefix( 'transform', item, `translate( -${ i * 100 }% )` );
-			} );
-		}
+    this._setUpNav()
 
-		/* Nav set up */
+    this._goTo(this.currentIndex, true)
+  }
 
-		this._setUpNav();
+  /**
+   * Helpers
+   */
 
-		this._goTo( this.currentIndex, true );
-	}
+  _doGoTo (index) {
+    const ogIndex = this.currentIndex
+    const lastIndex = super._doGoTo(index)
 
- /*
-	* Helpers
-	* -------
-	*/
+    if (this.showLast) { this.items[lastIndex].style.opacity = 1 }
 
-	_doGoTo( index ) {
-		let ogIndex = this.currentIndex,
-				lastIndex = super._doGoTo( index );
+    this.items[ogIndex].removeAttribute('data-active')
+    this.items[this.currentIndex].addAttribute('data-active', '')
 
-		if( this.showLast )
-			this.items[lastIndex].style.opacity = 1;
-		
-		this.items[ogIndex].removeAttribute( 'data-active' );
-		this.items[this.currentIndex].addAttribute( 'data-active', '' );
+    /* Fade without flash of background */
 
-		// fade without flash of background
-		setTimeout( () => {
-			if( this.showLast )
-				this.items[lastIndex].style.opacity = '';
-		}, this.transitionDuration );
-	}
+    setTimeout(() => {
+      if (this.showLast) { this.items[lastIndex].style.opacity = '' }
+    }, this.transitionDuration)
+  }
+} // End Fade
 
-} // end FadeSlider
+/* Exports */
+
+export default Fade

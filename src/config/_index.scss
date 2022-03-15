@@ -1,22 +1,17 @@
-
-/*
- * Imports
- * -------
- */
-
-@use 'sass:map';
-@use 'sass:meta';
-@use 'sass:string';
-@use 'functions' as func;
-@use 'mixins' as mix;
-@use '../utils/functions/capitalize' as c;
-@use '../utils/functions/map' as m;
-@use '../utils/mixins/grayscale' as g;
-
-/*
+/**
  * Config
- * ------
  */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:meta";
+@use "sass:string";
+@use "functions" as func;
+@use "mixins" as mix;
+@use "../utils/functions/capitalize" as c;
+@use "../utils/functions/map" as m;
+@use "../utils/mixins/grayscale" as g;
 
 /* Colors  */
 
@@ -37,21 +32,21 @@ $breakpoints: () !default;
 /* Layout containers and padding */
 
 $containers: () !default;
-$containerPadding: 25px !default;
+$container-padding: 25px !default;
 
 /* Grid system */
 
 $grid: () !default;
-$gridOverwrite: false !default;
+$grid-overwrite: false !default;
 
 /* Rem/em context */
 
 $context: 16px !default;
-$contextEm: 16px !default;
+$context-em: 16px !default;
 
 /* Aspect ratio padding */
 
-$aspectRatioPadding: () !default;
+$aspect-ratio-padding: () !default;
 
 /* Transitions */
 
@@ -59,592 +54,583 @@ $transitions: () !default;
 
 /* Z index */
 
-$zIndex: () !default;
+$z-index: () !default;
 
 /* Nav */
 
 $nav: (
-	icon: (
-		width: 35px,
-		lineWidth: 2px,
-		margin: 8px
-	)
+  icon: (
+    width: 35px,
+    line-width: 2px,
+    margin: 8px,
+  )
 ) !default;
-
-/* Loader */
-
-$loaderSelector: '.o-loader' !default;
-
-/* Table */
-
-$tableSelector: '.o-table' !default;
-
-/* Table Scroll */
-
-$tableScrollSelector: '.o-table-scroll' !default;
 
 /* Vars custom */
 
 $vars: () !default;
 
-/*
+/**
  * Merge maps
- * ----------
  */
 
 /* Colors */
 
-$colors: m.mapRecursiveMerge(
-	(
-		primary: (
-			base: #888888,
-			light: #AAAAAA,
-			dark: #666666
-		),
-		foreground: (
-			base: #222222,
-			light: #444444,
-			dark: #000000
-		),
-		background: (
-			base: #F8F8F8,
-			light: #FFFFFF,
-			dark: #EEEEEE
-		)
-	),
-	$colors
+$colors: m.map-recursive-merge(
+  (
+    primary: (
+      base: #888,
+      light: #aaa,
+      dark: #666,
+    ),
+    foreground: (
+      base: #222,
+      light: #444,
+      dark: #000,
+    ),
+    background: (
+      base: #f8f8f8,
+      light: #fff,
+      dark: #eee,
+    ),
+  ),
+  $colors
 );
 
 /* Fonts */
 
-$fonts: m.mapRecursiveMerge(
-	(
-		primary: (
-			Helvetica,
-			Arial,
-			sans-serif
-		),
-		weight: (
-			normal: 400
-		)
-	),
-	$fonts
+$fonts: m.map-recursive-merge(
+  (
+    primary: (
+      helvetica,
+      arial,
+      sans-serif,
+    ),
+    weight: (
+      normal: 400,
+    ),
+  ),
+  $fonts
 );
 
 /* Grid */
 
-$grid: m.mapRecursiveMerge(
-	(
-		25: (
-			600: 50%,
-			900: 25%
-		),
-		33: (
-			600: 50%,
-			900: 33.33333%
-		),
-		50: (
-			600: 50%
-		),
-		66: (
-			600: 50%,
-			900: 66.66667%
-		),
-		75: (
-			600: 50%,
-			900: 75%
-		)
-	),
-	$grid
+$grid: m.map-recursive-merge(
+  (
+    25: (
+      600: 50%,
+      900: 25%,
+    ),
+    33: (
+      600: 50%,
+      900: 33.3333%,
+    ),
+    50: (
+      600: 50%,
+    ),
+    66: (
+      600: 50%,
+      900: 66.6667%,
+    ),
+    75: (
+      600: 50%,
+      900: 75%,
+    ),
+  ),
+  $grid
 );
 
 /* Breakpoints */
 
-$breakpoints: m.mapRecursiveMerge(
-	(
-		0: 0px,
-		400: 400px,
-		500: 500px,
-		600: 600px,
-		700: 700px,
-		800: 800px,
-		900: 900px,
-		1000: 1000px,
-		1200: 1200px
-	),
-	$breakpoints
+$breakpoints: m.map-recursive-merge(
+  (
+    0: 0px,
+    400: 400px,
+    500: 500px,
+    600: 600px,
+    700: 700px,
+    800: 800px,
+    900: 900px,
+    1000: 1000px,
+    1200: 1200px,
+  ),
+  $breakpoints
 );
 
 /* Containers */
 
-$containers: m.mapRecursiveMerge(
-	(
-		def: 1200px,
-		sm: 800px,
-		lg: 1920px
-	),
-	$containers
+$containers: m.map-recursive-merge(
+  (
+    def: 1200px,
+    s: 800px,
+    l: 1920px,
+  ),
+  $containers
 );
 
-// append to breakpoints
+/* Append to breakpoints */
+
 @each $c, $width in $containers {
-	$k: meta.inspect( $c );
-	$suffix: '';
+  $k: meta.inspect($c);
+  $suffix: "";
 
-	@if $c != 'def' {
-		$suffix: #{ c.capitalize( $c ) };
-	}
+  @if $c != "def" {
+    $suffix: "-#{$c}";
+  }
 
-	$breakpoints: map.merge( ( "container#{ $suffix }": $width  ), $breakpoints );
-	$breakpoints: map.merge( ( "container#{ $suffix }WithPadding": $width + ( $containerPadding * 2 ) ), $breakpoints );
+  $breakpoints: map.merge(("container#{$suffix}": $width ), $breakpoints);
+  $breakpoints: map.merge(("container#{$suffix}-with-padding": $width + ($container-padding * 2)), $breakpoints);
 }
 
 /* Transitions */
 
-$transitions: m.mapRecursiveMerge(
-	(
-		def: (
-			durations: (
-				def: 300ms
-			),
-			timingFunction: 'ease-in-out',
-			timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
-		),
-		fade: (
-			durations: (
-				def: '800ms, 500ms',
-				s: '1200ms, 800ms'
-			),
-			y: (
-				def: 5%,
-				sm: 25%,
-				md: 50%,
-				lg: 100%
-			),
-			x: (
-				def: 5%,
-				sm: 25%,
-				md: 50%,
-				lg: 100%
-			)
-		),
-		scale: (
-			durations: (
-				def: '800ms, 500ms',
-				s: '2200ms, 600ms'
-			),
-			in: (
-				def: 1.10,
-				hover: 1.06,
-				sm: 1.05,
-				md: 1.20,
-				lg: 1.55
-			),
-			out: (
-				def: 1.10,
-				hover: 1,
-				sm: 1.04,
-				md: 1.20
-			)
-		)
-	),
-	$transitions
+$transitions: m.map-recursive-merge(
+  (
+    def: (
+      durations: (
+        def: 300ms,
+      ),
+      timing-function: "ease-in-out",
+      timing-function-cubic: "cubic-bezier(.07, .50, .12, 1)",
+    ),
+    fade: (
+      durations: (
+        def: "800ms, 500ms",
+        s: "1200ms, 800ms",
+      ),
+      y: (
+        def: 5%,
+        s: 25%,
+        m: 50%,
+        l: 100%,
+      ),
+      x: (
+        def: 5%,
+        s: 25%,
+        m: 50%,
+        l: 100%,
+      ),
+    ),
+    scale: (
+      durations: (
+        def: "800ms, 500ms",
+        s: "2200ms, 600ms",
+      ),
+      in: (
+        def: 1.1,
+        hover: 1.06,
+        s: 1.05,
+        m: 1.2,
+        l: 1.55,
+      ),
+      out: (
+        def: 1.1,
+        hover: 1,
+        s: 1.04,
+        m: 1.2,
+      ),
+    ),
+  ),
+  $transitions
 );
 
-$defTransitions: map.get( $transitions, 'def' );
-$defDurations: map.get( $defTransitions, 'durations' );
-$defDuration: map.get( $defDurations, 'def' );
-$defTimingFunction: map.get( $defTransitions, 'timingFunction' );
-$defTimingFunctionCubic: map.get( $defTransitions, 'timingFunctionCubic' );
+$def-transitions: map.get($transitions, "def");
+$def-durations: map.get($def-transitions, "durations");
+$def-duration: map.get($def-durations, "def");
+$def-timing-function: map.get($def-transitions, "timingFunction");
+$def-timing-function-cubic: map.get($def-transitions, "timingFunctionCubic");
 
 /* Z index */
 
-$zIndex: m.mapRecursiveMerge(
-	(
-		skipLink: 100,
-		transition: 100,
-		modal: 90,
-		nav: 85,
-		loader: (
-			def: 80,
-			page: 110
-		)
-	),
-	$zIndex
+$z-index: m.map-recursive-merge(
+  (
+    skip-link: 100,
+    transition: 100,
+    modal: 90,
+    nav: 85,
+    loader: (
+      def: 80,
+      page: 110
+    )
+  ),
+  $z-index
 );
 
-/*
+/**
  * Placeholders
- * ------------
  */
 
 /* Overflow */
 
-@include mix.setPlaceholder( 'overflow-hidden' ) {
-	overflow: hidden;
+@include mix.set-placeholder("overflow-hidden") {
+  overflow: hidden;
 }
 
-@include mix.setPlaceholder( 'overflow-scroll' ) {
-	overflow: scroll;
+@include mix.set-placeholder("overflow-scroll") {
+  overflow: scroll;
 }
 
-@include mix.setPlaceholder( 'overflow-y-auto' ) {
-	overflow-y: auto;
+@include mix.set-placeholder("overflow-y-auto") {
+  overflow-y: auto;
 }
 
-@include mix.setPlaceholder( 'overflow-x-hidden' ) {
-	overflow-x: hidden;
+@include mix.set-placeholder("overflow-x-hidden") {
+  overflow-x: hidden;
 }
 
 /* Floats */
 
-@include mix.setPlaceholder( 'float-left' ) {
-	float: left;
+@include mix.set-placeholder("float-left") {
+  float: left;
 }
 
-@include mix.setPlaceholder( 'float-right' ) {
-	float: right;
+@include mix.set-placeholder("float-right") {
+  float: right;
 }
 
 /* Display */
 
-@include mix.setPlaceholder( 'display-none' ) {
-	display: none;
+@include mix.set-placeholder("display-none") {
+  display: none;
 }
 
-@include mix.setPlaceholder( 'display-block' ) {
-	display: block;
+@include mix.set-placeholder("display-block") {
+  display: block;
 }
 
-@include mix.setPlaceholder( 'display-inline-block' ) {
-	display: inline-block;
+@include mix.set-placeholder("display-inline-block") {
+  display: inline-block;
 }
 
-@include mix.setPlaceholder( 'display-flex' ) {
-	display: flex;
+@include mix.set-placeholder("display-flex") {
+  display: flex;
 }
 
-@include mix.setPlaceholder( 'display-table' ) {
-	display: table;
+@include mix.set-placeholder("display-table") {
+  display: table;
 }
 
-@include mix.setPlaceholder( 'display-table-row' ) {
-	display: table-row;
+@include mix.set-placeholder("display-table-row") {
+  display: table-row;
 }
 
-@include mix.setPlaceholder( 'display-table-cell' ) {
-	display: table-cell;
+@include mix.set-placeholder("display-table-cell") {
+  display: table-cell;
 }
 
 /* Flexbox */
 
-@include mix.setPlaceholder( 'flex-shrink-0' ) {
-	flex-shrink: 0;
+@include mix.set-placeholder("flex-shrink-0") {
+  flex-shrink: 0;
 }
 
-@include mix.setPlaceholder( 'flex-grow-1' ) {
-	flex-grow: 1;
+@include mix.set-placeholder("flex-grow-1") {
+  flex-grow: 1;
 }
 
 /* Visibility */
 
-@include mix.setPlaceholder( 'visibility-hidden' ) {
-	visibility: hidden;
+@include mix.set-placeholder("visibility-hidden") {
+  visibility: hidden;
 }
 
-@include mix.setPlaceholder( 'visibility-visible' ) {
-	visibility: visible;
+@include mix.set-placeholder("visibility-visible") {
+  visibility: visible;
 }
 
 /* Content */
 
-@include mix.setPlaceholder( 'content-empty' ) {
-	content: '';
+@include mix.set-placeholder("content-empty") {
+  content: "";
 }
 
 /* Position */
 
-@include mix.setPlaceholder( 'position-relative' ) {
-	position: relative;
+@include mix.set-placeholder("position-relative") {
+  position: relative;
 }
 
-@include mix.setPlaceholder( 'position-absolute' ) {
-	position: absolute;
+@include mix.set-placeholder("position-absolute") {
+  position: absolute;
 }
 
-@include mix.setPlaceholder( 'position-fixed' ) {
-	position: fixed;
+@include mix.set-placeholder("position-fixed") {
+  position: fixed;
 }
 
-@include mix.setPlaceholder( 'top-0' ) {
-	top: 0;
+@include mix.set-placeholder("top-0") {
+  top: 0;
 }
 
-@include mix.setPlaceholder( 'bottom-0' ) {
-	bottom: 0;
+@include mix.set-placeholder("bottom-0") {
+  bottom: 0;
 }
 
-@include mix.setPlaceholder( 'left-0' ) {
-	left: 0;
+@include mix.set-placeholder("left-0") {
+  left: 0;
 }
 
-@include mix.setPlaceholder( 'right-0' ) {
-	right: 0;
+@include mix.set-placeholder("right-0") {
+  right: 0;
 }
 
-@include mix.setPlaceholder( 'position-vertical-center' ) {
-	top: 50%;
-	transform: translateY( -50% );
-	bottom: auto;
+@include mix.set-placeholder("position-vertical-center") {
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
 }
 
 /* Text align */
 
-@include mix.setPlaceholder( 'text-align-left' ) {
-	text-align: left;
+@include mix.set-placeholder("text-align-left") {
+  text-align: left;
 }
 
-@include mix.setPlaceholder( 'text-align-right' ) {
-	text-align: right;
+@include mix.set-placeholder("text-align-right") {
+  text-align: right;
 }
 
-@include mix.setPlaceholder( 'text-align-center' ) {
-	text-align: center;
+@include mix.set-placeholder("text-align-center") {
+  text-align: center;
 }
 
-@include mix.setPlaceholder( 'text-align-justify' ) {
-	text-align: justify;
+@include mix.set-placeholder("text-align-justify") {
+  text-align: justify;
 }
 
-@include mix.setPlaceholder( 'text-transform-uppercase' ) {
-	text-transform: uppercase;
+@include mix.set-placeholder("text-transform-uppercase") {
+  text-transform: uppercase;
 }
 
 /* Vertical align */
 
-@include mix.setPlaceholder( 'vertical-align-bottom' ) {
-	vertical-align: bottom;
+@include mix.set-placeholder("vertical-align-bottom") {
+  vertical-align: bottom;
 }
 
-@include mix.setPlaceholder( 'vertical-align-middle' ) {
-	vertical-align: middle;
+@include mix.set-placeholder("vertical-align-middle") {
+  vertical-align: middle;
 }
 
-@include mix.setPlaceholder( 'vertical-align-top' ) {
-	vertical-align: top;
+@include mix.set-placeholder("vertical-align-top") {
+  vertical-align: top;
 }
 
 /* Margin */
 
-@include mix.setPlaceholder( 'margin-auto' ) {
-	margin: auto;
+@include mix.set-placeholder("margin-auto") {
+  margin: auto;
 }
 
-@include mix.setPlaceholder( 'margin-right-auto' ) {
-	margin-right: auto;
+@include mix.set-placeholder("margin-right-auto") {
+  margin-right: auto;
 }
 
-@include mix.setPlaceholder( 'margin-left-auto' ) {
-	margin-left: auto;
+@include mix.set-placeholder("margin-left-auto") {
+  margin-left: auto;
 }
 
 /* Border radius */
 
-@include mix.setPlaceholder( 'border-radius-100' ) {
-	border-radius: 100%;
+@include mix.set-placeholder("border-radius-100") {
+  border-radius: 100%;
 }
 
 /* Transform origin */
 
-@include mix.setPlaceholder( 'transform-origin-0-0' ) {
-	transform-origin: 0% 0%;
+@include mix.set-placeholder("transform-origin-0-0") {
+  transform-origin: 0% 0%;
 }
 
-@include mix.setPlaceholder( 'transform-origin-0-100' ) {
-	transform-origin: 0% 100%;
+@include mix.set-placeholder("transform-origin-0-100") {
+  transform-origin: 0% 100%;
 }
 
-@include mix.setPlaceholder( 'transform-origin-100-0' ) {
-	transform-origin: 100% 0%;
+@include mix.set-placeholder("transform-origin-100-0") {
+  transform-origin: 100% 0%;
 }
 
-@include mix.setPlaceholder( 'transform-origin-100-100' ) {
-	transform-origin: 100% 100%;
+@include mix.set-placeholder("transform-origin-100-100") {
+  transform-origin: 100% 100%;
 }
 
 /* Opacity */
 
-@include mix.setPlaceholder( 'opacity-0' ) {
-	opacity: 0;
+@include mix.set-placeholder("opacity-0") {
+  opacity: 0;
 }
 
-@include mix.setPlaceholder( 'opacity-1' ) {
-	opacity: 1;
+@include mix.set-placeholder("opacity-1") {
+  opacity: 1;
 }
 
-/* Width / height */
+/* Width/height */
 
-@include mix.setPlaceholder( 'width-inherit' ) {
-	width: inherit;
+@include mix.set-placeholder("width-inherit") {
+  width: inherit;
 }
 
-@include mix.setPlaceholder( 'height-inherit' ) {
-	height: inherit;
+@include mix.set-placeholder("height-inherit") {
+  height: inherit;
 }
 
-@include mix.setPlaceholder( 'width-100' ) {
-	width: 100%;
+@include mix.set-placeholder("width-100") {
+  width: 100%;
 }
 
-@include mix.setPlaceholder( 'width-100vw' ) {
-	width: 100vw;
+@include mix.set-placeholder("width-100vw") {
+  width: 100vw;
 }
 
-@include mix.setPlaceholder( 'height-100' ) {
-	height: 100%;
+@include mix.set-placeholder("height-100") {
+  height: 100%;
 }
 
-@include mix.setPlaceholder( 'height-100vh' ) {
-	height: 100vh;
+@include mix.set-placeholder("height-100vh") {
+  height: 100vh;
 }
 
 /* Grayscale */
 
-@include mix.setPlaceholder( 'grayscale' ) {
-	@include g.grayscale();
+@include mix.set-placeholder("grayscale") {
+  @include g.grayscale;
 }
 
 /* Visually hidden */
 
-@include mix.setPlaceholder( 'visually-hidden' ) {
-	@extend %u-position-absolute;
-	@extend %u-overflow-hidden;
-	left: -625rem;
-	top: auto;
-	width: 0.063rem;
-	height: 0.063rem;
+@include mix.set-placeholder("visually-hidden") {
+  @extend %u-position-absolute;
+  @extend %u-overflow-hidden;
+
+  left: -625rem;
+  top: auto;
+  width: 0.063rem;
+  height: 0.063rem;
 }
 
 /* Touch target 50px */
 
-@include mix.setPlaceholder( 'touch-50' ) {
-	&::before {
-		@extend %u-content-empty;
-		@extend %u-position-absolute;
-		transform: translate( -50%, -50% );
-		width: 3.125rem;
-		height: 3.125rem;
-		top: 50%;
-		left: 50%;
-	}
+@include mix.set-placeholder("touch-50") {
+  &::before {
+    @extend %u-content-empty;
+    @extend %u-position-absolute;
+
+    transform: translate(-50%, -50%);
+    width: 3.125rem;
+    height: 3.125rem;
+    top: 50%;
+    left: 50%;
+  }
 }
 
 /* Colors */
 
-@include mix.setPlaceholder( 'color-inherit' ) {
-	color: inherit;
+@include mix.set-placeholder("color-inherit") {
+  color: inherit;
 }
 
-@include mix.setPlaceholder( 'background-color-inherit' ) {
-	background-color: inherit;
+@include mix.set-placeholder("background-color-inherit") {
+  background-color: inherit;
 }
 
-// convert nested colors to one level map
-$colorsFlatPrefix: func.mapFlatten( $colors, (), 'color' );
+/* Nested colors to one level map */
 
-@each $name, $value in $colorsFlatPrefix {
-	@include mix.setPlaceholder( $name ) {
-		color: $value;
-	}
+$colors-flat-prefix: func.map-flatten($colors, (), "color");
 
-	@include mix.setPlaceholder( "background-#{ $name }" ) {
-		background-color: $value;
-	}
+@each $name, $value in $colors-flat-prefix {
+  @include mix.set-placeholder($name) {
+    color: $value;
+  }
 
-	@include mix.setPlaceholder( "fill-#{ $name }" ) {
-		fill: $value;
-	}
+  @include mix.set-placeholder("background-#{$name}") {
+    background-color: $value;
+  }
 
-	@include mix.setPlaceholder( "border-#{ $name }" ) {
-		border-color: $value;
-	}
+  @include mix.set-placeholder("fill-#{$name}") {
+    fill: $value;
+  }
+
+  @include mix.set-placeholder("border-#{$name}") {
+    border-color: $value;
+  }
 }
 
-// convert nested colors to one level map without prefix
-$colorsFlat: func.mapFlatten( $colors, (), '' );
+/* Nested colors to one level map without prefix */
+
+$colors-flat: func.map-flatten($colors, (), "");
 
 /* Fonts */
 
-@if( meta.type-of( $fonts ) == map ) {
-	@each $k, $v in $fonts {
-		@if $k == weight {
-			@each $p, $w in $v {
-				@include mix.setPlaceholder( "font-weight-#{ $p }" ) {
-					font-weight: $w;
-				}
-			}
-		} @else {
-			@include mix.setPlaceholder( "font-family-#{ $k }" ) {
-				font-family: $v;
-			}
-		}
-	}
+@if meta.type-of($fonts) == map {
+  @each $k, $v in $fonts {
+    @if $k == weight {
+      @each $p, $w in $v {
+        @include mix.set-placeholder("font-weight-#{$p}") {
+          font-weight: $w;
+        }
+      }
+    } @else {
+      @include mix.set-placeholder("font-family-#{$k}") {
+        font-family: $v;
+      }
+    }
+  }
 }
 
 /* Transitions */
 
-@if( meta.type-of( $defTransitions ) == map ) {
-	@include mix.setPlaceholder( 'transition-property-opacity' ) {
-		transition-property: opacity;
-	}
-
-	@include mix.setPlaceholder( 'transition-property-transform' ) {
-		transition-property: transform;
-	}
-
-	@each $k, $v in $defDurations {
-		$name: 'transition-duration';
-
-		@if $k != def {
-			$name: $name + '-' + $k;
-		}
-
-		@include mix.setPlaceholder( $name ) {
-			transition-duration: $v;
-		}
+@if meta.type-of($def-transitions) == map {
+  @include mix.set-placeholder("transition-property-opacity") {
+    transition-property: opacity;
   }
 
-	@include mix.setPlaceholder( 'transition-property-opacity-transform' ) {
-		transition-property: opacity, transform;
-	}
+  @include mix.set-placeholder("transition-property-transform") {
+    transition-property: transform;
+  }
 
-	@include mix.setPlaceholder( 'transition-timing-function' ) {
-		transition-timing-function: $defTimingFunction;
-	}
+  @each $k, $v in $def-durations {
+    $name: "transition-duration";
 
-	@include mix.setPlaceholder( 'transition-timing-function-cubic' ) {
-		transition-timing-function: $defTimingFunctionCubic;
-	}
+    @if $k != def {
+      $name: $name + "-" + $k;
+    }
 
-	@include mix.setPlaceholder( 'transition-opacity-transform-ease' ) {
-		transition: opacity #{ $defDuration } #{ $defTimingFunction }, transform #{ $defDuration } #{ $defTimingFunction };
-	}
+    @include mix.set-placeholder($name) {
+      transition-duration: $v;
+    }
+  }
 
-	@include mix.setPlaceholder( 'transition-transform-ease' ) {
-		transition: transform #{ $defDuration } #{ $defTimingFunction };
-	}
+  @include mix.set-placeholder("transition-property-opacity-transform") {
+    transition-property: opacity, transform;
+  }
 
-	@include mix.setPlaceholder( 'transition-opacity-ease' ) {
-		transition: opacity #{ $defDuration } #{ $defTimingFunction };
-	}
+  @include mix.set-placeholder("transition-timing-function") {
+    transition-timing-function: $def-timing-function;
+  }
+
+  @include mix.set-placeholder("transition-timing-function-cubic") {
+    transition-timing-function: $def-timing-function-cubic;
+  }
+
+  @include mix.set-placeholder("transition-opacity-transform-ease") {
+    transition: opacity #{$def-duration} #{$def-timing-function}, transform #{$def-duration} #{$def-timing-function};
+  }
+
+  @include mix.set-placeholder("transition-transform-ease") {
+    transition: transform #{$def-duration} #{$def-timing-function};
+  }
+
+  @include mix.set-placeholder("transition-opacity-ease") {
+    transition: opacity #{$def-duration} #{$def-timing-function};
+  }
 }
 
 /* Placeholders */
 
-@if( meta.type-of( $placeholders ) == list ) {
-	@each $p in $placeholders {
-		@each $k, $v in $p {
-			@include mix.makePlaceholder( $k, $v );
-		}
-	}
+@if meta.type-of($placeholders) == list {
+  @each $p in $placeholders {
+    @each $k, $v in $p {
+      @include mix.make-placeholder($k, $v);
+    }
+  }
 }

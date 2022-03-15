@@ -1,65 +1,68 @@
-
-/*
- * Toggle focusability of specified elements
- * -----------------------------------------
- * source: https://bit.ly/3paRHkt
+/**
+ * Utility modules: toggle focusability of specified elements
+ *
+ * Source: https://bit.ly/3paRHkt
  *
  * @param focusContext [boolean]
  * @param items [array] of [HTMLElement]
  */
 
-export const toggleFocusability = ( on = true, items = [] ) => {
-	if( !items.length )
-		return;
+/* Module */
 
-	let formTags = ['BUTTON','INPUT','SELECT','TEXTAREA'];
+const toggleFocusability = (on = true, items = []) => {
+  if (!items.length) { return }
 
-	items.forEach( item => {
-		if( on ) {
-			if( item.hasAttribute( 'data-context-inert-aria-hidden' ) ) {
-			  item.setAttribute( 'aria-hidden', item.getAttribute( 'data-context-inert-aria-hidden' ) );
-			  item.removeAttribute( 'data-context-inert-aria-hidden' );
-			}
+  const formTags = ['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']
 
-			if( item.hasAttribute( 'data-context-inert-tabindex' ) ) {
-			  item.setAttribute( 'tabindex', item.getAttribute( 'data-context-inert-tabindex' ) );
-			  item.removeAttribute( 'data-context-inert-tabindex' );
-			}
+  items.forEach(item => {
+    if (on) {
+      if (item.hasAttribute('data-context-inert-aria-hidden')) {
+        item.setAttribute('aria-hidden', item.getAttribute('data-context-inert-aria-hidden'))
+        item.removeAttribute('data-context-inert-aria-hidden')
+      }
 
-			if( item.hasAttribute( 'data-context-inert-href' ) ) {
-			  item.setAttribute( 'href', item.getAttribute( 'data-context-inert-href' ) );
-			  item.removeAttribute( 'data-context-inert-href' );
-			}
+      if (item.hasAttribute('data-context-inert-tabindex')) {
+        item.setAttribute('tabindex', item.getAttribute('data-context-inert-tabindex'))
+        item.removeAttribute('data-context-inert-tabindex')
+      }
 
-			if( formTags.indexOf( item.tagName ) != -1 ) {
-				if( item.hasAttribute( 'data-context-inert-disabled' ) ) {
-					let v = item.getAttribute( 'data-context-inert-disabled' );
-					item.disabled = v === 'true' ? true : false;
-				}
-			}
-		} else {
-			let ariaHiddenValue = item.getAttribute( 'aria-hidden' );
+      if (item.hasAttribute('data-context-inert-href')) {
+        item.setAttribute('href', item.getAttribute('data-context-inert-href'))
+        item.removeAttribute('data-context-inert-href')
+      }
 
-			if( !ariaHiddenValue )
-				ariaHiddenValue = false;
+      if (formTags.indexOf(item.tagName) !== -1) {
+        if (item.hasAttribute('data-context-inert-disabled')) {
+          const v = item.getAttribute('data-context-inert-disabled')
+          item.disabled = v === 'true'
+        }
+      }
+    } else {
+      let ariaHiddenValue = item.getAttribute('aria-hidden')
 
-	    item.setAttribute( 'data-context-inert-aria-hidden', ariaHiddenValue );
-	    item.setAttribute( 'aria-hidden', true );
+      if (!ariaHiddenValue) { ariaHiddenValue = false }
 
-	    if( item.hasAttribute( 'tabindex' ) ) {
-	      item.setAttribute( 'data-context-inert-tabindex', item.getAttribute( 'tabindex' ) );
-	      item.removeAttribute( 'tabindex' );
-	    }
+      item.setAttribute('data-context-inert-aria-hidden', ariaHiddenValue)
+      item.setAttribute('aria-hidden', true)
 
-	    if( item.hasAttribute( 'href' ) ) {
-	      item.setAttribute( 'data-context-inert-href', item.getAttribute( 'href' ) );
-	      item.removeAttribute( 'href' );
-	    }
+      if (item.hasAttribute('tabindex')) {
+        item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
+        item.removeAttribute('tabindex')
+      }
 
-	    if( formTags.indexOf( item.tagName ) != -1 ) {
-	      item.setAttribute( 'data-context-inert-disabled', item.disabled );
-	      item.disabled = true;
-	    }
-		}
-	} );
-};
+      if (item.hasAttribute('href')) {
+        item.setAttribute('data-context-inert-href', item.getAttribute('href'))
+        item.removeAttribute('href')
+      }
+
+      if (formTags.indexOf(item.tagName) !== -1) {
+        item.setAttribute('data-context-inert-disabled', item.disabled)
+        item.disabled = true
+      }
+    }
+  })
+}
+
+/* Exports */
+
+export { toggleFocusability }

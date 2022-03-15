@@ -1,79 +1,78 @@
-
-/*
- * Imports
- * -------
+/**
+ * Layouts: mixins
  */
 
-@use 'sass:meta';
-@use '../utils/functions' as func;
-@use '../utils/mixins' as mix;
+/* Imports */
 
-/*
+@use "sass:meta";
+@use "../utils/functions" as func;
+@use "../utils/mixins" as mix;
+
+/**
  * Make container classes with breakpoints
- * ---------------------------------------
  */
 
-@mixin makeContainers( $containers, $containerPadding ) {
-	%u-margin-padding-0 {
-		&[data-left] {
-			margin-left: 0;
-			padding-left: 0;
-		}
-		
-		&[data-right] {
-			margin-right: 0;
-			padding-right: 0;
-		}
-	}
+@mixin make-containers($containers, $container-padding) {
+  %u-margin-padding-0 {
+    &[data-left] {
+      margin-left: 0;
+      padding-left: 0;
+    }
 
-	@each $c, $width in $containers {
-		$k: meta.inspect( $c );
-		$d: '';
-		$suffix: '';
+    &[data-right] {
+      margin-right: 0;
+      padding-right: 0;
+    }
+  }
 
-		@if $k != 'def' {
-			$d: '-';
-			$suffix: func.capitalize( $c );
-		} @else {
-			$k: '';
-		}
+  @each $c, $width in $containers {
+    $k: meta.inspect($c);
+    $d: "";
+    $suffix: "";
 
-		.l-container#{ $d }#{ $k } {
-			@extend %u-margin-right-auto;
-			@extend %u-margin-left-auto;
-			@extend %u-margin-padding-0;
-			max-width: func.calcRem( $width + ( $containerPadding * 2 ) );
-			padding-left: func.calcRem( $containerPadding );
-			padding-right: func.calcRem( $containerPadding );
-		}
-	}
+    @if $k != "def" {
+      $d: "-";
+      $suffix: "-#{$c}";
+    } @else {
+      $k: "";
+    }
+
+    .l-container#{$d}#{$k} {
+      @extend %u-margin-right-auto;
+      @extend %u-margin-left-auto;
+      @extend %u-margin-padding-0;
+
+      max-width: func.calc-rem($width + ($container-padding * 2));
+      padding-left: func.calc-rem($container-padding);
+      padding-right: func.calc-rem($container-padding);
+    }
+  }
 }
 
-/*
+/**
  * Make grid classes with breakpoints
- * ----------------------------------
  */
 
-@mixin makeGrid( $grid, $gridOverwrite ) {
-	.l-100 {
-		@extend %u-width-100;
-	}
+@mixin make-grid($grid, $grid-overwrite) {
+  .l-100 {
+    @extend %u-width-100;
+  }
 
-	$grid: $grid;
+  $grid: $grid;
 
-	@if meta.type-of( $gridOverwrite ) == map {
-		$grid: $gridOverwrite;
-	} 
+  @if meta.type-of($grid-overwrite) == map {
+    $grid: $grid-overwrite;
+  }
 
-	@each $g, $v in $grid {
-		.l-#{ $g } {
-			@extend %u-width-100;
-			
-			@each $bk, $width in $v {
-				@include mix.breakpointMin( $bk ) {
-					width: $width;
-				}
-			}
-		}
-	}
+  @each $g, $v in $grid {
+    .l-#{$g} {
+      @extend %u-width-100;
+
+      @each $bk, $width in $v {
+        @include mix.breakpoint-min($bk) {
+          width: $width;
+        }
+      }
+    }
+  }
 }

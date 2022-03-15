@@ -1,7 +1,5 @@
-
-/*
- * Small publish / subscribe to events module
- * ------------------------------------------
+/**
+ * Utility modules: publish/subscribe to events
  *
  * publish
  *
@@ -10,36 +8,40 @@
  *
  * subscribe
  *
- * @param name [string] ( same as publish name )
+ * @param name [string] (same as publish name)
  * @param callback [function]
  */
 
-let subscriptions = {};
+/* Variables */
 
-const publish = ( name, args = [] ) => {
-	if( !subscriptions.hasOwnProperty( name ) )
-		return;
+const subscriptions = {}
 
-	let callbacks = subscriptions[name];
+/* Modules */
 
-	if( callbacks )
-		callbacks.forEach( callback => {
-			callback( args );
-		} );
-};
+const publish = (name, args = []) => {
+  if (!Object.getOwnPropertyDescriptor(subscriptions, name)) { return }
 
-const subscribe = ( name, callback = () => {} ) => {
-	if( !subscriptions.hasOwnProperty( name ) )
-		subscriptions[name] = [];
+  const callbacks = subscriptions[name]
 
-	let index = subscriptions[name].push( callback ) - 1;
+  if (callbacks) {
+    callbacks.forEach(callback => {
+      callback(args)
+    })
+  }
+}
 
-	// remove subscription
-	return {
-		remove: () => {
-			delete subscriptions[name][index];
-		}
-	};
-};
+const subscribe = (name, callback = () => {}) => {
+  if (!Object.getOwnPropertyDescriptor(subscriptions, name)) { subscriptions[name] = [] }
 
-export { publish, subscribe };
+  const index = subscriptions[name].push(callback) - 1
+
+  return {
+    remove: () => {
+      delete subscriptions[name][index]
+    }
+  }
+}
+
+/* Exports */
+
+export { publish, subscribe }

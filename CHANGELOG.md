@@ -43,7 +43,7 @@ All notable changes to this project will be documented in this file.
 - Unnecessary variables and function calls in `Nav`.
 
 ### Changed
-- Use `math.div` instead of / for division in `calcRem` and `stripUnit`.
+- Use `math.div` instead of / for division in `calc-rem` and `strip-unit`.
 - Replace `disableButtonLoader` with simpler `setLoaders`.
 - Update `SendForm` with `setLoaders`.
 - Rework `LoadMore` to include prev/next pagination, save to browser history and break up into more functions.
@@ -62,13 +62,13 @@ All notable changes to this project will be documented in this file.
 ## [2.1.9] - 2021-07-15
 
 ### Added
-- Param for delay on `pageLoaderFallback` mixin.
+- Param for delay on `page-loader-fallback` mixin.
 - Auto scroll behaviour for `LoadMore`.
 - Optional `onValidate` arg for `Form`.
 - Form instance method for `SendForm`.
 
 ### Changed
-- Simplify `stripUnit` function.
+- Simplify `strip-unit` function.
 
 ### Removed
 - Position styles from nav overflow
@@ -88,3 +88,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Update to use `@use`/`@forward` instead of `@import`.
+
+## [3.0.0] - 2022-03-14
+
+### Changed
+- Update all JS files to use JavaScript Standard Style.
+- Update all SCSS files to use Stylelint Standard SCSS.
+- Update comment style to include params in functions and classes.
+
+### Removed
+- SCSS calcEm function.

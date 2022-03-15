@@ -25,7 +25,7 @@ _Parameters:_
 
 ## Form
 
-### `focusRing( className, selector )`
+### `focusRing(className, selector)`
 
 Add custom class to focusable elements on keyboard focus.
 
@@ -84,7 +84,7 @@ _Methods:_
 
 _Return:_ `boolean`
 
-#### `getFormValues( urlEncoded, filter )`
+#### `getFormValues(urlEncoded, filter)`
 
 _Parameters:_
 
@@ -98,11 +98,11 @@ _Default:_ `false`
 _Example:_
 
 ```js
-let filter = ( args, inputs ) => {
-  inputs.forEach( ( input ) => {
-  if( input.hasAttribute( 'data-something' ) )
+let filter = (args, inputs) => {
+  inputs.forEach((input) => {
+  if(input.hasAttribute('data-something'))
     args['something'] = true;
-  } );
+  });
 
   return args;
 };
@@ -110,7 +110,7 @@ let filter = ( args, inputs ) => {
 
 _Return:_ `object`
 
-#### `clear( exclude )`  
+#### `clear(exclude)`  
 
 Clear value of input.
 
@@ -154,7 +154,7 @@ _Parameters:_
 
 _Methods:_
 
-#### [`clear( exclude )`]()
+#### [`clear(exclude)`]()
 Clear inputs and hide loader and result.
 
 ## Load
@@ -219,7 +219,7 @@ _Parameters:_
 
 ### `class BaseSlider`
 
-Base slider ( to create fade/carousel sliders ).
+Base slider (to create fade/carousel sliders).
 
 _Parameters:_
 
@@ -243,7 +243,7 @@ _Parameters:_
 
 _Methods:_
 
-#### `goTo( index )`
+#### `goTo(index)`
 
 Go to slide.
 

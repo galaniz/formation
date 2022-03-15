@@ -1,61 +1,61 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility mixins: fluid sizes (font-size, padding, margins...)
  */
 
-@use 'sass:map';
-@use 'sass:meta';
-@use 'sass:list';
-@use '../../config' as con;
-@use '../functions/strip-unit' as s;
-@use '../functions/calc-rem-em' as c;
-@use 'breakpoint' as b;
+/* Imports */
 
-/*
- * Fluid sizes ( font-size, padding, margins... )
- * ----------------------------------------------
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "../../config" as con;
+@use "../functions/strip-unit" as s;
+@use "../functions/calc-rem" as c;
+@use "breakpoint" as b;
+
+/**
+ * Mixin
  *
  * @param [string] $prop
  * @param [list] $sizes
  * @param [list] $widths
- * @param [list] $otherValues
+ * @param [list] $other-values
  * @param [bool] $important
  */
 
-@mixin fluidSize( $prop, $sizes, $widths, $important: false, $otherValues: null ) {
-  $lastIndex: list.length( $sizes );
+@mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {
+  $last-index: list.length($sizes);
 
   @each $s in $sizes {
-    $i: list.index( $sizes, $s );
-    $w: list.nth( $widths, $i );
-    $ww: c.calcRem( map.get( con.$breakpoints, list.nth( $widths, $i ) ) );
+    $i: list.index($sizes, $s);
+    $w: list.nth($widths, $i);
+    $ww: c.calc-rem(map.get(con.$breakpoints, list.nth($widths, $i)));
     $o: null;
     $m: null;
 
-    @if meta.type-of( $otherValues ) == 'list' {
-      $o: list.nth( $widths, $i );
+    @if meta.type-of($other-values) == "list" {
+      $o: list.nth($widths, $i);
     }
 
     @if $important {
-      $m: #{'!important'};
+      $m: #{"!important"};
     }
 
     @if $i == 1 {
       #{$prop}: $s $o $m;
     }
 
-    @if $i == $lastIndex {
-      @include b.breakpointMin( $w ) {
+    @if $i == $last-index {
+      @include b.breakpoint-min($w) {
         #{$prop}: $s $o $m;
       }
     } @else {
-      $nextS: list.nth( $sizes, $i + 1 );
-      $nextW: list.nth( $widths, $i + 1 );
-      $nextWw: c.calcRem( map.get( con.$breakpoints, list.nth( $widths, $i + 1 ) ) );
+      $n-s: s.strip-unit(list.nth($sizes, $i + 1));
+      $n-w: list.nth($widths, $i + 1);
+      $n-ww: s.strip-unit(c.calc-rem(map.get(con.$breakpoints, $n-w)));
+      $s-ww: s.strip-unit($ww);
 
-      @include b.breakpointMin( $w ) {
-        #{$prop}: calc( #{ $s } + ( ( 100vw - #{ $ww } ) / ( #{ s.stripUnit( $nextWw ) } - #{ s.stripUnit( $ww ) } ) ) * ( #{ s.stripUnit( $nextS ) } - #{ s.stripUnit( $s ) } ) ) $o $m;
+      @include b.breakpoint-min($w) {
+        #{$prop}: calc(#{$s} + ((100vw - #{$ww}) / (#{$n-ww} - #{$s-ww})) * (#{$n-s} - #{s.strip-unit($s)})) $o $m;
       }
     }
   }

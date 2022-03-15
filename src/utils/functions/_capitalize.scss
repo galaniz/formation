@@ -1,19 +1,16 @@
-
-/*
- * Imports
- * -------
+/**
+ * Utility functions: capitalize string
  */
 
-@use 'sass:string';
+@use "sass:string";
 
-/* 
- * Capitalize string
- * -----------------
+/**
+ * Function
  *
  * @param [string] $str
  * @return [string]
  */
 
-@function capitalize( $str ) {
-	@return string.to-upper-case( string.slice( $str, 1, 1 ) ) + string.slice( $str, 2 );
+@function capitalize($str) {
+  @return string.to-upper-case(string.slice($str, 1, 1)) + string.slice($str, 2);
 }

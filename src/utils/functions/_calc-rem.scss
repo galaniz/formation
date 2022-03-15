@@ -1,0 +1,21 @@
+/**
+ * Utility functions: convert to rem units
+ */
+
+/* Imports */
+
+@use "sass:math";
+@use "../../config" as con;
+
+/**
+ * Function
+ *
+ * @param [number] $px
+ * @return [number]
+ */
+
+@function calc-rem($px) {
+	$num: math.div($px, con.$context);
+
+  @return ($num * 1rem);
+}

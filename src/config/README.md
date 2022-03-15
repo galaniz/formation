@@ -10,17 +10,17 @@ $g-colors: (
   base: #1DE9B6,
   light: #A7FFEB,
   dark: #00BFA5
-  ),
+ ),
   foreground: (
   base: #1E1E1E,
   light: #444444,
   dark: #000000
-  ),
+ ),
   background: (
   base: #F8F8F8,
   light: #FFFFFF,
   dark: #EEEEEE
-  )
+ )
 );
 ```
 
@@ -31,7 +31,7 @@ _Default:_
 
 ```scss
 $g-fonts: (
-	primary: (   
+	primary: (  
 		Helvetica,
 		Arial,
 		sans-serif
@@ -71,7 +71,7 @@ $g-containers: (
   lg: 1800px
 );
 ```
-#### `$g-containerPadding`
+#### `$g-container-padding`
 
 _Type:_ `number`  
 _Default:_ `25px`
@@ -83,25 +83,25 @@ _Default:_
 
 ```scss
 $g-grid: (
-  25: (   
+  25: (  
   600: 50%,
   900: 25%
-  ),
+ ),
   33: (
   600: 50%,
   900: 33.33333%
-  ),
+ ),
   50: (
   600: 50%
-  ),
+ ),
   66: (
   600: 50%,
   900: 66.66667%
-  ),
+ ),
   75: (
   600: 50%,
   900: 75%
-  )
+ )
 );
 ```
 
@@ -115,7 +115,7 @@ _Default:_ See utility [props](/src/utils/atomic/_props.scss)
 _Type:_ `number`  
 _Default:_ `16px`
 
-#### `$g-aspectRatioPadding`
+#### `$g-aspect-ratio-padding`
 
 _Type:_ `map`  
 _Default:_ `()`
@@ -130,63 +130,63 @@ $g-transitions: (
   def: (
   duration: 300ms,
   timingFunction: 'ease-in-out',
-  timingFunctionCubic: 'cubic-bezier( .07, .50, .12, 1 )'
-  ),
+  timingFunctionCubic: 'cubic-bezier(.07, .50, .12, 1)'
+ ),
   fade: (
   durations: (
     def: '800ms, 500ms',
     s: '1200ms, 800ms'
-  ),
+ ),
   y: (
     def: 5%,
     sm: 25%,
     md: 50%,
     lg: 100%
-  ),
+ ),
   x: (
     def: 5%,
     sm: 25%,
     md: 50%,
     lg: 100%
-  )
-  ),
+ )
+ ),
   scale: (
   durations: (
     def: '800ms, 500ms',
     s: '2200ms, 600ms'
-  ),
+ ),
   in: (
     def: 1.10,
     hover: 1.06,
     sm: 1.05,
     md: 1.20,
     lg: 1.55
-  ),
+ ),
   out: (
     def: 1.10,
     hover: 1,
     sm: 1.04,
     md: 1.20
-  )
-  )
+ )
+ )
 );
 ```
 
-#### `$g-zIndex`
+#### `$g-z-index`
 
 _Type:_ `map`  
 _Default:_
 
 ```scss
-$g-zIndex: (
-  skipLink: 100,
+$g-z-index: (
+  skip-link: 100,
   transition: 100,
   modal: 90,
   nav: 85,
   loader: (
   def: 80,
   page: 110
-  )
+ )
 );
 ```
 
@@ -199,7 +199,7 @@ _Default:_
 $g-nav: (
 	icon: (
 		width: 35px,
-		lineWidth: 2px,
+		line-width: 2px,
 		margin: 8px
 	)
 );

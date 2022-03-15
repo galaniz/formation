@@ -1,40 +1,37 @@
-
-/*
- * Imports
- * -------
+/**
+ * Components nav icon: one
  */
 
-@use 'index' as icon;
-@use '../../../config' as con;
+/* Imports */
 
-/*
- * Nav Icon: One
- * -------------
- */
+@use "index" as icon;
+@use "../../../config" as con;
+
+/* Styles */
 
 .c-nav-icon[data-num="1"] {
-	& .c-nav-icon__top,
-	& .c-nav-icon__middle,
-	& .c-nav-icon__bottom {
-		transition: transform 200ms ease;
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__middle,
+  & .c-nav-icon__bottom {
+    transition: transform 200ms ease;
+  }
 
-	& .c-nav-icon__top,
-	& .c-nav-icon__bottom {
-		transform: translateY( 0 ) rotate( 0deg );
-	}
+  & .c-nav-icon__top,
+  & .c-nav-icon__bottom {
+    transform: translateY(0) rotate(0deg);
+  }
 
-	.c-nav__button[data-show] & {
-		& .c-nav-icon__top {
-			transform: translateY( icon.$y ) rotate( 45deg );
-		}
+  .c-nav__button[data-show] & {
+    & .c-nav-icon__top {
+      transform: translateY(icon.$y) rotate(45deg);
+    }
 
-		& .c-nav-icon__middle {
-			transform: scaleX( 0 );
-		}
-		
-		& .c-nav-icon__bottom {
-			transform: translateY( #{ icon.$y * -1 } ) rotate( -45deg );
-		}
-	}
+    & .c-nav-icon__middle {
+      transform: scaleX(0);
+    }
+
+    & .c-nav-icon__bottom {
+      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
+    }
+  }
 }

@@ -1,6 +1,6 @@
 # Mixins
 
-#### `@mixin breakpointMin( $min )`
+#### `@mixin breakpoint-min($min)`
 
 Min width media query.
 
@@ -11,7 +11,7 @@ _Type:_ `string|number`
 _Required:_ true   
 _Note:_ Must exist in [`$g-breakpoints`]()
 
-#### `@mixin breakpointMax( $max )`
+#### `@mixin breakpoint-max($max)`
 
 Max width media query.
 
@@ -22,7 +22,7 @@ _Type:_ `string|number`
 _Required:_ true   
 _Note:_ Must exist in [`$g-breakpoints`]()
 
-#### `@mixin breakpointMinMax( $min, $max )`
+#### `@mixin breakpoint-min-max($min, $max)`
 
 Min width/max width media query.
 
@@ -38,7 +38,7 @@ _Type:_ `string|number`
 _Required:_ true  
 _Note:_ Must exist in [`$g-breakpoints`]()
 
-#### `@mixin fontRem( $size, $important: false )`
+#### `@mixin font-rem($size)`
 
 Font size in px to rem units.
 
@@ -48,11 +48,7 @@ _Parameters:_
 _Type:_ `number`px  
 _Required:_ true  
 
-* `$important`  
-Add !important to property.
-_Type:_ `boolean`  
-
-#### `@mixin linearGradient( $direction, $image, $colorStops... )`
+#### `@mixin linear-gradient($direction, $image, $colorStops...)`
 
 Output gradient.
 
@@ -69,7 +65,7 @@ _Default:_ `false`
 * `$colorStops`   
 _Type:_ `list`  
 
-#### `@mixin pageLoaderFallback( $selectors )`
+#### `@mixin page-loader-fallback($selectors)`
 
 Output fallback for page loader.
 

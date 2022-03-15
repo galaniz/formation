@@ -1,19 +1,17 @@
-
-/*
- * Imports
- * -------
+/**
+ * Objects lazy load
  */
 
-@use '../../../config';
+/* Imports */
 
-/*
- * Lazy load
- * ---------
- */
+@use "../../../config";
+
+/* Styles */
 
 .o-lazy {
-	@extend %u-opacity-0;
-	transition: opacity 200ms linear;
+  @extend %u-opacity-0;
+
+  transition: opacity 200ms linear;
 
   &[data-loaded="true"],
   &[data-loaded="err"] {

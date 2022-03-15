@@ -1,11 +1,9 @@
-
-/*
- * Functions
- * ---------
+/**
+ * Utility functions
  */
 
-@forward 'calc-rem-em';
-@forward 'capitalize';
-@forward 'map';
-@forward 'get-color';
-@forward 'strip-unit';
+@forward "calc-rem";
+@forward "capitalize";
+@forward "map";
+@forward "get-color";
+@forward "strip-unit";
