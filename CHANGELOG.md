@@ -88,3 +88,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Update to use `@use`/`@forward` instead of `@import`.
+
+## [3.0.0] - 2022-03-14
+
+### Changed
+- Update all JS files to use JavaScript Standard Style.
+- Update all SCSS files to use Stylelint Standard SCSS.
+- Update comment style to include params in functions and classes.
+
+### Removed
+- SCSS calcEm function.
