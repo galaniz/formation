@@ -4,7 +4,7 @@
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
-    "release": "release-it major",
+    "release": "release-it",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,5 +31,8 @@
     "github": {
       "release": true
     }
+  },
+	"publishConfig": {
+    "access": "public"
   }
 }

@@ -215,7 +215,7 @@ class Send {
       window.grecaptcha.execute(this.siteKey, { action: 'send_form' }).then((token) => {
         data += `&recaptcha=${token}`
 
-        console.log('DATA', data)
+        // console.log('DATA', data)
 
         request({
           method: 'POST',
@@ -224,7 +224,7 @@ class Send {
           body: data
         })
           .then(response => {
-            console.log('RESPONSE', response)
+            // console.log('RESPONSE', response)
 
             try {
               this.success(JSON.parse(response))
@@ -234,7 +234,7 @@ class Send {
             }
           })
           .catch(xhr => {
-            console.log('ERROR', xhr)
+            // console.log('ERROR', xhr)
 
             this._displayResult(true)
             this.error()

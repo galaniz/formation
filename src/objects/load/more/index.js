@@ -83,6 +83,7 @@ class More {
     this.afterInsert = () => {}
 
     this.filterPushUrlParams = () => {}
+    this.filterControlUrls = () => {}
     this.filterPostData = () => this._data
 
     /**
@@ -415,19 +416,31 @@ class More {
   /* Set display/disable of prev/next */
 
   _setControls () {
+    const isFirstPage = this._data.page === 1
+
     if (this._data.count >= this._data.total) {
       if (this.nextContainer) { this.nextContainer.style.display = 'none' }
 
       if (this._pagination) {
         this.next.disabled = true
-        this.prev.disabled = this._data.page === 1 // account for one page
+        this.next.setAttribute('aria-disabled', true)
+        this.next.removeAttribute('href')
       }
     } else {
       if (this.nextContainer) { this.nextContainer.style.display = 'block' }
 
       if (this._pagination) {
         this.next.disabled = false
-        this.prev.disabled = this._data.page === 1 // account for one page
+        this.next.setAttribute('aria-disabled', false)
+      }
+    }
+
+    if (this._pagination) {
+      this.prev.disabled = isFirstPage // account for one page
+      this.prev.setAttribute('aria-disabled', isFirstPage)
+
+      if (isFirstPage) {
+        this.prev.removeAttribute('href')
       }
     }
 
@@ -436,6 +449,31 @@ class More {
     if (!this._data.count && this._pagination) {
       this.next.disabled = true
       this.prev.disabled = true
+
+      this.next.setAttribute('aria-disabled', true)
+      this.prev.setAttribute('aria-disabled', true)
+
+      this.next.removeAttribute('href')
+      this.prev.removeAttribute('href')
+    }
+  }
+
+  _setControlUrls (urlParams) {
+    if (!this._pagination) {
+      return
+    }
+
+    const controlUrls = this.filterControlUrls({
+      urlParams,
+      total: this.total
+    })
+
+    if (controlUrls.prev && this.prev.getAttribute('aria-disabled') !== 'true') {
+      this.prev.setAttribute('href', controlUrls.prev)
+    }
+
+    if (controlUrls.next && this.next.getAttribute('aria-disabled') !== 'true') {
+      this.next.setAttribute('href', controlUrls.next)
     }
   }
 
@@ -559,6 +597,8 @@ class More {
 
     if (this._urlSupported && this._url) {
       const params = this.filterPushUrlParams(state, this._data)
+
+      this._setControlUrls(params)
 
       for (const u in params) {
         const v = params[u]

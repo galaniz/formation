@@ -478,7 +478,7 @@ $z-index: m.map-recursive-merge(
   width: 100%;
 }
 
-@include mix.set-placeholder("width-100vw") {
+@include mix.set-placeholder("width-100-vw") {
   width: 100vw;
 }
 
@@ -486,7 +486,7 @@ $z-index: m.map-recursive-merge(
   height: 100%;
 }
 
-@include mix.set-placeholder("height-100vh") {
+@include mix.set-placeholder("height-100-vh") {
   height: 100vh;
 }
 
