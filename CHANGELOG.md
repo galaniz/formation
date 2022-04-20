@@ -98,3 +98,14 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - SCSS calcEm function.
+
+## [3.0.1] - 2022-04-19
+
+### Changed
+- Some placeholder names.
+- Comment out console messages.
+- `setElements` module to include context in subsequent levels.
+- `LoadMore` support and allow filtering for link pagination vs buttons.
+
+### Fixed
+- Grayscale mixin.
