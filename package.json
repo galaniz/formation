@@ -30,11 +30,6 @@
     },
     "github": {
       "release": true
-    },
-		"plugins": {
-      "@release-it/bumper": {
-        "out": "package.json"
-      }
     }
   },
 	"publishConfig": {
