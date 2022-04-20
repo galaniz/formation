@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,7 @@
       "release": true
     }
   },
-	"publishConfig": {
+  "publishConfig": {
     "access": "public"
   }
 }
