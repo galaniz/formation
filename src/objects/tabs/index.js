@@ -4,6 +4,7 @@
  * @param args [object] {
  *  @param tabs nodelist of [HTMLElement]
  *  @param panels nodelist of [HTMLElement]
+ *  @param panelsDelay [int]
  *  @param orientation [string]
  * }
  */
@@ -26,6 +27,7 @@ class Tabs {
 
     this.tabs = null
     this.panels = null
+    this.panelsDelay = 0
     this.orientation = 'horizontal'
 
     /* Merge default variables with args */
@@ -48,11 +50,7 @@ class Tabs {
       ArrowRight: 'RIGHT',
       39: 'RIGHT',
       ArrowDown: 'DOWN',
-      40: 'DOWN',
-      Enter: 'ENTER',
-      13: 'ENTER',
-      Space: 'SPACE',
-      32: 'SPACE'
+      40: 'DOWN'
     }
 
     this._currentIndex = 0
@@ -78,21 +76,19 @@ class Tabs {
     if (!this.tabs || !this.panels) { return false }
 
     this.tabs = Array.from(this.tabs)
-    this.panels = Array.from(this.panels);
+    this.panels = Array.from(this.panels)
 
     /* Bind all event handlers for referencability */
 
-    [
-      'clickTab',
-      'keyDown',
-      'keyUp'
-    ].forEach(method => {
+    const h = ['clickTab', 'keyDown', 'keyUp']
+
+    h.forEach(method => {
       this[`_${method}`] = this[`_${method}`].bind(this)
     })
 
     this._lastTabIndex = this.tabs.length - 1
 
-    /* Add event listeners */
+    /* Add event listeners + set current */
 
     this.tabs.forEach((tab, index) => {
       tab.setAttribute('data-index', index)
@@ -103,8 +99,28 @@ class Tabs {
 
       const selected = tab.getAttribute('aria-selected')
 
-      if (selected === 'true') { this._currentIndex = index }
+      if (selected === 'true') {
+        this._currentIndex = index
+      }
     })
+
+    /* Set current based on location hash */
+
+    const hash = window.location.hash
+
+    if (hash) {
+      let hashIndex = null
+
+      this.tabs.forEach((tab, index) => {
+        if ('#' + tab.href.split('#')[1] === hash) {
+          hashIndex = index
+        }
+      })
+
+      if (hashIndex !== null) {
+        this._activate(hashIndex)
+      }
+    }
 
     return true
   }
@@ -122,17 +138,22 @@ class Tabs {
 
     /* Deactivate last tab */
 
-    lastTab.setAttribute('tabindex', '-1')
     lastTab.setAttribute('aria-selected', 'false')
 
-    this.panels[this._lastIndex].setAttribute('hidden', 'hidden')
+    this.panels[this._lastIndex].setAttribute('data-selected', 'false')
 
     /* Activate current tab */
 
-    tab.removeAttribute('tabindex')
     tab.setAttribute('aria-selected', 'true')
 
-    this.panels[this._currentIndex].removeAttribute('hidden')
+    this.panels[this._currentIndex].setAttribute('data-selected', 'true')
+
+    setTimeout(() => {
+      this.panels[this._lastIndex].setAttribute('hidden', '')
+      this.panels[this._currentIndex].removeAttribute('hidden')
+
+      this.panels[this._currentIndex].focus()
+    }, this.panelsDelay)
   }
 
   _getIndex (tab) {
@@ -212,11 +233,6 @@ class Tabs {
         } else {
           index++
         }
-        break
-      case 'ENTER':
-      case 'SPACE':
-        this._activate(index)
-        focus = false
         break
     }
 
