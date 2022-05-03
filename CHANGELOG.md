@@ -109,3 +109,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Grayscale mixin.
+
+## [3.0.2] - 2022-05-02
+
+### Changed
+- Visually hidden utility class.
+- `Tabs` class include panel focus and initial selected based on hash.

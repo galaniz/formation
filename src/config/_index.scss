@@ -502,10 +502,10 @@ $z-index: m.map-recursive-merge(
   @extend %u-position-absolute;
   @extend %u-overflow-hidden;
 
-  left: -625rem;
-  top: auto;
-  width: 0.063rem;
-  height: 0.063rem;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  margin: -0.0625rem;
+  clip: rect(0, 0, 0, 0);
 }
 
 /* Touch target 50px */
