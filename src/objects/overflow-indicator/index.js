@@ -9,8 +9,6 @@
  * }
  */
 
-import { mergeObjects } from '../../utils'
-
 /* Class */
 
 class OverflowIndicator {
@@ -23,14 +21,17 @@ class OverflowIndicator {
      * Public variables
      */
 
-    this.indicator = null
-    this.scroll = null
-    this.y = true
-    this.x = false
+    const {
+      indicator = null,
+      scroll = null,
+      y = true,
+      x = false
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.indicator = indicator
+    this.scroll = scroll
+    this.y = y
+    this.x = x
 
     /**
      * Internal variables

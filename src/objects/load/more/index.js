@@ -32,7 +32,6 @@
 /* Imports */
 
 import {
-  mergeObjects,
   request,
   setLoaders,
   urlEncode,
@@ -52,39 +51,56 @@ class More {
      * Public variables
      */
 
-    this.next = null
-    this.nextContainer = null
-    this.prev = null
-    this.current = null
-    this.tot = null
+    const {
+      next = null,
+      nextContainer = null,
+      prev = null,
+      current = null,
+      tot = null,
+      filters = [],
+      filtersForm = null,
+      loaders = [],
+      noResults = {
+        containers: [],
+        buttons: []
+      },
+      error = null,
+      url = '',
+      data = {},
+      ppp = 0,
+      page = 1,
+      total = 0,
+      insertInto = null,
+      insertLocation = 'beforeend',
+      onInsert = () => {},
+      afterInsert = () => {},
+      filterPushUrlParams = () => {},
+      filterControlUrls = () => {},
+      filterPostData = () => this._data
+    } = args
 
-    this.filters = []
-    this.filtersForm = null
-
-    this.loaders = []
-
-    this.noResults = {
-      containers: [],
-      buttons: []
-    }
-
-    this.error = null
-
-    this.url = ''
-    this.data = {}
-
-    this.ppp = 0
-    this.page = 1
-    this.total = 0
-
-    this.insertInto = null
-    this.insertLocation = 'beforeend'
-    this.onInsert = () => {}
-    this.afterInsert = () => {}
-
-    this.filterPushUrlParams = () => {}
-    this.filterControlUrls = () => {}
-    this.filterPostData = () => this._data
+    this.next = next
+    this.nextContainer = nextContainer
+    this.prev = prev
+    this.current = current
+    this.tot = tot
+    this.filters = filters
+    this.filtersForm = filtersForm
+    this.loaders = loaders
+    this.noResults = noResults
+    this.error = error
+    this.url = url
+    this.data = data
+    this.ppp = ppp
+    this.page = page
+    this.total = total
+    this.insertInto = insertInto
+    this.insertLocation = insertLocation
+    this.onInsert = onInsert
+    this.afterInsert = afterInsert
+    this.filterPushUrlParams = filterPushUrlParams
+    this.filterControlUrls = filterControlUrls
+    this.filterPostData = filterPostData
 
     /**
      * Internal variables
@@ -110,10 +126,6 @@ class More {
     /* Buttons for setLoaders */
 
     this._controls = []
-
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
 
     /**
      * Initialize

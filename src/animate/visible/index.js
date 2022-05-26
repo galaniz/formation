@@ -33,7 +33,6 @@
 
 import {
   prefix,
-  mergeObjects,
   getScrollY,
   subscribe
 } from '../../utils'
@@ -50,34 +49,49 @@ class Visible {
      * Public variables
      */
 
-    this.item = null
-    this.visibleItem = null
-    this.visibleOffset = 0
-    this.visibleOffsetPercentage = 0
-    this.visAll = false
-    this.allowUnset = false
-    this.delay = 0
-    this.wait = ''
-    this.sticky = false
-    this.stickyOffset = 0
-    this.stickyDelay = 0
-    this.onVisible = () => {}
-    this.endVisible = () => {}
-    this.onInit = () => {}
+    const {
+      item = null,
+      visibleItem = null,
+      visibleOffset = 0,
+      visibleOffsetPercentage = 0,
+      visAll = false,
+      allowUnset = false,
+      delay = 0,
+      wait = '',
+      sticky = false,
+      stickyOffset = 0,
+      stickyDelay = 0,
+      onVisible = () => {},
+      endVisible = () => {},
+      onInit = () => {},
+      parallax = {
+        rate: 0.2,
+        x: 0,
+        y: 0,
+        z: 0
+      },
+      breakpoints = {
+        min: 0,
+        max: 99999
+      }
+    } = args
 
-    this.parallax = {
-      rate: 0.2,
-      x: 0,
-      y: 0,
-      z: 0
-    }
-
-    this.breakpoints = {
-      min: 0,
-      max: 99999
-    }
-
-    mergeObjects(this, args)
+    this.item = item
+    this.visibleItem = visibleItem
+    this.visibleOffset = visibleOffset
+    this.visibleOffsetPercentage = visibleOffsetPercentage
+    this.visAll = visAll
+    this.allowUnset = allowUnset
+    this.delay = delay
+    this.wait = wait
+    this.sticky = sticky
+    this.stickyOffset = stickyOffset
+    this.stickyDelay = stickyDelay
+    this.onVisible = onVisible
+    this.endVisible = endVisible
+    this.onInit = onInit
+    this.parallax = parallax
+    this.breakpoints = breakpoints
 
     /**
      * Internal variables

@@ -35,7 +35,15 @@ const clickHandler = (e) => {
 
 /* Modules */
 
-const transition = (links = [], transitionElement = null, delay = 800, init = false, beforeShow = false) => {
+const transition = (args) => {
+  const {
+    links = [],
+    transitionElement = null,
+    delay = 800,
+    init = false,
+    beforeShow = false
+  } = args
+
   if (!links || !transitionElement) { return }
 
   t = transitionElement

@@ -7,10 +7,6 @@
  * }
  */
 
-/* Imports */
-
-import { mergeObjects } from '../../../utils'
-
 /* Class */
 
 class FloatLabel {
@@ -21,12 +17,13 @@ class FloatLabel {
   constructor (args) {
     /* Public variables */
 
-    this.input = null
-    this.label = null
+    const {
+      input = null,
+      label = null
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.input = input
+    this.label = label
 
     /* Initialize */
 

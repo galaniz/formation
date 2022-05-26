@@ -19,8 +19,7 @@
 import {
   addClass,
   removeClass,
-  prefix,
-  mergeObjects
+  prefix
 } from '../../utils'
 
 /* Class */
@@ -35,19 +34,27 @@ class Modal {
      * Public variables
      */
 
-    this.modal = null
-    this.window = null
-    this.overlay = null
-    this.trigger = null
-    this.close = null
-    this.scaleTransition = false
-    this.scaleTransitionDelay = 300
-    this.bodyOverflowHiddenClass = 'u-o-h'
-    this.onToggle = () => {}
+    const {
+      modal = null,
+      window = null,
+      overlay = null,
+      trigger = null,
+      close = null,
+      scaleTransition = false,
+      scaleTransitionDelay = 300,
+      bodyOverflowHiddenClass = 'u-o-h',
+      onToggle = () => {}
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.modal = modal
+    this.window = window
+    this.overlay = overlay
+    this.trigger = trigger
+    this.close = close
+    this.scaleTransition = scaleTransition
+    this.scaleTransitionDelay = scaleTransitionDelay
+    this.bodyOverflowHiddenClass = bodyOverflowHiddenClass
+    this.onToggle = onToggle
 
     /**
      * Internal variables

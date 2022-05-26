@@ -17,8 +17,7 @@
 
 import {
   setCookie,
-  getCookie,
-  mergeObjects
+  getCookie
 } from '../../utils'
 
 /* Class */
@@ -33,18 +32,21 @@ class Remove {
      * Public variables
      */
 
-    this.item = null
-    this.trigger = null
-    this.condition = () => {}
-    this.cookie = {
-      name: '',
-      value: '',
-      expirationDays: ''
-    }
+    const {
+      item = null,
+      trigger = null,
+      condition = () => {},
+      cookie = {
+        name: '',
+        value: '',
+        expirationDays: ''
+      }
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.item = item
+    this.trigger = trigger
+    this.condition = condition
+    this.cookie = cookie
 
     /**
      * Internal variables

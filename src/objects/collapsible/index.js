@@ -14,7 +14,7 @@
 
 /* Imports */
 
-import { mergeObjects, subscribe } from '../../utils'
+import { subscribe } from '../../utils'
 
 /* Class */
 
@@ -28,15 +28,23 @@ class Collapsible {
      * Public variables
      */
 
-    this.container = null
-    this.collapsible = null
-    this.trigger = null
-    this.closeOnLastBlur = false
-    this.accordianInstances = []
-    this.startOpen = false
-    this.resize = true
+    const {
+      container = null,
+      collapsible = null,
+      trigger = null,
+      closeOnLastBlur = false,
+      accordianInstances = [],
+      startOpen = false,
+      resize = true
+    } = args
 
-    mergeObjects(this, args)
+    this.container = container
+    this.collapsible = collapsible
+    this.trigger = trigger
+    this.closeOnLastBlur = closeOnLastBlur
+    this.accordianInstances = accordianInstances
+    this.startOpen = startOpen
+    this.resize = resize
 
     /**
      * Internal variables
