@@ -12,8 +12,6 @@
 const toggleFocusability = (on = true, items = []) => {
   if (!items.length) { return }
 
-  const formTags = ['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']
-
   items.forEach(item => {
     if (on) {
       if (item.hasAttribute('data-context-inert-aria-hidden')) {
@@ -22,20 +20,15 @@ const toggleFocusability = (on = true, items = []) => {
       }
 
       if (item.hasAttribute('data-context-inert-tabindex')) {
-        item.setAttribute('tabindex', item.getAttribute('data-context-inert-tabindex'))
-        item.removeAttribute('data-context-inert-tabindex')
-      }
+        const initTabIndex = item.getAttribute('data-context-inert-tabindex')
 
-      if (item.hasAttribute('data-context-inert-href')) {
-        item.setAttribute('href', item.getAttribute('data-context-inert-href'))
-        item.removeAttribute('data-context-inert-href')
-      }
-
-      if (formTags.indexOf(item.tagName) !== -1) {
-        if (item.hasAttribute('data-context-inert-disabled')) {
-          const v = item.getAttribute('data-context-inert-disabled')
-          item.disabled = v === 'true'
+        if (initTabIndex !== 'null') {
+          item.setAttribute('tabindex', initTabIndex)
+        } else {
+          item.removeAttribute('tabindex')
         }
+
+        item.removeAttribute('data-context-inert-tabindex')
       }
     } else {
       let ariaHiddenValue = item.getAttribute('aria-hidden')
@@ -43,26 +36,20 @@ const toggleFocusability = (on = true, items = []) => {
       if (!ariaHiddenValue) { ariaHiddenValue = false }
 
       item.setAttribute('data-context-inert-aria-hidden', ariaHiddenValue)
+      item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
+
+      item.setAttribute('tabindex', '-1')
       item.setAttribute('aria-hidden', true)
-
-      if (item.hasAttribute('tabindex')) {
-        item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
-        item.removeAttribute('tabindex')
-      }
-
-      if (item.hasAttribute('href')) {
-        item.setAttribute('data-context-inert-href', item.getAttribute('href'))
-        item.removeAttribute('href')
-      }
-
-      if (formTags.indexOf(item.tagName) !== -1) {
-        item.setAttribute('data-context-inert-disabled', item.disabled)
-        item.disabled = true
-      }
     }
   })
 }
 
+/**
+ * Selector string to get focusable items
+ */
+
+const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-context-inert-tabindex], iframe'
+
 /* Exports */
 
-export { toggleFocusability }
+export { toggleFocusability, focusSelector }

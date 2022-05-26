@@ -9,12 +9,6 @@
  * }
  */
 
-/* Imports */
-
-import { mergeObjects } from '../../utils'
-
-/* Class */
-
 class Tabs {
   /**
    * Constructor
@@ -25,14 +19,17 @@ class Tabs {
      * Public variables
      */
 
-    this.tabs = null
-    this.panels = null
-    this.panelsDelay = 0
-    this.orientation = 'horizontal'
+    const {
+      tabs = null,
+      panels = null,
+      panelsDelay = 0,
+      orientation = 'horizontal'
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.tabs = tabs
+    this.panels = panels
+    this.panelsDelay = panelsDelay
+    this.orientation = orientation
 
     /**
      * Internal variables
@@ -53,8 +50,13 @@ class Tabs {
       40: 'DOWN'
     }
 
+    /* Track current and previously current */
+
     this._currentIndex = 0
     this._lastIndex = 0
+
+    /* Last tab/panel index */
+
     this._lastTabIndex = 0
 
     /**
@@ -80,28 +82,28 @@ class Tabs {
 
     /* Bind all event handlers for referencability */
 
-    const h = ['clickTab', 'keyDown', 'keyUp']
+    const events = ['click', 'keyDown', 'keyUp']
 
-    h.forEach(method => {
-      this[`_${method}`] = this[`_${method}`].bind(this)
+    events.forEach(method => {
+      this[`_${method}Event`] = this[`_${method}`].bind(this)
     })
+
+    /* Get last tab/panel index */
 
     this._lastTabIndex = this.tabs.length - 1
 
-    /* Add event listeners + set current */
+    /* Add event listeners */
 
     this.tabs.forEach((tab, index) => {
       tab.setAttribute('data-index', index)
 
-      tab.addEventListener('click', this._clickTab)
-      tab.addEventListener('keydown', this._keyDown)
-      tab.addEventListener('keyup', this._keyUp)
+      tab.addEventListener('click', this._clickEvent)
+      tab.addEventListener('keydown', this._keyDownEvent)
+      tab.addEventListener('keyup', this._keyUpEvent)
 
       const selected = tab.getAttribute('aria-selected')
 
-      if (selected === 'true') {
-        this._currentIndex = index
-      }
+      if (selected === 'true') { this._currentIndex = index }
     })
 
     /* Set current based on location hash */
@@ -118,43 +120,94 @@ class Tabs {
       })
 
       if (hashIndex !== null) {
-        this._activate(hashIndex)
+        this._currentIndex = hashIndex
       }
     }
+
+    /* Activate current */
+
+    this._beforeInitActivate()
+
+    this._activate({
+      currentIndex: this._currentIndex,
+      focus: false,
+      source: 'init'
+    })
+
+    /* Init successful */
 
     return true
   }
 
+  _beforeInitActivate (args) {
+    return args
+  }
+
   /**
-   * Internal helpers
+   * Hide, show and focus panels and tabs
    */
 
-  _activate (currentIndex) {
+  _activate (args) {
+    const {
+      currentIndex = 0,
+      focus = true
+    } = args
+
     this._lastIndex = this._currentIndex
     this._currentIndex = currentIndex
+
+    if (this._currentIndex > this._lastTabIndex) {
+      this._currentIndex = this._lastTabIndex
+    }
 
     const tab = this.tabs[this._currentIndex]
     const lastTab = this.tabs[this._lastIndex]
 
     /* Deactivate last tab */
 
+    lastTab.setAttribute('tabindex', '-1')
     lastTab.setAttribute('aria-selected', 'false')
 
+    /* Deactivate last panel */
+
     this.panels[this._lastIndex].setAttribute('data-selected', 'false')
+    this._onDeactivate(args)
 
     /* Activate current tab */
 
+    tab.setAttribute('tabindex', '0')
     tab.setAttribute('aria-selected', 'true')
 
+    /* Activate current panel */
+
     this.panels[this._currentIndex].setAttribute('data-selected', 'true')
+    this._onActivate(args)
 
     setTimeout(() => {
-      this.panels[this._lastIndex].setAttribute('hidden', '')
-      this.panels[this._currentIndex].removeAttribute('hidden')
+      this._displayPanels()
 
-      this.panels[this._currentIndex].focus()
+      if (focus) {
+        this.panels[this._currentIndex].focus()
+      }
     }, this.panelsDelay)
   }
+
+  _onDeactivate (args) {
+    return false
+  }
+
+  _onActivate (args) {
+    return false
+  }
+
+  _displayPanels () {
+    this.panels[this._lastIndex].setAttribute('hidden', '')
+    this.panels[this._currentIndex].removeAttribute('hidden')
+  }
+
+  /**
+   * Other helpers
+   */
 
   _getIndex (tab) {
     return parseInt(tab.getAttribute('data-index'))
@@ -172,8 +225,11 @@ class Tabs {
    * Event handlers
    */
 
-  _clickTab (e) {
-    this._activate(this._getIndex(e.currentTarget))
+  _click (e) {
+    this._activate({
+      currentIndex: this._getIndex(e.currentTarget),
+      source: 'click'
+    })
   }
 
   _keyDown (e) {
@@ -182,18 +238,18 @@ class Tabs {
     let focus = true
 
     switch (this._KEYS[key]) {
-      case 'END': // last tab
+      case 'END': // Last tab
         e.preventDefault()
         index = this._lastTabIndex
         break
-      case 'HOME': // first tab
+      case 'HOME': // First tab
         e.preventDefault()
         index = 0
         break
 
         /* Up and down here to prevent page scroll */
 
-      case 'UP': // prev tab
+      case 'UP': // Prev tab
         if (this.orientation === 'horizontal') {
           focus = false
         } else {
@@ -201,7 +257,7 @@ class Tabs {
           index--
         }
         break
-      case 'DOWN': // next tab
+      case 'DOWN': // Next tab
         if (this.orientation === 'horizontal') {
           focus = false
         } else {
@@ -220,14 +276,14 @@ class Tabs {
     let focus = true
 
     switch (this._KEYS[key]) {
-      case 'LEFT': // prev tab
+      case 'LEFT': // Previous tab
         if (this.orientation === 'vertical') {
           focus = false
         } else {
           index--
         }
         break
-      case 'RIGHT': // next tab
+      case 'RIGHT': // Next tab
         if (this.orientation === 'vertical') {
           focus = false
         } else {

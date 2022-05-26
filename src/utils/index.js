@@ -12,7 +12,7 @@ import { prefix } from './modules/prefix'
 import { objectFit } from './modules/object-fit'
 import { setLoaders } from './modules/set-loaders'
 import { usingMouse } from './modules/using-mouse'
-import { toggleFocusability } from './modules/toggle-focusability'
+import { toggleFocusability, focusSelector } from './modules/toggle-focusability'
 
 /* Get values from DOM */
 
@@ -64,6 +64,7 @@ export {
   subscribe,
   usingMouse,
   toggleFocusability,
+  focusSelector,
   setCookie,
   getCookie
 }

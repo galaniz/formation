@@ -1,372 +1,377 @@
 /**
- * Objects: slider base (to create fade/carousel sliders)
+ * Objects: slider
  *
  * @param args [object] {
  *  @param slider [HTMLElement]
- *  @param items nodelist of [HTMLElement]
- *  @param loop [boolean]
- *  @param autoplay [boolean]
- *  @param autoplaySpeed [int]
- *  @param prev [HTMLElement]
- *  @param next [HTMLElement]
- *  @param nav [HTMLElement]
- *  @param navItemClass [string]
- *  @param currentIndex [int]
+ *  @param sliderPerPanel [array] of objects
+ *  @param sliderItems nodelist of [HTMLElement]
  * }
  */
 
 /* Imports */
 
-import { mergeObjects } from '../../utils'
+import Tabs from '../tabs'
+import {
+  toggleFocusability,
+  focusSelector
+} from '../../utils'
 
 /* Class */
 
-class Slider {
+class Slider extends Tabs {
   /**
    * Constructor
    */
 
-  constructor (args = {}) {
+  constructor (args) {
+    /**
+     * Base variables + init
+     */
+
+    super(args)
+
     /**
      * Public variables
      */
 
-    this.slider = null
-    this.items = null
-    this.loop = false
-    this.autoplay = false
-    this.autoplaySpeed = 8000
-    this.prev = null
-    this.next = null
-    this.nav = null
-    this.navItemClass = ''
-    this.currentIndex = 0
+    const {
+      slider = null,
+      sliderPerPanel = [],
+      sliderItems = []
+    } = args
+
+    this.slider = slider
+    this.sliderPerPanel = sliderPerPanel
+    this.sliderItems = Array.from(sliderItems)
+
+    /* Check for required */
+
+    if (!this.slider) {
+      return false
+    }
 
     /**
      * Internal variables
      */
 
-    this._lastIndex = 0
+    /* Track current and previously current */
 
-    this._autoStart = 0
-    this._goToAutoplay = this._goToAuto.bind(this)
+    this._lastIndexFocusableItems = []
 
-    this._pause = false
-    this._requestId = null
+    /* For scroll event and setting */
 
-    this._navItems = []
-    this._navItemsLen = 0
-    this._dotsLen = 0
-    this._dotsLastIndex = 0
+    this._scrollTimer = null
+    this._scrollOffsets = []
 
-    /* Visible slides */
+    /* For scroll with grouped panels */
 
-    this._perPage = 1
+    this._resizeTimer = null
+    this._viewportWidth = window.innerWidth
 
-    /* For key events */
+    this._smoothScrollSupported = false
 
-    this._KEYS = {
-      ArrowLeft: 'LEFT',
-      37: 'LEFT',
-      ArrowRight: 'RIGHT',
-      39: 'RIGHT',
-      Home: 'HOME',
-      36: 'HOME',
-      End: 'END',
-      35: 'END'
-    }
-
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
-
-    /**
-     * Initialize
-     */
-
-    const init = this._initialize()
-
-    if (!init) { return false }
+    this._sliderParent = null
+    this._sliderItemsLength = this.sliderItems.length
+    this._sliderRearrange = this._sliderItemsLength && this.sliderPerPanel.length
   }
 
   /**
    * Initialize
    */
 
-  _initialize () {
-    /* Check for required */
+  _beforeInitActivate (args) {
+    /* Check smooth scroll support */
 
-    if (!this.slider || !this.items) { return false }
-
-    this.items = Array.from(this.items)
-
-    this._lastIndex = this.items.length - 1
-
-    /* Auto play event listeners and animations */
-
-    if (this.autoplay) {
-      if (this._autoplayDurationsLen === 0) {
-        this.slider.addEventListener('mouseenter', () => {
-          this._pause = true
-        })
-
-        this.slider.addEventListener('mouseleave', () => {
-          this._pause = false
-
-          /* Restart animation */
-
-          window.requestAnimationFrame(this._goToAutoplay)
-        })
-      }
-
-      /* Check when window inactive */
-
-      window.addEventListener('blur', () => {
-        this._pause = true
-      })
-
-      window.addEventListener('focus', () => {
-        this._pause = false
-
-        /* Restart animation */
-
-        window.requestAnimationFrame(this._goToAutoplay)
-      })
-
-      window.requestAnimationFrame(this._goToAutoplay)
+    if (window.CSS.supports('(scroll-behavior: smooth)')) {
+      this._smoothScrollSupported = true
     }
 
-    /* Keyboard navigation */
+    /* Listen for slider scroll + resize */
 
-    this.slider.tabIndex = 0
-    this.slider.addEventListener('keydown', this._keyNav.bind(this))
+    this.slider.addEventListener('scroll', this._scrollEvent)
+    window.addEventListener('resize', this._resizeEvent)
 
-    return true
-  }
+    /* Set slider panel ranges */
 
-  /**
-   * Helpers
-   */
+    if (this._sliderRearrange) {
+      this._sliderParent = this.slider.parentElement
 
-  _getPrevIndex (index) {
-    let prevIndex = index - 1
+      const sliderPerPanelLength = this.sliderPerPanel.length
 
-    if (index <= 0) { prevIndex = this.loop ? this._dotsLastIndex : 0 }
+      this.sliderPerPanel.forEach((s, i) => {
+        const low = s.breakpoint
+        let high = 99999
 
-    return prevIndex
-  }
+        if (sliderPerPanelLength > 1 && i < sliderPerPanelLength - 1) { high = this.sliderPerPanel[i + 1].breakpoint }
 
-  _getNextIndex (index) {
-    let nextIndex = index + 1
+        s.low = low
+        s.high = high
+        s.panels = Math.ceil(this._sliderItemsLength / s.items)
+      })
 
-    if (index >= this._dotsLastIndex) { nextIndex = this.loop ? 0 : this._dotsLastIndex }
+      this._arrangeItems()
+    }
 
-    return nextIndex
-  }
+    /* Activate current */
 
-  _setUpNav (resize = false) {
-    this._dotsLen = (this.items.length - this._perPage) + 1
-    this._dotsLastIndex = this._dotsLen - 1
-
-    if (this.nav && this.navItemClass) {
-      if (resize) {
-        this.nav.innerHTML = ''
-        this._navItems = []
-        this._navItemsLen = 0
-      }
-
-      let navItems = Array.from(this.nav.querySelectorAll('.' + this.navItemClass))
-
-      const setupNavItem = (item = null, i = 0, classes = '') => {
-        const active = i === this.currentIndex
-        const setClass = !!classes
-
-        if (active) { item.setAttribute('data-active', '') }
-
-        if (setClass) { item.setAttribute('class', classes) }
-
-        item.setAttribute('data-index', i)
-        item.addEventListener('click', this._nav.bind(this))
-
-        this._navItems.push(item)
-      }
-
-      if (navItems.length === 0) {
-        navItems = document.createDocumentFragment()
-
-        if (this._dotsLen > 1) {
-          for (let i = 0; i < this._dotsLen; i++) {
-            const navItem = document.createElement('button')
-
-            navItem.type = 'button'
-            navItem.textContent = i
-
-            setupNavItem(navItem, i, this.navItemClass)
-
-            navItems.appendChild(navItem)
-          }
-
-          this.nav.appendChild(navItems)
-          this.slider.setAttribute('data-has-dots', 'true')
-        } else {
-          this.slider.removeAttribute('data-has-dots')
+    if (this.slider) {
+      this.panels.forEach((panel, index) => {
+        if (this._currentIndex !== index) {
+          const focusableItems = Array.from(panel.querySelectorAll(focusSelector))
+          focusableItems.unshift(panel)
+          toggleFocusability(false, focusableItems)
         }
-      } else {
-        this.slider.setAttribute('data-has-dots', 'true')
 
-        navItems.forEach((item, i) => {
-          setupNavItem(item, i)
-        })
-      }
+        if (index > this._lastTabIndex) {
+          return
+        }
 
-      this._navItemsLen = this._navItems.length
+        this._scrollOffsets.push(panel.offsetLeft)
+      })
     }
-
-    /* Prev/next navigation */
-
-    if (this._dotsLen > 1) {
-      if (!resize) {
-        if (this.prev) { this.prev.addEventListener('click', this._prev.bind(this)) }
-
-        if (this.next) { this.next.addEventListener('click', this._next.bind(this)) }
-      }
-    } else {
-      if (this.prev) { this.prev.style.display = 'none' }
-
-      if (this.next) { this.next.style.display = 'none' }
-    }
-  }
-
-  _setNav (index = null, lastIndex = null) {
-    if (this._navItemsLen) {
-      if (index !== null && lastIndex !== null) {
-        this._navItems[lastIndex].removeAttribute('data-active')
-        this._navItems[index].setAttribute('data-active', '')
-      }
-    }
-
-    if (this.prev && !this.loop) {
-      let disable = false
-
-      if (index <= 0) { disable = true }
-
-      this.prev.disabled = disable
-    }
-
-    if (this.next && !this.loop) {
-      let disable = false
-
-      if (index >= this._dotsLastIndex) { disable = true }
-
-      this.next.disabled = disable
-    }
-  }
-
-  _doGoTo (index) {
-    if (index < 0) { index = this.loop ? this._dotsLastIndex : 0 }
-
-    if (index > this._dotsLastIndex) { index = this.loop ? 0 : this._dotsLastIndex }
-
-    const lastIndex = this.currentIndex
-
-    /* Set nav items/prev next buttons */
-
-    this._setNav(index, lastIndex)
-
-    /* Set current */
-
-    this.currentIndex = index
-
-    return lastIndex
   }
 
   /**
-   * Go to slide
+   * Hide, show and focus panels and tabs
    */
 
-  _goTo (index, init = false) {
-    if (index === undefined || index === null) { return }
+  _onDeactivate (args) {
+    const {
+      source = ''
+    } = args
 
-    this._doGoTo(index)
+    if (source !== 'init') {
+      if (!this._lastIndexFocusableItems.length) {
+        this._lastIndexFocusableItems = Array.from(this.panels[this._lastIndex].querySelectorAll(focusSelector))
+        this._lastIndexFocusableItems.unshift(this.panels[this._lastIndex])
+      }
+
+      toggleFocusability(false, this._lastIndexFocusableItems)
+
+      const currentFocusableItems = Array.from(this.panels[this._currentIndex].querySelectorAll(focusSelector))
+      currentFocusableItems.unshift(this.panels[this._currentIndex])
+      toggleFocusability(true, currentFocusableItems)
+
+      this._lastIndexFocusableItems = currentFocusableItems
+    }
   }
 
-  _goToAuto (now) {
-    /* Cancel animation */
+  _onActivate (args) {
+    const {
+      source = ''
+    } = args
 
-    if (this._pause) {
-      if (this._requestId) {
-        window.cancelAnimationFrame(this._requestId)
-        this._requestId = false
-        this._autoStart = 0
+    if (source !== 'scroll') {
+      if (this._smoothScrollSupported) {
+        this.slider.scroll({
+          top: 0,
+          left: this._scrollOffsets[this._currentIndex],
+          behavior: 'smooth'
+        })
+      } else {
+        // Fallback for when smooth scroll not supported
+        this._scrollTo(this._scrollOffsets[this._currentIndex])
+      }
+    }
+  }
+
+  _displayPanels () {
+    this.panels[this._lastIndex].setAttribute('aria-hidden', 'true')
+    this.panels[this._currentIndex].setAttribute('aria-hidden', 'false')
+  }
+
+  /**
+   * Internal helpers
+   */
+
+  _arrangeItems (resize = false) {
+    if (!this._sliderRearrange) {
+      return
+    }
+
+    let numberOfPanels = 1
+    let perPanel = 1
+    const map = []
+
+    this.sliderPerPanel.forEach(s => {
+      if (this._viewportWidth >= s.low && this._viewportWidth < s.high) {
+        numberOfPanels = s.panels
+        perPanel = s.items
+      }
+    })
+
+    let start = 0
+
+    for (let i = 0; i < numberOfPanels; i++) {
+      map.push([])
+
+      for (let j = start; j < perPanel + start; j++) {
+        if (j < this._sliderItemsLength) {
+          map[i].push(j)
+        }
+      }
+
+      start += perPanel
+    }
+
+    /* Update tabs */
+
+    this.tabs.forEach((t, index) => {
+      if (index >= numberOfPanels) {
+        t.style.display = 'none'
+        this.panels[index].style.display = 'none'
+      } else {
+        t.style.display = ''
+        this.panels[index].style.display = ''
+      }
+    })
+
+    this._lastTabIndex = numberOfPanels - 1
+
+    /* Put changes in slider in fragment then append */
+
+    const frag = new window.DocumentFragment()
+
+    frag.appendChild(this.slider)
+
+    const groups = Array.from(frag.querySelectorAll('.o-scroll-x__view'))
+
+    groups.forEach((g, index) => {
+      if (index >= numberOfPanels) {
         return
       }
+
+      const m = map[index]
+
+      m.forEach(n => {
+        g.appendChild(this.sliderItems[n])
+      })
+    })
+
+    this._sliderParent.appendChild(frag)
+  }
+
+  _scrollTo (to) {
+    let start = null
+    let done = false
+    const duration = 500
+    const from = this.slider.scrollLeft
+    const dir = to > from ? 'right' : 'left'
+
+    this.slider.style.setProperty('--snap-type', 'none')
+
+    /*
+     Source: https://spicyyoghurt.com/tools/easing-functions
+     t = time
+     b = beginning value
+     c = change in value
+     d = duration
+    */
+
+    const ease = (t, b, c, d) => { // Sine ease in out
+      return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
     }
 
-    if (!this._autoStart) { this._autoStart = now }
+    const change = to - from
 
-    const progress = now - this._autoStart
-    const timeFraction = progress / this.autoplaySpeed
+    const animate = (timestamp) => {
+      if (start === null) {
+        start = timestamp
+      }
 
-    if (timeFraction >= 1) {
-      this._goTo(this.currentIndex + 1)
+      const elapsed = timestamp - start
 
-      /* Start timer again */
+      if (elapsed < duration) {
+        const v = ease(elapsed, from, change, duration)
 
-      this._autoStart = now
+        this.slider.scrollLeft = v
+
+        if (dir === 'right') {
+          if (v >= to) {
+            done = true
+          }
+        } else {
+          if (v <= to) {
+            done = true
+          }
+        }
+
+        if (!done) {
+          window.requestAnimationFrame(animate)
+        } else {
+          this.slider.style.setProperty('--snap-type', '')
+        }
+      } else {
+        this.slider.style.setProperty('--snap-type', '')
+      }
     }
 
-    this._requestId = window.requestAnimationFrame(this._goToAutoplay)
+    window.requestAnimationFrame(animate)
   }
 
   /**
    * Event handlers
    */
 
-  _nav (e) {
-    e.preventDefault()
-    this._goTo(parseInt(e.currentTarget.getAttribute('data-index')))
+  _scroll () {
+    clearTimeout(this._scrollTimer)
+
+    this._scrollTimer = setTimeout(() => {
+      let newIndex = this._currentIndex
+
+      const target = this.slider.scrollLeft
+      const offsets = this._scrollOffsets
+
+      const closestOffset = this._scrollOffsets.reduce((prev, curr) => {
+        return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
+      })
+
+      newIndex = offsets.indexOf(closestOffset)
+
+      if (newIndex !== this._currentIndex && newIndex !== -1) {
+        this._activate({
+          currentIndex: newIndex,
+          focus: false,
+          source: 'scroll'
+        })
+      }
+    }, 100)
   }
 
-  _keyNav (e) {
-    const key = e.key || e.keyCode || e.which || e.code
-    let index = null
+  _resize () {
+    clearTimeout(this._resizeTimer)
 
-    switch (this._KEYS[key]) {
-      case 'LEFT':
-        index = this.currentIndex - 1
-        break
-      case 'RIGHT':
-        index = this.currentIndex + 1
-        break
-      case 'HOME':
-        index = 0
-        break
-      case 'END':
-        index = this._dotsLastIndex
-        break
-    }
+    this._resizeTimer = setTimeout(() => {
+      const viewportWidth = window.innerWidth
 
-    if (index !== null) {
-      this._goTo(index)
-    }
-  }
+      if (viewportWidth !== this._viewportWidth) {
+        this._viewportWidth = viewportWidth
+      } else {
+        return
+      }
 
-  _prev (e) {
-    e.preventDefault()
-    this._goTo(this._getPrevIndex(this.currentIndex))
-  }
+      if (this._sliderRearrange) {
+        this._arrangeItems(true)
+      }
 
-  _next (e) {
-    e.preventDefault()
-    this._goTo(this._getNextIndex(this.currentIndex))
-  }
+      if (this.slider) {
+        this._scrollOffsets = []
 
-  /**
-   * Public methods
-   */
+        this.panels.forEach((panel, index) => {
+          if (index > this._lastTabIndex) {
+            return
+          }
 
-  goTo (index) {
-    this._goTo(index)
+          this._scrollOffsets.push(panel.offsetLeft)
+        })
+
+        this._activate({
+          currentIndex: this._currentIndex,
+          focus: false,
+          source: 'resize'
+        })
+      }
+    }, 100)
   }
 } // End Slider
 
