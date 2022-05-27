@@ -54,8 +54,7 @@ const assetsLoaded = (assets = [], done = () => {}) => {
       done(data)
     })
     .catch(err => {
-      // console.log(err)
-      done(false)
+      done(false, err)
     })
 }
 

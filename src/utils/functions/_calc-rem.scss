@@ -15,7 +15,7 @@
  */
 
 @function calc-rem($px) {
-	$num: math.div($px, con.$context);
+  $num: math.div($px, con.$context);
 
   @return ($num * 1rem);
 }
