@@ -30,7 +30,8 @@
 
 import {
   cascade,
-  toggleFocusability
+  toggleFocusability,
+  focusSelector
 } from '../../utils'
 
 /* Class */
@@ -175,7 +176,6 @@ class Nav {
 
     /* Get focusable elements */
 
-    const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-context-inert-tabindex], iframe'
     const navFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
     if (navFocusableItems.length) {

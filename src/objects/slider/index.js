@@ -28,26 +28,38 @@ class Slider extends Tabs {
      * Base variables + init
      */
 
-    super(args)
-
-    /**
-     * Public variables
-     */
-
     const {
       slider = null,
-      sliderPerPanel = [],
-      sliderItems = []
+      sliderTrack = null,
+      sliderHeight = null,
+      sliderItems = [],
+      sliderPerPanel = []
     } = args
 
-    this.slider = slider
-    this.sliderPerPanel = sliderPerPanel
-    this.sliderItems = Array.from(sliderItems)
-
-    /* Check for required */
-
-    if (!this.slider) {
+    if (!slider || !sliderTrack) {
       return false
+    }
+
+    args.init = false
+
+    super(args)
+
+    this.slider = slider
+    this.sliderTrack = sliderTrack
+    this.sliderHeight = sliderHeight
+    this.sliderItems = sliderItems
+    this.sliderPerPanel = sliderPerPanel
+
+    this.beforeInitActivate = () => {
+      this._beforeInitActivate()
+    }
+
+    this.onDeactivate = (args) => {
+      this._onDeactivate(args)
+    }
+
+    this.onActivate = (args) => {
+      this._onActivate(args)
     }
 
     /**
@@ -70,32 +82,44 @@ class Slider extends Tabs {
 
     this._smoothScrollSupported = false
 
-    this._sliderParent = null
     this._sliderItemsLength = this.sliderItems.length
     this._sliderRearrange = this._sliderItemsLength && this.sliderPerPanel.length
+
+    /**
+     * Initialize
+     */
+
+    const initialize = this._initialize()
+
+    if (!initialize) { return false }
   }
 
   /**
    * Initialize
    */
 
-  _beforeInitActivate (args) {
+  _beforeInitActivate () {
     /* Check smooth scroll support */
 
     if (window.CSS.supports('(scroll-behavior: smooth)')) {
       this._smoothScrollSupported = true
     }
 
+    /* Set height to hide scrollbar */
+
+    this._setHeight()
+
     /* Listen for slider scroll + resize */
 
-    this.slider.addEventListener('scroll', this._scrollEvent)
+    this._scrollEvent = this._scroll.bind(this)
+    this._resizeEvent = this._resize.bind(this)
+
+    this.sliderTrack.addEventListener('scroll', this._scrollEvent)
     window.addEventListener('resize', this._resizeEvent)
 
     /* Set slider panel ranges */
 
     if (this._sliderRearrange) {
-      this._sliderParent = this.slider.parentElement
-
       const sliderPerPanelLength = this.sliderPerPanel.length
 
       this.sliderPerPanel.forEach((s, i) => {
@@ -114,21 +138,19 @@ class Slider extends Tabs {
 
     /* Activate current */
 
-    if (this.slider) {
-      this.panels.forEach((panel, index) => {
-        if (this._currentIndex !== index) {
-          const focusableItems = Array.from(panel.querySelectorAll(focusSelector))
-          focusableItems.unshift(panel)
-          toggleFocusability(false, focusableItems)
-        }
+    this.panels.forEach((panel, index) => {
+      if (this._currentIndex !== index) {
+        const focusableItems = Array.from(panel.querySelectorAll(focusSelector))
+        focusableItems.unshift(panel)
+        toggleFocusability(false, focusableItems)
+      }
 
-        if (index > this._lastTabIndex) {
-          return
-        }
+      if (index > this._lastTabIndex) {
+        return
+      }
 
-        this._scrollOffsets.push(panel.offsetLeft)
-      })
-    }
+      this._scrollOffsets.push(panel.offsetLeft)
+    })
   }
 
   /**
@@ -163,7 +185,7 @@ class Slider extends Tabs {
 
     if (source !== 'scroll') {
       if (this._smoothScrollSupported) {
-        this.slider.scroll({
+        this.sliderTrack.scroll({
           top: 0,
           left: this._scrollOffsets[this._currentIndex],
           behavior: 'smooth'
@@ -183,6 +205,16 @@ class Slider extends Tabs {
   /**
    * Internal helpers
    */
+
+  _setHeight () {
+    if (!this.sliderHeight) {
+      return
+    }
+
+    const height = this.sliderHeight.clientHeight
+
+    this.slider.style.setProperty('--height', (height / 16) + 'rem')
+  }
 
   _arrangeItems (resize = false) {
     if (!this._sliderRearrange) {
@@ -232,9 +264,9 @@ class Slider extends Tabs {
 
     const frag = new window.DocumentFragment()
 
-    frag.appendChild(this.slider)
+    frag.appendChild(this.sliderTrack)
 
-    const groups = Array.from(frag.querySelectorAll('.o-scroll-x__view'))
+    const groups = Array.from(frag.querySelectorAll('.o-slider__view'))
 
     groups.forEach((g, index) => {
       if (index >= numberOfPanels) {
@@ -248,17 +280,17 @@ class Slider extends Tabs {
       })
     })
 
-    this._sliderParent.appendChild(frag)
+    this.slider.appendChild(frag)
   }
 
   _scrollTo (to) {
     let start = null
     let done = false
     const duration = 500
-    const from = this.slider.scrollLeft
+    const from = this.sliderTrack.scrollLeft
     const dir = to > from ? 'right' : 'left'
 
-    this.slider.style.setProperty('--snap-type', 'none')
+    this.sliderTrack.style.setProperty('--snap-type', 'none')
 
     /*
      Source: https://spicyyoghurt.com/tools/easing-functions
@@ -284,7 +316,7 @@ class Slider extends Tabs {
       if (elapsed < duration) {
         const v = ease(elapsed, from, change, duration)
 
-        this.slider.scrollLeft = v
+        this.sliderTrack.scrollLeft = v
 
         if (dir === 'right') {
           if (v >= to) {
@@ -299,10 +331,10 @@ class Slider extends Tabs {
         if (!done) {
           window.requestAnimationFrame(animate)
         } else {
-          this.slider.style.setProperty('--snap-type', '')
+          this.sliderTrack.style.setProperty('--snap-type', '')
         }
       } else {
-        this.slider.style.setProperty('--snap-type', '')
+        this.sliderTrack.style.setProperty('--snap-type', '')
       }
     }
 
@@ -319,7 +351,7 @@ class Slider extends Tabs {
     this._scrollTimer = setTimeout(() => {
       let newIndex = this._currentIndex
 
-      const target = this.slider.scrollLeft
+      const target = this.sliderTrack.scrollLeft
       const offsets = this._scrollOffsets
 
       const closestOffset = this._scrollOffsets.reduce((prev, curr) => {
@@ -350,27 +382,35 @@ class Slider extends Tabs {
         return
       }
 
+      /* Update height (to hide scrollbar) */
+
+      this._setHeight()
+
+      /* Shift items to different panels */
+
       if (this._sliderRearrange) {
         this._arrangeItems(true)
       }
 
-      if (this.slider) {
-        this._scrollOffsets = []
+      /* Reset offsets */
 
-        this.panels.forEach((panel, index) => {
-          if (index > this._lastTabIndex) {
-            return
-          }
+      this._scrollOffsets = []
 
-          this._scrollOffsets.push(panel.offsetLeft)
-        })
+      this.panels.forEach((panel, index) => {
+        if (index > this._lastTabIndex) {
+          return
+        }
 
-        this._activate({
-          currentIndex: this._currentIndex,
-          focus: false,
-          source: 'resize'
-        })
-      }
+        this._scrollOffsets.push(panel.offsetLeft)
+      })
+
+      /* Activate */
+
+      this._activate({
+        currentIndex: this._currentIndex,
+        focus: false,
+        source: 'resize'
+      })
     }, 100)
   }
 } // End Slider

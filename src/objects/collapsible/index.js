@@ -14,7 +14,10 @@
 
 /* Imports */
 
-import { subscribe } from '../../utils'
+import {
+  subscribe,
+  focusSelector
+} from '../../utils'
 
 /* Class */
 
@@ -100,7 +103,7 @@ class Collapsible {
 
     /* Get focusable elements */
 
-    this._focusableItems = Array.from(this.container.querySelectorAll('a, area, input, select, textarea, button, [tabindex], iframe'))
+    this._focusableItems = Array.from(this.container.querySelectorAll(focusSelector))
 
     if (this.closeOnLastBlur) {
       this._blurHandler = this._blur.bind(this)

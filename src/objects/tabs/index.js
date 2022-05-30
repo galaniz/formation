@@ -23,13 +23,20 @@ class Tabs {
       tabs = null,
       panels = null,
       panelsDelay = 0,
-      orientation = 'horizontal'
+      orientation = 'horizontal',
+      init = true,
+      beforeInitActivate = () => {},
+      onDeactivate = () => {},
+      onActivate = () => {}
     } = args
 
     this.tabs = tabs
     this.panels = panels
     this.panelsDelay = panelsDelay
     this.orientation = orientation
+    this.beforeInitActivate = beforeInitActivate
+    this.onDeactivate = onDeactivate
+    this.onActivate = onActivate
 
     /**
      * Internal variables
@@ -63,9 +70,11 @@ class Tabs {
      * Initialize
      */
 
-    const init = this._initialize()
+    if (init) {
+      const initialize = this._initialize()
 
-    if (!init) { return false }
+      if (!initialize) { return false }
+    }
   }
 
   /**
@@ -94,6 +103,8 @@ class Tabs {
 
     /* Add event listeners */
 
+    let currentIndex = this._currentIndex
+
     this.tabs.forEach((tab, index) => {
       tab.setAttribute('data-index', index)
 
@@ -103,7 +114,7 @@ class Tabs {
 
       const selected = tab.getAttribute('aria-selected')
 
-      if (selected === 'true') { this._currentIndex = index }
+      if (selected === 'true') { currentIndex = index }
     })
 
     /* Set current based on location hash */
@@ -114,22 +125,32 @@ class Tabs {
       let hashIndex = null
 
       this.tabs.forEach((tab, index) => {
-        if ('#' + tab.href.split('#')[1] === hash) {
+        if (!tab.hasAttribute('href')) {
+          return
+        }
+
+        const href = tab.href.split('#')
+
+        if (href.length < 2) {
+          return
+        }
+
+        if ('#' + href[1] === hash) {
           hashIndex = index
         }
       })
 
       if (hashIndex !== null) {
-        this._currentIndex = hashIndex
+        currentIndex = hashIndex
       }
     }
 
     /* Activate current */
 
-    this._beforeInitActivate()
+    this.beforeInitActivate()
 
     this._activate({
-      currentIndex: this._currentIndex,
+      currentIndex: currentIndex,
       focus: false,
       source: 'init'
     })
@@ -137,10 +158,6 @@ class Tabs {
     /* Init successful */
 
     return true
-  }
-
-  _beforeInitActivate (args) {
-    return args
   }
 
   /**
@@ -171,7 +188,7 @@ class Tabs {
     /* Deactivate last panel */
 
     this.panels[this._lastIndex].setAttribute('data-selected', 'false')
-    this._onDeactivate(args)
+    this.onDeactivate(args)
 
     /* Activate current tab */
 
@@ -181,7 +198,7 @@ class Tabs {
     /* Activate current panel */
 
     this.panels[this._currentIndex].setAttribute('data-selected', 'true')
-    this._onActivate(args)
+    this.onActivate(args)
 
     setTimeout(() => {
       this._displayPanels()
@@ -190,14 +207,6 @@ class Tabs {
         this.panels[this._currentIndex].focus()
       }
     }, this.panelsDelay)
-  }
-
-  _onDeactivate (args) {
-    return false
-  }
-
-  _onActivate (args) {
-    return false
   }
 
   _displayPanels () {
