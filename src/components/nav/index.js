@@ -29,9 +29,9 @@
 /* Imports */
 
 import {
-  mergeObjects,
   cascade,
-  toggleFocusability
+  toggleFocusability,
+  focusSelector
 } from '../../utils'
 
 /* Class */
@@ -46,29 +46,50 @@ class Nav {
      * Public variables
      */
 
-    this.nav = null
-    this.list = null
-    this.overflow = null
-    this.overflowList = null
-    this.items = null
-    this.itemSelector = ''
-    this.button = null
-    this.overlay = null
-    this.transition = null
-    this.overflowHiddenClass = 'u-o-h'
-    this.onSet = () => {}
-    this.onReset = () => {}
-    this.afterReset = () => {}
-    this.onResize = () => {}
-    this.onToggle = () => {}
-    this.endToggle = () => {}
-    this.done = () => {}
-    this.delay = {
-      open: 200,
-      close: 200
-    }
+    const {
+      nav = null,
+      list = null,
+      overflow = null,
+      overflowList = null,
+      items = null,
+      itemSelector = '',
+      button = null,
+      overlay = null,
+      transition = null,
+      overflowHiddenClass = 'u-o-h',
+      onSet = () => {},
+      onReset = () => {},
+      afterReset = () => {},
+      onResize = () => {},
+      onToggle = () => {},
+      endToggle = () => {},
+      done = () => {},
+      delay = {
+        open: 200,
+        close: 200
+      }
+    } = args
 
-    mergeObjects(this, args)
+    this.nav = nav
+    this.list = list
+    this.overflow = overflow
+    this.overflowList = overflowList
+    this.items = items
+    this.itemSelector = itemSelector
+    this.button = button
+    this.overlay = overlay
+    this.transition = transition
+    this.overflowHiddenClass = overflowHiddenClass
+    this.onSet = onSet
+    this.onReset = onReset
+    this.afterReset = afterReset
+    this.onResize = onResize
+    this.onToggle = onToggle
+    this.endToggle = endToggle
+    this.done = done
+    this.delay = delay
+
+    /* Not part of args but can be changed in function args */
 
     this.isOverflowing = false
 
@@ -155,7 +176,6 @@ class Nav {
 
     /* Get focusable elements */
 
-    const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-context-inert-tabindex], iframe'
     const navFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
     if (navFocusableItems.length) {

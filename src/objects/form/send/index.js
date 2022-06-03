@@ -34,7 +34,6 @@
 import {
   addClass,
   removeClass,
-  mergeObjects,
   setLoaders,
   request
 } from '../../../utils'
@@ -53,36 +52,50 @@ class Send {
      * Public variables
      */
 
-    this.id = ''
-    this.form = null
-    this.groupClass = ''
-    this.fieldClass = ''
-    this.labelClass = ''
-    this.errorClass = ''
-    this.submit = null
-    this.inputs = null
-    this.filterInputs = false
-    this.data = {}
-    this.loaders = []
-    this.shake = false
-    this.siteKey = ''
-    this.url = ''
-
-    this.success = () => {}
-    this.error = () => {}
-
-    this.result = {
-      container: null,
-      textContainer: null,
-      text: {
-        error: '',
-        success: ''
+    const {
+      id = '',
+      form = null,
+      groupClass = '',
+      fieldClass = '',
+      labelClass = '',
+      errorClass = '',
+      submit = null,
+      inputs = null,
+      filterInputs = false,
+      data = {},
+      loaders = [],
+      shake = false,
+      siteKey = '',
+      url = '',
+      success = () => {},
+      error = () => {},
+      result = {
+        container: null,
+        textContainer: null,
+        text: {
+          error: '',
+          success: ''
+        }
       }
-    }
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.id = id
+    this.form = form
+    this.groupClass = groupClass
+    this.fieldClass = fieldClass
+    this.labelClass = labelClass
+    this.errorClass = errorClass
+    this.submit = submit
+    this.inputs = inputs
+    this.filterInputs = filterInputs
+    this.data = data
+    this.loaders = loaders
+    this.shake = shake
+    this.siteKey = siteKey
+    this.url = url
+    this.success = success
+    this.error = error
+    this.result = result
 
     /**
      * Internal variables

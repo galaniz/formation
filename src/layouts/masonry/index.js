@@ -12,10 +12,6 @@
  * }
  */
 
-/* Imports */
-
-import { mergeObjects } from '../../utils'
-
 /* Class */
 
 class Masonry {
@@ -28,15 +24,20 @@ class Masonry {
      * Public variables
      */
 
-    this.container = null
-    this.items = null
-    this.breakpoints = []
-    this.column = {
-      tag: 'div',
-      class: ''
-    }
+    const {
+      container = null,
+      items = null,
+      breakpoints = [],
+      column = {
+        tag: 'div',
+        class: ''
+      }
+    } = args
 
-    mergeObjects(this, args)
+    this.container = container
+    this.items = items
+    this.breakpoints = breakpoints
+    this.column = column
 
     /**
      * Internal variables (more set in init)

@@ -19,8 +19,7 @@ import {
   addClass,
   removeClass,
   closest,
-  urlEncode,
-  mergeObjects
+  urlEncode
 } from '../../utils'
 
 /* Class */
@@ -35,19 +34,27 @@ class Form {
      * Public variables
      */
 
-    this.inputs = null
-    this.fieldClass = ''
-    this.groupClass = ''
-    this.labelClass = ''
-    this.submitted = false
-    this.errorShake = false
-    this.errorClass = ''
-    this.errorShakeClass = 'a-shake'
-    this.onValidate = () => {}
+    const {
+      inputs = null,
+      fieldClass = '',
+      groupClass = '',
+      labelClass = '',
+      submitted = false,
+      errorShake = false,
+      errorClass = '',
+      errorShakeClass = 'a-shake',
+      onValidate = () => {}
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.inputs = inputs
+    this.fieldClass = fieldClass
+    this.groupClass = groupClass
+    this.labelClass = labelClass
+    this.submitted = submitted
+    this.errorShake = errorShake
+    this.errorClass = errorClass
+    this.errorShakeClass = errorShakeClass
+    this.onValidate = onValidate
 
     /**
      * Internal variables

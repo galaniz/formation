@@ -7,10 +7,6 @@
  * }
  */
 
-/* Imports */
-
-import { mergeObjects } from '../../utils'
-
 /* Class */
 
 class Table {
@@ -23,12 +19,13 @@ class Table {
      * Public variables
      */
 
-    this.table = null
-    this.equalWidthTo = null
+    const {
+      table = null,
+      equalWidthTo = null
+    } = args
 
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
+    this.table = table
+    this.equalWidthTo = equalWidthTo
 
     /**
      * Internal variables

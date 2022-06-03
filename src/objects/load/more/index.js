@@ -32,12 +32,11 @@
 /* Imports */
 
 import {
-  mergeObjects,
   request,
   setLoaders,
   urlEncode,
   assetsLoaded,
-  getScrollY
+  focusSelector
 } from '../../../utils'
 
 /* Class */
@@ -52,39 +51,58 @@ class More {
      * Public variables
      */
 
-    this.next = null
-    this.nextContainer = null
-    this.prev = null
-    this.current = null
-    this.tot = null
+    const {
+      next = null,
+      nextContainer = null,
+      prev = null,
+      current = null,
+      tot = null,
+      filters = [],
+      filtersForm = null,
+      loader = null,
+      noResults = {
+        containers: [],
+        buttons: []
+      },
+      error = null,
+      url = '',
+      data = {},
+      ppp = 0,
+      page = 1,
+      total = 0,
+      insertInto = null,
+      insertLocation = 'beforeend',
+      insertAfterAssetsLoaded = false,
+      onInsert = () => {},
+      afterInsert = () => {},
+      filterPushUrlParams = () => {},
+      filterControlUrls = () => {},
+      filterPostData = () => this._data
+    } = args
 
-    this.filters = []
-    this.filtersForm = null
-
-    this.loaders = []
-
-    this.noResults = {
-      containers: [],
-      buttons: []
-    }
-
-    this.error = null
-
-    this.url = ''
-    this.data = {}
-
-    this.ppp = 0
-    this.page = 1
-    this.total = 0
-
-    this.insertInto = null
-    this.insertLocation = 'beforeend'
-    this.onInsert = () => {}
-    this.afterInsert = () => {}
-
-    this.filterPushUrlParams = () => {}
-    this.filterControlUrls = () => {}
-    this.filterPostData = () => this._data
+    this.next = next
+    this.nextContainer = nextContainer
+    this.prev = prev
+    this.current = current
+    this.tot = tot
+    this.filters = filters
+    this.filtersForm = filtersForm
+    this.loader = loader
+    this.noResults = noResults
+    this.error = error
+    this.url = url
+    this.data = data
+    this.ppp = ppp
+    this.page = page
+    this.total = total
+    this.insertInto = insertInto
+    this.insertLocation = insertLocation
+    this.insertAfterAssetsLoaded = insertAfterAssetsLoaded
+    this.onInsert = onInsert
+    this.afterInsert = afterInsert
+    this.filterPushUrlParams = filterPushUrlParams
+    this.filterControlUrls = filterControlUrls
+    this.filterPostData = filterPostData
 
     /**
      * Internal variables
@@ -99,10 +117,6 @@ class More {
 
     this._pagination = false
 
-    /* For scrolling back to top for pagination */
-
-    this._insertIntoY = 0
-
     /* Store initial count */
 
     this._initCount = 0
@@ -110,10 +124,6 @@ class More {
     /* Buttons for setLoaders */
 
     this._controls = []
-
-    /* Merge default variables with args */
-
-    mergeObjects(this, args)
 
     /**
      * Initialize
@@ -166,6 +176,10 @@ class More {
 
       if (this.prev) { this._controls.push(this.prev) }
     }
+
+    /* setLoaders expects array */
+
+    this.loader = this.loader ? [this.loader] : []
 
     /* Data */
 
@@ -271,26 +285,11 @@ class More {
 
     this._pushState('init', this.insertInto.innerHTML)
 
-    /* Set controls for initial state + get insert y */
+    /* Set controls for initial state */
 
     window.addEventListener('load', () => {
       this._setControls()
-      this._getInsertIntoY()
     })
-
-    if (this._pagination) {
-      let resizeTimer
-
-      window.addEventListener('resize', () => {
-        /* Throttles resize event */
-
-        clearTimeout(resizeTimer)
-
-        resizeTimer = setTimeout(() => {
-          this._getInsertIntoY()
-        }, 100)
-      })
-    }
 
     return true
   }
@@ -334,12 +333,6 @@ class More {
     }
 
     return c
-  }
-
-  /* Get insertInto y position */
-
-  _getInsertIntoY () {
-    this._insertIntoY = this.insertInto.getBoundingClientRect().y + getScrollY()
   }
 
   /**
@@ -486,10 +479,9 @@ class More {
 
     div.innerHTML = output
 
-    const imgs = Array.from(div.getElementsByTagName('img'))
     const insertedItems = Array.from(div.children)
 
-    assetsLoaded(imgs, data => {
+    const insert = () => {
       this.onInsert(insertedItems)
 
       if (table) {
@@ -511,7 +503,17 @@ class More {
       setTimeout(() => {
         this.afterInsert(insertedItems)
       }, 0)
-    })
+    }
+
+    if (this.insertAfterAssetsLoaded) {
+      const imgs = Array.from(div.getElementsByTagName('img'))
+
+      assetsLoaded(imgs, data => {
+        insert()
+      })
+    } else {
+      insert()
+    }
   }
 
   /* Set pagination numbers */
@@ -643,7 +645,7 @@ class More {
     this._setControls()
     this._setPagNum(a.total)
 
-    setLoaders(this.loaders, this._controls, false)
+    setLoaders(this.loader, this._controls, false)
 
     /* History entry */
 
@@ -720,7 +722,11 @@ class More {
     this._noResults(false)
     this._error(false)
 
-    setLoaders(this.loaders, this._controls, true)
+    setLoaders(this.loader, this._controls, true)
+
+    if (this.loader.length) {
+      this.loader[0].focus()
+    }
 
     if (e === 'history') {
       this.insertInto.innerHTML = ''
@@ -732,7 +738,7 @@ class More {
       }
 
       this._setControls()
-      setLoaders(this.loaders, this._controls, false)
+      setLoaders(this.loader, this._controls, false)
     } else {
       /* Update page fetching */
 
@@ -750,7 +756,7 @@ class More {
 
       const encodedData = urlEncode(this.filterPostData(this._data))
 
-      console.log('DATA', this._data)
+      // console.log('DATA', this._data)
 
       setTimeout(() => {
         /* Fetch more items */
@@ -779,7 +785,7 @@ class More {
             const output = result.output
             const total = parseInt(result.total)
 
-            console.log('RESULT', result)
+            // console.log('RESULT', result)
 
             if (reset) { this.insertInto.innerHTML = '' }
 
@@ -787,14 +793,10 @@ class More {
               if (!this._pagination) { this._data.offset += this.ppp }
 
               this._setOutput(output, () => {
-                if (this._pagination) {
-                  document.documentElement.setAttribute('data-load-scroll', '')
+                const firstFocusable = this.insertInto.querySelector(focusSelector)
 
-                  window.scrollTo(0, this._insertIntoY)
-
-                  setTimeout(() => {
-                    document.documentElement.removeAttribute('data-load-scroll')
-                  }, 0)
+                if (firstFocusable) {
+                  firstFocusable.focus()
                 }
 
                 setTimeout(() => {
@@ -817,7 +819,7 @@ class More {
             }
           })
           .catch(xhr => {
-            console.log('ERROR', xhr)
+            // console.log('ERROR', xhr)
 
             this._data.total = 0
             this._data.count = 0
@@ -828,7 +830,7 @@ class More {
 
             this._error(true)
 
-            setLoaders(this.loaders, this._controls, false)
+            setLoaders(this.loader, this._controls, false)
           })
       }, 0)
     }

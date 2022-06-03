@@ -11,7 +11,7 @@
 
 /* Imports */
 
-import { mergeObjects, getScrollY } from '../../utils'
+import { getScrollY } from '../../utils'
 
 /* Class */
 
@@ -25,12 +25,17 @@ class MarginMasonry {
      * Public variables
      */
 
-    this.container = null
-    this.items = null
-    this.itemSelector = ''
-    this.breakpoints = []
+    const {
+      container = null,
+      items = null,
+      itemSelector = '',
+      breakpoints = []
+    } = args
 
-    mergeObjects(this, args)
+    this.container = container
+    this.items = items
+    this.itemSelector = itemSelector
+    this.breakpoints = breakpoints
 
     /**
      * Internal variables
