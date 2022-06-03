@@ -115,3 +115,19 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Visually hidden utility class.
 - `Tabs` class include panel focus and initial selected based on hash.
+
+## [3.0.3] - 2022-06-02
+
+### Added
+- `focusSelector` to `toggleFocusability` module.
+
+### Changed
+- All classes to destructure `args` instead of `mergeObjects` module.
+- Simplify `toggleFocusability` module.
+- `Slider` use `Tabs` base for better a11y.
+- Rework `Tabs` to be more flexible.
+
+### Removed
+- `Fade` class and styles.
+- `Carousel` class.
+- Duplicate utility classes file.
