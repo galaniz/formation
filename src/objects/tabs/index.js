@@ -26,6 +26,7 @@ class Tabs {
       orientation = 'horizontal',
       init = true,
       beforeInitActivate = () => {},
+      afterIndexesSet = () => {},
       onDeactivate = () => {},
       onActivate = () => {}
     } = args
@@ -35,6 +36,7 @@ class Tabs {
     this.panelsDelay = panelsDelay
     this.orientation = orientation
     this.beforeInitActivate = beforeInitActivate
+    this.afterIndexesSet = afterIndexesSet
     this.onDeactivate = onDeactivate
     this.onActivate = onActivate
 
@@ -65,6 +67,12 @@ class Tabs {
     /* Last tab/panel index */
 
     this._lastTabIndex = 0
+
+    /* Equal to currentIndex - for filtering purposes */
+
+    this._panelIndex = 0
+    this._lastPanelIndex = 0
+    this._tabIndex = 0
 
     /**
      * Initialize
@@ -177,7 +185,13 @@ class Tabs {
       this._currentIndex = this._lastTabIndex
     }
 
-    const tab = this.tabs[this._currentIndex]
+    this._panelIndex = this._currentIndex
+    this._lastPanelIndex = this._lastIndex
+    this._tabIndex = this._currentIndex
+
+    this.afterIndexesSet(args)
+
+    const tab = this.tabs[this._tabIndex]
     const lastTab = this.tabs[this._lastIndex]
 
     /* Deactivate last tab */
@@ -187,7 +201,7 @@ class Tabs {
 
     /* Deactivate last panel */
 
-    this.panels[this._lastIndex].setAttribute('data-selected', 'false')
+    this.panels[this._lastPanelIndex].setAttribute('data-selected', 'false')
     this.onDeactivate(args)
 
     /* Activate current tab */
@@ -197,21 +211,21 @@ class Tabs {
 
     /* Activate current panel */
 
-    this.panels[this._currentIndex].setAttribute('data-selected', 'true')
+    this.panels[this._panelIndex].setAttribute('data-selected', 'true')
     this.onActivate(args)
 
     setTimeout(() => {
       this._displayPanels()
 
       if (focus) {
-        this.panels[this._currentIndex].focus()
+        this.panels[this._panelIndex].focus()
       }
     }, this.panelsDelay)
   }
 
   _displayPanels () {
-    this.panels[this._lastIndex].setAttribute('hidden', '')
-    this.panels[this._currentIndex].removeAttribute('hidden')
+    this.panels[this._lastPanelIndex].setAttribute('hidden', '')
+    this.panels[this._panelIndex].removeAttribute('hidden')
   }
 
   /**

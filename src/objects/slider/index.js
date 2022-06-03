@@ -3,8 +3,11 @@
  *
  * @param args [object] {
  *  @param slider [HTMLElement]
+ *  @param sliderTrack [HTMLElement]
+ *  @param sliderHeight [HTMLElement]
  *  @param sliderPerPanel [array] of objects
- *  @param sliderItems nodelist of [HTMLElement]
+ *  @param sliderItems [array] of [HTMLElement]
+ *  @param sliderInfinite [bool]
  * }
  */
 
@@ -33,7 +36,8 @@ class Slider extends Tabs {
       sliderTrack = null,
       sliderHeight = null,
       sliderItems = [],
-      sliderPerPanel = []
+      sliderPerPanel = [],
+      sliderInfinite = false
     } = args
 
     if (!slider || !sliderTrack) {
@@ -49,9 +53,14 @@ class Slider extends Tabs {
     this.sliderHeight = sliderHeight
     this.sliderItems = sliderItems
     this.sliderPerPanel = sliderPerPanel
+    this.sliderInfinite = sliderInfinite
 
     this.beforeInitActivate = () => {
       this._beforeInitActivate()
+    }
+
+    this.afterIndexesSet = (args) => {
+      this._afterIndexesSet(args)
     }
 
     this.onDeactivate = (args) => {
@@ -85,6 +94,18 @@ class Slider extends Tabs {
     this._sliderItemsLength = this.sliderItems.length
     this._sliderRearrange = this._sliderItemsLength && this.sliderPerPanel.length
 
+    /* For scroll infinite */
+
+    this._currentInnerIndex = 0
+    this._panelsParent = null
+    this._panelsGroups = []
+    this._ogLength = 0
+    this._length = 0
+    this._lastPanel = null
+    this._firstPanel = null
+    this._lastVisible = false
+    this._firstVisible = false
+
     /**
      * Initialize
      */
@@ -117,6 +138,45 @@ class Slider extends Tabs {
     this.sliderTrack.addEventListener('scroll', this._scrollEvent)
     window.addEventListener('resize', this._resizeEvent)
 
+    /* Clone panels for infinite slider */
+
+    if (this.sliderInfinite) {
+      this._ogLength = this.panels.length
+      this._panelsGroups = [this.panels]
+      this._panelsParent = this.panels[0].parentElement
+
+      const panelsFrag = new window.DocumentFragment()
+
+      panelsFrag.appendChild(this._panelsParent)
+
+      const panels = this.panels
+
+      for (let i = 0; i < 2; i++) {
+        const panelsArr = []
+
+        panels.forEach((p, index) => {
+          const clone = p.cloneNode(true)
+
+          clone.id = p.id + '-clone-' + i
+          clone.setAttribute('data-selected', false)
+
+          panelsArr.push(clone)
+
+          this._panelsParent.appendChild(clone)
+        })
+
+        this._panelsGroups.push(panelsArr)
+
+        this.panels = this.panels.concat(panelsArr)
+      }
+
+      this._length = this.panels.length
+      this._lastPanel = this.panels[this._length - 1]
+      this._firstPanel = this.panels[0]
+
+      this.sliderTrack.appendChild(panelsFrag)
+    }
+
     /* Set slider panel ranges */
 
     if (this._sliderRearrange) {
@@ -145,7 +205,7 @@ class Slider extends Tabs {
         toggleFocusability(false, focusableItems)
       }
 
-      if (index > this._lastTabIndex) {
+      if (!this.sliderInfinite && index > this._lastTabIndex) {
         return
       }
 
@@ -157,6 +217,32 @@ class Slider extends Tabs {
    * Hide, show and focus panels and tabs
    */
 
+  _afterIndexesSet (args) {
+    let {
+      currentIndex = 0,
+      source = ''
+    } = args
+
+    if (this.sliderInfinite) {
+      if (source === 'click') {
+        currentIndex = currentIndex + (this._ogLength * this._currentInnerIndex)
+      }
+
+      this._lastPanelIndex = this._lastIndex + (this._ogLength * this._currentInnerIndex)
+
+      this._currentInnerIndex = Math.floor(currentIndex / this._ogLength)
+
+      this._currentIndex = currentIndex - (this._ogLength * this._currentInnerIndex)
+
+      if (source === 'init') {
+        this._currentInnerIndex = 1
+      }
+
+      this._panelIndex = this._currentIndex + (this._ogLength * this._currentInnerIndex)
+      this._tabIndex = this._currentIndex
+    }
+  }
+
   _onDeactivate (args) {
     const {
       source = ''
@@ -164,14 +250,14 @@ class Slider extends Tabs {
 
     if (source !== 'init') {
       if (!this._lastIndexFocusableItems.length) {
-        this._lastIndexFocusableItems = Array.from(this.panels[this._lastIndex].querySelectorAll(focusSelector))
-        this._lastIndexFocusableItems.unshift(this.panels[this._lastIndex])
+        this._lastIndexFocusableItems = Array.from(this.panels[this._lastPanelIndex].querySelectorAll(focusSelector))
+        this._lastIndexFocusableItems.unshift(this.panels[this._lastPanelIndex])
       }
 
       toggleFocusability(false, this._lastIndexFocusableItems)
 
-      const currentFocusableItems = Array.from(this.panels[this._currentIndex].querySelectorAll(focusSelector))
-      currentFocusableItems.unshift(this.panels[this._currentIndex])
+      const currentFocusableItems = Array.from(this.panels[this._panelIndex].querySelectorAll(focusSelector))
+      currentFocusableItems.unshift(this.panels[this._panelIndex])
       toggleFocusability(true, currentFocusableItems)
 
       this._lastIndexFocusableItems = currentFocusableItems
@@ -187,19 +273,19 @@ class Slider extends Tabs {
       if (this._smoothScrollSupported) {
         this.sliderTrack.scroll({
           top: 0,
-          left: this._scrollOffsets[this._currentIndex],
+          left: this._scrollOffsets[this._panelIndex],
           behavior: 'smooth'
         })
       } else {
         // Fallback for when smooth scroll not supported
-        this._scrollTo(this._scrollOffsets[this._currentIndex])
+        this._scrollTo(this._scrollOffsets[this._panelIndex])
       }
     }
   }
 
   _displayPanels () {
-    this.panels[this._lastIndex].setAttribute('aria-hidden', 'true')
-    this.panels[this._currentIndex].setAttribute('aria-hidden', 'false')
+    this.panels[this._lastPanelIndex].setAttribute('aria-hidden', 'true')
+    this.panels[this._panelIndex].setAttribute('aria-hidden', 'false')
   }
 
   /**
@@ -281,6 +367,52 @@ class Slider extends Tabs {
     })
 
     this.slider.appendChild(frag)
+  }
+
+  _moveGroup (end = false) {
+    this._panelsGroups = [
+      this._panelsGroups[2],
+      this._panelsGroups[0],
+      this._panelsGroups[1]
+    ]
+
+    const panelsFrag = new window.DocumentFragment()
+
+    panelsFrag.appendChild(this._panelsParent)
+
+    const newPanels = []
+
+    this._panelsGroups.forEach((pg, index) => {
+      pg.forEach(p => {
+        newPanels.push(p)
+        this._panelsParent.appendChild(p)
+      })
+    })
+
+    this.panels = newPanels
+    this._length = this.panels.length
+    this._lastPanel = this.panels[this._length - 1]
+    this._firstPanel = this.panels[0]
+
+    this.sliderTrack.appendChild(panelsFrag)
+
+    let newIndex = -1
+
+    if (end) {
+      newIndex = this._currentIndex
+    } else {
+      newIndex = this._currentIndex + this._ogLength
+    }
+
+    if (newIndex !== -1) {
+      this.sliderTrack.scrollLeft = this._scrollOffsets[newIndex]
+    }
+
+    if (end) {
+      this._lastVisible = false
+    } else {
+      this._firstVisible = false
+    }
   }
 
   _scrollTo (to) {
@@ -367,7 +499,30 @@ class Slider extends Tabs {
           source: 'scroll'
         })
       }
-    }, 100)
+
+      /* Check if first and last item visible */
+
+      if (this.sliderInfinite) {
+        if (!this._lastVisible) {
+          const targetX = target + this.sliderTrack.clientWidth
+          const lastX = this._scrollOffsets[this._length - 1] + this._lastPanel.firstElementChild.offsetLeft
+
+          if (targetX > lastX) {
+            this._lastVisible = true
+            this._moveGroup(true)
+          }
+        }
+
+        if (!this._firstVisible) {
+          const firstX = this._scrollOffsets[0] + this._firstPanel.firstElementChild.offsetLeft
+
+          if (Math.floor(target) <= firstX + this._firstPanel.clientWidth) {
+            this._firstVisible = true
+            this._moveGroup(false)
+          }
+        }
+      }
+    }, 200)
   }
 
   _resize () {
@@ -397,7 +552,7 @@ class Slider extends Tabs {
       this._scrollOffsets = []
 
       this.panels.forEach((panel, index) => {
-        if (index > this._lastTabIndex) {
+        if (!this.sliderInfinite && index > this._lastTabIndex) {
           return
         }
 
