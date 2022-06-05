@@ -4,7 +4,7 @@
  * @param args [object] {
  *  @param tabs nodelist of [HTMLElement]
  *  @param panels nodelist of [HTMLElement]
- *  @param panelsDelay [int]
+ *  @param delay [int]
  *  @param orientation [string]
  * }
  */
@@ -22,7 +22,7 @@ class Tabs {
     const {
       tabs = null,
       panels = null,
-      panelsDelay = 0,
+      delay = 0,
       orientation = 'horizontal',
       init = true,
       beforeInitActivate = () => {},
@@ -33,7 +33,7 @@ class Tabs {
 
     this.tabs = tabs
     this.panels = panels
-    this.panelsDelay = panelsDelay
+    this.delay = delay
     this.orientation = orientation
     this.beforeInitActivate = beforeInitActivate
     this.afterIndexesSet = afterIndexesSet
@@ -73,6 +73,14 @@ class Tabs {
     this._panelIndex = 0
     this._lastPanelIndex = 0
     this._tabIndex = 0
+
+    /* For instances when delay before focusing panels required */
+
+    this._focusDelay = 0
+
+    /* Store panel to focus */
+
+    this._focusItem = null
 
     /**
      * Initialize
@@ -214,13 +222,17 @@ class Tabs {
     this.panels[this._panelIndex].setAttribute('data-selected', 'true')
     this.onActivate(args)
 
+    this._focusItem = this.panels[this._panelIndex]
+
     setTimeout(() => {
       this._displayPanels()
 
       if (focus) {
-        this.panels[this._panelIndex].focus()
+        setTimeout(() => {
+          this._focusItem.focus()
+        }, this._focusDelay)
       }
-    }, this.panelsDelay)
+    }, this.delay)
   }
 
   _displayPanels () {
