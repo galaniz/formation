@@ -213,47 +213,21 @@ class More {
 
     /* Set filters */
 
-    if (this.filters.length) {
+    if (this.filters.length && this.filtersForm) {
+      this.filtersForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        this._load('reset')
+      })
+
       this.filters.forEach(f => {
-        const type = this._getType(f)
+        const args = { currentTarget: f }
 
-        if (type === 'listbox') {
-          f.onChange((ff, val) => {
-            this._data.filters[ff.id] = {
-              value: val
-            }
+        f.addEventListener('change', this._filter.bind(this))
 
-            this._load('reset')
-          })
-        } else {
-          const args = { currentTarget: f }
+        /* Init (if selected add to data filter attribute) */
 
-          if (type === 'search') {
-            const submitSearchSelector = f.getAttribute('data-submit-selector')
-
-            if (submitSearchSelector) {
-              const submitSearch = document.querySelector(submitSearchSelector)
-
-              if (submitSearch) {
-                submitSearch.addEventListener('click', () => {
-                  this._filter(args)
-                })
-              }
-            }
-
-            f.addEventListener('keydown', e => {
-              const key = e.key || e.keyCode || e.which || e.code
-
-              if ([13, 'Enter'].indexOf(key) !== -1) { this._filter(args) }
-            })
-          } else {
-            f.addEventListener('change', this._filter.bind(this))
-          }
-
-          /* Init (if selected add to data filter attribute) */
-
-          this._filter(args, 'init')
-        }
+        this._filter(args, 'init')
       })
 
       /* Disable if no items to start */
@@ -270,7 +244,7 @@ class More {
 
           /* Clear filters */
 
-          if (this.filters.length) {
+          if (this.filters.length && this.filtersForm) {
             this.filters.forEach(f => {
               this._setFilter(f, 'null')
             })
@@ -305,13 +279,9 @@ class More {
     const loadMoreType = input.getAttribute('data-load-more-type')
 
     if (!loadMoreType) {
-      if (input.type === 'listbox') {
-        type = 'listbox'
-      } else {
-        type = input.tagName.toLowerCase()
+      type = input.tagName.toLowerCase()
 
-        if (type === 'input') { type = input.type }
-      }
+      if (type === 'input') { type = input.type }
 
       input.setAttribute('data-load-more-type', type)
     } else {
@@ -382,27 +352,23 @@ class More {
       }
     }
 
-    if (type === 'listbox') {
-      if (!equalToCompareVal) { f.clear() }
-    } else {
-      switch (type) {
-        case 'checkbox':
-        case 'radio':
-          f.checked = equalToCompareVal
+    switch (type) {
+      case 'checkbox':
+      case 'radio':
+        f.checked = equalToCompareVal
 
-          break
-        case 'select': {
-          const opts = Array.from(f.options)
+        break
+      case 'select': {
+        const opts = Array.from(f.options)
 
-          opts.forEach(o => {
-            o.selected = o.value === compareValue
-          })
+        opts.forEach(o => {
+          o.selected = o.value === compareValue
+        })
 
-          break
-        }
-        default:
-          f.value = equalToCompareVal ? value : ''
+        break
       }
+      default:
+        f.value = equalToCompareVal ? value : ''
     }
   }
 
@@ -543,18 +509,10 @@ class More {
   /* Disable/enable filters */
 
   _disableFilters (show = true) {
-    if (this.filters.length) {
-      if (this.filtersForm) { this.filtersForm.setAttribute('data-disabled', show ? 'true' : 'false') }
-
+    if (this.filters.length && this.filtersForm) {
       this.filters.forEach(f => {
-        const type = this._getType(f)
-
-        if (type === 'listbox') {
-          f.disable(!!show)
-        } else {
-          f.disabled = !!show
-          f.setAttribute('aria-disabled', show ? 'true' : 'false')
-        }
+        f.disabled = !!show
+        f.setAttribute('aria-disabled', show ? 'true' : 'false')
       })
     }
   }
@@ -661,8 +619,6 @@ class More {
     const compareValue = f.value
 
     this._setFilter(f, compareValue, state)
-
-    if (state !== 'init') { this._load('reset') }
   }
 
   _popState (e) {
@@ -676,7 +632,7 @@ class More {
       this._history = e.state.html
       this._load('history')
 
-      if (this.filters.length) {
+      if (this.filters.length && this.filtersForm) {
         this.filters.forEach(f => {
           let id = f.id
           const type = this._getType(f)

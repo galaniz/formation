@@ -5,7 +5,6 @@
  *  @param indicator [HTMLElement]
  *  @param scroll [HTMLElement]
  *  @param y [boolean]
- *  @param x [boolean]
  * }
  */
 
@@ -24,14 +23,12 @@ class OverflowIndicator {
     const {
       indicator = null,
       scroll = null,
-      y = true,
-      x = false
+      y = true
     } = args
 
     this.indicator = indicator
     this.scroll = scroll
     this.y = y
-    this.x = x
 
     /**
      * Internal variables
