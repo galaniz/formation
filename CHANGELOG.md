@@ -131,3 +131,14 @@ All notable changes to this project will be documented in this file.
 - `Fade` class and styles.
 - `Carousel` class.
 - Duplicate utility classes file.
+
+## [3.0.4] - 2022-07-01
+
+### Fixed
+- `Slider` focus issues with infinite loop.
+
+### Changed
+- `LoadMore` filters get results on submit instead of on change.
+
+### Removed
+- `OverflowIndicator` unused arg.
