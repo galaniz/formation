@@ -26,7 +26,7 @@ const clickHandler = (e) => {
 
   b()
 
-  t.setAttribute('data-show', '')
+  t.setAttribute('data-show', 'true')
 
   setTimeout(() => {
     window.location = url

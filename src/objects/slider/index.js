@@ -3,11 +3,11 @@
  *
  * @param args [object] {
  *  @param slider [HTMLElement]
- *  @param sliderTrack [HTMLElement]
- *  @param sliderHeight [HTMLElement]
- *  @param sliderPerPanel [array] of objects
- *  @param sliderItems [array] of [HTMLElement]
- *  @param sliderInfinite [bool]
+ *  @param track [HTMLElement]
+ *  @param targetHeight [HTMLElement]
+ *  @param breakpoints [array] of objects
+ *  @param groupItems [array] of [HTMLElement]
+ *  @param loop [bool]
  * }
  */
 
@@ -15,7 +15,6 @@
 
 import Tabs from '../tabs'
 import {
-  toggleFocusability,
   focusSelector
 } from '../../utils'
 
@@ -33,14 +32,14 @@ class Slider extends Tabs {
 
     const {
       slider = null,
-      sliderTrack = null,
-      sliderHeight = null,
-      sliderItems = [],
-      sliderPerPanel = [],
-      sliderInfinite = false
+      track = null,
+      targetHeight = null,
+      groupItems = [],
+      breakpoints = [],
+      loop = false
     } = args
 
-    if (!slider || !sliderTrack) {
+    if (!slider || !track) {
       return false
     }
 
@@ -49,11 +48,11 @@ class Slider extends Tabs {
     super(args)
 
     this.slider = slider
-    this.sliderTrack = sliderTrack
-    this.sliderHeight = sliderHeight
-    this.sliderItems = sliderItems
-    this.sliderPerPanel = sliderPerPanel
-    this.sliderInfinite = sliderInfinite
+    this.track = track
+    this.targetHeight = targetHeight
+    this.groupItems = groupItems
+    this.breakpoints = breakpoints
+    this.loop = loop
 
     this.beforeInitActivate = () => {
       this._beforeInitActivate()
@@ -70,6 +69,8 @@ class Slider extends Tabs {
     this.onActivate = (args) => {
       this._onActivate(args)
     }
+
+    this._focusDelay = this.loop ? this.delay : 0
 
     /**
      * Internal variables
@@ -91,12 +92,13 @@ class Slider extends Tabs {
 
     this._smoothScrollSupported = false
 
-    this._sliderItemsLength = this.sliderItems.length
-    this._sliderRearrange = this._sliderItemsLength && this.sliderPerPanel.length
+    this._groupItemsLength = this.groupItems.length
+    this._rearrange = this._groupItemsLength && this.breakpoints.length
 
-    /* For scroll infinite */
+    /* For loop */
 
     this._currentInnerIndex = 0
+    this._trackWidth = 0
     this._panelsParent = null
     this._panelsGroups = []
     this._ogLength = 0
@@ -135,12 +137,13 @@ class Slider extends Tabs {
     this._scrollEvent = this._scroll.bind(this)
     this._resizeEvent = this._resize.bind(this)
 
-    this.sliderTrack.addEventListener('scroll', this._scrollEvent)
+    this.track.addEventListener('scroll', this._scrollEvent)
     window.addEventListener('resize', this._resizeEvent)
 
-    /* Clone panels for infinite slider */
+    /* Clone panels for loop slider */
 
-    if (this.sliderInfinite) {
+    if (this.loop) {
+      this._trackWidth = this.track.clientWidth
       this._ogLength = this.panels.length
       this._panelsGroups = [this.panels]
       this._panelsParent = this.panels[0].parentElement
@@ -174,23 +177,26 @@ class Slider extends Tabs {
       this._lastPanel = this.panels[this._length - 1]
       this._firstPanel = this.panels[0]
 
-      this.sliderTrack.appendChild(panelsFrag)
+      this.track.appendChild(panelsFrag)
+
+      this._panelWidth = this._firstPanel.clientWidth
+      this._panelInnerOffset = this._firstPanel.firstElementChild.offsetLeft
     }
 
     /* Set slider panel ranges */
 
-    if (this._sliderRearrange) {
-      const sliderPerPanelLength = this.sliderPerPanel.length
+    if (this._rearrange) {
+      const breakpointsLength = this.breakpoints.length
 
-      this.sliderPerPanel.forEach((s, i) => {
+      this.breakpoints.forEach((s, i) => {
         const low = s.breakpoint
         let high = 99999
 
-        if (sliderPerPanelLength > 1 && i < sliderPerPanelLength - 1) { high = this.sliderPerPanel[i + 1].breakpoint }
+        if (breakpointsLength > 1 && i < breakpointsLength - 1) { high = this.breakpoints[i + 1].breakpoint }
 
         s.low = low
         s.high = high
-        s.panels = Math.ceil(this._sliderItemsLength / s.items)
+        s.panels = Math.ceil(this._groupItemsLength / s.items)
       })
 
       this._arrangeItems()
@@ -202,10 +208,10 @@ class Slider extends Tabs {
       if (this._currentIndex !== index) {
         const focusableItems = Array.from(panel.querySelectorAll(focusSelector))
         focusableItems.unshift(panel)
-        toggleFocusability(false, focusableItems)
+        this._toggleFocusability(false, focusableItems)
       }
 
-      if (!this.sliderInfinite && index > this._lastTabIndex) {
+      if (!this.loop && index > this._lastTabIndex) {
         return
       }
 
@@ -223,12 +229,16 @@ class Slider extends Tabs {
       source = ''
     } = args
 
-    if (this.sliderInfinite) {
+    if (this.loop) {
       if (source === 'click') {
         currentIndex = currentIndex + (this._ogLength * this._currentInnerIndex)
       }
 
       this._lastPanelIndex = this._lastIndex + (this._ogLength * this._currentInnerIndex)
+
+      if (this._lastIndex === 0) {
+        this._lastPanelIndex = 0
+      }
 
       this._currentInnerIndex = Math.floor(currentIndex / this._ogLength)
 
@@ -254,11 +264,11 @@ class Slider extends Tabs {
         this._lastIndexFocusableItems.unshift(this.panels[this._lastPanelIndex])
       }
 
-      toggleFocusability(false, this._lastIndexFocusableItems)
+      this._toggleFocusability(false, this._lastIndexFocusableItems)
 
       const currentFocusableItems = Array.from(this.panels[this._panelIndex].querySelectorAll(focusSelector))
       currentFocusableItems.unshift(this.panels[this._panelIndex])
-      toggleFocusability(true, currentFocusableItems)
+      this._toggleFocusability(true, currentFocusableItems)
 
       this._lastIndexFocusableItems = currentFocusableItems
     }
@@ -271,7 +281,7 @@ class Slider extends Tabs {
 
     if (source !== 'scroll') {
       if (this._smoothScrollSupported) {
-        this.sliderTrack.scroll({
+        this.track.scroll({
           top: 0,
           left: this._scrollOffsets[this._panelIndex],
           behavior: 'smooth'
@@ -288,22 +298,36 @@ class Slider extends Tabs {
     this.panels[this._panelIndex].setAttribute('aria-hidden', 'false')
   }
 
+  _toggleFocusability (on = true, items = []) {
+    if (!items.length) { return }
+
+    items.forEach(item => {
+      if (on) {
+        item.setAttribute('tabindex', 0)
+        item.setAttribute('aria-hidden', false)
+      } else {
+        item.setAttribute('tabindex', -1)
+        item.setAttribute('aria-hidden', true)
+      }
+    })
+  }
+
   /**
    * Internal helpers
    */
 
   _setHeight () {
-    if (!this.sliderHeight) {
+    if (!this.targetHeight) {
       return
     }
 
-    const height = this.sliderHeight.clientHeight
+    const height = this.targetHeight.clientHeight
 
     this.slider.style.setProperty('--height', (height / 16) + 'rem')
   }
 
   _arrangeItems (resize = false) {
-    if (!this._sliderRearrange) {
+    if (!this._rearrange) {
       return
     }
 
@@ -311,7 +335,7 @@ class Slider extends Tabs {
     let perPanel = 1
     const map = []
 
-    this.sliderPerPanel.forEach(s => {
+    this.breakpoints.forEach(s => {
       if (this._viewportWidth >= s.low && this._viewportWidth < s.high) {
         numberOfPanels = s.panels
         perPanel = s.items
@@ -324,7 +348,7 @@ class Slider extends Tabs {
       map.push([])
 
       for (let j = start; j < perPanel + start; j++) {
-        if (j < this._sliderItemsLength) {
+        if (j < this._groupItemsLength) {
           map[i].push(j)
         }
       }
@@ -350,7 +374,7 @@ class Slider extends Tabs {
 
     const frag = new window.DocumentFragment()
 
-    frag.appendChild(this.sliderTrack)
+    frag.appendChild(this.track)
 
     const groups = Array.from(frag.querySelectorAll('.o-slider__view'))
 
@@ -362,7 +386,7 @@ class Slider extends Tabs {
       const m = map[index]
 
       m.forEach(n => {
-        g.appendChild(this.sliderItems[n])
+        g.appendChild(this.groupItems[n])
       })
     })
 
@@ -394,7 +418,7 @@ class Slider extends Tabs {
     this._lastPanel = this.panels[this._length - 1]
     this._firstPanel = this.panels[0]
 
-    this.sliderTrack.appendChild(panelsFrag)
+    this.track.appendChild(panelsFrag)
 
     let newIndex = -1
 
@@ -405,7 +429,7 @@ class Slider extends Tabs {
     }
 
     if (newIndex !== -1) {
-      this.sliderTrack.scrollLeft = this._scrollOffsets[newIndex]
+      this.track.scrollLeft = this._scrollOffsets[newIndex]
     }
 
     if (end) {
@@ -419,10 +443,10 @@ class Slider extends Tabs {
     let start = null
     let done = false
     const duration = 500
-    const from = this.sliderTrack.scrollLeft
+    const from = this.track.scrollLeft
     const dir = to > from ? 'right' : 'left'
 
-    this.sliderTrack.style.setProperty('--snap-type', 'none')
+    this.track.style.setProperty('--snap-type', 'none')
 
     /*
      Source: https://spicyyoghurt.com/tools/easing-functions
@@ -448,7 +472,7 @@ class Slider extends Tabs {
       if (elapsed < duration) {
         const v = ease(elapsed, from, change, duration)
 
-        this.sliderTrack.scrollLeft = v
+        this.track.scrollLeft = v
 
         if (dir === 'right') {
           if (v >= to) {
@@ -463,10 +487,10 @@ class Slider extends Tabs {
         if (!done) {
           window.requestAnimationFrame(animate)
         } else {
-          this.sliderTrack.style.setProperty('--snap-type', '')
+          this.track.style.setProperty('--snap-type', '')
         }
       } else {
-        this.sliderTrack.style.setProperty('--snap-type', '')
+        this.track.style.setProperty('--snap-type', '')
       }
     }
 
@@ -483,7 +507,7 @@ class Slider extends Tabs {
     this._scrollTimer = setTimeout(() => {
       let newIndex = this._currentIndex
 
-      const target = this.sliderTrack.scrollLeft
+      const target = this.track.scrollLeft
       const offsets = this._scrollOffsets
 
       const closestOffset = this._scrollOffsets.reduce((prev, curr) => {
@@ -492,7 +516,7 @@ class Slider extends Tabs {
 
       newIndex = offsets.indexOf(closestOffset)
 
-      if (newIndex !== this._currentIndex && newIndex !== -1) {
+      if (newIndex !== -1) {
         this._activate({
           currentIndex: newIndex,
           focus: false,
@@ -502,10 +526,10 @@ class Slider extends Tabs {
 
       /* Check if first and last item visible */
 
-      if (this.sliderInfinite) {
+      if (this.loop) {
         if (!this._lastVisible) {
-          const targetX = target + this.sliderTrack.clientWidth
-          const lastX = this._scrollOffsets[this._length - 1] + this._lastPanel.firstElementChild.offsetLeft
+          const targetX = target + this._trackWidth
+          const lastX = this._scrollOffsets[this._length - 1] + this._panelInnerOffset
 
           if (targetX > lastX) {
             this._lastVisible = true
@@ -514,9 +538,9 @@ class Slider extends Tabs {
         }
 
         if (!this._firstVisible) {
-          const firstX = this._scrollOffsets[0] + this._firstPanel.firstElementChild.offsetLeft
+          const firstX = this._scrollOffsets[0] + this._panelInnerOffset
 
-          if (Math.floor(target) <= firstX + this._firstPanel.clientWidth) {
+          if (Math.floor(target) <= firstX + this._panelWidth) {
             this._firstVisible = true
             this._moveGroup(false)
           }
@@ -541,9 +565,17 @@ class Slider extends Tabs {
 
       this._setHeight()
 
+      /* Set dimensions needed for loop */
+
+      if (this.loop) {
+        this._trackWidth = this.track.clientWidth
+        this._panelWidth = this._firstPanel.clientWidth
+        this._panelInnerOffset = this._firstPanel.firstElementChild.offsetLeft
+      }
+
       /* Shift items to different panels */
 
-      if (this._sliderRearrange) {
+      if (this._rearrange) {
         this._arrangeItems(true)
       }
 
@@ -552,7 +584,7 @@ class Slider extends Tabs {
       this._scrollOffsets = []
 
       this.panels.forEach((panel, index) => {
-        if (!this.sliderInfinite && index > this._lastTabIndex) {
+        if (!this.loop && index > this._lastTabIndex) {
           return
         }
 
