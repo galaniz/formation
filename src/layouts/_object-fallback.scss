@@ -1,0 +1,35 @@
+/**
+ * Layout: object fit fallback
+ */
+
+/* Imports */
+
+@use "../../config" as con;
+
+/* Styles */
+
+.l-object-contain,
+.l-object-cover {
+	.no-object-fit & {
+    @extend %u-opacity-0;
+    @extend %u-visibility-hidden;
+  }
+}
+
+.l-object-cover-fallback,
+.l-object-cover-fallback {
+	@extend %u-background-no-repeat;
+	@extend %u-background-position-center;
+
+	.object-fit & {
+		@extend %u-display-none;
+	}
+}
+
+.l-object-cover-fallback {
+	@extend %u-background-size-cover;
+}
+
+.l-object-contain-fallback {
+	@extend %u-background-size-contain;
+}

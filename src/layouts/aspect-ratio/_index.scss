@@ -9,10 +9,9 @@
 
 /* Styles */
 
-.o-aspect-ratio {
-  @extend %u-position-relative;
-  @extend %u-overflow-hidden;
+.l-aspect-ratio .l-relative .l-overflow-hidden
 
+.l-aspect-ratio {
   &::before {
     @extend %u-content-empty;
     @extend %u-display-block;
@@ -21,23 +20,10 @@
   }
 
   @include mix.aspect-ratio-padding(con.$aspect-ratio-padding);
-
-  &[data-circle] {
-    @extend %u-border-radius-100;
-
-    mask-image: radial-gradient(white, black);
-  }
 }
 
-.o-aspect-ratio__media {
-  @extend %u-position-absolute;
-  @extend %u-top-0;
-  @extend %u-left-0;
-  @extend %u-width-100;
-  @extend %u-height-100;
+"l-absolute l-top-0 l-left-0 l-width-100-pc l-height-100-pc l-object-cover"
 
-  object-fit: cover;
-}
 
 .o-aspect-ratio__video {
   @extend %u-position-absolute;

@@ -4,11 +4,11 @@
  * @param [string] $selectors
  */
 
-@mixin page-loader-fallback($delay: 2500ms, $selectors: "#js-page-loader, #js-page-transition") {
+@mixin page-loader-fallback($delay: 2500ms, $duration: 1000ms, $selectors: "#js-page-loader, #js-page-transition") {
   #{$selectors} {
     .no-js & {
       animation-name: a-page-loader-fade-out;
-      animation-duration: 1000ms;
+      animation-duration: $duration;
       animation-delay: $delay;
       animation-fill-mode: forwards;
     }

@@ -25,6 +25,14 @@ $fonts: () !default;
 
 $placeholders: () !default;
 
+$padding: (
+	l: (
+		x1: 4px
+	)
+);
+
+$padding-breakpoints: ("m");
+
 /* Breakpoints */
 
 $breakpoints: () !default;
@@ -44,9 +52,9 @@ $grid-overwrite: false !default;
 $context: 16px !default;
 $context-em: 16px !default;
 
-/* Aspect ratio padding */
+/* Aspect ratios */
 
-$aspect-ratio-padding: () !default;
+$aspect-ratios: () !default;
 
 /* Transitions */
 
@@ -60,7 +68,7 @@ $z-index: () !default;
 
 $nav: (
   icon: (
-    width: 35px,
+    width: 40px,
     line-width: 2px,
     margin: 8px,
   )
@@ -161,7 +169,7 @@ $breakpoints: m.map-recursive-merge(
 
 $containers: m.map-recursive-merge(
   (
-    def: 1200px,
+    default: 1200px,
     s: 800px,
     l: 1920px,
   ),
@@ -174,7 +182,7 @@ $containers: m.map-recursive-merge(
   $k: meta.inspect($c);
   $suffix: "";
 
-  @if $c != "def" {
+  @if $c != "default" {
     $suffix: "-#{$c}";
   }
 
@@ -186,26 +194,26 @@ $containers: m.map-recursive-merge(
 
 $transitions: m.map-recursive-merge(
   (
-    def: (
+    default: (
       durations: (
-        def: 300ms,
+        default: 300ms,
       ),
       timing-function: "ease-in-out",
       timing-function-cubic: "cubic-bezier(.07, .50, .12, 1)",
     ),
     fade: (
       durations: (
-        def: "800ms, 500ms",
+        default: "800ms, 500ms",
         s: "1200ms, 800ms",
       ),
       y: (
-        def: 5%,
+        default: 5%,
         s: 25%,
         m: 50%,
         l: 100%,
       ),
       x: (
-        def: 5%,
+        default: 5%,
         s: 25%,
         m: 50%,
         l: 100%,
@@ -213,18 +221,18 @@ $transitions: m.map-recursive-merge(
     ),
     scale: (
       durations: (
-        def: "800ms, 500ms",
+        default: "800ms, 500ms",
         s: "2200ms, 600ms",
       ),
       in: (
-        def: 1.1,
+        default: 1.1,
         hover: 1.06,
         s: 1.05,
         m: 1.2,
         l: 1.55,
       ),
       out: (
-        def: 1.1,
+        default: 1.1,
         hover: 1,
         s: 1.04,
         m: 1.2,
@@ -233,11 +241,12 @@ $transitions: m.map-recursive-merge(
   ),
   $transitions
 );
-$def-transitions: map.get($transitions, "def");
-$def-durations: map.get($def-transitions, "durations");
-$def-duration: map.get($def-durations, "def");
-$def-timing-function: map.get($def-transitions, "timingFunction");
-$def-timing-function-cubic: map.get($def-transitions, "timingFunctionCubic");
+
+$default-transitions: map.get($transitions, "default");
+$durations: map.get($default-transitions, "durations");
+$duration: map.get($durations, "default");
+$timing-function: map.get($default-transitions, "timing-function");
+$timing-function-cubic: map.get($default-transitions, "timing-function-cubic");
 
 /* Z index */
 
@@ -248,7 +257,7 @@ $z-index: m.map-recursive-merge(
     modal: 90,
     nav: 85,
     loader: (
-      def: 80,
+      default: 80,
       page: 110
     )
   ),
@@ -265,16 +274,36 @@ $z-index: m.map-recursive-merge(
   overflow: hidden;
 }
 
+@include mix.set-placeholder("overflow-x-hidden") {
+  overflow-x: hidden;
+}
+
+@include mix.set-placeholder("overflow-y-hidden") {
+  overflow-y: hidden;
+}
+
 @include mix.set-placeholder("overflow-scroll") {
   overflow: scroll;
 }
 
-@include mix.set-placeholder("overflow-y-auto") {
-  overflow-y: auto;
+@include mix.set-placeholder("overflow-x-scroll") {
+  overflow-x: scroll;
 }
 
-@include mix.set-placeholder("overflow-x-hidden") {
-  overflow-x: hidden;
+@include mix.set-placeholder("overflow-y-scroll") {
+  overflow-y: scroll;
+}
+
+@include mix.set-placeholder("overflow-auto") {
+  overflow: auto;
+}
+
+@include mix.set-placeholder("overflow-x-auto") {
+  overflow-x: auto;
+}
+
+@include mix.set-placeholder("overflow-y-auto") {
+  overflow-y: auto;
 }
 
 /* Floats */
@@ -285,6 +314,12 @@ $z-index: m.map-recursive-merge(
 
 @include mix.set-placeholder("float-right") {
   float: right;
+}
+
+/* Clear */
+
+@include mix.set-placeholder("clear-both") {
+  clear: both;
 }
 
 /* Display */
@@ -327,6 +362,46 @@ $z-index: m.map-recursive-merge(
   flex-grow: 1;
 }
 
+@include mix.set-placeholder("flex-direction-column") {
+  flex-direction: column;
+}
+
+@include mix.set-placeholder("flex-direction-row") {
+  flex-direction: row;
+}
+
+@include mix.set-placeholder("flex-wrap-wrap") {
+  flex-wrap: wrap;
+}
+
+@include mix.set-placeholder("justify-content-space-between") {
+  justify-content: space-between;
+}
+
+@include mix.set-placeholder("justify-content-center") {
+  justify-content: center;
+}
+
+@include mix.set-placeholder("justify-content-flex-start") {
+  justify-content: flex-start;
+}
+
+@include mix.set-placeholder("justify-content-flex-end") {
+  justify-content: flex-end;
+}
+
+@include mix.set-placeholder("align-items-center") {
+  align-items: center;
+}
+
+@include mix.set-placeholder("align-items-flex-start") {
+  align-items: flex-start;
+}
+
+@include mix.set-placeholder("align-items-flex-end") {
+  align-items: flex-end;
+}
+
 /* Visibility */
 
 @include mix.set-placeholder("visibility-hidden") {
@@ -357,6 +432,10 @@ $z-index: m.map-recursive-merge(
   position: fixed;
 }
 
+@include mix.set-placeholder("position-sticky") {
+  position: sticky;
+}
+
 @include mix.set-placeholder("top-0") {
   top: 0;
 }
@@ -376,7 +455,19 @@ $z-index: m.map-recursive-merge(
 @include mix.set-placeholder("position-vertical-center") {
   top: 50%;
   transform: translateY(-50%);
-  bottom: auto;
+}
+
+@include mix.set-placeholder("position-horizontal-center") {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@include mix.set-placeholder("z-index-1") {
+  z-index: 1;
+}
+
+@include mix.set-placeholder("z-index--1") {
+  z-index: -1;
 }
 
 /* Text align */
@@ -587,7 +678,7 @@ $colors-flat: func.map-flatten($colors, (), "");
     transition-property: transform;
   }
 
-  @each $k, $v in $def-durations {
+  @each $k, $v in $durations {
     $name: "transition-duration";
 
     @if $k != def {
@@ -604,23 +695,23 @@ $colors-flat: func.map-flatten($colors, (), "");
   }
 
   @include mix.set-placeholder("transition-timing-function") {
-    transition-timing-function: $def-timing-function;
+    transition-timing-function: $timing-function;
   }
 
   @include mix.set-placeholder("transition-timing-function-cubic") {
-    transition-timing-function: $def-timing-function-cubic;
+    transition-timing-function: $timing-function-cubic;
   }
 
   @include mix.set-placeholder("transition-opacity-transform-ease") {
-    transition: opacity #{$def-duration} #{$def-timing-function}, transform #{$def-duration} #{$def-timing-function};
+    transition: opacity #{$duration} #{$timing-function}, transform #{$duration} #{$timing-function};
   }
 
   @include mix.set-placeholder("transition-transform-ease") {
-    transition: transform #{$def-duration} #{$def-timing-function};
+    transition: transform #{$duration} #{$timing-function};
   }
 
   @include mix.set-placeholder("transition-opacity-ease") {
-    transition: opacity #{$def-duration} #{$def-timing-function};
+    transition: opacity #{$duration} #{$timing-function};
   }
 }
 

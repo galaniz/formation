@@ -8,10 +8,6 @@
 
 /* Styles */
 
-* {
-  @extend %u-color-inherit;
-}
-
 *,
 *::before,
 *::after {
@@ -22,12 +18,7 @@ html,
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none;
   font-size: 100%;
-
-  &.u-o-h {
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 /* Resets */
@@ -66,11 +57,11 @@ a {
     @extend %u-color-inherit;
   }
 
-  &:hover,
-  &:active,
-  &:focus {
-    outline: 0;
-  }
+	&:hover,
+	&:active,
+	&:focus {
+		outline: 0;
+	}
 }
 
 /* Misc resets */
@@ -90,24 +81,14 @@ video {
   height: auto;
 }
 
+main,
+time,
 img {
   @extend %u-display-block;
 }
 
 address {
   font-style: normal;
-}
-
-main,
-time {
-  @extend %u-display-block;
-}
-
-/* Lists */
-
-ol,
-ul {
-  list-style: none;
 }
 
 /* Svg */

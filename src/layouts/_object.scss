@@ -1,0 +1,17 @@
+/**
+ * Layout: object fit
+ */
+
+/* Imports */
+
+@use "../../config" as con;
+
+/* Styles */
+
+.l-object-contain {
+	@extend %u-object-fit-contain;
+}
+
+.l-object-cover {
+	@extend %u-object-fit-cover;
+}

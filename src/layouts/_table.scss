@@ -12,11 +12,11 @@
   @extend %u-display-table;
 }
 
-.l-table__row {
+.l-table-row {
   @extend %u-display-table-row;
 }
 
-.l-table__cell {
+.l-table-cell {
   @extend %u-display-table-cell;
   @extend %u-vertical-align-middle;
 }
