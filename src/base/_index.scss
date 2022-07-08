@@ -6,6 +6,14 @@
 
 @use "../config";
 
+/* Root */
+
+:root {
+	--aspect-ratio-padding: 100%;
+	--gap: 0rem;
+	--gap-margin: 0rem;
+}
+
 /* Styles */
 
 *,

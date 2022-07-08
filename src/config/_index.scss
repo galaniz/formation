@@ -13,48 +13,55 @@
 @use "../utils/functions/map" as m;
 @use "../utils/mixins/grayscale" as g;
 
-/* Colors  */
+/* Padding */
 
-$colors: () !default;
+$padding-vertical: () !default;
+$padding-vertical-breakpoints: ("l") !default;
 
-/* Fonts */
+$padding-horizontal: () !default;
+$padding-horizontal-breakpoints: ("l") !default;
 
-$fonts: () !default;
+/* Gap */
 
-/* Placeholders */
-
-$placeholders: () !default;
-
-$padding: (
-	l: (
-		x1: 4px
-	)
-);
-
-$padding-breakpoints: ("m");
-
-/* Breakpoints */
-
-$breakpoints: () !default;
+$gaps: () !default;
+$gap-breakpoints: ("l") !default;
 
 /* Layout containers and padding */
 
 $containers: () !default;
-$container-padding: 25px !default;
+$container-padding: 20px !default;
 
 /* Grid system */
 
 $grid: () !default;
-$grid-overwrite: false !default;
 
-/* Rem/em context */
+/* Widths */
+
+$widths: (
+	25: (
+	  600: 50%,
+	  900: 25%,
+	),
+	33: (
+	  600: 50%,
+	  900: 33.3333%,
+	),
+	50: (
+	  600: 50%,
+	),
+	66: (
+	  600: 50%,
+	  900: 66.6667%,
+	),
+	75: (
+	  600: 50%,
+	  900: 75%,
+	),
+) !default;
+
+/* Rem context */
 
 $context: 16px !default;
-$context-em: 16px !default;
-
-/* Aspect ratios */
-
-$aspect-ratios: () !default;
 
 /* Transitions */
 
@@ -63,6 +70,15 @@ $transitions: () !default;
 /* Z index */
 
 $z-index: () !default;
+
+/* Aspect ratios */
+
+$aspect-ratios: map.merge(
+  (
+    100
+  ),
+  $aspect-ratios
+);
 
 /* Nav */
 
@@ -78,103 +94,60 @@ $nav: (
 
 $vars: () !default;
 
-/**
- * Merge maps
- */
-
 /* Colors */
 
-$colors: m.map-recursive-merge(
-  (
-    primary: (
-      base: #888,
-      light: #aaa,
-      dark: #666,
-    ),
-    foreground: (
-      base: #222,
-      light: #444,
-      dark: #000,
-    ),
-    background: (
-      base: #f8f8f8,
-      light: #fff,
-      dark: #eee,
-    ),
-  ),
-  $colors
-);
+$colors: (
+	primary: (
+		base: #888,
+		light: #aaa,
+		dark: #666,
+	),
+	foreground: (
+		base: #222,
+		light: #444,
+		dark: #000,
+	),
+	background: (
+		base: #f8f8f8,
+		light: #fff,
+		dark: #eee,
+	),
+) !default;
 
 /* Fonts */
 
-$fonts: m.map-recursive-merge(
-  (
-    primary: (
-      helvetica,
-      arial,
-      sans-serif,
-    ),
-    weight: (
-      normal: 400,
-    ),
+$fonts: (
+  primary: (
+    helvetica,
+    arial,
+    sans-serif,
   ),
-  $fonts
-);
+) !important;
+
+$font-weights: (
+	normal: 400,
+) !default;
 
 /* Grid */
 
-$grid: m.map-recursive-merge(
-  (
-    25: (
-      600: 50%,
-      900: 25%,
-    ),
-    33: (
-      600: 50%,
-      900: 33.3333%,
-    ),
-    50: (
-      600: 50%,
-    ),
-    66: (
-      600: 50%,
-      900: 66.6667%,
-    ),
-    75: (
-      600: 50%,
-      900: 75%,
-    ),
-  ),
-  $grid
-);
+$grid: ();
 
 /* Breakpoints */
 
-$breakpoints: m.map-recursive-merge(
-  (
-    0: 0,
-    400: 400px,
-    500: 500px,
-    600: 600px,
-    700: 700px,
-    800: 800px,
-    900: 900px,
-    1000: 1000px,
-    1200: 1200px,
-  ),
-  $breakpoints
-);
+$breakpoints: (
+	xs: 400px,
+	s: 600px,
+	r: 800px,
+	m: 900px,
+	l: 1000px,
+	xl: 1200px,
+) !default;
 
 /* Containers */
 
-$containers: m.map-recursive-merge(
-  (
-    default: 1200px,
-    s: 800px,
-    l: 1920px,
-  ),
-  $containers
-);
+$containers: (
+	default: 1300px,
+) !default;
 
 /* Append to breakpoints */
 
@@ -264,252 +237,340 @@ $z-index: m.map-recursive-merge(
   $z-index
 );
 
-/**
- * Placeholders
- */
+/* Placeholders */
+
+$placeholders: () !default;
+
+$placeholders: m.map-recursive-merge(
+	(
+		(
+			name: "overflow-hidden",
+			prop: (
+				overflow: hidden
+			)
+		),
+		(
+			name: "overflow-x-hidden",
+			prop: (
+				overflow-x: hidden
+			)
+		),
+		(
+			name: "overflow-y-hidden",
+			prop: (
+				overflow-y: hidden
+			)
+		),
+		(
+			name: "overflow-scroll",
+			prop: (
+				overflow: scroll
+			)
+		),
+		(
+			name: "overflow-x-scroll",
+			prop: (
+				overflow-x: scroll
+			)
+		),
+		(
+			name: "overflow-y-scroll",
+			prop: (
+				overflow-y: scroll
+			)
+		),
+		(
+			name: "overflow-auto",
+			prop: (
+				overflow: auto
+			)
+		),
+		(
+			name: "overflow-x-auto",
+			prop: (
+				overflow-x: auto
+			)
+		),
+		(
+			name: "overflow-y-auto",
+			prop: (
+				overflow-y: auto
+			)
+		),
+		(
+			name: "float-left",
+			prop: (
+				float: left
+			)
+		),
+		(
+			name: "float-right",
+			prop: (
+				float: right
+			)
+		),
+		(
+			name: "clear-both",
+			prop: (
+				clear: both
+			)
+		),
+		(
+			name: "display-none",
+			prop: (
+				display: none
+			)
+		),
+		(
+			name: "display-block",
+			prop: (
+				display: block
+			)
+		),
+		(
+			name: "display-inline-block",
+			prop: (
+				display: inline-block
+			)
+		),
+		(
+			name: "display-flex",
+			prop: (
+				display: flex
+			)
+		),
+		(
+			name: "display-table",
+			prop: (
+				display: table
+			)
+		),
+		(
+			name: "display-table-row",
+			prop: (
+				display: table-row
+			)
+		),
+		(
+			name: "display-table-cell",
+			prop: (
+				display: table-cell
+			)
+		),
+		(
+			name: "flex-shrink-0",
+			prop: (
+				flex-shrink: 0
+			)
+		),
+		(
+			name: "flex-grow-1",
+			prop: (
+				flex-grow: 1
+			)
+		),
+		(
+			name: "flex-direction-column",
+			prop: (
+				flex-direction: column
+			)
+		),
+		(
+			name: "flex-direction-row",
+			prop: (
+				flex-direction: row
+			)
+		),
+		(
+			name: "flex-wrap-wrap",
+			prop: (
+				flex-wrap: wrap
+			)
+		),
+		(
+			name: "justify-content-space-between",
+			prop: (
+				justify-content: space-between
+			)
+		),
+		(
+			name: "justify-content-center",
+			prop: (
+				justify-content: center
+			)
+		),
+		(
+			name: "justify-content-flex-start",
+			prop: (
+				justify-content: flex-start
+			)
+		),
+		(
+			name: "justify-content-flex-end",
+			prop: (
+				justify-content: flex-end
+			)
+		),
+		(
+			name: "align-items-center",
+			prop: (
+				align-items: center
+			)
+		),
+		(
+			name: "align-items-flex-start",
+			prop: (
+				align-items: flex-start
+			)
+		),
+		(
+			name: "align-items-flex-end",
+			prop: (
+				align-items: flex-end
+			)
+		),
+		(
+			name: "visibility-hidden",
+			prop: (
+				visibility: hidden
+			)
+		),
+		(
+			name: "visibility-visible",
+			prop: (
+				visibility: visible
+			)
+		),
+		(
+			name: "content-empty",
+			prop: (
+				content: ""
+			)
+		),
+		(
+			name: "position-relative",
+			prop: (
+				position: relative
+			)
+		),
+		(
+			name: "position-absolute",
+			prop: (
+				position: absolute
+			)
+		),
+		(
+			name: "position-fixed",
+			prop: (
+				position: fixed
+			)
+		),
+		(
+			name: "position-sticky",
+			prop: (
+				position: sticky
+			)
+		),
+		(
+			name: "top-0",
+			prop: (
+				top: 0
+			)
+		),
+		(
+			name: "bottom-0",
+			prop: (
+				bottom: 0
+			)
+		),
+		(
+			name: "left-0",
+			prop: (
+				left: 0
+			)
+		),
+		(
+			name: "right-0",
+			prop: (
+				right: 0
+			)
+		),
+		(
+			name: "z-index-1",
+			prop: (
+				z-index: 1
+			)
+		),
+		(
+			name: "z-index--1",
+			prop: (
+				z-index: -1
+			)
+		),
+		(
+			name: "text-align-left",
+			prop: (
+				text-align: left
+			)
+		),
+		(
+			name: "text-align-right",
+			prop: (
+				text-align: right
+			)
+		),
+		(
+			name: "text-align-center",
+			prop: (
+				text-align: center
+			)
+		),
+		(
+			name: "text-align-justify",
+			prop: (
+				text-align: justify
+			)
+		),
+		(
+			name: "vertical-align-bottom",
+			prop: (
+				vertical-align: bottom
+			)
+		),
+		(
+			name: "vertical-align-middle",
+			prop: (
+				vertical-align: middle
+			)
+		),
+		(
+			name: "vertical-align-top",
+			prop: (
+				vertical-align: top
+			)
+		),
+		(
+			name: "margin-auto",
+			prop: (
+				margin: auto
+			)
+		),
+		(
+			name: "",
+			prop: (
+				:
+			)
+		),
+	),
+  $placeholders
+);
 
-/* Overflow */
 
-@include mix.set-placeholder("overflow-hidden") {
-  overflow: hidden;
-}
-
-@include mix.set-placeholder("overflow-x-hidden") {
-  overflow-x: hidden;
-}
-
-@include mix.set-placeholder("overflow-y-hidden") {
-  overflow-y: hidden;
-}
-
-@include mix.set-placeholder("overflow-scroll") {
-  overflow: scroll;
-}
-
-@include mix.set-placeholder("overflow-x-scroll") {
-  overflow-x: scroll;
-}
-
-@include mix.set-placeholder("overflow-y-scroll") {
-  overflow-y: scroll;
-}
-
-@include mix.set-placeholder("overflow-auto") {
-  overflow: auto;
-}
-
-@include mix.set-placeholder("overflow-x-auto") {
-  overflow-x: auto;
-}
-
-@include mix.set-placeholder("overflow-y-auto") {
-  overflow-y: auto;
-}
-
-/* Floats */
-
-@include mix.set-placeholder("float-left") {
-  float: left;
-}
-
-@include mix.set-placeholder("float-right") {
-  float: right;
-}
-
-/* Clear */
-
-@include mix.set-placeholder("clear-both") {
-  clear: both;
-}
-
-/* Display */
-
-@include mix.set-placeholder("display-none") {
-  display: none;
-}
-
-@include mix.set-placeholder("display-block") {
-  display: block;
-}
-
-@include mix.set-placeholder("display-inline-block") {
-  display: inline-block;
-}
-
-@include mix.set-placeholder("display-flex") {
-  display: flex;
-}
-
-@include mix.set-placeholder("display-table") {
-  display: table;
-}
-
-@include mix.set-placeholder("display-table-row") {
-  display: table-row;
-}
-
-@include mix.set-placeholder("display-table-cell") {
-  display: table-cell;
-}
-
-/* Flexbox */
-
-@include mix.set-placeholder("flex-shrink-0") {
-  flex-shrink: 0;
-}
-
-@include mix.set-placeholder("flex-grow-1") {
-  flex-grow: 1;
-}
-
-@include mix.set-placeholder("flex-direction-column") {
-  flex-direction: column;
-}
-
-@include mix.set-placeholder("flex-direction-row") {
-  flex-direction: row;
-}
-
-@include mix.set-placeholder("flex-wrap-wrap") {
-  flex-wrap: wrap;
-}
-
-@include mix.set-placeholder("justify-content-space-between") {
-  justify-content: space-between;
-}
-
-@include mix.set-placeholder("justify-content-center") {
-  justify-content: center;
-}
-
-@include mix.set-placeholder("justify-content-flex-start") {
-  justify-content: flex-start;
-}
-
-@include mix.set-placeholder("justify-content-flex-end") {
-  justify-content: flex-end;
-}
-
-@include mix.set-placeholder("align-items-center") {
-  align-items: center;
-}
-
-@include mix.set-placeholder("align-items-flex-start") {
-  align-items: flex-start;
-}
-
-@include mix.set-placeholder("align-items-flex-end") {
-  align-items: flex-end;
-}
-
-/* Visibility */
-
-@include mix.set-placeholder("visibility-hidden") {
-  visibility: hidden;
-}
-
-@include mix.set-placeholder("visibility-visible") {
-  visibility: visible;
-}
-
-/* Content */
-
-@include mix.set-placeholder("content-empty") {
-  content: "";
-}
-
-/* Position */
-
-@include mix.set-placeholder("position-relative") {
-  position: relative;
-}
-
-@include mix.set-placeholder("position-absolute") {
-  position: absolute;
-}
-
-@include mix.set-placeholder("position-fixed") {
-  position: fixed;
-}
-
-@include mix.set-placeholder("position-sticky") {
-  position: sticky;
-}
-
-@include mix.set-placeholder("top-0") {
-  top: 0;
-}
-
-@include mix.set-placeholder("bottom-0") {
-  bottom: 0;
-}
-
-@include mix.set-placeholder("left-0") {
-  left: 0;
-}
-
-@include mix.set-placeholder("right-0") {
-  right: 0;
-}
-
-@include mix.set-placeholder("position-vertical-center") {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-@include mix.set-placeholder("position-horizontal-center") {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-@include mix.set-placeholder("z-index-1") {
-  z-index: 1;
-}
-
-@include mix.set-placeholder("z-index--1") {
-  z-index: -1;
-}
-
-/* Text align */
-
-@include mix.set-placeholder("text-align-left") {
-  text-align: left;
-}
-
-@include mix.set-placeholder("text-align-right") {
-  text-align: right;
-}
-
-@include mix.set-placeholder("text-align-center") {
-  text-align: center;
-}
-
-@include mix.set-placeholder("text-align-justify") {
-  text-align: justify;
-}
-
-@include mix.set-placeholder("text-transform-uppercase") {
-  text-transform: uppercase;
-}
-
-/* Vertical align */
-
-@include mix.set-placeholder("vertical-align-bottom") {
-  vertical-align: bottom;
-}
-
-@include mix.set-placeholder("vertical-align-middle") {
-  vertical-align: middle;
-}
-
-@include mix.set-placeholder("vertical-align-top") {
-  vertical-align: top;
-}
 
 /* Margin */
 
-@include mix.set-placeholder("margin-auto") {
-  margin: auto;
+@include mix.set-placeholder("") {
+  ;
 }
 
 @include mix.set-placeholder("margin-right-auto") {
@@ -578,6 +639,17 @@ $z-index: m.map-recursive-merge(
 
 @include mix.set-placeholder("height-100-vh") {
   height: 100vh;
+}
+
+
+@include mix.set-placeholder("position-vertical-center") {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@include mix.set-placeholder("position-horizontal-center") {
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Grayscale */

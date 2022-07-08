@@ -1,0 +1,65 @@
+
+
+
+.l-gap {
+	
+}
+
+
+&[data-gap=""] {
+      --ht-flex-gap: #{func.calc-rem(1px)};
+    }
+
+    &[data-gap="xs"] {
+      --ht-flex-gap: #{func.calc-rem(12px)};
+    }
+
+    &[data-gap="s"] {
+      --ht-flex-gap: #{func.calc-rem(20px)};
+    }
+
+    &[data-gap="r"] {
+      --ht-flex-gap: #{func.calc-rem(40px)};
+    }
+
+    &[data-gap="m"] {
+      --ht-flex-gap: #{func.calc-rem(60px)};
+    }
+
+    &[data-gap="l"] {
+      --ht-flex-gap: #{func.calc-rem(80px)};
+    }
+
+    &[data-gap] {
+      margin: calc(var(--ht-flex-gap) * -1) 0 0 calc(var(--ht-flex-gap) * -1);
+
+      & > * {
+        padding: var(--ht-flex-gap) 0 0 var(--ht-flex-gap);
+      }
+    }
+
+
+
+
+
+		@include mix.breakpoint-min(1000) {
+      &[data-gap-l="s"] {
+        --ht-flex-gap: #{func.calc-rem(20px)};
+      }
+
+      &[data-gap-l="r"] {
+        --ht-flex-gap: #{func.calc-rem(40px)};
+      }
+
+      &[data-gap-l="m"] {
+        --ht-flex-gap: #{func.calc-rem(60px)};
+      }
+
+      &[data-gap-l="l"] {
+        --ht-flex-gap: #{func.calc-rem(80px)};
+      }
+
+      &[data-gap-l="xl"] {
+        --ht-flex-gap: #{func.calc-rem(160px)};
+      }
+    }

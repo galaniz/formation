@@ -1,0 +1,44 @@
+/**
+ * Objects aspect ratio
+ */
+
+/* Imports */
+
+@use "sass:list";
+@use "mixins" as mix;
+@use "../../config" as con;
+
+/* Styles */
+
+$aspect-ratio-classes: ();
+
+@each $p in con.$aspect-ratio-padding {
+	list.append($aspect-ratio-classes, .l-aspect-ratio-#{$p});
+}
+
+#{list.join($aspect-ratio-classes, $separator: comma)} {
+	&::before {
+		@extend %u-content-empty;
+		@extend %u-display-block;
+
+		padding-top: var(--aspect-ratio-padding);
+	}
+}
+
+@each $p in $aspect-ratio-classes {
+	#{$p} {
+		--aspect-ratio-padding: math.percentage($p);
+	}
+}
+
+.o-aspect-ratio__video {
+  @extend %u-position-absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+}
