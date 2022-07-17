@@ -13,6 +13,10 @@
 @use "../utils/functions/map" as m;
 @use "../utils/mixins/grayscale" as g;
 
+/* Root */
+
+$root: () !default;
+
 /* Padding */
 
 $padding-vertical: () !default;
@@ -556,9 +560,105 @@ $placeholders: m.map-recursive-merge(
 			)
 		),
 		(
-			name: "",
+			name: "margin-right-auto",
 			prop: (
-				:
+				margin-right: auto
+			)
+		),
+		(
+			name: "margin-left-auto",
+			prop: (
+				margin-left: auto
+			)
+		),
+		(
+			name: "border-radius-100-pc",
+			prop: (
+				border-radius: 100%
+			)
+		),
+		(
+			name: "transform-origin-0-0",
+			prop: (
+				transform-origin: 0 0
+			)
+		),
+		(
+			name: "transform-origin-0-100-pc",
+			prop: (
+				transform-origin: 0 100%
+			)
+		),
+		(
+			name: "transform-origin-100-pc-0",
+			prop: (
+				transform-origin: 100% 0
+			)
+		),
+		(
+			name: "transform-origin-100-pc-100-pc",
+			prop: (
+				transform-origin: 100% 100%
+			)
+		),
+		(
+			name: "opacity-0",
+			prop: (
+				opacity: 0
+			)
+		),
+		(
+			name: "opacity-1",
+			prop: (
+				opacity: 1
+			)
+		),
+		(
+			name: "width-inherit",
+			prop: (
+				width: inherit
+			)
+		),
+		(
+			name: "height-inherit",
+			prop: (
+				height: inherit
+			)
+		),
+		(
+			name: "width-100-pc",
+			prop: (
+				width: 100%
+			)
+		),
+		(
+			name: "width-100-vw",
+			prop: (
+				width: 100vw
+			)
+		),
+		(
+			name: "height-100-pc",
+			prop: (
+				height: 100%
+			)
+		),
+		(
+			name: "height-100-vh",
+			prop: (
+				height: 100vh
+			)
+		),
+		(
+			name: "color-inherit",
+			prop: (
+				color: inherit
+			)
+		),
+		(
+			name: "background-color-inherit",
+			prop: (
+				background-color: inherit
 			)
 		),
 	),
@@ -567,79 +667,8 @@ $placeholders: m.map-recursive-merge(
 
 
 
-/* Margin */
 
-@include mix.set-placeholder("") {
-  ;
-}
 
-@include mix.set-placeholder("margin-right-auto") {
-  margin-right: auto;
-}
-
-@include mix.set-placeholder("margin-left-auto") {
-  margin-left: auto;
-}
-
-/* Border radius */
-
-@include mix.set-placeholder("border-radius-100") {
-  border-radius: 100%;
-}
-
-/* Transform origin */
-
-@include mix.set-placeholder("transform-origin-0-0") {
-  transform-origin: 0% 0%;
-}
-
-@include mix.set-placeholder("transform-origin-0-100") {
-  transform-origin: 0% 100%;
-}
-
-@include mix.set-placeholder("transform-origin-100-0") {
-  transform-origin: 100% 0%;
-}
-
-@include mix.set-placeholder("transform-origin-100-100") {
-  transform-origin: 100% 100%;
-}
-
-/* Opacity */
-
-@include mix.set-placeholder("opacity-0") {
-  opacity: 0;
-}
-
-@include mix.set-placeholder("opacity-1") {
-  opacity: 1;
-}
-
-/* Width/height */
-
-@include mix.set-placeholder("width-inherit") {
-  width: inherit;
-}
-
-@include mix.set-placeholder("height-inherit") {
-  height: inherit;
-}
-
-@include mix.set-placeholder("width-100") {
-  width: 100%;
-}
-
-@include mix.set-placeholder("width-100-vw") {
-  width: 100vw;
-}
-
-@include mix.set-placeholder("height-100") {
-  height: 100%;
-}
-
-@include mix.set-placeholder("height-100-vh") {
-  height: 100vh;
-}
 
 
 @include mix.set-placeholder("position-vertical-center") {
@@ -686,14 +715,6 @@ $placeholders: m.map-recursive-merge(
 }
 
 /* Colors */
-
-@include mix.set-placeholder("color-inherit") {
-  color: inherit;
-}
-
-@include mix.set-placeholder("background-color-inherit") {
-  background-color: inherit;
-}
 
 /* Nested colors to one level map */
 
