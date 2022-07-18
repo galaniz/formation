@@ -142,3 +142,8 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - `OverflowIndicator` unused arg.
+
+## [3.0.5] - 2022-07-07
+
+### Fixed
+- `Slider` smooth scroll issue with tab buttons.
