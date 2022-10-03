@@ -90,8 +90,6 @@ class Slider extends Tabs {
     this._resizeTimer = null
     this._viewportWidth = window.innerWidth
 
-    this._smoothScrollSupported = false
-
     this._groupItemsLength = this.groupItems.length
     this._rearrange = this._groupItemsLength && this.breakpoints.length
 
@@ -122,12 +120,6 @@ class Slider extends Tabs {
    */
 
   _beforeInitActivate () {
-    /* Check smooth scroll support */
-
-    if (window.CSS.supports('(scroll-behavior: smooth)')) {
-      this._smoothScrollSupported = true
-    }
-
     /* Set height to hide scrollbar */
 
     this._setHeight()
@@ -280,16 +272,7 @@ class Slider extends Tabs {
     } = args
 
     if (source !== 'scroll') {
-      if (this._smoothScrollSupported) {
-        this.track.scroll({
-          top: 0,
-          left: this._scrollOffsets[this._panelIndex],
-          behavior: 'smooth'
-        })
-      } else {
-        // Fallback for when smooth scroll not supported
-        this._scrollTo(this._scrollOffsets[this._panelIndex])
-      }
+      this._scrollTo(this._scrollOffsets[this._panelIndex])
     }
   }
 
