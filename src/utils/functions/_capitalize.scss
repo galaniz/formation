@@ -1,5 +1,5 @@
 /**
- * Utility functions: capitalize string
+ * Utils: functions capitalize string
  */
 
 @use "sass:string";
@@ -7,8 +7,8 @@
 /**
  * Function
  *
- * @param [string] $str
- * @return [string]
+ * @param {string} $str
+ * @return {string}
  */
 
 @function capitalize($str) {

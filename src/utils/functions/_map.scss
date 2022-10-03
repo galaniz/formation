@@ -1,5 +1,5 @@
 /**
- * Utility functions: recursively set nested map
+ * Utils: functions recursively set nested map
  */
 
 /* Imports */
@@ -12,10 +12,9 @@
  *
  * Source: https://github.com/pentzzsolt/sass-recursive-map.merge
  *
- * @param [map] $parent-map
- * @param [map] $child-map
- *
- * @return [map]
+ * @param {map} $parent-map
+ * @param {map} $child-map
+ * @return {map}
  */
 
 @function map-recursive-merge($parent-map, $child-map) {

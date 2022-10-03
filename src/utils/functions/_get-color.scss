@@ -1,5 +1,5 @@
 /**
- * Utility functions: get color from $colors map
+ * Utils: functions get color from $colors map
  */
 
 @use "sass:map";
@@ -8,8 +8,8 @@
 /**
  * Function
  *
- * @param [string] $color
- * @return [string]
+ * @param {string} $color
+ * @return {string}
  */
 
 @function get-color($color: "background-light") {
