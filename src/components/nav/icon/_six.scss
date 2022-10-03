@@ -1,25 +1,19 @@
 /**
- * Components nav icon: six
+ * Components: nav icon six
  */
 
 /* Imports */
 
 @use "sass:map";
 @use "../../../config" as con;
-@use "../../../utils/functions/calc-rem" as c;
+@use "../../../utils/functions" as func;
 
 /* Styles */
 
 .c-nav-icon[data-num="6"] {
-  /* Lines */
+  --duration: 200ms;
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__middle,
-  & .c-nav-icon__bottom,
-  & .c-nav-icon__left,
-  & .c-nav-icon__right {
-    transition: transform 200ms ease;
-  }
+  /* Lines */
 
   & .c-nav-icon__top,
   & .c-nav-icon__middle,
@@ -29,15 +23,15 @@
   }
 
   & .c-nav-icon__top {
-    transition-delay: 500ms;
+    --delay: 500ms;
   }
 
   & .c-nav-icon__middle {
-    transition-delay: 625ms;
+    --delay: 625ms;
   }
 
   & .c-nav-icon__bottom {
-    transition-delay: 750ms;
+    --delay: 750ms;
   }
 
   /* Cross */
@@ -49,7 +43,7 @@
   }
 
   & .c-nav-icon__cross {
-    $w: c.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
+    $w: func.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
 
     @extend %u-margin-auto;
     @extend %u-left-0;
@@ -68,19 +62,21 @@
   }
 
   & .c-nav-icon__left {
+    --delay: 0ms;
+
     @extend %u-top-0;
     @extend %u-height-100;
 
     transform: scaleY(0) translateX(-50%);
-    transition-delay: 0ms;
     left: 50%;
   }
 
   & .c-nav-icon__right {
+    --delay: 250ms;
+
     @extend %u-width-100;
 
     transform: scaleX(0) translateY(-50%);
-    transition-delay: 250ms;
     top: 50%;
   }
 
@@ -92,25 +88,27 @@
     }
 
     & .c-nav-icon__top {
-      transition-delay: 0ms;
+      --delay: 0ms;
     }
 
     & .c-nav-icon__middle {
-      transition-delay: 125ms;
+      --delay: 125ms;
     }
 
     & .c-nav-icon__bottom {
-      transition-delay: 250ms;
+      --delay: 250ms;
     }
 
     & .c-nav-icon__left {
+      --delay: 625ms;
+
       transform: scaleY(1) translateX(-50%);
-      transition-delay: 625ms;
     }
 
     & .c-nav-icon__right {
+      --delay: 375ms;
+
       transform: scaleX(1) translateY(-50%);
-      transition-delay: 375ms;
     }
   }
 }

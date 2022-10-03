@@ -42,7 +42,7 @@ class Modal {
       close = null,
       scaleTransition = false,
       scaleTransitionDelay = 300,
-      bodyOverflowHiddenClass = 'u-o-h',
+      bodyOverflowHiddenClass = 'l-overflow-hidden',
       onToggle = () => {}
     } = args
 

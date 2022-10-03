@@ -1,11 +1,11 @@
 /**
- * Animate: transition page on link click
+ * Effects: page transition on link click
  *
- * @param links [array] of [HTMLElement]
- * @param transitionElement [HTMLElement]
- * @param delay [int]
- * @param init [boolean] or [function]
- * @param beforeShow [boolean] or [function]
+ * @param {array} links of {HTMLElement}
+ * @param {HTMLElement} transitionElement
+ * @param {int} delay
+ * @param {boolean/function} init
+ * @param {boolean/function} beforeShow
  */
 
 /* Variables */
@@ -35,7 +35,7 @@ const clickHandler = (e) => {
 
 /* Modules */
 
-const transition = (args) => {
+const pageTransition = (args) => {
   const {
     links = [],
     transitionElement = null,
@@ -58,10 +58,10 @@ const transition = (args) => {
   if (init) { init() }
 }
 
-const setTransitionRun = (r) => {
+const setPageTransitionRun = (r) => {
   run = r
 }
 
 /* Exports */
 
-export { transition, setTransitionRun }
+export { pageTransition, setPageTransitionRun }

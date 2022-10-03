@@ -1,0 +1,54 @@
+/**
+ * Effects: transition
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:list";
+@use "sass:string";
+@use "../config" as con;
+
+/* Styles */
+
+$transition-classes: ();
+
+@each $t, $v in con.$transitions {
+  $suffix: "";
+
+  @if $t != "default" {
+    $suffix: "-#{$t}";
+  }
+
+  $class: ".e-transition#{$suffix}";
+
+  $v: map.set($v, "class", $class);
+	$transition-classes: list.append($transition-classes, $class);
+}
+
+#{list.join($transition-classes, $separator: comma)} {
+	transition-property: var(--prop);
+  transition-timing-function: var(--easing);
+  transition-duration: var(--duration);
+  transition-delay: var(--delay);
+}
+
+@each $t, $v in con.$transitions {
+  @if $t != "default" {
+    $class: map.get("class", $v);
+
+    #{$class} {
+      @each $tt, $vv in $v {
+        @if $tt == "prop" {
+          --prop: #{$vv};
+        } @else if $r == "easing" {
+          --easing: #{$vv};
+        } @else if $r == "duration" {
+          --duration: #{$vv};
+        } @else if $r == "delay" {
+          --delay: #{$vv};
+        }
+      }
+    }
+  }
+}

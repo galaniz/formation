@@ -1,0 +1,35 @@
+/**
+ * Layouts: gap margin
+ */
+
+/* Imports */
+
+@use "../config" as con;
+@use "../utils/mixins" as mix;
+@use "../utils/functions" as func;
+
+/* Styles */
+
+[class^="l-gap-margin"] {
+  margin: calc(var(--gap-margin) * -1) 0 0 calc(var(--gap-margin) * -1);
+
+  & > * {
+    padding: var(--gap-margin) 0 0 var(--gap-margin);
+  }
+}
+
+@each $g, $v in con.$gaps {
+  .l-gap-margin-#{$g} {
+    --gap-margin: #{func.calc-rem($v)};
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @include mix.breakpoint-min($b) {
+    @each $g, $v in con.$gaps {
+      .l-gap-margin-#{$g}-#{$b} {
+        --gap-margin: #{func.calc-rem($v)};
+      }
+    }
+  }
+}

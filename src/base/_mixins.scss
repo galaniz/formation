@@ -1,0 +1,65 @@
+/**
+ * Base: mixins
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../config" as con;
+@use "../functions" as func;
+
+/**
+ * Set root variables
+ */
+
+@mixin set-root() {
+  $props: ();
+
+  @each $r in con.$root {
+    @if $r == "colors" {
+      @each $c, $v in con.$colors-flat {
+        --#{$c}: #{$v};
+      }
+    } @else if $r == "fonts" {
+      @each $f, $v in con.$fonts {
+        --font-#{$f}: #{$v};
+      }
+    } @else if $r == "font-weights" {
+      @each $f, $v in con.$font-weights {
+        --font-weight-#{$f}: #{$v};
+      }
+    } @else if $r == "padding-vertical" {
+      @each $p, $v in con.$padding-vertical {
+        --pv-#{$p}: #{$v};
+      }
+    } @else if $r == "padding-horizontal" {
+      @each $p, $v in con.$padding-horizontal {
+        --ph-#{$p}: #{$v};
+      }
+    } @else if $r == "gap" {
+      --gap: 0rem;
+      --gap-margin: 0rem;
+    } @else if $r == "containers" {
+      @each $c, $v in con.$containers {
+        $suffix: "";
+
+        @if $c != "default" {
+          $suffix: "-#{$c}";
+        }
+
+        --container#{$suffix}: #{func.calc-rem(con.$containers)};
+      }
+    } @else if $r == "container-padding" {
+      --container-padding: #{func.calc-rem(con.$container-padding)};
+    } @else if $r == "aspect-ratio-padding" {
+      --aspect-ratio-padding: 100%;
+    } @else if $r == "transitions" {
+      $default: map.get(con.$transitions, "default");
+
+      --prop: #{map.get($default, "prop")};
+      --duration: #{map.get($default, "duration")};
+      --easing: #{map.get($default, "easing")};
+      --delay: #{map.get($default, "delay")};
+    }
+  }
+}

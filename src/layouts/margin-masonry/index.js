@@ -1,11 +1,11 @@
 /**
  * Layouts: masonry with negative margins
  *
- * @param args [object] {
- *  @param container [HTMLElement]
- *  @param items nodelist of [HTMLElement]
- *  @param itemSelector [string]
- *  @param breakpoints [array]
+ * @param {object} args {
+ *  @param {HTMLElement} container
+ *  @param {nodelist} items
+ *  @param {string} itemSelector
+ *  @param {array} breakpoints
  * }
  */
 

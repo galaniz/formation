@@ -1,5 +1,5 @@
 /**
- * Components nav icon: two
+ * Components: nav icon two
  */
 
 /* Imports */
@@ -10,16 +10,15 @@
 /* Styles */
 
 .c-nav-icon[data-num="2"] {
+  --duration: 175ms;
+
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {
     transform: translateY(0);
-    transition: transform 175ms ease;
   }
 
   & .c-nav-icon__middle {
     @extend %u-opacity-1;
-
-    transition: opacity 175ms ease;
   }
 
   .c-nav__button[data-show] & {

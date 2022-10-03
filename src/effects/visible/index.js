@@ -1,30 +1,30 @@
 /**
- * Animate: visible in viewport check
+ * Effects: visible in viewport check
  *
- * @param args [object] {
- *  @param item [HTMLElement]
- *  @param visibleItem [HTMLElement]
- *  @param visibleOffset [int]
- *  @param visibleOffsetPercentage [int]
- *  @param visAll [boolean]
- *  @param allowUnset [boolean]
- *  @param delay [int]
- *  @param wait [string]
- *  @param sticky [boolean]
- *  @param stickyOffset [int]
- *  @param stickyDelay [int]
- *  @param onVisible [function]
- *  @param endVisible [function]
- *  @param onInit [function]
- *  @param parallax [object] {
- *   @param rate [float]
- *   @param x [int]
- *   @param y [int]
- *   @param z [int]
+ * @param {object} args {
+ *  @param {HTMLElement} item
+ *  @param {HTMLElement} visibleItem
+ *  @param {int} visibleOffset
+ *  @param {int} visibleOffsetPercentage
+ *  @param {boolean} visAll
+ *  @param {boolean} allowUnset
+ *  @param {int} delay
+ *  @param {string} wait
+ *  @param {boolean} sticky
+ *  @param {int} stickyOffset
+ *  @param {int} stickyDelay
+ *  @param {function} onVisible
+ *  @param {function} endVisible
+ *  @param {function} onInit
+ *  @param {object} parallax {
+ *   @param {float} rate
+ *   @param {int} x
+ *   @param {int} y
+ *   @param {int} z
  *  }
- *  @param breakpoints [object] {
- *   @param min [int]
- *   @param max [int]
+ *  @param {object} breakpoints {
+ *   @param {int} min
+ *   @param {int} max
  *  }
  * }
  */

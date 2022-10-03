@@ -8,11 +8,7 @@
 
 /* Styles */
 
-.l-flex {
-  @extend %u-display-flex;
-}
-
-.l-flex-col {
+.l-flex-column {
 	@extend %u-flex-direction-column;
 }
 

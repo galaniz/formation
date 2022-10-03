@@ -5,100 +5,36 @@
 /* Imports */
 
 @use "sass:map";
-@use "sass:meta";
 @use "sass:string";
 @use "functions" as func;
 @use "mixins" as mix;
-@use "../utils/functions/capitalize" as c;
 @use "../utils/functions/map" as m;
 @use "../utils/mixins/grayscale" as g;
 
 /* Root */
 
-$root: () !default;
-
-/* Padding */
-
-$padding-vertical: () !default;
-$padding-vertical-breakpoints: ("l") !default;
-
-$padding-horizontal: () !default;
-$padding-horizontal-breakpoints: ("l") !default;
-
-/* Gap */
-
-$gaps: () !default;
-$gap-breakpoints: ("l") !default;
-
-/* Layout containers and padding */
-
-$containers: () !default;
-$container-padding: 20px !default;
-
-/* Grid system */
-
-$grid: () !default;
-
-/* Widths */
-
-$widths: (
-	25: (
-	  600: 50%,
-	  900: 25%,
-	),
-	33: (
-	  600: 50%,
-	  900: 33.3333%,
-	),
-	50: (
-	  600: 50%,
-	),
-	66: (
-	  600: 50%,
-	  900: 66.6667%,
-	),
-	75: (
-	  600: 50%,
-	  900: 75%,
-	),
+$root: (
+	"colors",
+	"fonts",
+	"font-weights",
+	"padding-vertical",
+	"padding-horizontal",
+	"gap",
+	"containers",
+	"container-padding",
+	"aspect-ratio-padding",
+	"transitions",
 ) !default;
 
 /* Rem context */
 
 $context: 16px !default;
 
-/* Transitions */
-
-$transitions: () !default;
-
-/* Z index */
-
-$z-index: () !default;
-
-/* Aspect ratios */
-
-$aspect-ratios: map.merge(
-  (
-    100
-  ),
-  $aspect-ratios
-);
-
-/* Nav */
-
-$nav: (
-  icon: (
-    width: 40px,
-    line-width: 2px,
-    margin: 8px,
-  )
-) !default;
-
-/* Vars custom */
+/* Store custom variables */
 
 $vars: () !default;
 
-/* Colors */
+/* Colors  */
 
 $colors: (
 	primary: (
@@ -118,9 +54,17 @@ $colors: (
 	),
 ) !default;
 
+/* Flatten colors to one level map */
+
+$colors-flat-prefix: func.map-flatten($colors, (), "color");
+
+/* Flatten colors to one level map without prefix */
+
+$colors-flat: func.map-flatten($colors, (), "");
+
 /* Fonts */
 
-$fonts: (
+$font-families: (
   primary: (
     helvetica,
     arial,
@@ -132,9 +76,15 @@ $font-weights: (
 	normal: 400,
 ) !default;
 
-/* Grid */
+/* Nav */
 
-$grid: ();
+$nav: (
+  icon: (
+    width: 40px,
+    line-width: 2px,
+    margin: 8px,
+  )
+) !default;
 
 /* Breakpoints */
 
@@ -144,19 +94,16 @@ $breakpoints: (
 	r: 800px,
 	m: 900px,
 	l: 1000px,
-	xl: 1200px,
 ) !default;
 
-/* Containers */
+/* Containers and padding */
 
-$containers: (
-	default: 1300px,
-) !default;
+$containers: ( default: 1300px ) !default;
+$container-padding: 20px !default;
 
 /* Append to breakpoints */
 
 @each $c, $width in $containers {
-  $k: meta.inspect($c);
   $suffix: "";
 
   @if $c != "default" {
@@ -167,70 +114,94 @@ $containers: (
   $breakpoints: map.merge(("container#{$suffix}-with-padding": $width + ($container-padding * 2)), $breakpoints);
 }
 
+/* Widths */
+
+$width-percentages: (
+	"4-5": 80%,
+	"3-4": 75%,
+	"2-3": 66.667%,
+	"3-5": 60%,
+	"1-2": 50%,
+	"2-5": 40%,
+	"1-3": 33.333%,
+	"1-4": 25%,
+	"1-5": 20%
+) !default;
+
+$width-percentage-breakpoints: ("s", "m") !default;
+
+$widths: () !default;
+$width-breakpoints: () !default;
+
+$max-widths: () !default;
+$max-width-breakpoints: () !default;
+
+/* Heights */
+
+$heights: () !default;
+$height-breakpoints: () !default;
+
+/* Padding */
+
+$padding-top: () !default;
+$padding-bottom: () !default;
+$padding-vertical-breakpoints: ("l") !default;
+
+$padding-left: () !default;
+$padding-right: () !default;
+$padding-horizontal-breakpoints: () !default;
+
+/* Margin */
+
+$margin-top: () !default;
+$margin-bottom: () !default;
+$margin-bottom-all: () !default;
+$margin-vertical-breakpoints: () !default;
+
+$margin-left: () !default;
+$margin-right: () !default;
+$margin-horizontal-breakpoints: () !default;
+
+/* Gap */
+
+$gaps: () !default;
+$gap-breakpoints: ("l") !default;
+
+/* Aspect ratio padding */
+
+$aspect-ratio-padding: () !default;
+
+$aspect-ratio-padding: map.merge(
+  (
+		100
+  ),
+  $aspect-ratio-padding
+);
+
 /* Transitions */
+
+$transitions: () !default;
 
 $transitions: m.map-recursive-merge(
   (
     default: (
-      durations: (
-        default: 300ms,
-      ),
-      timing-function: "ease-in-out",
-      timing-function-cubic: "cubic-bezier(.07, .50, .12, 1)",
-    ),
-    fade: (
-      durations: (
-        default: "800ms, 500ms",
-        s: "1200ms, 800ms",
-      ),
-      y: (
-        default: 5%,
-        s: 25%,
-        m: 50%,
-        l: 100%,
-      ),
-      x: (
-        default: 5%,
-        s: 25%,
-        m: 50%,
-        l: 100%,
-      ),
-    ),
-    scale: (
-      durations: (
-        default: "800ms, 500ms",
-        s: "2200ms, 600ms",
-      ),
-      in: (
-        default: 1.1,
-        hover: 1.06,
-        s: 1.05,
-        m: 1.2,
-        l: 1.55,
-      ),
-      out: (
-        default: 1.1,
-        hover: 1,
-        s: 1.04,
-        m: 1.2,
-      ),
+			prop: color, background, border-color, opacity, transform,
+			duration: 300ms,
+      easing: "ease-in-out",
+			delay: 0ms,
     ),
   ),
   $transitions
 );
 
-$default-transitions: map.get($transitions, "default");
-$durations: map.get($default-transitions, "durations");
-$duration: map.get($durations, "default");
-$timing-function: map.get($default-transitions, "timing-function");
-$timing-function-cubic: map.get($default-transitions, "timing-function-cubic");
-
 /* Z index */
+
+$z-index: () !default;
 
 $z-index: m.map-recursive-merge(
   (
     skip-link: 100,
-    transition: 100,
+    page-transition: 100,
     modal: 90,
     nav: 85,
     loader: (
@@ -341,6 +312,12 @@ $placeholders: m.map-recursive-merge(
 			name: "display-flex",
 			prop: (
 				display: flex
+			)
+		),
+		(
+			name: "display-inline-flex",
+			prop: (
+				display: inline-flex
 			)
 		),
 		(
@@ -554,9 +531,27 @@ $placeholders: m.map-recursive-merge(
 			)
 		),
 		(
+			name: "margin-0",
+			prop: (
+				margin: 0
+			)
+		),
+		(
 			name: "margin-auto",
 			prop: (
 				margin: auto
+			)
+		),
+		(
+			name: "margin-top-auto",
+			prop: (
+				margin-top: auto
+			)
+		),
+		(
+			name: "margin-bottom-auto",
+			prop: (
+				margin-bottom: auto
 			)
 		),
 		(
@@ -665,11 +660,11 @@ $placeholders: m.map-recursive-merge(
   $placeholders
 );
 
-
-
-
-
-
+@each $p in $placeholders {
+	@each $k, $v in $p {
+		@include mix.make-placeholder($k, $v);
+	}
+}
 
 @include mix.set-placeholder("position-vertical-center") {
   top: 50%;
@@ -681,13 +676,9 @@ $placeholders: m.map-recursive-merge(
   transform: translateX(-50%);
 }
 
-/* Grayscale */
-
 @include mix.set-placeholder("grayscale") {
   @include g.grayscale;
 }
-
-/* Visually hidden */
 
 @include mix.set-placeholder("visually-hidden") {
   @extend %u-position-absolute;
@@ -698,8 +689,6 @@ $placeholders: m.map-recursive-merge(
   margin: -0.0625rem;
   clip: rect(0, 0, 0, 0);
 }
-
-/* Touch target 50px */
 
 @include mix.set-placeholder("touch-50") {
   &::before {
@@ -714,11 +703,17 @@ $placeholders: m.map-recursive-merge(
   }
 }
 
-/* Colors */
+@each $k, $v in $font-families {
+	@include mix.set-placeholder("font-family-#{$k}") {
+		font-family: $v;
+	}
+}
 
-/* Nested colors to one level map */
-
-$colors-flat-prefix: func.map-flatten($colors, (), "color");
+@each $k, $v in $font-weights {
+	@include mix.set-placeholder("font-weight-#{$p}") {
+		font-weight: $w;
+	}
+}
 
 @each $name, $value in $colors-flat-prefix {
   @include mix.set-placeholder($name) {
@@ -735,85 +730,5 @@ $colors-flat-prefix: func.map-flatten($colors, (), "color");
 
   @include mix.set-placeholder("border-#{$name}") {
     border-color: $value;
-  }
-}
-
-/* Nested colors to one level map without prefix */
-
-$colors-flat: func.map-flatten($colors, (), "");
-
-/* Fonts */
-
-@if meta.type-of($fonts) == map {
-  @each $k, $v in $fonts {
-    @if $k == weight {
-      @each $p, $w in $v {
-        @include mix.set-placeholder("font-weight-#{$p}") {
-          font-weight: $w;
-        }
-      }
-    } @else {
-      @include mix.set-placeholder("font-family-#{$k}") {
-        font-family: $v;
-      }
-    }
-  }
-}
-
-/* Transitions */
-
-@if meta.type-of($def-transitions) == map {
-  @include mix.set-placeholder("transition-property-opacity") {
-    transition-property: opacity;
-  }
-
-  @include mix.set-placeholder("transition-property-transform") {
-    transition-property: transform;
-  }
-
-  @each $k, $v in $durations {
-    $name: "transition-duration";
-
-    @if $k != def {
-      $name: $name + "-" + $k;
-    }
-
-    @include mix.set-placeholder($name) {
-      transition-duration: $v;
-    }
-  }
-
-  @include mix.set-placeholder("transition-property-opacity-transform") {
-    transition-property: opacity, transform;
-  }
-
-  @include mix.set-placeholder("transition-timing-function") {
-    transition-timing-function: $timing-function;
-  }
-
-  @include mix.set-placeholder("transition-timing-function-cubic") {
-    transition-timing-function: $timing-function-cubic;
-  }
-
-  @include mix.set-placeholder("transition-opacity-transform-ease") {
-    transition: opacity #{$duration} #{$timing-function}, transform #{$duration} #{$timing-function};
-  }
-
-  @include mix.set-placeholder("transition-transform-ease") {
-    transition: transform #{$duration} #{$timing-function};
-  }
-
-  @include mix.set-placeholder("transition-opacity-ease") {
-    transition: opacity #{$duration} #{$timing-function};
-  }
-}
-
-/* Placeholders */
-
-@if meta.type-of($placeholders) == list {
-  @each $p in $placeholders {
-    @each $k, $v in $p {
-      @include mix.make-placeholder($k, $v);
-    }
   }
 }

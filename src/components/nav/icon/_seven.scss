@@ -1,5 +1,5 @@
 /**
- * Components nav icon: seven
+ * Components: nav icon seven
  */
 
 /* Imports */
@@ -10,18 +10,22 @@
 /* Styles */
 
 .c-nav-icon[data-num="7"] {
-  transition: transform 200ms ease;
+  --duration: 200ms;
+
+  & .c-nav-icon__top,
+  & .c-nav-icon__bottom,
+  & .c-nav-icon__middle {
+    --duration: 0ms;
+    --delay: 150ms;
+  }
 
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {
     transform: translateY(0) rotate(0deg);
-    transition: transform 0s ease 150ms;
   }
 
   & .c-nav-icon__middle {
     @extend %u-opacity-1;
-
-    transition: opacity 0s ease 150ms;
   }
 
   .c-nav__button:not([data-show]) & {

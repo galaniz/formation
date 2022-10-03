@@ -1,39 +1,41 @@
 /**
- * Components nav icon
+ * Components: nav icon
  */
 
 /* Imports */
 
 @use "sass:map";
 @use "../../../config" as con;
-@use "../../../utils/functions/calc-rem" as c;
+@use "../../../utils/functions" as func;
 
 /* Styles */
 
-$y: c.calc-rem(map.get(con.$nav, "icon", "margin") + map.get(con.$nav, "icon", "line-width"));
+$y: func.calc-rem(map.get(con.$nav, "icon", "margin") + map.get(con.$nav, "icon", "line-width"));
 
 .c-nav-icon {
+  --easing: ease;
+
   @extend %u-position-relative;
   @extend %u-margin-auto;
 
-  width: c.calc-rem(map.get(con.$nav, "icon", "width"));
+  width: func.calc-rem(map.get(con.$nav, "icon", "width"));
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom,
 .c-nav-icon__right {
-  height: c.calc-rem(map.get(con.$nav, "icon", "line-width"));
+  height: func.calc-rem(map.get(con.$nav, "icon", "line-width"));
 }
 
 .c-nav-icon__left {
-  width: c.calc-rem(map.get(con.$nav, "icon", "line-width"));
+  width: func.calc-rem(map.get(con.$nav, "icon", "line-width"));
 }
 
 .c-nav-icon__top,
 .c-nav-icon__middle,
 .c-nav-icon__bottom {
-  margin: c.calc-rem(map.get(con.$nav, "icon", "margin")) auto;
+  margin: func.calc-rem(map.get(con.$nav, "icon", "margin")) auto;
 }
 
 .c-nav-icon__top {

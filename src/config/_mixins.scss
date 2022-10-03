@@ -23,8 +23,8 @@
 /**
  * Make placeholder
  *
- * @param [string] $key
- * @param [string/map] $value
+ * @param {string} $key
+ * @param {string/map} $value
  */
 
 @mixin make-placeholder($key, $value) {

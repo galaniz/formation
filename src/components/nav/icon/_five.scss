@@ -1,5 +1,5 @@
 /**
- * Components nav icon: five
+ * Components: nav icon five
  */
 
 /* Imports */
@@ -19,16 +19,17 @@
   }
 
   & .c-nav-icon__middle {
-    @extend %u-opacity-1;
+    --duration: 150ms;
+    --delay: 100ms;
 
-    transition: opacity 150ms ease 100ms;
+    @extend %u-opacity-1;
   }
 
   .c-nav__button[data-show] & {
     & .c-nav-icon__middle {
-      @extend %u-opacity-0;
+      --delay: 0ms;
 
-      transition: opacity 150ms ease;
+      @extend %u-opacity-0;
     }
 
     & .c-nav-icon__top {

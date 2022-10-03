@@ -1,5 +1,5 @@
 /**
- * Components nav icon: eight
+ * Components: nav icon eight
  */
 
 /* Imports */
@@ -7,22 +7,17 @@
 @use "sass:map";
 @use "index" as icon;
 @use "../../../config" as con;
-@use "../../../utils/functions/calc-rem" as c;
+@use "../../../utils/functions" as func;
 
 /* Styles */
 
 .c-nav-icon[data-num="8"] {
-  $x: c.calc-rem((map.get(con.$nav, "icon", "width") / 2) - (map.get(con.$nav, "icon", "line-width") / 2));
-  $y: c.calc-rem(icon.$y + (map.get(con.$nav, "icon", "line-width") / 2) + 0.5px); // 0.5 to make x more precise
+  --duration: 200ms;
+
+  $x: func.calc-rem((map.get(con.$nav, "icon", "width") / 2) - (map.get(con.$nav, "icon", "line-width") / 2));
+  $y: func.calc-rem(icon.$y + (map.get(con.$nav, "icon", "line-width") / 2) + 0.5px); // 0.5 to make x more precise
 
   transform: rotate(0deg);
-
-  &,
-  & .c-nav-icon__top,
-  & .c-nav-icon__middle,
-  & .c-nav-icon__bottom {
-    transition: transform 200ms ease;
-  }
 
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {

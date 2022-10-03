@@ -1,27 +1,27 @@
 /**
  * Components: nav
  *
- * @param args [object] {
- *  @param nav [HTMLElement]
- *  @param list [HTMLElement] or [array]
- *  @param overflow [HTMLElement]
- *  @param overflowList [HTMLElement] or [array]
- *  @param items [HTMLElement]
- *  @param itemSelector [string]
- *  @param button [HTMLElement]
- *  @param overlay [HTMLElement]
- *  @param transition [HTMLElement]
- *  @param overflowHiddenClass [string]
- *  @param onSet [function]
- *  @param onReset [function]
- *  @param afterReset [function]
- *  @param onResize [function]
- *  @param onToggle [function]
- *  @param endToggle [function]
- *  @param done [function]
- *  @param delay [object] {
- *   @param open [int]
- *   @param close [int]
+ * @param {object} args {
+ *  @param {HTMLElement} nav
+ *  @param {HTMLElement/array} list
+ *  @param {HTMLElement} overflow
+ *  @param {HTMLElement/array} overflowList
+ *  @param {HTMLElement} items
+ *  @param {string} itemSelector
+ *  @param {HTMLElement} button
+ *  @param {HTMLElement} overlay
+ *  @param {HTMLElement} transition
+ *  @param {string} overflowHiddenClass
+ *  @param {function} onSet
+ *  @param {function} onReset
+ *  @param {function} afterReset
+ *  @param {function} onResize
+ *  @param {function} onToggle
+ *  @param {function} endToggle
+ *  @param {function} done
+ *  @param {object} delay {
+ *   @param {int} open
+ *   @param {int} close
  *  }
  * }
  */
@@ -56,7 +56,7 @@ class Nav {
       button = null,
       overlay = null,
       transition = null,
-      overflowHiddenClass = 'u-o-h',
+      overflowHiddenClass = 'l-overflow-hidden',
       onSet = () => {},
       onReset = () => {},
       afterReset = () => {},

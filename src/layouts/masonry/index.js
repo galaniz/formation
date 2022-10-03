@@ -1,13 +1,13 @@
 /**
  * Layouts: masonry by placing items into columns
  *
- * @param args [object] {
- *  @param container [HTMLElement]
- *  @param items nodelist of [HTMLElement]
- *  @param breakpoints [array]
- *  @param column [object] {
- *   @param tag [string]
- *   @param class [string]
+ * @param {object} args {
+ *  @param {HTMLElement} container
+ *  @param {nodelist} items
+ *  @param {array} breakpoints
+ *  @param {object} column {
+ *   @param {string} tag
+ *   @param {string} class
  *  }
  * }
  */

@@ -1,5 +1,5 @@
 /**
- * Animate: transition
+ * Effects: page transition
  */
 
 /* Imports */
@@ -9,8 +9,8 @@
 
 /* Styles */
 
-.a-transition {
+.e-page-transition {
   &[data-show="true"] {
-    z-index: map.get(con.$z-index, "transition");
+    z-index: map.get(con.$z-index, "page-transition");
   }
 }

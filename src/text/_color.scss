@@ -1,0 +1,15 @@
+/**
+ * Text: color
+ */
+
+/* Imports */
+
+@use "../config" as con;
+
+/* Styles */
+
+@each $c, $v in con.$colors-flat {
+  .t-#{$c} {
+    color: var(--#{c});
+  }
+}

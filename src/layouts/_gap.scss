@@ -1,0 +1,27 @@
+/**
+ * Layouts: gap
+ */
+
+/* Imports */
+
+@use "../config" as con;
+@use "../utils/mixins" as mix;
+@use "../utils/functions" as func;
+
+/* Styles */
+
+@each $g, $v in con.$gaps {
+  .l-gap-#{$g} {
+    --gap: #{func.calc-rem($v)};
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @include mix.breakpoint-min($b) {
+    @each $g, $v in con.$gaps {
+      .l-gap-#{$g}-#{$b} {
+        --gap: #{func.calc-rem($v)};
+      }
+    }
+  }
+}

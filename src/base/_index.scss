@@ -5,21 +5,7 @@
 /* Imports */
 
 @use "../config";
-
-/* Root */
-
-:root {
-	--aspect-ratio-padding: 100%;
-	--gap: 0rem;
-	--gap-margin: 0rem;
-
-	// COLORS
-	// PADDING V + H
-	// GAP SPACNG?
-	// CONAINER
-	// CONTIANER PADDING
-	// TRANSITIONS
-}
+@use "mixins" as mix;
 
 /* Styles */
 

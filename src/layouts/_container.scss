@@ -1,0 +1,28 @@
+/**
+ * Layouts: container
+ */
+
+/* Imports */
+
+@use "../config" as con;
+
+/* Styles */
+
+[class^="l-container"] {
+  @extend %u-margin-auto;
+
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+@each $c, $v in con.$containers {
+  $suffix: "";
+
+  @if $c != "default" {
+    $suffix: "-#{$c}";
+  }
+
+  .l-container-#{$suffix} {
+    max-width: var(--container#{$suffix});
+  }
+}

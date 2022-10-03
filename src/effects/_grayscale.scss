@@ -1,0 +1,13 @@
+/**
+ * Effects: grayscale filter
+ */
+
+/* Imports */
+
+@use "../config";
+
+/* Styles */
+
+.e-grayscale {
+  @extend %u-grayscale;
+}
