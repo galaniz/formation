@@ -1,11 +1,11 @@
 /**
  * Objects: tabs
  *
- * @param args [object] {
- *  @param tabs nodelist of [HTMLElement]
- *  @param panels nodelist of [HTMLElement]
- *  @param delay [int]
- *  @param orientation [string]
+ * @param {object} args {
+ *  @param {nodelist} tabs
+ *  @param {nodelist} panels
+ *  @param {int} delay
+ *  @param {string} orientation
  * }
  */
 

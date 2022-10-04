@@ -1,8 +1,8 @@
 /**
- * Utility modules: remove class(es) from element
+ * Utils: remove class(es) from element
  *
- * @param item [HTMLElement]
- * @param classes [string] of classes separated by space
+ * @param {HTMLElement} item
+ * @param {string} classes - separated by space
  */
 
 /* Module */

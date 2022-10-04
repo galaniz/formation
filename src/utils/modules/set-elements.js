@@ -1,17 +1,17 @@
 /**
- * Utility modules: fetch and set elements by selector
+ * Utils: fetch and set elements by selector
  *
- * @param context [HTMLElement]
- * @param meta [array] of objects {
- *  @prop prop [string]
- *  @prop selector [string]
- *  @prop all [boolean]
- *  @prop array [boolean]
- *  @prop items [array]
- *  @prop context [HTMLElement]
+ * @param {HTMLElement} context
+ * @param {array} meta {
+ *  @prop {string} prop
+ *  @prop {string} selector
+ *  @prop {boolean} all
+ *  @prop {boolean} array
+ *  @prop {array} items
+ *  @prop {HTMLElement} context
  * }
- * @param obj [object]
- * @param done [function] callback when done recursing through meta and setting e object
+ * @param {object} obj
+ * @param {function} done - callback when done recursing through meta and setting object
  */
 
 /* Module */

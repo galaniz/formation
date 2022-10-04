@@ -1,5 +1,5 @@
 /**
- * Utility mixins: fluid sizes (font-size, padding, margins...)
+ * Utils: fluid sizes (font-size, padding, margins...)
  */
 
 /* Imports */
@@ -15,11 +15,11 @@
 /**
  * Mixin
  *
- * @param [string] $prop
- * @param [list] $sizes
- * @param [list] $widths
- * @param [list] $other-values
- * @param [bool] $important
+ * @param {string} $prop
+ * @param {list} $sizes
+ * @param {list} $widths
+ * @param {list} $other-values
+ * @param {bool} $important
  */
 
 @mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {

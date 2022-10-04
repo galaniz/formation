@@ -1,5 +1,5 @@
 /**
- * Utility mixins: font size in rem units
+ * Utils: font size in rem units
  */
 
 /* Imports */
@@ -9,7 +9,7 @@
 /**
  * Mixin
  *
- * @param [number] $size
+ * @param {number} $size
  */
 
 @mixin font-rem($size) {

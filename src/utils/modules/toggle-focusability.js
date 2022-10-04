@@ -1,10 +1,10 @@
 /**
- * Utility modules: toggle focusability of specified elements
+ * Utils: toggle focusability of specified elements
  *
  * Source: https://bit.ly/3paRHkt
  *
- * @param focusContext [boolean]
- * @param items [array] of [HTMLElement]
+ * @param {boolean} focusContext
+ * @param {array} items
  */
 
 /* Module */

@@ -1,8 +1,8 @@
 /**
- * Utility modules: traverse up DOM until find element with class
+ * Utils: traverse up DOM until find element with class
  *
- * @param item [HTMLElement]
- * @param className [string]
+ * @param {HTMLElement} item
+ * @param {string} className
  */
 
 /* Imports */

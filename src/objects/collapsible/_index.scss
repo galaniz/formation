@@ -16,8 +16,8 @@
 
 .o-collapsible__main {
   --prop: visibility, height;
-  --duration: 0ms, 300ms;
-  --delay: 300ms, 10ms;
+  --duration: 0ms, #{con.$default-duration};
+  --delay: #{con.$default-duration}, 10ms;
 
   @extend %u-visibility-hidden;
 

@@ -1,8 +1,8 @@
 /**
- * Utility modules: show/hide html element
+ * Utils: show/hide html element
  *
- * @param item [HTMLElement]
- * @param show [boolean]
+ * @param {HTMLElement} item
+ * @param {boolean} show
  */
 
 /* Module */

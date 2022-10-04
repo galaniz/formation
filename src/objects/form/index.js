@@ -1,16 +1,16 @@
 /**
  * Objects: form validation and get values
  *
- * @param args [object] {
- *  @param inputs nodelist of [HTMLElement]
- *  @param fieldClass [string]
- *  @param groupClass [string]
- *  @param labelClass [string]
- *  @param submitted [boolean]
- *  @param errorShake [boolean]
- *  @param errorClass [string]
- *  @param errorShakeClass [string]
- *  @param onValidate [function]
+ * @param {object} args {
+ *  @param {nodelist} inputs
+ *  @param {string} fieldClass
+ *  @param {string} groupClass
+ *  @param {string} labelClass
+ *  @param {boolean} submitted
+ *  @param {boolean} errorShake
+ *  @param {string} errorClass
+ *  @param {string} errorShakeClass
+ *  @param {function} onValidate
  */
 
 /* Imports */

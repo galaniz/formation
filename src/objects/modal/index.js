@@ -1,16 +1,16 @@
 /**
  * Objects: modal
  *
- * @param args [object] {
- *  @param modal [HTMLElement]
- *  @param window [HTMLElement]
- *  @param overlay [HTMLElement]
- *  @param trigger [HTMLElement]
- *  @param close [HTMLElement]
- *  @param scaleTransition [boolean]
- *  @param scaleTransitionDelay [int]
- *  @param bodyOverflowHiddenClass [string]
- *  @param onToggle [function]
+ * @param {object} args {
+ *  @param {HTMLElement} modal
+ *  @param {HTMLElement} window
+ *  @param {HTMLElement} overlay
+ *  @param {HTMLElement} trigger
+ *  @param {HTMLElement} close
+ *  @param {boolean} scaleTransition
+ *  @param {int} scaleTransitionDelay
+ *  @param {string} bodyOverflowHiddenClass
+ *  @param {function} onToggle
  * }
  */
 

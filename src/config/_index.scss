@@ -194,6 +194,11 @@ $transitions: m.map-recursive-merge(
   $transitions
 );
 
+$default-prop: map.get($transitions, "default", "prop");
+$default-duration: map.get($transitions, "default", "duration");
+$default-easing: map.get($transitions, "default", "easing");
+$default-delay: map.get($transitions, "default", "delay");
+
 /* Z index */
 
 $z-index: () !default;

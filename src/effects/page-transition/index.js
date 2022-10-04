@@ -1,7 +1,7 @@
 /**
  * Effects: page transition on link click
  *
- * @param {array} links of {HTMLElement}
+ * @param {array} links
  * @param {HTMLElement} transitionElement
  * @param {int} delay
  * @param {boolean/function} init

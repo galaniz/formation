@@ -1,11 +1,11 @@
 /**
- * Utility modules: recursively convert object key value pairs into url encoded string
+ * Utils: recursively convert object key value pairs into url encoded string
  *
- * @param o [object] (only param that needs to be passed by user)
- * @param _key [string] (for iteration)
- * @param _list [array] store key value pairs (for iteration)
+ * @param {object} o - only param that needs to be passed by user
+ * @param {string} _key - for iteration
+ * @param {array} _list - store key value pairs for iteration
  *
- * @return [string]
+ * @return {string}
  */
 
 /* Module */

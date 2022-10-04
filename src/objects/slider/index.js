@@ -1,13 +1,13 @@
 /**
  * Objects: slider
  *
- * @param args [object] {
- *  @param slider [HTMLElement]
- *  @param track [HTMLElement]
- *  @param targetHeight [HTMLElement]
- *  @param breakpoints [array] of objects
- *  @param groupItems [array] of [HTMLElement]
- *  @param loop [bool]
+ * @param {object} args {
+ *  @param {HTMLElement} slider
+ *  @param {HTMLElement} track
+ *  @param {HTMLElement} targetHeight
+ *  @param {array} breakpoints
+ *  @param {array} groupItems
+ *  @param {boolean} loop
  * }
  */
 

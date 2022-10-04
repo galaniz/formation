@@ -13,7 +13,7 @@
 .o-modal {
   --prop: visibility;
   --duration: 0ms;
-  --delay: #{map.get(con.$transitions, "default", "duration")};
+  --delay: #{con.$default-duration};
 
   @extend %u-visibility-hidden;
 
@@ -43,9 +43,4 @@
   .o-modal[aria-hidden="false"] & {
     @extend %u-opacity-1;
   }
-}
-
-.o-modal__content {
-  @extend %u-overflow-y-auto;
-  @extend %u-overflow-x-hidden;
 }

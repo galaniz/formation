@@ -1,5 +1,5 @@
 /**
- * Objects loader
+ * Objects: loader
  */
 
 /* Imports */
@@ -10,18 +10,14 @@
 /* Styles */
 
 .o-loader {
-  @extend %u-position-absolute;
-  @extend %u-top-0;
-  @extend %u-bottom-0;
-  @extend %u-left-0;
-  @extend %u-right-0;
+  --prop: opacity, z-index;
+  --duration: #{con.$default-duration}, 0ms;
+  --delay: 10ms, 0ms;
+
   @extend %u-opacity-1;
   @extend %u-background-color-inherit;
 
-  z-index: map.get(con.$z-index, "loader", "def");
-  transition:
-    opacity #{con.$def-duration} #{con.$def-timing-function} 10ms,
-    z-index 0ms #{con.$def-timing-function};
+  z-index: map.get(con.$z-index, "loader", "default");
 
   &[data-page] {
     @extend %u-position-fixed;
@@ -30,11 +26,10 @@
   }
 
   &[data-hide] {
+    --delay: 0ms, #{con.$default-duration};
+
     @extend %u-opacity-0;
 
     z-index: -1;
-    transition:
-      opacity #{con.$def-duration} #{con.$def-timing-function},
-      z-index 0ms #{con.$def-timing-function} #{con.$def-duration};
   }
 }

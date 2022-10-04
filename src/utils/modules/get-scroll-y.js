@@ -1,7 +1,7 @@
 /**
- * Utility modules: get scroll y position in cross browser way
+ * Utils: get scroll y position in cross browser way
  *
- * @return [int] scroll y value
+ * @return {int} scroll y value
  */
 
 /* Module */

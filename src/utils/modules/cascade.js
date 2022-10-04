@@ -1,12 +1,12 @@
 /**
- * Utility modules: call functions sequentially & with delay
+ * Utils: call functions sequentially & with delay
  *
- * @param events [array] of objects {
- *  @prop action [function] with optional callback
- *  @prop delay [int]
- *  @prop increment [int]
+ * @param {array} events {
+ *  @prop {function} action - with optional callback
+ *  @prop {int} delay
+ *  @prop {int} increment
  * }
- * @param repeat [int]
+ * @param {int} repeat
  */
 
 /* Module */

@@ -4,7 +4,6 @@
 
 /* Imports */
 
-@use "sass:map";
 @use "../config" as con;
 @use "../functions" as func;
 
@@ -54,12 +53,10 @@
     } @else if $r == "aspect-ratio-padding" {
       --aspect-ratio-padding: 100%;
     } @else if $r == "transitions" {
-      $default: map.get(con.$transitions, "default");
-
-      --prop: #{map.get($default, "prop")};
-      --duration: #{map.get($default, "duration")};
-      --easing: #{map.get($default, "easing")};
-      --delay: #{map.get($default, "delay")};
+      --prop: #{con.$default-prop};
+      --duration: #{con.$default-duration};
+      --easing: #{con.$default-easing};
+      --delay: #{con.$default-delay};
     }
   }
 }

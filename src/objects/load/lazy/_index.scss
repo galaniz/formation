@@ -1,5 +1,5 @@
 /**
- * Objects lazy load
+ * Objects: lazy load
  */
 
 /* Imports */
@@ -9,9 +9,9 @@
 /* Styles */
 
 .o-lazy {
-  @extend %u-opacity-0;
+  --duration: 200ms;
 
-  transition: opacity 200ms linear;
+  @extend %u-opacity-0;
 
   &[data-loaded="true"],
   &[data-loaded="err"] {

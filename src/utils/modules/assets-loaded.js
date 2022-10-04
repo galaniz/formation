@@ -1,15 +1,15 @@
 /**
- * Utility modules: check if assets are loaded
+ * Utils: check if assets are loaded
  *
  * assetLoaded
  *
- * @param assets [HTML element]
- * @param return [promise]
+ * @param {HTMLElement} assets
+ * @param {promise} return
  *
  * assetsLoaded
  *
- * @param assets [array] of [HTML elements]
- * @param done callback [function] when finished loading
+ * @param {array} assets
+ * @param {function} done - callback when finished loading
  */
 
 /* Modules */

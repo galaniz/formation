@@ -1,29 +1,28 @@
 /**
- * Objects form: send and validate form with Google reCAPTCHA
+ * Objects: send and validate form
  *
- * @param args [object] {
- *  @param id [string]
- *  @param form [HTMLElement]
- *  @param groupClass [string]
- *  @param fieldClass [string]
- *  @param labelClass [string]
- *  @param errorClass [string]
- *  @param submit [HTMLElement]
- *  @param inputs nodelist of [HTMLElement]
- *  @param filterInputs [boolean]
- *  @param data [object]
- *  @param loaders [array]
- *  @param shake [boolean]
- *  @param siteKey [string]
- *  @param url [string]
- *  @param success [function]
- *  @param error [function]
- *  @param result [object] {
- *   @param container [HTMLElement]
- *   @param textContainer [HTMLElement]
- *   @param text [object] {
- *    @param error [string]
- *    @param success [string]
+ * @param {object} args {
+ *  @param {string} id
+ *  @param {HTMLElement} form
+ *  @param {string} groupClass
+ *  @param {string} fieldClass
+ *  @param {string} labelClass
+ *  @param {string} errorClass
+ *  @param {HTMLElement} submit
+ *  @param {nodelist} inputs
+ *  @param {boolean} filterInputs
+ *  @param {object} data
+ *  @param {array} loaders
+ *  @param {boolean} shake
+ *  @param {string} url
+ *  @param {function} success
+ *  @param {function} error
+ *  @param {object} result {
+ *   @param {HTMLElement} container
+ *   @param {HTMLElement} textContainer
+ *   @param {object} text {
+ *    @param {string} error
+ *    @param {string} success
  *   }
  *  }
  * }
@@ -222,38 +221,28 @@ class Send {
       }
     }
 
-    /* Get recaptcha token to send to server */
+    /* Send */
 
-    if (Object.getOwnPropertyDescriptor(window, 'grecaptcha')) {
-      window.grecaptcha.execute(this.siteKey, { action: 'send_form' }).then((token) => {
-        data += `&recaptcha=${token}`
+    request({
+      method: 'POST',
+      url: this.url,
+      headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+      body: data
+    }).then(response => {
+      // console.log('RESPONSE', response)
 
-        // console.log('DATA', data)
+      try {
+        this.success(JSON.parse(response))
+        this._displayResult()
+      } catch (e) {
+        this._displayResult(true)
+      }
+    }).catch(xhr => {
+      // console.log('ERROR', xhr)
 
-        request({
-          method: 'POST',
-          url: this.url,
-          headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-          body: data
-        })
-          .then(response => {
-            // console.log('RESPONSE', response)
-
-            try {
-              this.success(JSON.parse(response))
-              this._displayResult()
-            } catch (e) {
-              this._displayResult(true)
-            }
-          })
-          .catch(xhr => {
-            // console.log('ERROR', xhr)
-
-            this._displayResult(true)
-            this.error()
-          })
-      })
-    }
+      this._displayResult(true)
+      this.error()
+    })
   }
 
   /**

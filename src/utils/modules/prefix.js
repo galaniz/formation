@@ -1,9 +1,9 @@
 /**
- * Utility modules: prefix transition or transform props on element
+ * Utils: prefix transition or transform props on element
  *
- * @param type [string] with value 'transition', 'transform', 'transformOrigin' or 'transitionDelay'
- * @param item [HTMLElement]
- * @param val [string] property value
+ * @param {string} type - 'transition', 'transform', 'transformOrigin', 'transitionDelay'
+ * @param {HTMLElement} item
+ * @param {string} val - property value
  */
 
 /* Module */

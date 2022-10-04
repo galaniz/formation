@@ -1,16 +1,16 @@
 /**
- * Utility modules: set and get browser cookie
+ * Utils: set and get browser cookie
  *
  * setCookie
  *
- * @param name [string]
- * @param value [string]
- * @param expirationDays [int]
+ * @param {string} name
+ * @param {string} value
+ * @param {int} expirationDays
  *
  * getCookie
  *
- * @param name [string]
- * @return [string]
+ * @param {string} name
+ * @return {string}
  */
 
 /* Modules */

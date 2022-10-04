@@ -1,30 +1,30 @@
 /**
- * Objects load: more content
+ * Objects: load more content
  *
- * @param args [object] {
- *  @param next [HTMLElement]
- *  @param nextContainer [HTMLElement] - no pagination
- *  @param prev [HTMLElement] - pagination
- *  @param current [HTMLElement] - pagination
- *  @param tot [HTMLElement] - pagination
- *  @param filters [array]
- *  @param filtersForm [HTMLElement]
- *  @param loaders [array]
- *  @param error [HTMLElement]
- *  @param url [string]
- *  @param data [object]
- *  @param ppp [int] - per page
- *  @param page [int] - pagination
- *  @param total [int] - pagination total pages else total number of items
- *  @param insertInto [HTMLElement]
- *  @param insertLocation [string]
- *  @param onInsert [function]
- *  @param afterInsert [function]
- *  @param filterPushUrlParams [function]
- *  @param filterPostData [function]
- *  @param noResults [object] {
- *   @param containers [array]
- *   @param buttons [array]
+ * @param {object} args {
+ *  @param {HTMLElement} next
+ *  @param {HTMLElement} nextContainer - no pagination
+ *  @param {HTMLElement} prev - pagination
+ *  @param {HTMLElement} current - pagination
+ *  @param {HTMLElement} tot - pagination
+ *  @param {array} filters
+ *  @param {HTMLElement} filtersForm
+ *  @param {array} loaders
+ *  @param {HTMLElement} error
+ *  @param {string} url
+ *  @param {object} data
+ *  @param {int} ppp - per page
+ *  @param {int} page - pagination
+ *  @param {int} total - pagination total pages else total number of items
+ *  @param {HTMLElement} insertInto
+ *  @param {string} insertLocation
+ *  @param {function} onInsert
+ *  @param {function} afterInsert
+ *  @param {function} filterPushUrlParams
+ *  @param {function} filterPostData
+ *  @param {object} noResults {
+ *   @param {array} containers
+ *   @param {array} buttons
  *  }
  * }
  */

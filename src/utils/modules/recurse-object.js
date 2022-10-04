@@ -1,9 +1,9 @@
 /**
- * Utility modules: loop through object recursively
+ * Utils: loop through object recursively
  *
- * @param obj [object]
- * @param callback [boolean/function] if function pass property and value
- * @param condition [function] returns boolean
+ * @param {object} obj
+ * @param {boolean/function} callback - if function pass property and value
+ * @param {function} condition - returns boolean
  */
 
 /* Module */

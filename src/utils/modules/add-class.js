@@ -1,8 +1,8 @@
 /**
- * Utility modules: add class(es) to element
+ * Utils: add class(es) to element
  *
- * @param item [HTMLElement]
- * @param classes [string] of classes separated by space
+ * @param {HTMLElement} item
+ * @param {string} classes - classes separated by space
  */
 
 /* Module */

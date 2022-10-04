@@ -1,9 +1,9 @@
 /**
- * Utility modules: check if element contains class(es)
+ * Utils: check if element contains class(es)
  *
- * @param item [HTMLElement]
- * @param classes [string] of classes separated by space
- * @param all [boolean] contains all classes
+ * @param {HTMLElement} item
+ * @param {string} classes - separated by space
+ * @param {boolean} all - contains all classes
  */
 
 /* Module */

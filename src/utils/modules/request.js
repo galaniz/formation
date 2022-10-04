@@ -1,14 +1,14 @@
 /**
- * Utility modules: handle ajax requests
+ * Utils: handle ajax requests
  *
- * @param args [object] {
- *  @prop method [string]
- *  @prop url [string]
- *  @prop headers [object]
- *  @prop body [string] url encoded or [form data]
+ * @param {object} args {
+ *  @prop {string} method
+ *  @prop {string} url
+ *  @prop {object} headers
+ *  @prop {string} body - url encoded or [form data]
  * }
  *
- * @return [promise] with response/error passed to it
+ * @return {promise} - width response/error passed to it
  */
 
 /* Module */
