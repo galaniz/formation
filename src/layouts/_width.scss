@@ -29,7 +29,7 @@
 @each $b in con.$width-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $w, $v in con.$widths {
-      .l-width-#{$w} {
+      .l-width-#{$w}-#{$b} {
         width: #{func.calc-rem($v)};
       }
     }
@@ -45,7 +45,7 @@
 @each $b in con.$width-percentage-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $w, $v in con.$width-percentages {
-      .l-width-#{$w} {
+      .l-width-#{$w}-#{$b} {
         width: $v;
       }
     }
@@ -53,7 +53,7 @@
 }
 
 @each $w, $v in con.$max-widths {
-  .l-max-width-#{w} {
+  .l-max-width-#{$w} {
     max-width: #{func.calc-rem($v)};
   }
 }
@@ -61,7 +61,7 @@
 @each $b in con.$max-width-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $w, $v in con.$max-widths {
-      .l-max-width-#{w} {
+      .l-max-width-#{$w}-#{$b} {
         max-width: #{func.calc-rem($v)};
       }
     }
