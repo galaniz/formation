@@ -15,9 +15,6 @@ $y: func.calc-rem(map.get(con.$nav, "icon", "margin") + map.get(con.$nav, "icon"
 .c-nav-icon {
   --easing: ease;
 
-  @extend %u-position-relative;
-  @extend %u-margin-auto;
-
   width: func.calc-rem(map.get(con.$nav, "icon", "width"));
 }
 

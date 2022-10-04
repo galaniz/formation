@@ -36,20 +36,8 @@
 
   /* Cross */
 
-  & .c-nav-icon__cross,
-  & .c-nav-icon__left,
-  & .c-nav-icon__right {
-    @extend %u-position-absolute;
-  }
-
   & .c-nav-icon__cross {
     $w: func.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
-
-    @extend %u-margin-auto;
-    @extend %u-left-0;
-    @extend %u-right-0;
-    @extend %u-top-0;
-    @extend %u-bottom-0;
 
     transform: rotate(45deg);
     height: $w;
@@ -64,17 +52,12 @@
   & .c-nav-icon__left {
     --delay: 0ms;
 
-    @extend %u-top-0;
-    @extend %u-height-100-pc;
-
     transform: scaleY(0) translateX(-50%);
     left: 50%;
   }
 
   & .c-nav-icon__right {
     --delay: 250ms;
-
-    @extend %u-width-100-pc;
 
     transform: scaleX(0) translateY(-50%);
     top: 50%;
