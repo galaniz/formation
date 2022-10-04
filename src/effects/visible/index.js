@@ -208,9 +208,9 @@ class Visible {
     const bottom = rect.bottom + this._scrollY
 
     this._rect = {
-      top: top,
+      top,
       ogTop: top,
-      bottom: bottom,
+      bottom,
       ogBottom: bottom,
       height: rect.height
     }

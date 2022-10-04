@@ -166,7 +166,7 @@ class Tabs {
     this.beforeInitActivate()
 
     this._activate({
-      currentIndex: currentIndex,
+      currentIndex,
       focus: false,
       source: 'init'
     })

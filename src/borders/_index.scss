@@ -1,0 +1,56 @@
+/**
+ * Borders
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config" as con;
+
+/* Styles */
+
+.b-radius-100-pc {
+  @extend %u-border-radius-100;
+}
+
+/* Sides */
+
+$sides: map.get(con.$borders, "sides");
+
+@each $s, $v in $sides {
+  @if $s == "all" {
+    border: var(--border-width) solid var(--border-color);
+  } @else if $r == "left" {
+    border-left: var(--border-width) solid var(--border-color);
+  } @else if $r == "right" {
+    border-right: var(--border-width) solid var(--border-color);
+  } @else if $r == "top" {
+    border-top: var(--border-width) solid var(--border-color);
+  } @else if $r == "bottom" {
+    border-bottom: var(--border-width) solid var(--border-color);
+  }
+}
+
+/* Colors */
+
+$colors: map.get(con.$borders, "colors");
+
+@each $c, $v in $colors {
+  @if $c != "default" {
+    .b-#{$c} {
+      --border-color: var(--#{$v});
+    }
+  }
+}
+
+/* Widths */
+
+$widths: map.get(con.$borders, "widths");
+
+@each $w, $v in $widths {
+  @if $w != "default" {
+    .b-width-#{w} {
+      --border-width: #{$v};
+    }
+  }
+}

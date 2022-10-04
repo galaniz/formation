@@ -150,9 +150,9 @@ class Form {
 
         this._inputGroups[name] = {
           inputs: [input], // array for checkboxes and radio buttons
-          field: field,
-          required: required,
-          type: type,
+          field,
+          required,
+          type,
           values: [],
           valid: false
         }
@@ -230,9 +230,9 @@ class Form {
     }
 
     return {
-      values: values,
-      message: message,
-      valid: valid
+      values,
+      message,
+      valid
     }
   }
 

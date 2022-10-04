@@ -8,28 +8,28 @@
 
 /* Styles */
 
-.l-object-contain,
-.l-object-cover {
-	.no-object-fit & {
+.l-object-cover,
+.l-object-contain {
+  .no-object-fit & {
     @extend %u-opacity-0;
     @extend %u-visibility-hidden;
   }
 }
 
-.l-object-cover-fallback,
 .l-object-cover-fallback {
-	@extend %u-background-no-repeat;
-	@extend %u-background-position-center;
-
-	.object-fit & {
-		@extend %u-display-none;
-	}
-}
-
-.l-object-cover-fallback {
-	@extend %u-background-size-cover;
+  @extend %u-background-size-cover;
 }
 
 .l-object-contain-fallback {
-	@extend %u-background-size-contain;
+  @extend %u-background-size-contain;
+}
+
+.l-object-cover-fallback,
+.l-object-contain-fallback {
+  @extend %u-background-no-repeat;
+  @extend %u-background-position-center;
+
+  .object-fit & {
+    @extend %u-display-none;
+  }
 }

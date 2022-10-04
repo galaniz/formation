@@ -9,43 +9,43 @@
 /* Styles */
 
 .l-flex-column {
-	@extend %u-flex-direction-column;
+  @extend %u-flex-direction-column;
 }
 
 .l-flex-row {
-	@extend %u-flex-direction-row;
+  @extend %u-flex-direction-row;
 }
 
 .l-flex-wrap {
-	@extend %u-flex-wrap-wrap;
+  @extend %u-flex-wrap-wrap;
 }
 
 .l-justify-between {
-	@extend %u-justify-content-space-between;
+  @extend %u-justify-content-space-between;
 }
 
 .l-justify-center {
-	@extend %u-justify-content-center;
+  @extend %u-justify-content-center;
 }
 
 .l-justify-start {
-	@extend %u-justify-flex-start;
+  @extend %u-justify-flex-start;
 }
 
 .l-justify-end {
-	@extend %u-justify-flex-end;
+  @extend %u-justify-flex-end;
 }
 
 .l-align-center {
-	@extend %u-align-items-center;
+  @extend %u-align-items-center;
 }
 
 .l-align-start {
-	@extend %u-align-items-flex-start;
+  @extend %u-align-items-flex-start;
 }
 
 .l-align-end {
-	@extend %u-align-items-flex-end;
+  @extend %u-align-items-flex-end;
 }
 
 .l-flex-shrink-0 {

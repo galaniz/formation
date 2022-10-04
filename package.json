@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "release-it": "^14.12.4",
-    "standard": "^16.0.4",
-    "stylelint": "^14.4.0",
-    "stylelint-config-standard-scss": "^3.0.0"
+    "release-it": "^15.4.3",
+    "standard": "^17.0.0",
+    "stylelint": "^14.13.0",
+    "stylelint-config-standard-scss": "^5.0.0"
   },
   "release-it": {
     "git": {

@@ -347,8 +347,8 @@ class More {
       /* Selected */
 
       this._data.filters[id] = {
-        value: value,
-        operator: operator
+        value,
+        operator
       }
     }
 
@@ -551,7 +551,7 @@ class More {
     let url = ''
     const data = {
       data: this._data,
-      state: state,
+      state,
       html: output ? this.insertInto.innerHTML : ''
     }
 
@@ -728,9 +728,9 @@ class More {
               if (reset) { this._noResults() }
 
               this._afterResponse({
-                reset: reset,
+                reset,
                 total: 0,
-                state: state
+                state
               })
 
               return
@@ -757,10 +757,10 @@ class More {
 
                 setTimeout(() => {
                   this._afterResponse({
-                    reset: reset,
-                    total: total,
-                    state: state,
-                    output: output
+                    reset,
+                    total,
+                    state,
+                    output
                   })
                 }, 0)
               })
@@ -768,9 +768,9 @@ class More {
               if (reset) { this._noResults() }
 
               this._afterResponse({
-                reset: reset,
-                total: total,
-                state: state
+                reset,
+                total,
+                state
               })
             }
           })

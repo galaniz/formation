@@ -16,8 +16,8 @@
   transform: translateY(-100%);
 
   &:focus {
-		@extend %u-opacity-1;
-		
+    @extend %u-opacity-1;
+
     transform: translateY(0);
   }
 }

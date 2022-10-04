@@ -13,27 +13,27 @@
 /* Defaults */
 
 .l-margin-0 {
-	@extend %u-margin-0;
+  @extend %u-margin-0;
 }
 
 .l-margin-auto {
-	@extend %u-margin-auto;
+  @extend %u-margin-auto;
 }
 
 .l-margin-top-auto {
-	@extend %u-margin-top-auto;
+  @extend %u-margin-top-auto;
 }
 
 .l-margin-left-auto {
-	@extend %u-margin-left-auto;
+  @extend %u-margin-left-auto;
 }
 
 .l-margin-right-auto {
-	@extend %u-margin-right-auto;
+  @extend %u-margin-right-auto;
 }
 
 .l-margin-bottom-auto {
-	@extend %u-margin-bottom-auto;
+  @extend %u-margin-bottom-auto;
 }
 
 /* Config margins */
@@ -45,11 +45,11 @@
 }
 
 @each $m, $v in con.$margin-bottom {
-	$selector: ".l-margin-bottom-#{$m}";
+  $selector: ".l-margin-bottom-#{$m}";
 
-	@if list.index(con.$margin-bottom-all, $m) {
-		$selector: "#{$selector}, #{$selector}-all > *";
-	}
+  @if list.index(con.$margin-bottom-all, $m) {
+    $selector: "#{$selector}, #{$selector}-all > *";
+  }
 
   #{string.unquote($selector)} {
     margin-bottom: #{func.calc-rem($v)};
@@ -59,16 +59,16 @@
 @each $b in con.$margin-vertical-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $m, $v in con.$margin-top {
-			.l-margin-top-#{$m}-#{$b} {
-				margin-top: #{func.calc-rem($v)};
-			}
-		}
-		
-		@each $m, $v in con.$margin-bottom {
-			.l-margin-bottom-#{$m}-#{$b} {
-				margin-bottom: #{func.calc-rem($v)};
-			}
-		}
+      .l-margin-top-#{$m}-#{$b} {
+        margin-top: #{func.calc-rem($v)};
+      }
+    }
+
+    @each $m, $v in con.$margin-bottom {
+      .l-margin-bottom-#{$m}-#{$b} {
+        margin-bottom: #{func.calc-rem($v)};
+      }
+    }
   }
 }
 
@@ -86,22 +86,22 @@
 
 @each $b in con.$margin-horizontal-breakpoints {
   @include mix.breakpoint-min($b) {
-		@each $m, $v in con.$margin-left {
-			.l-margin-left-#{$m}-#{$b} {
-				margin-left: #{func.calc-rem($v)};
-			}
-		}
-		
-		@each $m, $v in con.$margin-right {
-			.l-margin-right-#{$m}-#{$b} {
-				margin-right: #{func.calc-rem($v)};
-			}
-		}
+    @each $m, $v in con.$margin-left {
+      .l-margin-left-#{$m}-#{$b} {
+        margin-left: #{func.calc-rem($v)};
+      }
+    }
+
+    @each $m, $v in con.$margin-right {
+      .l-margin-right-#{$m}-#{$b} {
+        margin-right: #{func.calc-rem($v)};
+      }
+    }
   }
 }
 
 /* Defaults */
 
 .l-margin-0-last > *:last-child {
-	@extend %u-margin-0;
+  @extend %u-margin-0;
 }

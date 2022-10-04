@@ -96,9 +96,9 @@ class Masonry {
       }
 
       this._bkRanges.push({
-        high: high,
-        low: low,
-        cols: cols
+        high,
+        low,
+        cols
       })
 
       if (i === breakpointLength - 1) {
@@ -107,9 +107,9 @@ class Masonry {
         cols = bk.cols
 
         this._bkRanges.push({
-          high: high,
-          low: low,
-          cols: cols
+          high,
+          low,
+          cols
         })
       }
     })

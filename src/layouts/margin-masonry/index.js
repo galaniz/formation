@@ -180,11 +180,11 @@ class MarginMasonry {
       const sisterIndex = this.items[sI] ? sI : undefined
 
       this._itemInfo.push({
-        item: item,
+        item,
         top: offsetTop,
         bottom: rect.bottom + scrollY,
-        height: height,
-        sisterIndex: sisterIndex,
+        height,
+        sisterIndex,
         indexInRow: indexInRow - 1,
         marginTop: 0
       })

@@ -9,9 +9,9 @@
 /* Styles */
 
 .l-object-contain {
-	@extend %u-object-fit-contain;
+  @extend %u-object-fit-contain;
 }
 
 .l-object-cover {
-	@extend %u-object-fit-cover;
+  @extend %u-object-fit-cover;
 }

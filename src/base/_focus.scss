@@ -1,0 +1,19 @@
+/**
+ * Base:focus
+ */
+
+/* Imports */
+
+@use "../config";
+@use "mixins" as mix;
+
+/* Styles */
+
+*:focus {
+  outline: var(--outline-width) solid var(--outline-color);
+  outline-offset: var(--outline-offset);
+
+  body[data-using-mouse] & {
+    --outline-width: 0;
+  }
+}

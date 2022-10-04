@@ -12,7 +12,7 @@
   @extend %u-position-relative;
   @extend %u-margin-left-auto;
   @extend %u-margin-right-auto;
-	@extend %u-width-100-vw;
+  @extend %u-width-100-vw;
 
   transform: translateX(-50%);
   left: 50%;

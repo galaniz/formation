@@ -11,7 +11,7 @@
 .l-clearfix::after {
   @extend %u-content-empty;
   @extend %u-display-table;
-	@extend %u-clear-both;
+  @extend %u-clear-both;
 }
 
 .l-float-right {

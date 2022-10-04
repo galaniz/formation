@@ -13,7 +13,7 @@
 /* Defaults */
 
 .l-padding-0 {
-	@extend %u-padding-0;
+  @extend %u-padding-0;
 }
 
 /* Config padding */
@@ -32,17 +32,17 @@
 
 @each $b in con.$padding-vertical-breakpoints {
   @include mix.breakpoint-min($b) {
-		@each $p, $v in con.$padding-top {
-			.l-padding-top-#{$p}-#{$b} {
-				padding-top: #{func.calc-rem($v)};
-			}
-		}
-		
-		@each $p, $v in con.$padding-bottom {
-			.l-padding-bottom-#{$p}-#{$b} {
-				padding-bottom: #{func.calc-rem($v)};
-			}
-		}
+    @each $p, $v in con.$padding-top {
+      .l-padding-top-#{$p}-#{$b} {
+        padding-top: #{func.calc-rem($v)};
+      }
+    }
+
+    @each $p, $v in con.$padding-bottom {
+      .l-padding-bottom-#{$p}-#{$b} {
+        padding-bottom: #{func.calc-rem($v)};
+      }
+    }
   }
 }
 
@@ -60,16 +60,16 @@
 
 @each $b in con.$padding-horizontal-breakpoints {
   @include mix.breakpoint-min($b) {
-		@each $p, $v in con.$padding-left {
-			.l-padding-left-#{$p}-#{$b} {
-				padding-left: #{func.calc-rem($v)};
-			}
-		}
-		
-		@each $p, $v in con.$padding-right {
-			.l-padding-right-#{$p}-#{$b} {
-				padding-right: #{func.calc-rem($v)};
-			}
-		}
+    @each $p, $v in con.$padding-left {
+      .l-padding-left-#{$p}-#{$b} {
+        padding-left: #{func.calc-rem($v)};
+      }
+    }
+
+    @each $p, $v in con.$padding-right {
+      .l-padding-right-#{$p}-#{$b} {
+        padding-right: #{func.calc-rem($v)};
+      }
+    }
   }
 }
