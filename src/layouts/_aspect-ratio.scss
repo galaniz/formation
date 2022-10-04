@@ -17,8 +17,8 @@
   }
 }
 
-@each $p in con.$aspect-ratio-padding {
+@each $p, $v in con.$aspect-ratio-padding {
   .l-aspect-ratio-#{$p} {
-    --aspect-ratio-padding: #{$p};
+    --aspect-ratio-padding: #{$v};
   }
 }

@@ -11,7 +11,7 @@
 /* Relative units */
 
 .l-width-100-pc {
-  @extend %u-width-100;
+  @extend %u-width-100-pc;
 }
 
 .l-width-100-vh {
@@ -42,7 +42,7 @@
   }
 }
 
-@each $b in con.$width-breakpoints {
+@each $b in con.$width-percentage-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $w, $v in con.$width-percentages {
       .l-width-#{$w} {

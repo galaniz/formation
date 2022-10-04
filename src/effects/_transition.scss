@@ -22,10 +22,10 @@ $transition-classes: ();
 
   $class: ".e-transition#{$suffix}";
   $v: map.set($v, "class", $class);
-  $transition-classes: list.append($transition-classes, $class);
+  $transition-classes: list.append($transition-classes, $class, $separator: comma);
 }
 
-#{list.join($transition-classes, $separator: comma)} {
+#{$transition-classes} {
   transition: var(--prop) var(--duration) var(--easing) var(--delay);
 }
 

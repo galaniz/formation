@@ -14,10 +14,10 @@
 
 $root: (
   "colors",
-  "fonts",
+  "font-families",
   "font-weights",
-  "padding-vertical",
-  "padding-horizontal",
+  "padding-top",
+  "padding-left",
   "gap",
   "containers",
   "container-padding",
@@ -71,7 +71,7 @@ $font-families: (
     arial,
     sans-serif,
   ),
-) !important;
+) !default;
 $font-weights: (
   normal: 400,
 ) !default;
@@ -165,9 +165,9 @@ $gap-breakpoints: ("l") !default;
 /* Aspect ratio padding */
 
 $aspect-ratio-padding: () !default;
-$aspect-ratio-padding: map.merge(
+$aspect-ratio-padding: m.map-recursive-merge(
   (
-    100
+    100: 100%
   ),
   $aspect-ratio-padding
 );
@@ -178,7 +178,7 @@ $transitions: () !default;
 $transitions: m.map-recursive-merge(
   (
     default: (
-      prop: color, background, border-color, opacity, transform,
+      prop: (color, background, border-color, opacity, transform),
       duration: 300ms,
       easing: "ease-in-out",
       delay: 0ms,
@@ -554,6 +554,12 @@ $placeholders: m.map-recursive-merge(
       )
     ),
     (
+      name: "padding-0",
+      prop: (
+        padding: 0
+      )
+    ),
+    (
       name: "margin-0",
       prop: (
         margin: 0
@@ -679,14 +685,150 @@ $placeholders: m.map-recursive-merge(
         background-color: inherit
       )
     ),
+    (
+      name: "background-no-repeat",
+      prop: (
+        background-repeat: no-repeat
+      )
+    ),
+    (
+      name: "background-size-cover",
+      prop: (
+        background-size: cover
+      )
+    ),
+    (
+      name: "background-size-contain",
+      prop: (
+        background-size: contain
+      )
+    ),
+    (
+      name: "background-position-left-top",
+      prop: (
+        background-position: left top
+      )
+    ),
+    (
+      name: "background-position-left-center",
+      prop: (
+        background-position: left center
+      )
+    ),
+    (
+      name: "background-position-left-bottom",
+      prop: (
+        background-position: left bottom
+      )
+    ),
+    (
+      name: "background-position-center-top",
+      prop: (
+        background-position: center top
+      )
+    ),
+    (
+      name: "background-position-center-center",
+      prop: (
+        background-position: center center
+      )
+    ),
+    (
+      name: "background-position-center-bottom",
+      prop: (
+        background-position: center bottom
+      )
+    ),
+    (
+      name: "background-position-right-top",
+      prop: (
+        background-position: right top
+      )
+    ),
+    (
+      name: "background-position-right-center",
+      prop: (
+        background-position: right center
+      )
+    ),
+    (
+      name: "background-position-right-bottom",
+      prop: (
+        background-position: right bottom
+      )
+    ),
+    (
+      name: "object-fit-cover",
+      prop: (
+        object-fit: cover
+      )
+    ),
+    (
+      name: "object-fit-contain",
+      prop: (
+        object-fit: contain
+      )
+    ),
+    (
+      name: "object-position-left-top",
+      prop: (
+        object-position: left top
+      )
+    ),
+    (
+      name: "object-position-left-center",
+      prop: (
+        object-position: left center
+      )
+    ),
+    (
+      name: "object-position-left-bottom",
+      prop: (
+        object-position: left bottom
+      )
+    ),
+    (
+      name: "object-position-center-top",
+      prop: (
+        object-position: center top
+      )
+    ),
+    (
+      name: "object-position-center-center",
+      prop: (
+        object-position: center center
+      )
+    ),
+    (
+      name: "object-position-center-bottom",
+      prop: (
+        object-position: center bottom
+      )
+    ),
+    (
+      name: "object-position-right-top",
+      prop: (
+        object-position: right top
+      )
+    ),
+    (
+      name: "object-position-right-center",
+      prop: (
+        object-position: right center
+      )
+    ),
+    (
+      name: "object-position-right-bottom",
+      prop: (
+        object-position: right bottom
+      )
+    ),
   ),
   $placeholders
 );
 
 @each $p in $placeholders {
-  @each $k, $v in $p {
-    @include mix.make-placeholder($k, $v);
-  }
+  @include mix.make-placeholder($p);
 }
 
 @include mix.set-placeholder("position-vertical-center") {
@@ -729,8 +871,8 @@ $placeholders: m.map-recursive-merge(
 }
 
 @each $k, $v in $font-weights {
-  @include mix.set-placeholder("font-weight-#{$p}") {
-    font-weight: $w;
+  @include mix.set-placeholder("font-weight-#{$k}") {
+    font-weight: $v;
   }
 }
 

@@ -65,7 +65,7 @@
     --delay: 0ms;
 
     @extend %u-top-0;
-    @extend %u-height-100;
+    @extend %u-height-100-pc;
 
     transform: scaleY(0) translateX(-50%);
     left: 50%;
@@ -74,7 +74,7 @@
   & .c-nav-icon__right {
     --delay: 250ms;
 
-    @extend %u-width-100;
+    @extend %u-width-100-pc;
 
     transform: scaleX(0) translateY(-50%);
     top: 50%;

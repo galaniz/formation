@@ -11,7 +11,7 @@
 /**
  * Set placeholder
  *
- * @param [string] $name
+ * @param {string} $name
  */
 
 @mixin set-placeholder($name) {
@@ -23,31 +23,17 @@
 /**
  * Make placeholder
  *
- * @param {string} $key
- * @param {string/map} $value
+ * @param {map} $map
  */
 
-@mixin make-placeholder($key, $value) {
-  @if $key == custom {
-    $map: $value;
-    $name: map.get($map, "name");
-    $prop: map.get($map, "prop");
-    $selector: map.get($map, "selector");
+@mixin make-placeholder($map) {
+  $name: map.get($map, "name");
+  $prop: map.get($map, "prop");
+  $selector: map.get($map, "selector");
 
-    @if $selector {
-      %u-#{$name} {
-        #{$selector} {
-          @each $key, $value in $prop {
-            @if meta.type-of($value) == string and $name != "content-empty" {
-              #{$key}: string.unquote($value);
-            } @else {
-              #{$key}: $value;
-            }
-          }
-        }
-      }
-    } @else {
-      %u-#{$name} {
+  @if $selector {
+    %u-#{$name} {
+      #{$selector} {
         @each $key, $value in $prop {
           @if meta.type-of($value) == string and $name != "content-empty" {
             #{$key}: string.unquote($value);
@@ -58,11 +44,13 @@
       }
     }
   } @else {
-    %u-#{$key}-#{$value} {
-      @if meta.type-of($value) == string {
-        #{$key}: string.unquote($value);
-      } @else {
-        #{$key}: $value;
+    %u-#{$name} {
+      @each $key, $value in $prop {
+        @if meta.type-of($value) == string and $name != "content-empty" {
+          #{$key}: string.unquote($value);
+        } @else {
+          #{$key}: $value;
+        }
       }
     }
   }

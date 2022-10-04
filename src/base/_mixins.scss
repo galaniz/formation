@@ -7,7 +7,7 @@
 @use "sass:map";
 @use "sass:string";
 @use "../config" as con;
-@use "../functions" as func;
+@use "../utils/functions" as func;
 
 /**
  * Set root variables
@@ -21,25 +21,25 @@
       @each $c, $v in con.$colors-flat {
         --#{$c}: #{$v};
       }
-    } @else if $r == "fonts" {
-      @each $f, $v in con.$fonts {
-        --font-#{$f}: #{$v};
+    } @else if $r == "font-families" {
+      @each $f, $v in con.$font-families {
+        --font-family-#{$f}: #{$v};
       }
     } @else if $r == "font-weights" {
       @each $f, $v in con.$font-weights {
         --font-weight-#{$f}: #{$v};
       }
-    } @else if $r == "padding-vertical" {
-      @each $p, $v in con.$padding-vertical {
-        --pv-#{$p}: #{$v};
+    } @else if $r == "padding-top" {
+      @each $p, $v in con.$padding-top {
+        --pt-#{$p}: #{$v};
       }
-    } @else if $r == "padding-horizontal" {
-      @each $p, $v in con.$padding-horizontal {
-        --ph-#{$p}: #{$v};
+    } @else if $r == "padding-left" {
+      @each $p, $v in con.$padding-left {
+        --pl-#{$p}: #{$v};
       }
     } @else if $r == "gap" {
-      --gap: 0;
-      --gap-margin: 0;
+      --gap: 0rem;
+      --gap-margin: 0rem;
     } @else if $r == "containers" {
       @each $c, $v in con.$containers {
         $suffix: "";
@@ -48,7 +48,7 @@
           $suffix: "-#{$c}";
         }
 
-        --container#{$suffix}: #{func.calc-rem(con.$containers)};
+        --container#{$suffix}: #{func.calc-rem($v)};
       }
     } @else if $r == "container-padding" {
       --container-padding: #{func.calc-rem(con.$container-padding)};
@@ -69,7 +69,7 @@
       $default-color: map.get(con.$borders, "colors", "default");
 
       --border-color: var(--#{$default-color});
-      --border-width: #{map.get(con.$borders, "width", "default")};
+      --border-width: #{map.get(con.$borders, "widths", "default")};
     }
   }
 }

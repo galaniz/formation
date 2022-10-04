@@ -22,7 +22,7 @@
     $suffix: "-#{$c}";
   }
 
-  .l-container-#{$suffix} {
+  .l-container#{$suffix} {
     max-width: var(--container#{$suffix});
   }
 }

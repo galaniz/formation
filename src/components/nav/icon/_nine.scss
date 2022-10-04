@@ -11,7 +11,7 @@
 /* Styles */
 
 .c-nav-icon[data-num="9"] {
-  $y: func.calc-rem(icon.$y + 0.5px); // 0.5 to make corner sharp
+  $y: icon.$y + 0.0313rem; // 0.0313 to make corner sharp
 
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {
@@ -21,11 +21,11 @@
   }
 
   & .c-nav-icon__top {
-    @extend %u-transform-origin-100-100;
+    @extend %u-transform-origin-100-pc-100-pc;
   }
 
   & .c-nav-icon__bottom {
-    @extend %u-transform-origin-100-0;
+    @extend %u-transform-origin-100-pc-0;
   }
 
   .c-nav__button[data-show] & {

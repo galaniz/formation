@@ -29,11 +29,11 @@
 }
 
 .l-justify-start {
-  @extend %u-justify-flex-start;
+  @extend %u-justify-content-flex-start;
 }
 
 .l-justify-end {
-  @extend %u-justify-flex-end;
+  @extend %u-justify-content-flex-end;
 }
 
 .l-align-center {

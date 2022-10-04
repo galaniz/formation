@@ -4,7 +4,7 @@
 
 /* Imports */
 
-@use "../../config";
+@use "../config";
 
 /* Styles */
 
@@ -27,7 +27,7 @@
 .l-object-cover-fallback,
 .l-object-contain-fallback {
   @extend %u-background-no-repeat;
-  @extend %u-background-position-center;
+  @extend %u-background-position-center-center;
 
   .object-fit & {
     @extend %u-display-none;

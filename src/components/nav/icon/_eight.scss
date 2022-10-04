@@ -5,6 +5,7 @@
 /* Imports */
 
 @use "sass:map";
+@use "sass:math";
 @use "index" as icon;
 @use "../../../config" as con;
 @use "../../../utils/functions" as func;
@@ -14,8 +15,10 @@
 .c-nav-icon[data-num="8"] {
   --duration: 200ms;
 
-  $x: func.calc-rem((map.get(con.$nav, "icon", "width") / 2) - (map.get(con.$nav, "icon", "line-width") / 2));
-  $y: func.calc-rem(icon.$y + (map.get(con.$nav, "icon", "line-width") / 2) + 0.5px); // 0.5 to make x more precise
+  $width: map.get(con.$nav, "icon", "width");
+  $line-width: map.get(con.$nav, "icon", "line-width");
+  $x: func.calc-rem(math.div($width, 2) - math.div($line-width, 2));
+  $y: (icon.$y + func.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 to make x more precise
 
   transform: rotate(0deg);
 
@@ -31,7 +34,7 @@
   }
 
   & .c-nav-icon__bottom {
-    @extend %u-transform-origin-100-100;
+    @extend %u-transform-origin-100-pc-100-pc;
 
     margin-left: 50%;
   }
