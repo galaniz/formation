@@ -30,7 +30,7 @@
 @each $b in con.$height-breakpoints {
   @include mix.breakpoint-min($b) {
     @each $h, $v in con.$heights {
-      .l-height-#{$h} {
+      .l-height-#{$h}-#{$b} {
         height: #{func.calc-rem($v)};
       }
     }
