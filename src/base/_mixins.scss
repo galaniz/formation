@@ -29,13 +29,9 @@
       @each $f, $v in con.$font-weights {
         --font-weight-#{$f}: #{$v};
       }
-    } @else if $r == "padding-top" {
-      @each $p, $v in con.$padding-top {
-        --pt-#{$p}: #{$v};
-      }
-    } @else if $r == "padding-left" {
-      @each $p, $v in con.$padding-left {
-        --pl-#{$p}: #{$v};
+    } @else if $r == "spacing" {
+      @each $s, $v in con.$spacing {
+        --#{$s}: #{func.calc-rem($v)};
       }
     } @else if $r == "gap" {
       --gap: 0rem;

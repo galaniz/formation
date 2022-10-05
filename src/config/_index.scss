@@ -16,8 +16,7 @@ $root: (
   "colors",
   "font-families",
   "font-weights",
-  "padding-top",
-  "padding-left",
+  "spacing",
   "gap",
   "containers",
   "container-padding",
@@ -113,6 +112,14 @@ $container-padding: 20px !default;
   $breakpoints: map.merge(("container#{$suffix}": $width ), $breakpoints);
   $breakpoints: map.merge(("container#{$suffix}-with-padding": $width + ($container-padding * 2)), $breakpoints);
 }
+
+/* Spacing */
+
+$spacing: (
+  s: 8px,
+  m: 16px,
+  l: 24px,
+) !default;
 
 /* Widths */
 

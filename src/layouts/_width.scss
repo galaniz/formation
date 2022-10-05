@@ -6,7 +6,6 @@
 
 @use "../config" as con;
 @use "../utils/mixins" as mix;
-@use "../utils/functions" as func;
 
 /* Relative units */
 
@@ -20,17 +19,17 @@
 
 /* Config widths */
 
-@each $w, $v in con.$widths {
+@each $w in con.$widths {
   .l-width-#{$w} {
-    width: #{func.calc-rem($v)};
+    width: var(--#{$w});
   }
 }
 
 @each $b in con.$width-breakpoints {
   @include mix.breakpoint-min($b) {
-    @each $w, $v in con.$widths {
+    @each $w in con.$widths {
       .l-width-#{$w}-#{$b} {
-        width: #{func.calc-rem($v)};
+        width: var(--#{$w});
       }
     }
   }
@@ -52,17 +51,17 @@
   }
 }
 
-@each $w, $v in con.$max-widths {
+@each $w in con.$max-widths {
   .l-max-width-#{$w} {
-    max-width: #{func.calc-rem($v)};
+    max-width: var(--#{$w});
   }
 }
 
 @each $b in con.$max-width-breakpoints {
   @include mix.breakpoint-min($b) {
-    @each $w, $v in con.$max-widths {
+    @each $w in con.$max-widths {
       .l-max-width-#{$w}-#{$b} {
-        max-width: #{func.calc-rem($v)};
+        max-width: var(--#{$w});
       }
     }
   }

@@ -6,7 +6,6 @@
 
 @use "../config" as con;
 @use "../utils/mixins" as mix;
-@use "../utils/functions" as func;
 
 /* Relative units */
 
@@ -21,17 +20,17 @@
 
 /* Config heights */
 
-@each $h, $v in con.$heights {
+@each $h in con.$heights {
   .l-height-#{$h} {
-    height: #{func.calc-rem($v)};
+    height: var(--#{$h});
   }
 }
 
 @each $b in con.$height-breakpoints {
   @include mix.breakpoint-min($b) {
-    @each $h, $v in con.$heights {
+    @each $h in con.$heights {
       .l-height-#{$h}-#{$b} {
-        height: #{func.calc-rem($v)};
+        height: var(--#{$h});
       }
     }
   }

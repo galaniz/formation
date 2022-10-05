@@ -6,7 +6,6 @@
 
 @use "../config" as con;
 @use "../utils/mixins" as mix;
-@use "../utils/functions" as func;
 
 /* Styles */
 
@@ -18,17 +17,17 @@
   }
 }
 
-@each $g, $v in con.$gaps {
+@each $g in con.$gaps {
   .l-gap-margin-#{$g} {
-    --gap-margin: #{func.calc-rem($v)};
+    --gap-margin: var(--#{$g});
   }
 }
 
 @each $b in con.$gap-breakpoints {
   @include mix.breakpoint-min($b) {
-    @each $g, $v in con.$gaps {
+    @each $g in con.$gaps {
       .l-gap-margin-#{$g}-#{$b} {
-        --gap-margin: #{func.calc-rem($v)};
+        --gap-margin: var(--#{$g});
       }
     }
   }
