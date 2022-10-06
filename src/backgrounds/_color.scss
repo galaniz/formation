@@ -8,7 +8,7 @@
 
 /* Styles */
 
-@each $c, $v in con.$colors-flat {
+@each $c in con.$background-colors {
   .bg-#{$c} {
     background-color: var(--#{$c});
   }

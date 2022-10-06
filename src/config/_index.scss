@@ -62,7 +62,21 @@ $colors-flat-prefix: func.map-flatten($colors, (), "color");
 
 $colors-flat: func.map-flatten($colors, (), "");
 
-/* Fonts */
+/* Text colors */
+
+$text-colors: (
+  "foreground-base",
+  "foreground-dark",
+) !default;
+
+/* Background colors */
+
+$background-colors: (
+  "background-base",
+  "background-dark",
+) !default;
+
+/* Fonts families  */
 
 $font-families: (
   primary: (
@@ -71,6 +85,9 @@ $font-families: (
     sans-serif,
   ),
 ) !default;
+
+/* Font weights */
+
 $font-weights: (
   normal: 400,
 ) !default;

@@ -8,7 +8,7 @@
 
 /* Styles */
 
-@each $c, $v in con.$colors-flat {
+@each $c in con.$text-colors {
   .t-#{$c} {
     color: var(--#{$c});
   }
