@@ -59,13 +59,17 @@
       $default-color: map.get(con.$outline, "color");
 
       --outline-width: #{map.get(con.$outline, "width")};
-      --outline-color: var(--#{$default-color});
+      --outline-color: #{$default-color};
       --outline-offset: #{map.get(con.$outline, "offset")};
     } @else if $r == "borders" {
       $default-color: map.get(con.$borders, "colors", "default");
 
-      --border-color: var(--#{$default-color});
+      --border-color: #{$default-color};
       --border-width: #{map.get(con.$borders, "widths", "default")};
+    } @else if $r == "border-radius" {
+      @each $b, $v in con.$border-radius {
+        --border-radius-#{$b}: #{func.calc-rem($v)};
+      }      
     }
   }
 }

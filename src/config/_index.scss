@@ -5,6 +5,7 @@
 /* Imports */
 
 @use "sass:map";
+@use "sass:list";
 @use "sass:string";
 @use "functions" as func;
 @use "mixins" as mix;
@@ -24,6 +25,7 @@ $root: (
   "transitions",
   "outline",
   "borders",
+  "border-radius",
 ) !default;
 
 /* Rem context */
@@ -37,20 +39,20 @@ $vars: () !default;
 /* Colors  */
 
 $colors: (
-  primary: (
-    base: #888,
-    light: #aaa,
-    dark: #666,
+  "primary": (
+    "base": #888,
+    "light": #aaa,
+    "dark": #666,
   ),
-  foreground: (
-    base: #222,
-    light: #444,
-    dark: #000,
+  "foreground": (
+    "base": #222,
+    "light": #444,
+    "dark": #000,
   ),
-  background: (
-    base: #f8f8f8,
-    light: #fff,
-    dark: #eee,
+  "background": (
+    "base": #f8f8f8,
+    "light": #fff,
+    "dark": #eee,
   ),
 ) !default;
 
@@ -79,7 +81,7 @@ $background-colors: (
 /* Fonts families  */
 
 $font-families: (
-  primary: (
+  "primary": (
     helvetica,
     arial,
     sans-serif,
@@ -89,32 +91,32 @@ $font-families: (
 /* Font weights */
 
 $font-weights: (
-  normal: 400,
+  "normal": 400,
 ) !default;
 
 /* Nav */
 
 $nav: (
-  icon: (
-    width: 40px,
-    line-width: 2px,
-    margin: 8px,
+  "icon": (
+    "width": 40px,
+    "line-width": 2px,
+    "margin": 8px,
   )
 ) !default;
 
 /* Breakpoints */
 
 $breakpoints: (
-  xs: 400px,
-  s: 600px,
-  r: 800px,
-  m: 900px,
-  l: 1000px,
+  "xs": 400px,
+  "s": 600px,
+  "r": 800px,
+  "m": 900px,
+  "l": 1000px,
 ) !default;
 
 /* Containers and padding */
 
-$containers: ( default: 1300px ) !default;
+$containers: ( "default": 1300px ) !default;
 $container-padding: 20px !default;
 
 /* Append to breakpoints */
@@ -133,9 +135,9 @@ $container-padding: 20px !default;
 /* Spacing */
 
 $spacing: (
-  s: 8px,
-  m: 16px,
-  l: 24px,
+  "s": 8px,
+  "m": 16px,
+  "l": 24px,
 ) !default;
 
 /* Widths */
@@ -191,7 +193,7 @@ $gap-breakpoints: ("l") !default;
 $aspect-ratio-padding: () !default;
 $aspect-ratio-padding: m.map-recursive-merge(
   (
-    100: 100%
+    "100": 100%
   ),
   $aspect-ratio-padding
 );
@@ -201,11 +203,11 @@ $aspect-ratio-padding: m.map-recursive-merge(
 $transitions: () !default;
 $transitions: m.map-recursive-merge(
   (
-    default: (
-      prop: (color, background, border-color, opacity, transform),
-      duration: 300ms,
-      easing: "ease-in-out",
-      delay: 0ms,
+    "default": (
+      "prop": (color, background, border-color, opacity, transform),
+      "duration": 300ms,
+      "easing": "ease-in-out",
+      "delay": 0ms,
     ),
   ),
   $transitions
@@ -220,13 +222,13 @@ $default-delay: map.get($transitions, "default", "delay");
 $z-index: () !default;
 $z-index: m.map-recursive-merge(
   (
-    skip-link: 100,
-    page-transition: 100,
-    modal: 90,
-    nav: 85,
-    loader: (
-      default: 80,
-      page: 110
+    "skip-link": 100,
+    "page-transition": 100,
+    "modal": 90,
+    "nav": 85,
+    "loader": (
+      "default": 80,
+      "page": 110
     )
   ),
   $z-index
@@ -237,9 +239,9 @@ $z-index: m.map-recursive-merge(
 $outline: () !default;
 $outline: m.map-recursive-merge(
   (
-    width: 0.25rem,
-    color: "primary-dark",
-    offset: 0.25rem,
+    "width": 0.25rem,
+    "color": "var(--primary-dark)",
+    "offset": 0.25rem,
   ),
   $outline
 );
@@ -249,601 +251,605 @@ $outline: m.map-recursive-merge(
 $borders: () !default;
 $borders: m.map-recursive-merge(
   (
-    sides: ("all", "top", "left", "right", "bottom"),
-    colors: (
-      "default": "foreground-light",
+    "sides": ("all", "top", "left", "right", "bottom"),
+    "colors": (
+      "default": currentColor,
     ),
-    widths: (
+    "widths": (
       "default": 0.125rem,
     ),
   ),
   $borders
 );
 
+/* Border radius */
+
+$border-radius: () !default;
+
 /* Placeholders */
 
 $placeholders: () !default;
-$placeholders: m.map-recursive-merge(
+$placeholders: list.join(
   (
     (
-      name: "overflow-hidden",
-      prop: (
+      "name": "overflow-hidden",
+      "prop": (
         overflow: hidden
       )
     ),
     (
-      name: "overflow-x-hidden",
-      prop: (
+      "name": "overflow-x-hidden",
+      "prop": (
         overflow-x: hidden
       )
     ),
     (
-      name: "overflow-y-hidden",
-      prop: (
+      "name": "overflow-y-hidden",
+      "prop": (
         overflow-y: hidden
       )
     ),
     (
-      name: "overflow-scroll",
-      prop: (
+      "name": "overflow-scroll",
+      "prop": (
         overflow: scroll
       )
     ),
     (
-      name: "overflow-x-scroll",
-      prop: (
+      "name": "overflow-x-scroll",
+      "prop": (
         overflow-x: scroll
       )
     ),
     (
-      name: "overflow-y-scroll",
-      prop: (
+      "name": "overflow-y-scroll",
+      "prop": (
         overflow-y: scroll
       )
     ),
     (
-      name: "overflow-auto",
-      prop: (
+      "name": "overflow-auto",
+      "prop": (
         overflow: auto
       )
     ),
     (
-      name: "overflow-x-auto",
-      prop: (
+      "name": "overflow-x-auto",
+      "prop": (
         overflow-x: auto
       )
     ),
     (
-      name: "overflow-y-auto",
-      prop: (
+      "name": "overflow-y-auto",
+      "prop": (
         overflow-y: auto
       )
     ),
     (
-      name: "float-left",
-      prop: (
+      "name": "float-left",
+      "prop": (
         float: left
       )
     ),
     (
-      name: "float-right",
-      prop: (
+      "name": "float-right",
+      "prop": (
         float: right
       )
     ),
     (
-      name: "clear-both",
-      prop: (
+      "name": "clear-both",
+      "prop": (
         clear: both
       )
     ),
     (
-      name: "display-none",
-      prop: (
+      "name": "display-none",
+      "prop": (
         display: none
       )
     ),
     (
-      name: "display-block",
-      prop: (
+      "name": "display-block",
+      "prop": (
         display: block
       )
     ),
     (
-      name: "display-inline-block",
-      prop: (
+      "name": "display-inline-block",
+      "prop": (
         display: inline-block
       )
     ),
     (
-      name: "display-flex",
-      prop: (
+      "name": "display-flex",
+      "prop": (
         display: flex
       )
     ),
     (
-      name: "display-inline-flex",
-      prop: (
+      "name": "display-inline-flex",
+      "prop": (
         display: inline-flex
       )
     ),
     (
-      name: "display-table",
-      prop: (
+      "name": "display-table",
+      "prop": (
         display: table
       )
     ),
     (
-      name: "display-table-row",
-      prop: (
+      "name": "display-table-row",
+      "prop": (
         display: table-row
       )
     ),
     (
-      name: "display-table-cell",
-      prop: (
+      "name": "display-table-cell",
+      "prop": (
         display: table-cell
       )
     ),
     (
-      name: "flex-shrink-0",
-      prop: (
+      "name": "flex-shrink-0",
+      "prop": (
         flex-shrink: 0
       )
     ),
     (
-      name: "flex-grow-1",
-      prop: (
+      "name": "flex-grow-1",
+      "prop": (
         flex-grow: 1
       )
     ),
     (
-      name: "flex-direction-column",
-      prop: (
+      "name": "flex-direction-column",
+      "prop": (
         flex-direction: column
       )
     ),
     (
-      name: "flex-direction-row",
-      prop: (
+      "name": "flex-direction-row",
+      "prop": (
         flex-direction: row
       )
     ),
     (
-      name: "flex-wrap-wrap",
-      prop: (
+      "name": "flex-wrap-wrap",
+      "prop": (
         flex-wrap: wrap
       )
     ),
     (
-      name: "justify-content-space-between",
-      prop: (
+      "name": "justify-content-space-between",
+      "prop": (
         justify-content: space-between
       )
     ),
     (
-      name: "justify-content-center",
-      prop: (
+      "name": "justify-content-center",
+      "prop": (
         justify-content: center
       )
     ),
     (
-      name: "justify-content-flex-start",
-      prop: (
+      "name": "justify-content-flex-start",
+      "prop": (
         justify-content: flex-start
       )
     ),
     (
-      name: "justify-content-flex-end",
-      prop: (
+      "name": "justify-content-flex-end",
+      "prop": (
         justify-content: flex-end
       )
     ),
     (
-      name: "align-items-center",
-      prop: (
+      "name": "align-items-center",
+      "prop": (
         align-items: center
       )
     ),
     (
-      name: "align-items-flex-start",
-      prop: (
+      "name": "align-items-flex-start",
+      "prop": (
         align-items: flex-start
       )
     ),
     (
-      name: "align-items-flex-end",
-      prop: (
+      "name": "align-items-flex-end",
+      "prop": (
         align-items: flex-end
       )
     ),
     (
-      name: "visibility-hidden",
-      prop: (
+      "name": "visibility-hidden",
+      "prop": (
         visibility: hidden
       )
     ),
     (
-      name: "visibility-visible",
-      prop: (
+      "name": "visibility-visible",
+      "prop": (
         visibility: visible
       )
     ),
     (
-      name: "content-empty",
-      prop: (
+      "name": "content-empty",
+      "prop": (
         content: ""
       )
     ),
     (
-      name: "position-relative",
-      prop: (
+      "name": "position-relative",
+      "prop": (
         position: relative
       )
     ),
     (
-      name: "position-absolute",
-      prop: (
+      "name": "position-absolute",
+      "prop": (
         position: absolute
       )
     ),
     (
-      name: "position-fixed",
-      prop: (
+      "name": "position-fixed",
+      "prop": (
         position: fixed
       )
     ),
     (
-      name: "position-sticky",
-      prop: (
+      "name": "position-sticky",
+      "prop": (
         position: sticky
       )
     ),
     (
-      name: "top-0",
-      prop: (
+      "name": "top-0",
+      "prop": (
         top: 0
       )
     ),
     (
-      name: "bottom-0",
-      prop: (
+      "name": "bottom-0",
+      "prop": (
         bottom: 0
       )
     ),
     (
-      name: "left-0",
-      prop: (
+      "name": "left-0",
+      "prop": (
         left: 0
       )
     ),
     (
-      name: "right-0",
-      prop: (
+      "name": "right-0",
+      "prop": (
         right: 0
       )
     ),
     (
-      name: "z-index-1",
-      prop: (
+      "name": "z-index-1",
+      "prop": (
         z-index: 1
       )
     ),
     (
-      name: "z-index--1",
-      prop: (
+      "name": "z-index--1",
+      "prop": (
         z-index: -1
       )
     ),
     (
-      name: "text-align-left",
-      prop: (
+      "name": "text-align-left",
+      "prop": (
         text-align: left
       )
     ),
     (
-      name: "text-align-right",
-      prop: (
+      "name": "text-align-right",
+      "prop": (
         text-align: right
       )
     ),
     (
-      name: "text-align-center",
-      prop: (
+      "name": "text-align-center",
+      "prop": (
         text-align: center
       )
     ),
     (
-      name: "text-align-justify",
-      prop: (
+      "name": "text-align-justify",
+      "prop": (
         text-align: justify
       )
     ),
     (
-      name: "vertical-align-bottom",
-      prop: (
+      "name": "vertical-align-bottom",
+      "prop": (
         vertical-align: bottom
       )
     ),
     (
-      name: "vertical-align-middle",
-      prop: (
+      "name": "vertical-align-middle",
+      "prop": (
         vertical-align: middle
       )
     ),
     (
-      name: "vertical-align-top",
-      prop: (
+      "name": "vertical-align-top",
+      "prop": (
         vertical-align: top
       )
     ),
     (
-      name: "padding-0",
-      prop: (
+      "name": "padding-0",
+      "prop": (
         padding: 0
       )
     ),
     (
-      name: "margin-0",
-      prop: (
+      "name": "margin-0",
+      "prop": (
         margin: 0
       )
     ),
     (
-      name: "margin-auto",
-      prop: (
+      "name": "margin-auto",
+      "prop": (
         margin: auto
       )
     ),
     (
-      name: "margin-top-auto",
-      prop: (
+      "name": "margin-top-auto",
+      "prop": (
         margin-top: auto
       )
     ),
     (
-      name: "margin-bottom-auto",
-      prop: (
+      "name": "margin-bottom-auto",
+      "prop": (
         margin-bottom: auto
       )
     ),
     (
-      name: "margin-right-auto",
-      prop: (
+      "name": "margin-right-auto",
+      "prop": (
         margin-right: auto
       )
     ),
     (
-      name: "margin-left-auto",
-      prop: (
+      "name": "margin-left-auto",
+      "prop": (
         margin-left: auto
       )
     ),
     (
-      name: "border-radius-100-pc",
-      prop: (
+      "name": "border-radius-100-pc",
+      "prop": (
         border-radius: 100%
       )
     ),
     (
-      name: "transform-origin-0-0",
-      prop: (
+      "name": "transform-origin-0-0",
+      "prop": (
         transform-origin: 0 0
       )
     ),
     (
-      name: "transform-origin-0-100-pc",
-      prop: (
+      "name": "transform-origin-0-100-pc",
+      "prop": (
         transform-origin: 0 100%
       )
     ),
     (
-      name: "transform-origin-100-pc-0",
-      prop: (
+      "name": "transform-origin-100-pc-0",
+      "prop": (
         transform-origin: 100% 0
       )
     ),
     (
-      name: "transform-origin-100-pc-100-pc",
-      prop: (
+      "name": "transform-origin-100-pc-100-pc",
+      "prop": (
         transform-origin: 100% 100%
       )
     ),
     (
-      name: "opacity-0",
-      prop: (
+      "name": "opacity-0",
+      "prop": (
         opacity: 0
       )
     ),
     (
-      name: "opacity-1",
-      prop: (
+      "name": "opacity-1",
+      "prop": (
         opacity: 1
       )
     ),
     (
-      name: "width-inherit",
-      prop: (
+      "name": "width-inherit",
+      "prop": (
         width: inherit
       )
     ),
     (
-      name: "height-inherit",
-      prop: (
+      "name": "height-inherit",
+      "prop": (
         height: inherit
       )
     ),
     (
-      name: "width-100-pc",
-      prop: (
+      "name": "width-100-pc",
+      "prop": (
         width: 100%
       )
     ),
     (
-      name: "width-100-vw",
-      prop: (
+      "name": "width-100-vw",
+      "prop": (
         width: 100vw
       )
     ),
     (
-      name: "height-100-pc",
-      prop: (
+      "name": "height-100-pc",
+      "prop": (
         height: 100%
       )
     ),
     (
-      name: "height-100-vh",
-      prop: (
+      "name": "height-100-vh",
+      "prop": (
         height: 100vh
       )
     ),
     (
-      name: "color-inherit",
-      prop: (
+      "name": "color-inherit",
+      "prop": (
         color: inherit
       )
     ),
     (
-      name: "background-color-inherit",
-      prop: (
+      "name": "background-color-inherit",
+      "prop": (
         background-color: inherit
       )
     ),
     (
-      name: "background-no-repeat",
-      prop: (
+      "name": "background-no-repeat",
+      "prop": (
         background-repeat: no-repeat
       )
     ),
     (
-      name: "background-size-cover",
-      prop: (
+      "name": "background-size-cover",
+      "prop": (
         background-size: cover
       )
     ),
     (
-      name: "background-size-contain",
-      prop: (
+      "name": "background-size-contain",
+      "prop": (
         background-size: contain
       )
     ),
     (
-      name: "background-position-left-top",
-      prop: (
+      "name": "background-position-left-top",
+      "prop": (
         background-position: left top
       )
     ),
     (
-      name: "background-position-left-center",
-      prop: (
+      "name": "background-position-left-center",
+      "prop": (
         background-position: left center
       )
     ),
     (
-      name: "background-position-left-bottom",
-      prop: (
+      "name": "background-position-left-bottom",
+      "prop": (
         background-position: left bottom
       )
     ),
     (
-      name: "background-position-center-top",
-      prop: (
+      "name": "background-position-center-top",
+      "prop": (
         background-position: center top
       )
     ),
     (
-      name: "background-position-center-center",
-      prop: (
+      "name": "background-position-center-center",
+      "prop": (
         background-position: center center
       )
     ),
     (
-      name: "background-position-center-bottom",
-      prop: (
+      "name": "background-position-center-bottom",
+      "prop": (
         background-position: center bottom
       )
     ),
     (
-      name: "background-position-right-top",
-      prop: (
+      "name": "background-position-right-top",
+      "prop": (
         background-position: right top
       )
     ),
     (
-      name: "background-position-right-center",
-      prop: (
+      "name": "background-position-right-center",
+      "prop": (
         background-position: right center
       )
     ),
     (
-      name: "background-position-right-bottom",
-      prop: (
+      "name": "background-position-right-bottom",
+      "prop": (
         background-position: right bottom
       )
     ),
     (
-      name: "object-fit-cover",
-      prop: (
+      "name": "object-fit-cover",
+      "prop": (
         object-fit: cover
       )
     ),
     (
-      name: "object-fit-contain",
-      prop: (
+      "name": "object-fit-contain",
+      "prop": (
         object-fit: contain
       )
     ),
     (
-      name: "object-position-left-top",
-      prop: (
+      "name": "object-position-left-top",
+      "prop": (
         object-position: left top
       )
     ),
     (
-      name: "object-position-left-center",
-      prop: (
+      "name": "object-position-left-center",
+      "prop": (
         object-position: left center
       )
     ),
     (
-      name: "object-position-left-bottom",
-      prop: (
+      "name": "object-position-left-bottom",
+      "prop": (
         object-position: left bottom
       )
     ),
     (
-      name: "object-position-center-top",
-      prop: (
+      "name": "object-position-center-top",
+      "prop": (
         object-position: center top
       )
     ),
     (
-      name: "object-position-center-center",
-      prop: (
+      "name": "object-position-center-center",
+      "prop": (
         object-position: center center
       )
     ),
     (
-      name: "object-position-center-bottom",
-      prop: (
+      "name": "object-position-center-bottom",
+      "prop": (
         object-position: center bottom
       )
     ),
     (
-      name: "object-position-right-top",
-      prop: (
+      "name": "object-position-right-top",
+      "prop": (
         object-position: right top
       )
     ),
     (
-      name: "object-position-right-center",
-      prop: (
+      "name": "object-position-right-center",
+      "prop": (
         object-position: right center
       )
     ),
     (
-      name: "object-position-right-bottom",
-      prop: (
+      "name": "object-position-right-bottom",
+      "prop": (
         object-position: right bottom
       )
     ),

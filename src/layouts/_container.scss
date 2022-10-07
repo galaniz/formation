@@ -8,7 +8,7 @@
 
 /* Styles */
 
-[class^="l-container"] {
+[class*="l-container"] {
   @extend %u-margin-auto;
 
   padding-left: var(--container-padding);

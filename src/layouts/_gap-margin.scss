@@ -9,7 +9,7 @@
 
 /* Styles */
 
-[class^="l-gap-margin"] {
+[class*="l-gap-margin"] {
   margin: calc(var(--gap-margin) * -1) 0 0 calc(var(--gap-margin) * -1);
 
   & > * {

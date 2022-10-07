@@ -8,7 +8,7 @@
 
 /* Styles */
 
-[class^="l-aspect-ratio"] {
+[class*="l-aspect-ratio"] {
   &::before {
     @extend %u-content-empty;
     @extend %u-display-block;
