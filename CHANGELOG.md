@@ -147,3 +147,21 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - `Slider` smooth scroll issue with tab buttons.
+
+## [4.0.0] - 2022-10-08
+
+### Added
+- More folders to divide styles - a11y, backgrounds, borders, effects, text
+
+### Changed
+- Update most if not all class names to be more descriptive as well as inclusion of CSS variables
+- Config includes more variables and flexibility
+- Layouts more robust
+- Comment block formatting
+- `Nav` attributes
+
+### Fixed
+- `Send` result text prop issue
+
+### Removed
+- All recaptcha references
