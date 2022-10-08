@@ -4,7 +4,8 @@
 
 /* Imports */
 
-@use "../config";
+@use "../config" as con;
+@use "../utils/mixins" as mix;
 
 /* Styles */
 
@@ -54,4 +55,20 @@
 
 .l-flex-grow-1 {
   @extend %u-flex-grow-1;
+}
+
+@each $b in con.$flex-column-breakpoints {
+  @include mix.breakpoint-min($b) {
+    .l-flex-column-#{$b} {
+      flex-direction: column;
+    }
+  }
+}
+
+@each $b in con.$flex-row-breakpoints {
+  @include mix.breakpoint-min($b) {
+    .l-flex-row-#{$b} {
+      flex-direction: row;
+    }
+  }
 }

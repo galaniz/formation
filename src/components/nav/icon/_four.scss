@@ -10,10 +10,14 @@
 /* Styles */
 
 .c-nav-icon[data-num="4"] {
-  --duration: 0ms;
-  --delay: 100ms;
-
   transform: rotateY(0deg);
+
+  & .c-nav-icon__top,
+  & .c-nav-icon__middle,
+  & .c-nav-icon__bottom {
+    --duration: 0ms;
+    --delay: 100ms;
+  }
 
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {

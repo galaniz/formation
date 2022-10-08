@@ -142,14 +142,17 @@ class Form {
         if (emailLabel) { this._inputEmailLabels[name] = emailLabel }
 
         const field = closest(input, this.fieldClass)
-        let label = field.querySelector('.' + this.labelClass) || ''
+        const label = field.querySelector('.' + this.labelClass)
 
-        if (label) { label = label.textContent }
+        let labelText = ''
 
-        this._inputLabels[name] = label
+        if (label) { labelText = label.textContent }
+
+        this._inputLabels[name] = labelText
 
         this._inputGroups[name] = {
           inputs: [input], // array for checkboxes and radio buttons
+          label,
           field,
           required,
           type,
@@ -242,6 +245,7 @@ class Form {
     let validGroup = true
     const inputs = inputGroup.inputs
     const field = inputGroup.field
+    const label = inputGroup.label
     const type = inputGroup.type
     const required = inputGroup.required
 
@@ -253,10 +257,10 @@ class Form {
     const message = validate.message
 
     if (!valid) {
-      this._setErrorMessage(inputs, name, field, message)
+      this._setErrorMessage(inputs, name, label, field, message)
       validGroup = false
     } else {
-      this._removeErrorMessage(inputs, name, field)
+      this._removeErrorMessage(inputs, name, label, field)
     }
 
     /* Save valid state and values in inputGroup */
@@ -269,7 +273,7 @@ class Form {
     return validGroup
   }
 
-  _setErrorMessage (inputs, name, field, message) {
+  _setErrorMessage (inputs, name, label, field, message) {
     /* Error element id */
 
     const errorID = name + '-error'
@@ -284,9 +288,9 @@ class Form {
       const messageElement = error.querySelector('.o-form-error__message')
       messageElement.textContent = message
     } else {
-      field.insertAdjacentHTML('beforeend', `
+      label.insertAdjacentHTML('beforeend', `
         <div id="${errorID}" class="o-form-error${this.errorClass}">
-          <span class="o-form-error__message" role="alert">
+          <span class="o-form-error__message">
             ${message}
           </span>
         </div>
@@ -299,11 +303,10 @@ class Form {
 
     inputs.forEach((input) => {
       input.setAttribute('aria-invalid', true)
-      input.setAttribute('aria-describedby', errorID)
     })
   }
 
-  _removeErrorMessage (inputs, name, field) {
+  _removeErrorMessage (inputs, name, label, field) {
     /* Error element id */
 
     const errorID = name + '-error'
@@ -312,7 +315,7 @@ class Form {
 
     const error = document.getElementById(errorID)
 
-    if (error !== null) { field.removeChild(error) }
+    if (error !== null) { label.removeChild(error) }
 
     if (this.errorShake) { removeClass(field, this.errorShakeClass) }
 
@@ -320,7 +323,6 @@ class Form {
 
     inputs.forEach((input) => {
       input.setAttribute('aria-invalid', false)
-      input.setAttribute('aria-describedby', '')
     })
   }
 

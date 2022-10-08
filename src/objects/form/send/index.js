@@ -64,7 +64,6 @@ class Send {
       data = {},
       loaders = [],
       shake = false,
-      siteKey = '',
       url = '',
       success = () => {},
       error = () => {},
@@ -90,7 +89,6 @@ class Send {
     this.data = data
     this.loaders = loaders
     this.shake = shake
-    this.siteKey = siteKey
     this.url = url
     this.success = success
     this.error = error
@@ -129,26 +127,17 @@ class Send {
   _initialize () {
     /* Check that required variables not empty/null */
 
-    if (!this.id || !this.form || !this.groupClass || !this.fieldClass || !this.labelClass || !this.submit || !this.inputs || !this.loaders || !this.siteKey || !this.url) {
+    if (!this.id || !this.form || !this.groupClass || !this.fieldClass || !this.labelClass || !this.submit || !this.inputs || !this.loaders || !this.url) {
       return false
     }
 
     /* Default messages if none */
 
-    if (!Object.getOwnPropertyDescriptor(this.result.text, 'error')) {
-      this.result.text.error = this._defaultErrorMessage
-    }
-
-    if (!this.result.text.error) {
-      this.result.text.error = this._defaultErrorMessage
-    }
-
-    if (!Object.getOwnPropertyDescriptor(this.result.text, 'success')) {
-      this.result.text.success = this._defaultSuccessMessage
-    }
-
-    if (!this.result.text.success) {
-      this.result.text.success = this._defaultSuccessMessage
+    if (!Object.getOwnPropertyDescriptor(this.result, 'text')) {
+      this.result.text = {
+        error: this._defaultErrorMessage,
+        success: this._defaultSuccessMessage
+      }
     }
 
     /* Prepare for validation */

@@ -10,8 +10,11 @@
 /* Styles */
 
 *:focus {
-  outline: var(--outline-width) solid var(--outline-color);
   outline-offset: var(--outline-offset);
+
+  body:not([data-using-mouse]) & {
+    outline: var(--outline-width) solid var(--outline-color);
+  }
 
   body[data-using-mouse] & {
     --outline-width: 0;

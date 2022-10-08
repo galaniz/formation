@@ -246,8 +246,8 @@ class Nav {
   _resetNav () {
     this.onReset()
 
-    this.nav.removeAttribute('data-overflow')
-    this.nav.removeAttribute('data-overflow-all')
+    this.nav.setAttribute('data-overflow', 'false')
+    this.nav.setAttribute('data-overflow-all', 'false')
 
     this._lastOverflowFocus = null
 
@@ -340,10 +340,10 @@ class Nav {
     })
 
     if (this._currentOverflowGroups.length > 0) {
-      if (!this.nav.hasAttribute('data-overflow')) { this.nav.setAttribute('data-overflow', '') }
+      if (this.nav.getAttribute('data-overflow') === 'false') { this.nav.setAttribute('data-overflow', 'true') }
 
       if (this._currentOverflowGroups.length === this._overflowGroupsLength) {
-        if (!this.nav.hasAttribute('data-overflow-all')) { this.nav.setAttribute('data-overflow-all', '') }
+        if (this.nav.getAttribute('data-overflow-all') === 'false') { this.nav.setAttribute('data-overflow-all', 'true') }
       }
     } else {
       this._toggle(true)
@@ -418,8 +418,7 @@ class Nav {
 
             this._disableScroll()
 
-            this.button.setAttribute('aria-expanded', 'true')
-            this.nav.setAttribute('data-open', '')
+            this.nav.setAttribute('data-open', 'true')
 
             if (this.transition) { this.transition.setAttribute('data-show', '') }
           }
@@ -454,10 +453,11 @@ class Nav {
         },
         {
           action: () => {
-            this.nav.removeAttribute('data-open')
+            this.nav.setAttribute('data-open', 'false')
 
             this._disableScroll(false)
-            this.button.setAttribute('aria-expanded', 'false')
+
+            this.button.focus()
           }
         },
         {
