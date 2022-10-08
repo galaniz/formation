@@ -69,7 +69,7 @@
     } @else if $r == "border-radius" {
       @each $b, $v in con.$border-radius {
         --border-radius-#{$b}: #{func.calc-rem($v)};
-      }      
+      }
     }
   }
 }
