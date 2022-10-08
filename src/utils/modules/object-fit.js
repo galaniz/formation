@@ -1,7 +1,7 @@
 /**
- * Utility modules: object fit fallback for cover/contain
+ * Utils: object fit fallback for cover/contain
  *
- * @param images [array] of image elements
+ * @param {array} images
  */
 
 export const objectFit = (images = [], type = 'cover') => {

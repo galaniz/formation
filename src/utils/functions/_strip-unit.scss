@@ -1,5 +1,5 @@
 /**
- * Utility functions: strip unit from number
+ * Utils: strip unit from number
  */
 
 /* Imports */
@@ -12,8 +12,8 @@
  *
  * Source: https://css-tricks.com/snippets/css/fluid-typography
  *
- * @param [number] $number
- * @return [number]
+ * @param {number} $number
+ * @return {number}
  */
 
 @function strip-unit($number) {

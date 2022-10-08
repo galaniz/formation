@@ -4,7 +4,8 @@
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
-    "release": "release-it",
+    "build": "webpack",
+    "release": "release-it major",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,10 +19,27 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "release-it": "^14.12.4",
-    "standard": "^16.0.4",
-    "stylelint": "^14.4.0",
-    "stylelint-config-standard-scss": "^3.0.0"
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.3",
+    "autoprefixer": "^10.4.12",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "cssnano": "^5.1.13",
+    "fibers": "^5.0.3",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss": "^8.4.17",
+    "postcss-combine-duplicated-selectors": "^10.0.3",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.2",
+    "release-it": "^15.4.3",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.0.2",
+    "standard": "^17.0.0",
+    "style-loader": "^3.3.1",
+    "stylelint": "^14.13.0",
+    "stylelint-config-standard-scss": "^5.0.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "release-it": {
     "git": {
@@ -34,5 +52,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "browserslist": [
+    "edge 16"
+  ],
+  "dependencies": {
+    "core-js": "^3.25.5"
   }
 }

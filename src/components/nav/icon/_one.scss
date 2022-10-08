@@ -1,5 +1,5 @@
 /**
- * Components nav icon: one
+ * Components: nav icon one
  */
 
 /* Imports */
@@ -10,11 +10,7 @@
 /* Styles */
 
 .c-nav-icon[data-num="1"] {
-  & .c-nav-icon__top,
-  & .c-nav-icon__middle,
-  & .c-nav-icon__bottom {
-    transition: transform 200ms ease;
-  }
+  --duration: 200ms;
 
   & .c-nav-icon__top,
   & .c-nav-icon__bottom {

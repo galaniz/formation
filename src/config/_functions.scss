@@ -10,12 +10,12 @@
 /**
  * Convert map to one level map
  *
- * @param [map] $map
- * @param [map] $new-map
- * @param [string] $prefix
- * @param [null/string] $new-prefix
+ * @param {map} $map
+ * @param {map} $new-map
+ * @param {string} $prefix
+ * @param {null/string} $new-prefix
  *
- * @return [map]
+ * @return {map}
  */
 
 @function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {

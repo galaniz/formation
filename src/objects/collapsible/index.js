@@ -1,14 +1,14 @@
 /**
  * Objects: collapsible
  *
- * @param args [object] {
- *  @param container [HTMLElement]
- *  @param collapsible [HTMLElement]
- *  @param trigger [HTMLElement]
- *  @param closeOnLastBlur [boolean]
- *  @param accordianInstances [array]
- *  @param startOpen [boolean]
- *  @param resize [boolean]
+ * @param {object} args {
+ *  @param {HTMLElement} container
+ *  @param {HTMLElement} collapsible
+ *  @param {HTMLElement} trigger
+ *  @param {boolean} closeOnLastBlur
+ *  @param {array} accordianInstances
+ *  @param {boolean} startOpen
+ *  @param {boolean} resize
  * }
  */
 

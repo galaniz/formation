@@ -1,5 +1,5 @@
 /**
- * Utility functions: convert to rem units
+ * Utils: convert to rem units
  */
 
 /* Imports */
@@ -10,8 +10,8 @@
 /**
  * Function
  *
- * @param [number] $px
- * @return [number]
+ * @param {number} $px
+ * @return {number}
  */
 
 @function calc-rem($px) {

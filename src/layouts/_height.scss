@@ -1,0 +1,37 @@
+/**
+ * Layouts: height
+ */
+
+/* Imports */
+
+@use "../config" as con;
+@use "../utils/mixins" as mix;
+
+/* Relative units */
+
+.l-height-100-pc {
+  @extend %u-height-100-pc;
+}
+
+.l-height-100-vh,
+.l-min-height-100-vh {
+  @extend %u-height-100-vh;
+}
+
+/* Config heights */
+
+@each $h in con.$heights {
+  .l-height-#{$h} {
+    height: var(--#{$h});
+  }
+}
+
+@each $b in con.$height-breakpoints {
+  @include mix.breakpoint-min($b) {
+    @each $h in con.$heights {
+      .l-height-#{$h}-#{$b} {
+        height: var(--#{$h});
+      }
+    }
+  }
+}

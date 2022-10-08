@@ -1,5 +1,5 @@
 /**
- * Utilities
+ * Utils
  */
 
 /* Alter DOM */

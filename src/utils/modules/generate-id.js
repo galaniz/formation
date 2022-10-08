@@ -1,9 +1,9 @@
 /**
- * Utility modules: generate unique id
+ * Utils: generate unique id
  *
  * Source: https://gist.github.com/gordonbrander/2230317
  *
- * @return [string]
+ * @return {string}
  */
 
 /* Module */

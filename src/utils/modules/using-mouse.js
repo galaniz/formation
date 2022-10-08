@@ -1,5 +1,5 @@
 /**
- * Utility modules: add attr to body if using mouse
+ * Utils: add attr to body if using mouse
  *
  * Source: https://bit.ly/2GpioBO
  */

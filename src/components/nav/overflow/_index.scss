@@ -1,5 +1,5 @@
 /**
- * Components nav overflow
+ * Components: nav overflow
  */
 
 /* Imports */
@@ -11,7 +11,7 @@
 .c-nav-overflow {
   @extend %u-visibility-hidden;
 
-  .c-nav[data-open] & {
+  .c-nav[data-open="true"] & {
     @extend %u-visibility-visible;
   }
 }

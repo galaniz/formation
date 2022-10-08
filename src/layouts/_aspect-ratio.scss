@@ -1,0 +1,24 @@
+/**
+ * Layouts: aspect ratio
+ */
+
+/* Imports */
+
+@use "../config" as con;
+
+/* Styles */
+
+[class*="l-aspect-ratio"] {
+  &::before {
+    @extend %u-content-empty;
+    @extend %u-display-block;
+
+    padding-top: var(--aspect-ratio-padding);
+  }
+}
+
+@each $p, $v in con.$aspect-ratio-padding {
+  .l-aspect-ratio-#{$p} {
+    --aspect-ratio-padding: #{$v};
+  }
+}

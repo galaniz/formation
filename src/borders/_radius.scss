@@ -1,0 +1,20 @@
+/**
+ * Borders
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../config" as con;
+
+/* Styles */
+
+.b-radius-100-pc {
+  @extend %u-border-radius-100-pc;
+}
+
+@each $r, $v in con.$border-radius {
+  .b-#{$r} {
+    border-radius: var(--border-radius-#{$r});
+  }
+}

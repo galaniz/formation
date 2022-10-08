@@ -10,16 +10,14 @@
 /* Styles */
 
 .c-skip-link {
-  @extend %u-display-block;
-  @extend %u-position-absolute;
-  @extend %u-top-0;
-  @extend %u-left-0;
-  @extend %u-right-0;
+  @extend %u-opacity-0;
 
   z-index: map.get(con.$z-index, "skip-link");
-  transform: translateY(-150%);
+  transform: translateY(-100%);
 
   &:focus {
+    @extend %u-opacity-1;
+
     transform: translateY(0);
   }
 }

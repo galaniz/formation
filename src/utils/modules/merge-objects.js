@@ -1,12 +1,12 @@
 /**
- * Utility modules: merge objects only one nested level deep
+ * Utils: merge objects only one nested level deep
  *
  * @dependency Object.assign()
  *
- * @param x [object]
- * @param y [object] overwrite x values
+ * @param {object} x
+ * @param {object} y - overwrite x values
  *
- * @return [object] x
+ * @return {object} x
  */
 
 /* Module */

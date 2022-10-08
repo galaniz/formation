@@ -1,0 +1,67 @@
+/**
+ * Layouts: position
+ */
+
+/* Imports */
+
+@use "../config";
+
+/* Styles */
+
+.l-relative {
+  @extend %u-position-relative;
+}
+
+.l-absolute {
+  @extend %u-position-absolute;
+}
+
+.l-fixed {
+  @extend %u-position-fixed;
+}
+
+.l-sticky {
+  @extend %u-position-sticky;
+}
+
+.l-top-0 {
+  @extend %u-top-0;
+}
+
+.l-left-0 {
+  @extend %u-left-0;
+}
+
+.l-right-0 {
+  @extend %u-right-0;
+}
+
+.l-bottom-0 {
+  @extend %u-top-0;
+}
+
+.l-before::before {
+  @extend %u-content-empty;
+  @extend %u-position-absolute;
+  @extend %u-top-0;
+  @extend %u-left-0;
+  @extend %u-right-0;
+  @extend %u-bottom-0;
+}
+
+.l-after::after {
+  @extend %u-content-empty;
+  @extend %u-position-absolute;
+  @extend %u-top-0;
+  @extend %u-left-0;
+  @extend %u-right-0;
+  @extend %u-bottom-0;
+}
+
+.l-z-index-1 {
+  @extend %u-z-index-1;
+}
+
+.l-z-index--1 {
+  @extend %u-z-index--1;
+}

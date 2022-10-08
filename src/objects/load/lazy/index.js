@@ -1,7 +1,7 @@
 /**
- * Objects load: lazy (images + iframes)
+ * Objects: lazy load (images + iframes)
  *
- * @param args [array] of [HTMLElement]
+ * @param {array} args
  */
 
 /* Imports */

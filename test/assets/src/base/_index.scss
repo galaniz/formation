@@ -1,0 +1,13 @@
+/**
+ * Base
+ */
+
+/* Imports */
+
+@use "../../../../src/base/mixins" as mix;
+
+/* Root */
+
+:root {
+  @include mix.set-root;
+}

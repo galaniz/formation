@@ -1,9 +1,9 @@
 /**
- * Objects form: float labels above inputs
+ * Objects: float labels above inputs
  *
- * @param args [object] {
- *  @param input [HTMLElement]
- *  @param label [HTMLElement]
+ * @param {object} args {
+ *  @param {HTMLElement} input
+ *  @param {HTMLElement} label
  * }
  */
 

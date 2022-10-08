@@ -1,27 +1,27 @@
 /**
  * Components: nav
  *
- * @param args [object] {
- *  @param nav [HTMLElement]
- *  @param list [HTMLElement] or [array]
- *  @param overflow [HTMLElement]
- *  @param overflowList [HTMLElement] or [array]
- *  @param items [HTMLElement]
- *  @param itemSelector [string]
- *  @param button [HTMLElement]
- *  @param overlay [HTMLElement]
- *  @param transition [HTMLElement]
- *  @param overflowHiddenClass [string]
- *  @param onSet [function]
- *  @param onReset [function]
- *  @param afterReset [function]
- *  @param onResize [function]
- *  @param onToggle [function]
- *  @param endToggle [function]
- *  @param done [function]
- *  @param delay [object] {
- *   @param open [int]
- *   @param close [int]
+ * @param {object} args {
+ *  @param {HTMLElement} nav
+ *  @param {HTMLElement/array} list
+ *  @param {HTMLElement} overflow
+ *  @param {HTMLElement/array} overflowList
+ *  @param {HTMLElement} items
+ *  @param {string} itemSelector
+ *  @param {HTMLElement} button
+ *  @param {HTMLElement} overlay
+ *  @param {HTMLElement} transition
+ *  @param {string} overflowHiddenClass
+ *  @param {function} onSet
+ *  @param {function} onReset
+ *  @param {function} afterReset
+ *  @param {function} onResize
+ *  @param {function} onToggle
+ *  @param {function} endToggle
+ *  @param {function} done
+ *  @param {object} delay {
+ *   @param {int} open
+ *   @param {int} close
  *  }
  * }
  */
@@ -56,7 +56,7 @@ class Nav {
       button = null,
       overlay = null,
       transition = null,
-      overflowHiddenClass = 'u-o-h',
+      overflowHiddenClass = 'l-overflow-hidden',
       onSet = () => {},
       onReset = () => {},
       afterReset = () => {},
@@ -246,8 +246,8 @@ class Nav {
   _resetNav () {
     this.onReset()
 
-    this.nav.removeAttribute('data-overflow')
-    this.nav.removeAttribute('data-overflow-all')
+    this.nav.setAttribute('data-overflow', 'false')
+    this.nav.setAttribute('data-overflow-all', 'false')
 
     this._lastOverflowFocus = null
 
@@ -340,10 +340,10 @@ class Nav {
     })
 
     if (this._currentOverflowGroups.length > 0) {
-      if (!this.nav.hasAttribute('data-overflow')) { this.nav.setAttribute('data-overflow', '') }
+      if (this.nav.getAttribute('data-overflow') === 'false') { this.nav.setAttribute('data-overflow', 'true') }
 
       if (this._currentOverflowGroups.length === this._overflowGroupsLength) {
-        if (!this.nav.hasAttribute('data-overflow-all')) { this.nav.setAttribute('data-overflow-all', '') }
+        if (this.nav.getAttribute('data-overflow-all') === 'false') { this.nav.setAttribute('data-overflow-all', 'true') }
       }
     } else {
       this._toggle(true)
@@ -418,8 +418,7 @@ class Nav {
 
             this._disableScroll()
 
-            this.button.setAttribute('aria-expanded', 'true')
-            this.nav.setAttribute('data-open', '')
+            this.nav.setAttribute('data-open', 'true')
 
             if (this.transition) { this.transition.setAttribute('data-show', '') }
           }
@@ -454,10 +453,11 @@ class Nav {
         },
         {
           action: () => {
-            this.nav.removeAttribute('data-open')
+            this.nav.setAttribute('data-open', 'false')
 
             this._disableScroll(false)
-            this.button.setAttribute('aria-expanded', 'false')
+
+            this.button.focus()
           }
         },
         {

@@ -4,62 +4,71 @@
 
 /* Imports */
 
-@use "../config";
+@use "../config" as con;
+@use "../utils/mixins" as mix;
 
 /* Styles */
 
-.l-flex {
-  @extend %u-display-flex;
-
-  &[data-wrap] {
-    flex-wrap: wrap;
-  }
-
-  &[data-col] {
-    flex-direction: column;
-  }
-
-  &[data-justify="def"] {
-    justify-content: space-between;
-  }
-
-  &[data-justify="center"] {
-    justify-content: center;
-  }
-
-  &[data-justify="right"] {
-    justify-content: flex-end;
-  }
-
-  &[data-justify="left"] {
-    justify-content: flex-start;
-  }
-
-  &[data-align="center"] {
-    align-items: center;
-  }
-
-  &[data-align="start"] {
-    align-items: flex-start;
-  }
-
-  &[data-align="end"] {
-    align-items: flex-end;
-  }
-
-  &[data-right] {
-    @extend %u-margin-left-auto;
-  }
-
-  &[data-left] {
-    @extend %u-margin-right-auto;
-  }
+.l-flex-column {
+  @extend %u-flex-direction-column;
 }
 
-.l-flex-grow {
-  @extend %u-flex-grow-1;
+.l-flex-row {
+  @extend %u-flex-direction-row;
+}
+
+.l-flex-wrap {
+  @extend %u-flex-wrap-wrap;
+}
+
+.l-justify-between {
+  @extend %u-justify-content-space-between;
+}
+
+.l-justify-center {
+  @extend %u-justify-content-center;
+}
+
+.l-justify-start {
+  @extend %u-justify-content-flex-start;
+}
+
+.l-justify-end {
+  @extend %u-justify-content-flex-end;
+}
+
+.l-align-center {
+  @extend %u-align-items-center;
+}
+
+.l-align-start {
+  @extend %u-align-items-flex-start;
+}
+
+.l-align-end {
+  @extend %u-align-items-flex-end;
 }
 
 .l-flex-shrink-0 {
   @extend %u-flex-shrink-0;
+}
+
+.l-flex-grow-1 {
+  @extend %u-flex-grow-1;
+}
+
+@each $b in con.$flex-column-breakpoints {
+  @include mix.breakpoint-min($b) {
+    .l-flex-column-#{$b} {
+      flex-direction: column;
+    }
+  }
+}
+
+@each $b in con.$flex-row-breakpoints {
+  @include mix.breakpoint-min($b) {
+    .l-flex-row-#{$b} {
+      flex-direction: row;
+    }
+  }
 }

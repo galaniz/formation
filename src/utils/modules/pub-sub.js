@@ -1,15 +1,15 @@
 /**
- * Utility modules: publish/subscribe to events
+ * Utils: publish/subscribe to events
  *
  * publish
  *
- * @param name [string]
- * @param args [array] pass to callback function
+ * @param {string} name
+ * @param {array} args - pass to callback function
  *
  * subscribe
  *
- * @param name [string] (same as publish name)
- * @param callback [function]
+ * @param {string} name - same as publish name
+ * @param {function} callback
  */
 
 /* Variables */

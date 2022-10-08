@@ -1,5 +1,5 @@
 /**
- * Components nav
+ * Components: nav
  */
 
 /* Imports */
@@ -9,23 +9,15 @@
 /* Styles */
 
 .c-nav__button {
-  @extend %u-position-relative;
-  @extend %u-touch-50;
-
-  .c-nav:not([data-overflow]) & {
+  .c-nav[data-overflow="false"] & {
     @extend %u-display-none;
   }
 }
 
 .c-nav__overlay {
-  @extend %u-position-fixed;
-  @extend %u-top-0;
-  @extend %u-left-0;
-  @extend %u-bottom-0;
-  @extend %u-right-0;
   @extend %u-visibility-hidden;
 
-  .c-nav[data-open] & {
+  .c-nav[data-open="true"] & {
     @extend %u-visibility-visible;
   }
 }

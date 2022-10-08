@@ -5,176 +5,126 @@
 /* Imports */
 
 @use "sass:map";
-@use "sass:meta";
+@use "sass:list";
 @use "sass:string";
 @use "functions" as func;
 @use "mixins" as mix;
-@use "../utils/functions/capitalize" as c;
 @use "../utils/functions/map" as m;
-@use "../utils/mixins/grayscale" as g;
+
+/* Root */
+
+$root: (
+  "colors",
+  "font-families",
+  "font-weights",
+  "spacing",
+  "gap",
+  "containers",
+  "container-padding",
+  "aspect-ratio-padding",
+  "transitions",
+  "outline",
+  "borders",
+  "border-radius",
+) !default;
+
+/* Rem context */
+
+$context: 16px !default;
+
+/* Store custom variables */
+
+$vars: () !default;
 
 /* Colors  */
 
-$colors: () !default;
+$colors: (
+  "primary": (
+    "base": #888,
+    "light": #aaa,
+    "dark": #666,
+  ),
+  "foreground": (
+    "base": #222,
+    "light": #444,
+    "dark": #000,
+  ),
+  "background": (
+    "base": #f8f8f8,
+    "light": #fff,
+    "dark": #eee,
+  ),
+) !default;
 
-/* Fonts */
+/* Flatten colors to one level map */
 
-$fonts: () !default;
+$colors-flat-prefix: func.map-flatten($colors, (), "color");
 
-/* Placeholders */
+/* Flatten colors to one level map without prefix */
 
-$placeholders: () !default;
+$colors-flat: func.map-flatten($colors, (), "");
 
-/* Breakpoints */
+/* Text colors */
 
-$breakpoints: () !default;
+$text-colors: (
+  "foreground-base",
+  "foreground-dark",
+) !default;
 
-/* Layout containers and padding */
+/* Background colors */
 
-$containers: () !default;
-$container-padding: 25px !default;
+$background-colors: (
+  "background-base",
+  "background-dark",
+) !default;
 
-/* Grid system */
+/* Fonts families  */
 
-$grid: () !default;
-$grid-overwrite: false !default;
+$font-families: (
+  "primary": (
+    helvetica,
+    arial,
+    sans-serif,
+  ),
+) !default;
 
-/* Rem/em context */
+/* Font weights */
 
-$context: 16px !default;
-$context-em: 16px !default;
-
-/* Aspect ratio padding */
-
-$aspect-ratio-padding: () !default;
-
-/* Transitions */
-
-$transitions: () !default;
-
-/* Z index */
-
-$z-index: () !default;
+$font-weights: (
+  "normal": 400,
+) !default;
 
 /* Nav */
 
 $nav: (
-  icon: (
-    width: 35px,
-    line-width: 2px,
-    margin: 8px,
+  "icon": (
+    "width": 40px,
+    "line-width": 2px,
+    "margin": 8px,
   )
 ) !default;
 
-/* Vars custom */
-
-$vars: () !default;
-
-/**
- * Merge maps
- */
-
-/* Colors */
-
-$colors: m.map-recursive-merge(
-  (
-    primary: (
-      base: #888,
-      light: #aaa,
-      dark: #666,
-    ),
-    foreground: (
-      base: #222,
-      light: #444,
-      dark: #000,
-    ),
-    background: (
-      base: #f8f8f8,
-      light: #fff,
-      dark: #eee,
-    ),
-  ),
-  $colors
-);
-
-/* Fonts */
-
-$fonts: m.map-recursive-merge(
-  (
-    primary: (
-      helvetica,
-      arial,
-      sans-serif,
-    ),
-    weight: (
-      normal: 400,
-    ),
-  ),
-  $fonts
-);
-
-/* Grid */
-
-$grid: m.map-recursive-merge(
-  (
-    25: (
-      600: 50%,
-      900: 25%,
-    ),
-    33: (
-      600: 50%,
-      900: 33.3333%,
-    ),
-    50: (
-      600: 50%,
-    ),
-    66: (
-      600: 50%,
-      900: 66.6667%,
-    ),
-    75: (
-      600: 50%,
-      900: 75%,
-    ),
-  ),
-  $grid
-);
-
 /* Breakpoints */
 
-$breakpoints: m.map-recursive-merge(
-  (
-    0: 0,
-    400: 400px,
-    500: 500px,
-    600: 600px,
-    700: 700px,
-    800: 800px,
-    900: 900px,
-    1000: 1000px,
-    1200: 1200px,
-  ),
-  $breakpoints
-);
+$breakpoints: (
+  "xs": 400px,
+  "s": 600px,
+  "r": 800px,
+  "m": 900px,
+  "l": 1000px,
+) !default;
 
-/* Containers */
+/* Containers and padding */
 
-$containers: m.map-recursive-merge(
-  (
-    def: 1200px,
-    s: 800px,
-    l: 1920px,
-  ),
-  $containers
-);
+$containers: ( "default": 1300px ) !default;
+$container-padding: 20px !default;
 
 /* Append to breakpoints */
 
 @each $c, $width in $containers {
-  $k: meta.inspect($c);
   $suffix: "";
 
-  @if $c != "def" {
+  @if $c != "default" {
     $suffix: "-#{$c}";
   }
 
@@ -182,320 +132,749 @@ $containers: m.map-recursive-merge(
   $breakpoints: map.merge(("container#{$suffix}-with-padding": $width + ($container-padding * 2)), $breakpoints);
 }
 
+/* Spacing */
+
+$spacing: (
+  "s": 8px,
+  "m": 16px,
+  "l": 24px,
+) !default;
+
+/* Widths */
+
+$width-percentages: (
+  "4-5": 80%,
+  "3-4": 75%,
+  "2-3": 66.667%,
+  "3-5": 60%,
+  "1-2": 50%,
+  "2-5": 40%,
+  "1-3": 33.333%,
+  "1-4": 25%,
+  "1-5": 20%
+) !default;
+$width-percentage-breakpoints: ("s", "m") !default;
+$widths: () !default;
+$width-breakpoints: () !default;
+$max-widths: () !default;
+$max-width-breakpoints: () !default;
+
+/* Heights */
+
+$heights: () !default;
+$height-breakpoints: () !default;
+
+/* Padding */
+
+$padding-top: () !default;
+$padding-bottom: () !default;
+$padding-vertical-breakpoints: ("l") !default;
+$padding-left: () !default;
+$padding-right: () !default;
+$padding-horizontal-breakpoints: () !default;
+
+/* Margin */
+
+$margin-top: () !default;
+$margin-bottom: () !default;
+$margin-bottom-all: () !default;
+$margin-vertical-breakpoints: () !default;
+$margin-left: () !default;
+$margin-right: () !default;
+$margin-horizontal-breakpoints: () !default;
+
+/* Gap */
+
+$gaps: () !default;
+$gap-breakpoints: ("l") !default;
+
+/* Flex */
+
+$flex-row-breakpoints: () !default;
+$flex-column-breakpoints: () !default;
+
+/* Aspect ratio padding */
+
+$aspect-ratio-padding: () !default;
+$aspect-ratio-padding: m.map-recursive-merge(
+  (
+    "100": 100%
+  ),
+  $aspect-ratio-padding
+);
+
 /* Transitions */
 
+$transitions: () !default;
 $transitions: m.map-recursive-merge(
   (
-    def: (
-      durations: (
-        def: 300ms,
-      ),
-      timing-function: "ease-in-out",
-      timing-function-cubic: "cubic-bezier(.07, .50, .12, 1)",
-    ),
-    fade: (
-      durations: (
-        def: "800ms, 500ms",
-        s: "1200ms, 800ms",
-      ),
-      y: (
-        def: 5%,
-        s: 25%,
-        m: 50%,
-        l: 100%,
-      ),
-      x: (
-        def: 5%,
-        s: 25%,
-        m: 50%,
-        l: 100%,
-      ),
-    ),
-    scale: (
-      durations: (
-        def: "800ms, 500ms",
-        s: "2200ms, 600ms",
-      ),
-      in: (
-        def: 1.1,
-        hover: 1.06,
-        s: 1.05,
-        m: 1.2,
-        l: 1.55,
-      ),
-      out: (
-        def: 1.1,
-        hover: 1,
-        s: 1.04,
-        m: 1.2,
-      ),
+    "default": (
+      "prop": (color, background, border-color, opacity, transform),
+      "duration": 300ms,
+      "easing": "ease-in-out",
+      "delay": 0ms,
     ),
   ),
   $transitions
 );
-$def-transitions: map.get($transitions, "def");
-$def-durations: map.get($def-transitions, "durations");
-$def-duration: map.get($def-durations, "def");
-$def-timing-function: map.get($def-transitions, "timingFunction");
-$def-timing-function-cubic: map.get($def-transitions, "timingFunctionCubic");
+$default-prop: map.get($transitions, "default", "prop");
+$default-duration: map.get($transitions, "default", "duration");
+$default-easing: map.get($transitions, "default", "easing");
+$default-delay: map.get($transitions, "default", "delay");
 
 /* Z index */
 
+$z-index: () !default;
 $z-index: m.map-recursive-merge(
   (
-    skip-link: 100,
-    transition: 100,
-    modal: 90,
-    nav: 85,
-    loader: (
-      def: 80,
-      page: 110
+    "skip-link": 100,
+    "page-transition": 100,
+    "modal": 90,
+    "nav": 85,
+    "loader": (
+      "default": 80,
+      "page": 110
     )
   ),
   $z-index
 );
 
-/**
- * Placeholders
- */
+/* Outline */
 
-/* Overflow */
+$outline: () !default;
+$outline: m.map-recursive-merge(
+  (
+    "width": 0.25rem,
+    "color": "var(--primary-dark)",
+    "offset": 0.25rem,
+  ),
+  $outline
+);
 
-@include mix.set-placeholder("overflow-hidden") {
-  overflow: hidden;
-}
+/* Borders */
 
-@include mix.set-placeholder("overflow-scroll") {
-  overflow: scroll;
-}
+$borders: () !default;
+$borders: m.map-recursive-merge(
+  (
+    "sides": ("all", "top", "left", "right", "bottom"),
+    "colors": (
+      "default": currentcolor,
+    ),
+    "widths": (
+      "default": 0.125rem,
+    ),
+  ),
+  $borders
+);
 
-@include mix.set-placeholder("overflow-y-auto") {
-  overflow-y: auto;
-}
+/* Border radius */
 
-@include mix.set-placeholder("overflow-x-hidden") {
-  overflow-x: hidden;
-}
+$border-radius: () !default;
 
-/* Floats */
+/* Placeholders */
 
-@include mix.set-placeholder("float-left") {
-  float: left;
-}
+$placeholders: () !default;
+$placeholders: list.join(
+  (
+    (
+      "name": "overflow-hidden",
+      "prop": (
+        overflow: hidden
+      )
+    ),
+    (
+      "name": "overflow-x-hidden",
+      "prop": (
+        overflow-x: hidden
+      )
+    ),
+    (
+      "name": "overflow-y-hidden",
+      "prop": (
+        overflow-y: hidden
+      )
+    ),
+    (
+      "name": "overflow-scroll",
+      "prop": (
+        overflow: scroll
+      )
+    ),
+    (
+      "name": "overflow-x-scroll",
+      "prop": (
+        overflow-x: scroll
+      )
+    ),
+    (
+      "name": "overflow-y-scroll",
+      "prop": (
+        overflow-y: scroll
+      )
+    ),
+    (
+      "name": "overflow-auto",
+      "prop": (
+        overflow: auto
+      )
+    ),
+    (
+      "name": "overflow-x-auto",
+      "prop": (
+        overflow-x: auto
+      )
+    ),
+    (
+      "name": "overflow-y-auto",
+      "prop": (
+        overflow-y: auto
+      )
+    ),
+    (
+      "name": "float-left",
+      "prop": (
+        float: left
+      )
+    ),
+    (
+      "name": "float-right",
+      "prop": (
+        float: right
+      )
+    ),
+    (
+      "name": "clear-both",
+      "prop": (
+        clear: both
+      )
+    ),
+    (
+      "name": "display-none",
+      "prop": (
+        display: none
+      )
+    ),
+    (
+      "name": "display-block",
+      "prop": (
+        display: block
+      )
+    ),
+    (
+      "name": "display-inline-block",
+      "prop": (
+        display: inline-block
+      )
+    ),
+    (
+      "name": "display-flex",
+      "prop": (
+        display: flex
+      )
+    ),
+    (
+      "name": "display-inline-flex",
+      "prop": (
+        display: inline-flex
+      )
+    ),
+    (
+      "name": "display-table",
+      "prop": (
+        display: table
+      )
+    ),
+    (
+      "name": "display-table-row",
+      "prop": (
+        display: table-row
+      )
+    ),
+    (
+      "name": "display-table-cell",
+      "prop": (
+        display: table-cell
+      )
+    ),
+    (
+      "name": "flex-shrink-0",
+      "prop": (
+        flex-shrink: 0
+      )
+    ),
+    (
+      "name": "flex-grow-1",
+      "prop": (
+        flex-grow: 1
+      )
+    ),
+    (
+      "name": "flex-direction-column",
+      "prop": (
+        flex-direction: column
+      )
+    ),
+    (
+      "name": "flex-direction-row",
+      "prop": (
+        flex-direction: row
+      )
+    ),
+    (
+      "name": "flex-wrap-wrap",
+      "prop": (
+        flex-wrap: wrap
+      )
+    ),
+    (
+      "name": "justify-content-space-between",
+      "prop": (
+        justify-content: space-between
+      )
+    ),
+    (
+      "name": "justify-content-center",
+      "prop": (
+        justify-content: center
+      )
+    ),
+    (
+      "name": "justify-content-flex-start",
+      "prop": (
+        justify-content: flex-start
+      )
+    ),
+    (
+      "name": "justify-content-flex-end",
+      "prop": (
+        justify-content: flex-end
+      )
+    ),
+    (
+      "name": "align-items-center",
+      "prop": (
+        align-items: center
+      )
+    ),
+    (
+      "name": "align-items-flex-start",
+      "prop": (
+        align-items: flex-start
+      )
+    ),
+    (
+      "name": "align-items-flex-end",
+      "prop": (
+        align-items: flex-end
+      )
+    ),
+    (
+      "name": "visibility-hidden",
+      "prop": (
+        visibility: hidden
+      )
+    ),
+    (
+      "name": "visibility-visible",
+      "prop": (
+        visibility: visible
+      )
+    ),
+    (
+      "name": "content-empty",
+      "prop": (
+        content: ""
+      )
+    ),
+    (
+      "name": "position-relative",
+      "prop": (
+        position: relative
+      )
+    ),
+    (
+      "name": "position-absolute",
+      "prop": (
+        position: absolute
+      )
+    ),
+    (
+      "name": "position-fixed",
+      "prop": (
+        position: fixed
+      )
+    ),
+    (
+      "name": "position-sticky",
+      "prop": (
+        position: sticky
+      )
+    ),
+    (
+      "name": "top-0",
+      "prop": (
+        top: 0
+      )
+    ),
+    (
+      "name": "bottom-0",
+      "prop": (
+        bottom: 0
+      )
+    ),
+    (
+      "name": "left-0",
+      "prop": (
+        left: 0
+      )
+    ),
+    (
+      "name": "right-0",
+      "prop": (
+        right: 0
+      )
+    ),
+    (
+      "name": "z-index-1",
+      "prop": (
+        z-index: 1
+      )
+    ),
+    (
+      "name": "z-index--1",
+      "prop": (
+        z-index: -1
+      )
+    ),
+    (
+      "name": "text-align-left",
+      "prop": (
+        text-align: left
+      )
+    ),
+    (
+      "name": "text-align-right",
+      "prop": (
+        text-align: right
+      )
+    ),
+    (
+      "name": "text-align-center",
+      "prop": (
+        text-align: center
+      )
+    ),
+    (
+      "name": "text-align-justify",
+      "prop": (
+        text-align: justify
+      )
+    ),
+    (
+      "name": "vertical-align-bottom",
+      "prop": (
+        vertical-align: bottom
+      )
+    ),
+    (
+      "name": "vertical-align-middle",
+      "prop": (
+        vertical-align: middle
+      )
+    ),
+    (
+      "name": "vertical-align-top",
+      "prop": (
+        vertical-align: top
+      )
+    ),
+    (
+      "name": "padding-0",
+      "prop": (
+        padding: 0
+      )
+    ),
+    (
+      "name": "margin-0",
+      "prop": (
+        margin: 0
+      )
+    ),
+    (
+      "name": "margin-auto",
+      "prop": (
+        margin: auto
+      )
+    ),
+    (
+      "name": "margin-top-auto",
+      "prop": (
+        margin-top: auto
+      )
+    ),
+    (
+      "name": "margin-bottom-auto",
+      "prop": (
+        margin-bottom: auto
+      )
+    ),
+    (
+      "name": "margin-right-auto",
+      "prop": (
+        margin-right: auto
+      )
+    ),
+    (
+      "name": "margin-left-auto",
+      "prop": (
+        margin-left: auto
+      )
+    ),
+    (
+      "name": "border-radius-100-pc",
+      "prop": (
+        border-radius: 100%
+      )
+    ),
+    (
+      "name": "transform-origin-0-0",
+      "prop": (
+        transform-origin: 0 0
+      )
+    ),
+    (
+      "name": "transform-origin-0-100-pc",
+      "prop": (
+        transform-origin: 0 100%
+      )
+    ),
+    (
+      "name": "transform-origin-100-pc-0",
+      "prop": (
+        transform-origin: 100% 0
+      )
+    ),
+    (
+      "name": "transform-origin-100-pc-100-pc",
+      "prop": (
+        transform-origin: 100% 100%
+      )
+    ),
+    (
+      "name": "opacity-0",
+      "prop": (
+        opacity: 0
+      )
+    ),
+    (
+      "name": "opacity-1",
+      "prop": (
+        opacity: 1
+      )
+    ),
+    (
+      "name": "width-inherit",
+      "prop": (
+        width: inherit
+      )
+    ),
+    (
+      "name": "height-inherit",
+      "prop": (
+        height: inherit
+      )
+    ),
+    (
+      "name": "width-100-pc",
+      "prop": (
+        width: 100%
+      )
+    ),
+    (
+      "name": "width-100-vw",
+      "prop": (
+        width: 100vw
+      )
+    ),
+    (
+      "name": "height-100-pc",
+      "prop": (
+        height: 100%
+      )
+    ),
+    (
+      "name": "height-100-vh",
+      "prop": (
+        height: 100vh
+      )
+    ),
+    (
+      "name": "color-inherit",
+      "prop": (
+        color: inherit
+      )
+    ),
+    (
+      "name": "background-color-inherit",
+      "prop": (
+        background-color: inherit
+      )
+    ),
+    (
+      "name": "background-no-repeat",
+      "prop": (
+        background-repeat: no-repeat
+      )
+    ),
+    (
+      "name": "background-size-cover",
+      "prop": (
+        background-size: cover
+      )
+    ),
+    (
+      "name": "background-size-contain",
+      "prop": (
+        background-size: contain
+      )
+    ),
+    (
+      "name": "background-position-left-top",
+      "prop": (
+        background-position: left top
+      )
+    ),
+    (
+      "name": "background-position-left-center",
+      "prop": (
+        background-position: left center
+      )
+    ),
+    (
+      "name": "background-position-left-bottom",
+      "prop": (
+        background-position: left bottom
+      )
+    ),
+    (
+      "name": "background-position-center-top",
+      "prop": (
+        background-position: center top
+      )
+    ),
+    (
+      "name": "background-position-center-center",
+      "prop": (
+        background-position: center center
+      )
+    ),
+    (
+      "name": "background-position-center-bottom",
+      "prop": (
+        background-position: center bottom
+      )
+    ),
+    (
+      "name": "background-position-right-top",
+      "prop": (
+        background-position: right top
+      )
+    ),
+    (
+      "name": "background-position-right-center",
+      "prop": (
+        background-position: right center
+      )
+    ),
+    (
+      "name": "background-position-right-bottom",
+      "prop": (
+        background-position: right bottom
+      )
+    ),
+    (
+      "name": "object-fit-cover",
+      "prop": (
+        object-fit: cover
+      )
+    ),
+    (
+      "name": "object-fit-contain",
+      "prop": (
+        object-fit: contain
+      )
+    ),
+    (
+      "name": "object-position-left-top",
+      "prop": (
+        object-position: left top
+      )
+    ),
+    (
+      "name": "object-position-left-center",
+      "prop": (
+        object-position: left center
+      )
+    ),
+    (
+      "name": "object-position-left-bottom",
+      "prop": (
+        object-position: left bottom
+      )
+    ),
+    (
+      "name": "object-position-center-top",
+      "prop": (
+        object-position: center top
+      )
+    ),
+    (
+      "name": "object-position-center-center",
+      "prop": (
+        object-position: center center
+      )
+    ),
+    (
+      "name": "object-position-center-bottom",
+      "prop": (
+        object-position: center bottom
+      )
+    ),
+    (
+      "name": "object-position-right-top",
+      "prop": (
+        object-position: right top
+      )
+    ),
+    (
+      "name": "object-position-right-center",
+      "prop": (
+        object-position: right center
+      )
+    ),
+    (
+      "name": "object-position-right-bottom",
+      "prop": (
+        object-position: right bottom
+      )
+    ),
+  ),
+  $placeholders
+);
 
-@include mix.set-placeholder("float-right") {
-  float: right;
-}
-
-/* Display */
-
-@include mix.set-placeholder("display-none") {
-  display: none;
-}
-
-@include mix.set-placeholder("display-block") {
-  display: block;
-}
-
-@include mix.set-placeholder("display-inline-block") {
-  display: inline-block;
-}
-
-@include mix.set-placeholder("display-flex") {
-  display: flex;
-}
-
-@include mix.set-placeholder("display-table") {
-  display: table;
-}
-
-@include mix.set-placeholder("display-table-row") {
-  display: table-row;
-}
-
-@include mix.set-placeholder("display-table-cell") {
-  display: table-cell;
-}
-
-/* Flexbox */
-
-@include mix.set-placeholder("flex-shrink-0") {
-  flex-shrink: 0;
-}
-
-@include mix.set-placeholder("flex-grow-1") {
-  flex-grow: 1;
-}
-
-/* Visibility */
-
-@include mix.set-placeholder("visibility-hidden") {
-  visibility: hidden;
-}
-
-@include mix.set-placeholder("visibility-visible") {
-  visibility: visible;
-}
-
-/* Content */
-
-@include mix.set-placeholder("content-empty") {
-  content: "";
-}
-
-/* Position */
-
-@include mix.set-placeholder("position-relative") {
-  position: relative;
-}
-
-@include mix.set-placeholder("position-absolute") {
-  position: absolute;
-}
-
-@include mix.set-placeholder("position-fixed") {
-  position: fixed;
-}
-
-@include mix.set-placeholder("top-0") {
-  top: 0;
-}
-
-@include mix.set-placeholder("bottom-0") {
-  bottom: 0;
-}
-
-@include mix.set-placeholder("left-0") {
-  left: 0;
-}
-
-@include mix.set-placeholder("right-0") {
-  right: 0;
+@each $p in $placeholders {
+  @include mix.make-placeholder($p);
 }
 
 @include mix.set-placeholder("position-vertical-center") {
   top: 50%;
   transform: translateY(-50%);
-  bottom: auto;
 }
 
-/* Text align */
-
-@include mix.set-placeholder("text-align-left") {
-  text-align: left;
+@include mix.set-placeholder("position-horizontal-center") {
+  left: 50%;
+  transform: translateX(-50%);
 }
-
-@include mix.set-placeholder("text-align-right") {
-  text-align: right;
-}
-
-@include mix.set-placeholder("text-align-center") {
-  text-align: center;
-}
-
-@include mix.set-placeholder("text-align-justify") {
-  text-align: justify;
-}
-
-@include mix.set-placeholder("text-transform-uppercase") {
-  text-transform: uppercase;
-}
-
-/* Vertical align */
-
-@include mix.set-placeholder("vertical-align-bottom") {
-  vertical-align: bottom;
-}
-
-@include mix.set-placeholder("vertical-align-middle") {
-  vertical-align: middle;
-}
-
-@include mix.set-placeholder("vertical-align-top") {
-  vertical-align: top;
-}
-
-/* Margin */
-
-@include mix.set-placeholder("margin-auto") {
-  margin: auto;
-}
-
-@include mix.set-placeholder("margin-right-auto") {
-  margin-right: auto;
-}
-
-@include mix.set-placeholder("margin-left-auto") {
-  margin-left: auto;
-}
-
-/* Border radius */
-
-@include mix.set-placeholder("border-radius-100") {
-  border-radius: 100%;
-}
-
-/* Transform origin */
-
-@include mix.set-placeholder("transform-origin-0-0") {
-  transform-origin: 0% 0%;
-}
-
-@include mix.set-placeholder("transform-origin-0-100") {
-  transform-origin: 0% 100%;
-}
-
-@include mix.set-placeholder("transform-origin-100-0") {
-  transform-origin: 100% 0%;
-}
-
-@include mix.set-placeholder("transform-origin-100-100") {
-  transform-origin: 100% 100%;
-}
-
-/* Opacity */
-
-@include mix.set-placeholder("opacity-0") {
-  opacity: 0;
-}
-
-@include mix.set-placeholder("opacity-1") {
-  opacity: 1;
-}
-
-/* Width/height */
-
-@include mix.set-placeholder("width-inherit") {
-  width: inherit;
-}
-
-@include mix.set-placeholder("height-inherit") {
-  height: inherit;
-}
-
-@include mix.set-placeholder("width-100") {
-  width: 100%;
-}
-
-@include mix.set-placeholder("width-100-vw") {
-  width: 100vw;
-}
-
-@include mix.set-placeholder("height-100") {
-  height: 100%;
-}
-
-@include mix.set-placeholder("height-100-vh") {
-  height: 100vh;
-}
-
-/* Grayscale */
-
-@include mix.set-placeholder("grayscale") {
-  @include g.grayscale;
-}
-
-/* Visually hidden */
 
 @include mix.set-placeholder("visually-hidden") {
   @extend %u-position-absolute;
@@ -506,8 +885,6 @@ $z-index: m.map-recursive-merge(
   margin: -0.0625rem;
   clip: rect(0, 0, 0, 0);
 }
-
-/* Touch target 50px */
 
 @include mix.set-placeholder("touch-50") {
   &::before {
@@ -522,19 +899,17 @@ $z-index: m.map-recursive-merge(
   }
 }
 
-/* Colors */
-
-@include mix.set-placeholder("color-inherit") {
-  color: inherit;
+@each $k, $v in $font-families {
+  @include mix.set-placeholder("font-family-#{$k}") {
+    font-family: $v;
+  }
 }
 
-@include mix.set-placeholder("background-color-inherit") {
-  background-color: inherit;
+@each $k, $v in $font-weights {
+  @include mix.set-placeholder("font-weight-#{$k}") {
+    font-weight: $v;
+  }
 }
-
-/* Nested colors to one level map */
-
-$colors-flat-prefix: func.map-flatten($colors, (), "color");
 
 @each $name, $value in $colors-flat-prefix {
   @include mix.set-placeholder($name) {
@@ -551,85 +926,5 @@ $colors-flat-prefix: func.map-flatten($colors, (), "color");
 
   @include mix.set-placeholder("border-#{$name}") {
     border-color: $value;
-  }
-}
-
-/* Nested colors to one level map without prefix */
-
-$colors-flat: func.map-flatten($colors, (), "");
-
-/* Fonts */
-
-@if meta.type-of($fonts) == map {
-  @each $k, $v in $fonts {
-    @if $k == weight {
-      @each $p, $w in $v {
-        @include mix.set-placeholder("font-weight-#{$p}") {
-          font-weight: $w;
-        }
-      }
-    } @else {
-      @include mix.set-placeholder("font-family-#{$k}") {
-        font-family: $v;
-      }
-    }
-  }
-}
-
-/* Transitions */
-
-@if meta.type-of($def-transitions) == map {
-  @include mix.set-placeholder("transition-property-opacity") {
-    transition-property: opacity;
-  }
-
-  @include mix.set-placeholder("transition-property-transform") {
-    transition-property: transform;
-  }
-
-  @each $k, $v in $def-durations {
-    $name: "transition-duration";
-
-    @if $k != def {
-      $name: $name + "-" + $k;
-    }
-
-    @include mix.set-placeholder($name) {
-      transition-duration: $v;
-    }
-  }
-
-  @include mix.set-placeholder("transition-property-opacity-transform") {
-    transition-property: opacity, transform;
-  }
-
-  @include mix.set-placeholder("transition-timing-function") {
-    transition-timing-function: $def-timing-function;
-  }
-
-  @include mix.set-placeholder("transition-timing-function-cubic") {
-    transition-timing-function: $def-timing-function-cubic;
-  }
-
-  @include mix.set-placeholder("transition-opacity-transform-ease") {
-    transition: opacity #{$def-duration} #{$def-timing-function}, transform #{$def-duration} #{$def-timing-function};
-  }
-
-  @include mix.set-placeholder("transition-transform-ease") {
-    transition: transform #{$def-duration} #{$def-timing-function};
-  }
-
-  @include mix.set-placeholder("transition-opacity-ease") {
-    transition: opacity #{$def-duration} #{$def-timing-function};
-  }
-}
-
-/* Placeholders */
-
-@if meta.type-of($placeholders) == list {
-  @each $p in $placeholders {
-    @each $k, $v in $p {
-      @include mix.make-placeholder($k, $v);
-    }
   }
 }

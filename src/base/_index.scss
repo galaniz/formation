@@ -5,12 +5,9 @@
 /* Imports */
 
 @use "../config";
+@use "mixins" as mix;
 
 /* Styles */
-
-* {
-  @extend %u-color-inherit;
-}
 
 *,
 *::before,
@@ -22,12 +19,7 @@ html,
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overscroll-behavior-y: none;
   font-size: 100%;
-
-  &.u-o-h {
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 /* Resets */
@@ -90,24 +82,14 @@ video {
   height: auto;
 }
 
+main,
+time,
 img {
   @extend %u-display-block;
 }
 
 address {
   font-style: normal;
-}
-
-main,
-time {
-  @extend %u-display-block;
-}
-
-/* Lists */
-
-ol,
-ul {
-  list-style: none;
 }
 
 /* Svg */

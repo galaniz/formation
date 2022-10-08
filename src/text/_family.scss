@@ -1,0 +1,15 @@
+/**
+ * Text: font families
+ */
+
+/* Imports */
+
+@use "../config" as con;
+
+/* Styles */
+
+@each $f, $v in con.$font-families {
+  .t-#{$f}-family {
+    @extend %u-#{"font-family-#{$f}"};
+  }
+}

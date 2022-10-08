@@ -1,10 +1,10 @@
 /**
  * Objects: overflow indicator
  *
- * @param args [object] {
- *  @param indicator [HTMLElement]
- *  @param scroll [HTMLElement]
- *  @param y [boolean]
+ * @param {object} args {
+ *  @param {HTMLElement} indicator
+ *  @param {HTMLElement} scroll
+ *  @param {boolean} y
  * }
  */
 

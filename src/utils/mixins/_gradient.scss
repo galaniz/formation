@@ -1,5 +1,5 @@
 /**
- * Utility mixins: gradient
+ * Utils: gradient
  */
 
 /* Imports */
@@ -9,9 +9,9 @@
 /**
  * Mixin
  *
- * @param [string] $direction
- * @param [boolean] $image
- * @param [list] of maps $color-stops
+ * @param {string} $direction
+ * @param {boolean} $image
+ * @param {list} of maps $color-stops
  */
 
 @mixin linear-gradient($direction: to left, $image: false, $color-stops...) {

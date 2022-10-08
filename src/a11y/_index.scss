@@ -1,0 +1,21 @@
+/**
+ * A11y
+ */
+
+/* Imports */
+
+@use "../config";
+
+/* Styles */
+
+.a11y-visually-hidden {
+  @extend %u-visually-hidden;
+}
+
+.a11y-hide-input {
+  @extend %u-position-absolute;
+  @extend %u-opacity-0;
+
+  width: 1em;
+  height: 1em;
+}

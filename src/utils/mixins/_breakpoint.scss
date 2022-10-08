@@ -1,5 +1,5 @@
 /**
- * Utility mixins: media queries
+ * Utils: media queries
  */
 
 /* Imports */
@@ -11,7 +11,7 @@
 /**
  * Min media query
  *
- * @param [string/number] $min
+ * @param {string/number} $min
  */
 
 @mixin breakpoint-min($min) {
@@ -29,7 +29,7 @@
 /**
  * Max media query
  *
- * @param [string/number] $max
+ * @param {string/number} $max
  */
 
 @mixin breakpoint-max($max) {
@@ -47,8 +47,8 @@
 /**
  * Min/max media query
  *
- * @param [string/number] $min
- * @param [string/number] $max
+ * @param {string/number} $min
+ * @param {string/number} $max
  */
 
 @mixin breakpoint-min-max($min, $max) {

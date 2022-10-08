@@ -1,5 +1,5 @@
 /**
- * Objects collapsible
+ * Objects: collapsible
  */
 
 /* Imports */
@@ -15,12 +15,13 @@
 }
 
 .o-collapsible__main {
+  --prop: visibility, height;
+  --duration: 0ms, #{con.$default-duration};
+  --delay: #{con.$default-duration}, 10ms;
+
   @extend %u-visibility-hidden;
 
   height: 0;
-  transition:
-    visibility 0ms #{con.$def-timing-function} #{con.$def-duration},
-    height #{con.$def-duration } #{con.$def-timing-function} 10ms;
 
   .o-collapsible[data-set] > & {
     @extend %u-overflow-hidden;
@@ -29,10 +30,8 @@
   }
 
   .o-collapsible[data-expanded="true"] > & {
-    @extend %u-visibility-visible;
+    --delay: 10ms, 0ms;
 
-    transition:
-      visibility 0ms #{con.$def-timing-function} 10ms,
-      height #{con.$def-duration} #{con.$def-timing-function};
+    @extend %u-visibility-visible;
   }
 }

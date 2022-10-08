@@ -11,14 +11,13 @@
 .l-clearfix::after {
   @extend %u-content-empty;
   @extend %u-display-table;
-
-  clear: both;
+  @extend %u-clear-both;
 }
 
-.l-right {
+.l-float-right {
   @extend %u-float-right;
 }
 
-.l-left {
+.l-float-left {
   @extend %u-float-left;
 }

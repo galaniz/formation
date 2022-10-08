@@ -1,9 +1,9 @@
 /**
- * Utility modules: toggle display of loaders/disable buttons
+ * Utils: toggle display of loaders/disable buttons
  *
- * @param loaders [array] of [HTMLElement]
- * @param buttons [array] of [HTMLElement]
- * @param show [boolean]
+ * @param {array} loaders
+ * @param {array} buttons
+ * @param {boolean} show
  */
 
 /* Module */

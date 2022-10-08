@@ -1,9 +1,9 @@
 /**
  * Objects: table collapse dynamically
  *
- * @param args [object] {
- *  @param table [HTMLElement]
- *  @param equalWidthTo [HTMLElement]
+ * @param {object} args {
+ *  @param {HTMLElement} table
+ *  @param {HTMLElement} equalWidthTo
  * }
  */
 

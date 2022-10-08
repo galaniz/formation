@@ -1,0 +1,106 @@
+/**
+ * Layouts: margin
+ */
+
+/* Imports */
+
+@use "sass:list";
+@use "sass:string";
+@use "../config" as con;
+@use "../utils/mixins" as mix;
+
+/* Defaults */
+
+.l-margin-0 {
+  @extend %u-margin-0;
+}
+
+.l-margin-auto {
+  @extend %u-margin-auto;
+}
+
+.l-margin-top-auto {
+  @extend %u-margin-top-auto;
+}
+
+.l-margin-left-auto {
+  @extend %u-margin-left-auto;
+}
+
+.l-margin-right-auto {
+  @extend %u-margin-right-auto;
+}
+
+.l-margin-bottom-auto {
+  @extend %u-margin-bottom-auto;
+}
+
+/* Config margins */
+
+@each $m in con.$margin-top {
+  .l-margin-top-#{$m} {
+    margin-top: var(--#{$m});
+  }
+}
+
+@each $m in con.$margin-bottom {
+  $selector: ".l-margin-bottom-#{$m}";
+
+  @if list.index(con.$margin-bottom-all, $m) {
+    $selector: "#{$selector}, #{$selector}-all > *";
+  }
+
+  #{string.unquote($selector)} {
+    margin-bottom: var(--#{$m});
+  }
+}
+
+@each $b in con.$margin-vertical-breakpoints {
+  @include mix.breakpoint-min($b) {
+    @each $m in con.$margin-top {
+      .l-margin-top-#{$m}-#{$b} {
+        margin-top: var(--#{$m});
+      }
+    }
+
+    @each $m in con.$margin-bottom {
+      .l-margin-bottom-#{$m}-#{$b} {
+        margin-bottom: var(--#{$m});
+      }
+    }
+  }
+}
+
+@each $m in con.$margin-left {
+  .l-margin-left-#{$m} {
+    margin-left: var(--#{$m});
+  }
+}
+
+@each $m in con.$margin-right {
+  .l-margin-right-#{$m} {
+    margin-right: var(--#{$m});
+  }
+}
+
+@each $b in con.$margin-horizontal-breakpoints {
+  @include mix.breakpoint-min($b) {
+    @each $m in con.$margin-left {
+      .l-margin-left-#{$m}-#{$b} {
+        margin-left: var(--#{$m});
+      }
+    }
+
+    @each $m in con.$margin-right {
+      .l-margin-right-#{$m}-#{$b} {
+        margin-right: var(--#{$m});
+      }
+    }
+  }
+}
+
+/* Defaults */
+
+.l-margin-0-last > *:last-child {
+  @extend %u-margin-0;
+}

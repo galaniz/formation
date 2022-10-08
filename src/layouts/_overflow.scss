@@ -1,0 +1,29 @@
+/**
+ * Layouts: overflow
+ */
+
+/* Imports */
+
+@use "../config";
+
+/* Styles */
+
+.l-overflow-hidden {
+  @extend %u-overflow-hidden;
+}
+
+.l-overflow-x-hidden {
+  @extend %u-overflow-x-hidden;
+}
+
+.l-overflow-y-hidden {
+  @extend %u-overflow-y-hidden;
+}
+
+.l-overflow-y-auto {
+  @extend %u-overflow-y-auto;
+}
+
+.l-overflow-x-auto {
+  @extend %u-overflow-x-auto;
+}
