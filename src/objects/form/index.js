@@ -7,17 +7,12 @@
  *  @param {string} groupClass
  *  @param {string} labelClass
  *  @param {boolean} submitted
- *  @param {boolean} errorShake
- *  @param {string} errorClass
- *  @param {string} errorShakeClass
  *  @param {function} onValidate
  */
 
 /* Imports */
 
 import {
-  addClass,
-  removeClass,
   closest,
   urlEncode
 } from '../../utils'
@@ -39,10 +34,12 @@ class Form {
       fieldClass = '',
       groupClass = '',
       labelClass = '',
+      errorTemplate = "<span id='%id'><span id='%id-text'>%message</span></span>",
+      errorSummary = {
+        container: null,
+        list: null
+      },
       submitted = false,
-      errorShake = false,
-      errorClass = '',
-      errorShakeClass = 'a-shake',
       onValidate = () => {}
     } = args
 
@@ -50,21 +47,20 @@ class Form {
     this.fieldClass = fieldClass
     this.groupClass = groupClass
     this.labelClass = labelClass
+    this.errorTemplate = errorTemplate
+    this.errorSummary = errorSummary
     this.submitted = submitted
-    this.errorShake = errorShake
-    this.errorClass = errorClass
-    this.errorShakeClass = errorShakeClass
     this.onValidate = onValidate
 
     /**
      * Internal variables
      */
 
-    /* Regex for url, email inputs */
+    /* Regex source: https://emailregex.com && https://urlregex.com */
 
     this._exp = {
-      url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
-      email: /^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/,
+      email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     }
 
     /* Input data goes here */
@@ -82,6 +78,13 @@ class Form {
     /* Input email labels by name */
 
     this._inputEmailLabels = {}
+
+    /* Store errors for summary list */
+
+    this._errorSummaryList = {
+      ids: [],
+      messages: {}
+    }
 
     /**
      * Initialize
@@ -102,8 +105,6 @@ class Form {
     if (!this.inputs || !this.fieldClass) { return false }
 
     this.inputs = Array.from(this.inputs)
-
-    if (this.errorClass) { this.errorClass = ' ' + this.errorClass }
 
     /* Check if already got field group */
 
@@ -161,9 +162,9 @@ class Form {
         }
       }
 
-      /* Listen on change so can validate then rather than submit */
+      /* Listen on blur so can validate then rather than only submit */
 
-      input.addEventListener('change', this._onChange.bind(this))
+      input.addEventListener('blur', this._onBlur.bind(this))
     })
 
     return true
@@ -216,7 +217,7 @@ class Form {
             valid = true
           } else {
             valid = false
-            message = 'Please enter a valid email'
+            message = 'Enter a valid email'
           }
           break
         case 'url':
@@ -224,7 +225,7 @@ class Form {
             valid = true
           } else {
             valid = false
-            message = 'Please enter a valid URL'
+            message = 'Enter a valid URL'
           }
           break
         default:
@@ -258,10 +259,34 @@ class Form {
 
     if (!valid) {
       this._setErrorMessage(inputs, name, label, field, message)
+
+      if (label) {
+        if (!this._errorSummaryList.ids.includes(label.id)) {
+          console.log(label, label.id)
+          this._errorSummaryList.ids.push(label.id)
+        }
+
+        this._errorSummaryList.messages[label.id] = message
+      }
+
       validGroup = false
     } else {
       this._removeErrorMessage(inputs, name, label, field)
+
+      if (label) {
+        if (this._errorSummaryList.ids.includes(label.id)) {
+          this._errorSummaryList.ids = this._errorSummaryList.ids.filter((id) => {
+            return label.id !== id
+          })
+
+          this._errorSummaryList.messages[label.id] = ''
+        }
+      }
     }
+
+    /* Reset summary list */
+
+    this._setErrorSummaryList()
 
     /* Save valid state and values in inputGroup */
 
@@ -276,28 +301,21 @@ class Form {
   _setErrorMessage (inputs, name, label, field, message) {
     /* Error element id */
 
-    const errorID = name + '-error'
+    const errorId = name + '-error'
 
     /* Check if error element exists */
 
-    const error = document.getElementById(errorID)
+    const error = document.getElementById(errorId)
 
     /* Output */
 
     if (error !== null) {
-      const messageElement = error.querySelector('.o-form-error__message')
+      const messageElement = error.querySelector(`#${errorId}-text`)
       messageElement.textContent = message
     } else {
-      label.insertAdjacentHTML('beforeend', `
-        <div id="${errorID}" class="o-form-error${this.errorClass}">
-          <span class="o-form-error__message">
-            ${message}
-          </span>
-        </div>
-      `)
+      const errorHtml = this.errorTemplate.replace(/%id/g, errorId).replace(/%message/g, message)
+      label.insertAdjacentHTML('beforeend', errorHtml)
     }
-
-    if (this.errorShake) { addClass(field, this.errorShakeClass) }
 
     /* Set inputs as invalid */
 
@@ -309,15 +327,13 @@ class Form {
   _removeErrorMessage (inputs, name, label, field) {
     /* Error element id */
 
-    const errorID = name + '-error'
+    const errorId = name + '-error'
 
     /* Check if error element exists */
 
-    const error = document.getElementById(errorID)
+    const error = document.getElementById(errorId)
 
     if (error !== null) { label.removeChild(error) }
-
-    if (this.errorShake) { removeClass(field, this.errorShakeClass) }
 
     /* Set inputs as valid */
 
@@ -326,7 +342,40 @@ class Form {
     })
   }
 
-  _onChange (e) {
+  _displayErrorSummary (display = true) {
+    if (!this.errorSummary.container) {
+      return
+    }
+
+    const displayValue = display ? 'block' : 'none'
+    this.errorSummary.container.style.setProperty('display', displayValue)
+  }
+
+  _setErrorSummaryList () {
+    if (!this.errorSummary.list) {
+      return
+    }
+
+    if (!this._errorSummaryList.ids.length) {
+      this._displayErrorSummary(false)
+    }
+
+    const frag = new window.DocumentFragment()
+
+    this._errorSummaryList.ids.forEach((id) => {
+      const li = document.createElement('LI')
+      const message = this._errorSummaryList.messages[id]
+
+      li.innerHTML = `<a href="#${id}">${message}</a>`
+
+      frag.appendChild(li)
+    })
+
+    this.errorSummary.list.innerHTML = ''
+    this.errorSummary.list.appendChild(frag)
+  }
+
+  _onBlur (e) {
     const input = e.currentTarget
     const name = input.name
     const inputGroup = this._inputGroups[name]
@@ -347,6 +396,14 @@ class Form {
       const validGroup = this._validateGroup(this._inputGroups[name], name)
 
       if (!validGroup) { validForm = false }
+    }
+
+    this._displayErrorSummary(!validForm)
+
+    if (!validForm) {
+      if (this.errorSummary.container) {
+        this.errorSummary.container.focus()
+      }
     }
 
     return validForm

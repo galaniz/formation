@@ -45,6 +45,7 @@
         }
 
         --container#{$suffix}: #{func.calc-rem($v)};
+        --container#{$suffix}-no-padding: #{func.calc-rem($v - (con.$container-padding * 2))};
       }
     } @else if $r == "container-padding" {
       --container-padding: #{func.calc-rem(con.$container-padding)};

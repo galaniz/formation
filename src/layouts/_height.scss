@@ -13,9 +13,12 @@
   @extend %u-height-100-pc;
 }
 
-.l-height-100-vh,
-.l-min-height-100-vh {
+.l-height-100-vh {
   @extend %u-height-100-vh;
+}
+
+.l-min-height-100-vh {
+  min-height: 100vh;
 }
 
 /* Config heights */
