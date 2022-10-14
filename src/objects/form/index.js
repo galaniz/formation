@@ -7,17 +7,12 @@
  *  @param {string} groupClass
  *  @param {string} labelClass
  *  @param {boolean} submitted
- *  @param {boolean} errorShake
- *  @param {string} errorClass
- *  @param {string} errorShakeClass
  *  @param {function} onValidate
  */
 
 /* Imports */
 
 import {
-  addClass,
-  removeClass,
   closest,
   urlEncode
 } from '../../utils'
@@ -39,10 +34,12 @@ class Form {
       fieldClass = '',
       groupClass = '',
       labelClass = '',
+      errorTemplate = "<span id='%id'><span id='%id-text'>%message</span></span>",
+      errorSummary = {
+        container: null,
+        list: null
+      },
       submitted = false,
-      errorShake = false,
-      errorClass = '',
-      errorShakeClass = 'a-shake',
       onValidate = () => {}
     } = args
 
@@ -50,21 +47,20 @@ class Form {
     this.fieldClass = fieldClass
     this.groupClass = groupClass
     this.labelClass = labelClass
+    this.errorTemplate = errorTemplate
+    this.errorSummary = errorSummary
     this.submitted = submitted
-    this.errorShake = errorShake
-    this.errorClass = errorClass
-    this.errorShakeClass = errorShakeClass
     this.onValidate = onValidate
 
     /**
      * Internal variables
      */
 
-    /* Regex for url, email inputs */
+    /* Regex source: https://emailregex.com && https://urlregex.com */
 
     this._exp = {
-      url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
-      email: /^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/,
+      email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     }
 
     /* Input data goes here */
@@ -79,9 +75,16 @@ class Form {
 
     this._inputLabels = {}
 
-    /* Input email labels by name */
+    /* Input legends name */
 
-    this._inputEmailLabels = {}
+    this._inputLegends = {}
+
+    /* Store errors for summary list */
+
+    this._errorSummaryList = {
+      ids: [],
+      messages: {}
+    }
 
     /**
      * Initialize
@@ -103,67 +106,99 @@ class Form {
 
     this.inputs = Array.from(this.inputs)
 
-    if (this.errorClass) { this.errorClass = ' ' + this.errorClass }
-
-    /* Check if already got field group */
-
-    const fieldGroupSet = []
-
     /* Loop through inputs to insert input data into inputGroups */
 
     this.inputs.forEach((input) => {
       const name = input.name
 
-      /* Already exists in inputGroups so just push input into inputs array */
+      /* Already exists in inputGroups so push input into inputs array */
 
       if (Object.getOwnPropertyDescriptor(this._inputGroups, name)) {
         this._inputGroups[name].inputs.push(input)
-
-        if (fieldGroupSet.indexOf(name) === -1) {
-          const fieldGroup = closest(input, this.groupClass, 10)
-
-          if (fieldGroup) { this._inputGroups[name].field = fieldGroup }
-
-          fieldGroupSet.push(name)
-        }
       } else {
         /* Doesn't exist so create new object of input data */
 
         const reqAttr = input.getAttribute('aria-required')
-        const required = (reqAttr === 'true' || reqAttr === '1')
+        let required = (reqAttr === 'true' || reqAttr === '1')
+
+        const dataReqAttr = input.getAttribute('data-aria-required') // Required radio buttons and checkboxes
+
+        if (dataReqAttr === 'true' || dataReqAttr === '1') {
+          required = true
+        }
+
+        /* Type */
+
         let type = input.tagName.toLowerCase()
 
         if (type === 'input') { type = input.type }
 
         this._inputTypes[name] = type
 
-        const emailLabel = input.getAttribute('data-email-label')
+        /* Legend */
 
-        if (emailLabel) { this._inputEmailLabels[name] = emailLabel }
+        const fieldset = closest(input, this.groupClass)
+        let legend = null
+        let excludeLabel = false
+
+        if (fieldset) {
+          legend = fieldset.querySelector('legend')
+
+          if (legend) {
+            this._inputLegends[name] = legend.textContent.replace(' required', '')
+
+            if (type === 'radio' || type === 'checkbox') {
+              excludeLabel = true
+            }
+          }
+        }
+
+        /* Field */
 
         const field = closest(input, this.fieldClass)
-        const label = field.querySelector('.' + this.labelClass)
 
+        /* Label */
+
+        let label = null
         let labelText = ''
 
-        if (label) { labelText = label.textContent }
+        if (field) {
+          label = field.querySelector('.' + this.labelClass)
+
+          if (label && !excludeLabel) {
+            labelText = label.textContent.replace(' required', '')
+          }
+
+          if (!label && !excludeLabel) {
+            labelText = input.getAttribute('aria-label')
+          }
+        }
 
         this._inputLabels[name] = labelText
 
+        /* Empty and invalid messages */
+
+        const emptyMessage = input.getAttribute('data-empty-message')
+        const invalidMessage = input.getAttribute('data-invalid-message')
+
+        /* Group object */
+
         this._inputGroups[name] = {
-          inputs: [input], // array for checkboxes and radio buttons
+          inputs: [input], // Array for checkboxes and radio buttons
+          legend,
           label,
-          field,
           required,
           type,
           values: [],
-          valid: false
+          valid: false,
+          emptyMessage,
+          invalidMessage
         }
       }
 
-      /* Listen on change so can validate then rather than submit */
+      /* Listen on blur so can validate then rather than only submit */
 
-      input.addEventListener('change', this._onChange.bind(this))
+      input.addEventListener('blur', this._onBlur.bind(this))
     })
 
     return true
@@ -173,8 +208,9 @@ class Form {
    * Internal helper methods
    */
 
-  _validateInputs (inputs, type, required) {
+  _validateInputs (inputs, type, required, emptyMessage = '', invalidMessage = '') {
     const values = []
+
     let message = ''
     let valid = false
 
@@ -203,7 +239,7 @@ class Form {
     if (values.length === 0) {
       if (required) {
         valid = false
-        message = 'This field is required'
+        message = emptyMessage || 'This field is required'
       } else {
         valid = true
       }
@@ -212,19 +248,19 @@ class Form {
 
       switch (type) {
         case 'email':
-          if (values[0].match(this._exp.email)) {
+          if (values[0].toLowerCase().match(this._exp.email)) {
             valid = true
           } else {
             valid = false
-            message = 'Please enter a valid email'
+            message = invalidMessage || 'Enter a valid email'
           }
           break
         case 'url':
-          if (values[0].match(this._exp.url)) {
+          if (values[0].toLowerCase().match(this._exp.url)) {
             valid = true
           } else {
             valid = false
-            message = 'Please enter a valid URL'
+            message = invalidMessage || 'Enter a valid URL'
           }
           break
         default:
@@ -243,25 +279,55 @@ class Form {
     /* Get inputGroup data */
 
     let validGroup = true
-    const inputs = inputGroup.inputs
-    const field = inputGroup.field
-    const label = inputGroup.label
-    const type = inputGroup.type
-    const required = inputGroup.required
+
+    const {
+      inputs,
+      legend,
+      label,
+      type,
+      required,
+      emptyMessage,
+      invalidMessage
+    } = inputGroup
+
+    const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
     /* Validate inputGroup */
 
-    const validate = this._validateInputs(inputs, type, required)
+    const validate = this._validateInputs(inputs, type, required, emptyMessage, invalidMessage)
     const values = validate.values
     const valid = validate.valid
     const message = validate.message
 
     if (!valid) {
-      this._setErrorMessage(inputs, name, label, field, message)
+      this._setErrorMessage(inputs, name, type, l, message)
+
+      if (l) {
+        if (!this._errorSummaryList.ids.includes(l.id)) {
+          this._errorSummaryList.ids.push(l.id)
+        }
+
+        this._errorSummaryList.messages[l.id] = message
+      }
+
       validGroup = false
     } else {
-      this._removeErrorMessage(inputs, name, label, field)
+      this._removeErrorMessage(inputs, name, type, l)
+
+      if (l) {
+        if (this._errorSummaryList.ids.includes(l.id)) {
+          this._errorSummaryList.ids = this._errorSummaryList.ids.filter((id) => {
+            return l.id !== id
+          })
+
+          this._errorSummaryList.messages[l.id] = ''
+        }
+      }
     }
+
+    /* Reset summary list */
+
+    this._setErrorSummaryList()
 
     /* Save valid state and values in inputGroup */
 
@@ -273,60 +339,88 @@ class Form {
     return validGroup
   }
 
-  _setErrorMessage (inputs, name, label, field, message) {
+  _setErrorMessage (inputs, name, type, label, message) {
     /* Error element id */
 
-    const errorID = name + '-error'
+    const errorId = name + '-error'
 
     /* Check if error element exists */
 
-    const error = document.getElementById(errorID)
+    const error = document.getElementById(errorId)
 
     /* Output */
 
     if (error !== null) {
-      const messageElement = error.querySelector('.o-form-error__message')
+      const messageElement = error.querySelector(`#${errorId}-text`)
       messageElement.textContent = message
     } else {
-      label.insertAdjacentHTML('beforeend', `
-        <div id="${errorID}" class="o-form-error${this.errorClass}">
-          <span class="o-form-error__message">
-            ${message}
-          </span>
-        </div>
-      `)
+      const errorHtml = this.errorTemplate.replace(/%id/g, errorId).replace(/%message/g, message)
+      label.insertAdjacentHTML('beforeend', errorHtml)
     }
-
-    if (this.errorShake) { addClass(field, this.errorShakeClass) }
 
     /* Set inputs as invalid */
 
-    inputs.forEach((input) => {
-      input.setAttribute('aria-invalid', true)
-    })
+    if (type !== 'radio' && type !== 'checkbox') {
+      inputs.forEach((input) => {
+        input.setAttribute('aria-invalid', true)
+      })
+    }
   }
 
-  _removeErrorMessage (inputs, name, label, field) {
+  _removeErrorMessage (inputs, name, type, label) {
     /* Error element id */
 
-    const errorID = name + '-error'
+    const errorId = name + '-error'
 
     /* Check if error element exists */
 
-    const error = document.getElementById(errorID)
+    const error = document.getElementById(errorId)
 
     if (error !== null) { label.removeChild(error) }
 
-    if (this.errorShake) { removeClass(field, this.errorShakeClass) }
-
     /* Set inputs as valid */
 
-    inputs.forEach((input) => {
-      input.setAttribute('aria-invalid', false)
-    })
+    if (type !== 'radio' && type !== 'checkbox') {
+      inputs.forEach((input) => {
+        input.setAttribute('aria-invalid', false)
+      })
+    }
   }
 
-  _onChange (e) {
+  _displayErrorSummary (display = true) {
+    if (!this.errorSummary.container) {
+      return
+    }
+
+    const displayValue = display ? 'block' : 'none'
+    this.errorSummary.container.style.setProperty('display', displayValue)
+  }
+
+  _setErrorSummaryList () {
+    if (!this.errorSummary.list) {
+      return
+    }
+
+    if (!this._errorSummaryList.ids.length) {
+      this._displayErrorSummary(false)
+    }
+
+    const frag = new window.DocumentFragment()
+
+    this._errorSummaryList.ids.forEach((id) => {
+      const li = document.createElement('LI')
+      const message = this._errorSummaryList.messages[id]
+
+      li.innerHTML = `<a href="#${id}">${message}</a>`
+
+      frag.appendChild(li)
+    })
+
+    this.errorSummary.list.innerHTML = ''
+    this.errorSummary.list.appendChild(frag)
+  }
+
+  _onBlur (e) {
     const input = e.currentTarget
     const name = input.name
     const inputGroup = this._inputGroups[name]
@@ -349,12 +443,19 @@ class Form {
       if (!validGroup) { validForm = false }
     }
 
+    this._displayErrorSummary(!validForm)
+
+    if (!validForm) {
+      if (this.errorSummary.container) {
+        this.errorSummary.container.focus()
+      }
+    }
+
     return validForm
   }
 
   getFormValues (urlEncoded = false, filter = false) {
     let formValues = {}
-    const usedEmailLabels = []
 
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
@@ -371,15 +472,15 @@ class Form {
         type: this._inputTypes[name]
       }
 
-      if (Object.getOwnPropertyDescriptor(this._inputEmailLabels, name)) {
-        const emailLabel = this._inputEmailLabels[name]
+      if (Object.getOwnPropertyDescriptor(this._inputLegends, name)) {
+        const legend = this._inputLegends[name]
 
-        if (usedEmailLabels.indexOf(emailLabel) === -1) { formValuesArgs.email_label = emailLabel }
-
-        usedEmailLabels.push(emailLabel)
-      } else {
-        formValuesArgs.label = this._inputLabels[name]
+        if (legend) {
+          formValuesArgs.legend = legend
+        }
       }
+
+      formValuesArgs.label = this._inputLabels[name]
 
       if (filter && typeof filter === 'function') { formValuesArgs = filter(formValuesArgs, inputGroup.inputs) }
 
@@ -397,12 +498,15 @@ class Form {
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
       const inputs = inputGroup.inputs
-      const field = inputGroup.field
       const type = inputGroup.type
+      const legend = inputGroup.legend
+      const label = inputGroup.label
+
+      const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
       /* Remove error markup if exists */
 
-      this._removeErrorMessage(inputs, name, field)
+      this._removeErrorMessage(inputs, name, type, l)
 
       if (exclude.indexOf(name) === -1) {
         inputs.forEach((input) => {

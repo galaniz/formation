@@ -129,7 +129,6 @@ $container-padding: 20px !default;
   }
 
   $breakpoints: map.merge(("container#{$suffix}": $width ), $breakpoints);
-  $breakpoints: map.merge(("container#{$suffix}-with-padding": $width + ($container-padding * 2)), $breakpoints);
 }
 
 /* Spacing */
@@ -270,6 +269,7 @@ $borders: m.map-recursive-merge(
 /* Border radius */
 
 $border-radius: () !default;
+$border-radius-breakpoints: () !default;
 
 /* Placeholders */
 

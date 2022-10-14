@@ -7,32 +7,23 @@
  *  @param {string} groupClass
  *  @param {string} fieldClass
  *  @param {string} labelClass
- *  @param {string} errorClass
  *  @param {HTMLElement} submit
  *  @param {nodelist} inputs
  *  @param {boolean} filterInputs
  *  @param {object} data
  *  @param {array} loaders
- *  @param {boolean} shake
  *  @param {string} url
  *  @param {function} success
  *  @param {function} error
- *  @param {object} result {
- *   @param {HTMLElement} container
- *   @param {HTMLElement} textContainer
- *   @param {object} text {
- *    @param {string} error
- *    @param {string} success
- *   }
- *  }
+ *  @param {string} errorTemplate
+ *  @param {object} result
  * }
  */
 
 /* Imports */
 
 import {
-  addClass,
-  removeClass,
+  mergeObjects,
   setLoaders,
   request
 } from '../../../utils'
@@ -57,24 +48,16 @@ class Send {
       groupClass = '',
       fieldClass = '',
       labelClass = '',
-      errorClass = '',
       submit = null,
       inputs = null,
       filterInputs = false,
       data = {},
       loaders = [],
-      shake = false,
       url = '',
       success = () => {},
       error = () => {},
-      result = {
-        container: null,
-        textContainer: null,
-        text: {
-          error: '',
-          success: ''
-        }
-      }
+      errorTemplate = '',
+      result = {}
     } = args
 
     this.id = id
@@ -82,17 +65,44 @@ class Send {
     this.groupClass = groupClass
     this.fieldClass = fieldClass
     this.labelClass = labelClass
-    this.errorClass = errorClass
     this.submit = submit
     this.inputs = inputs
     this.filterInputs = filterInputs
     this.data = data
     this.loaders = loaders
-    this.shake = shake
     this.url = url
     this.success = success
     this.error = error
+    this.errorTemplate = errorTemplate
     this.result = result
+
+    this.result = mergeObjects(
+      {
+        error: {
+          summary: {
+            container: null,
+            list: null
+          },
+          container: null,
+          primary: null,
+          secondary: null,
+          message: {
+            primary: 'Sorry, there is a problem with the service.',
+            secondary: 'Try again later.'
+          }
+        },
+        success: {
+          container: null,
+          primary: null,
+          secondary: null,
+          message: {
+            primary: 'Success!',
+            secondary: ''
+          }
+        }
+      },
+      this.result
+    )
 
     /**
      * Internal variables
@@ -105,11 +115,6 @@ class Send {
     /* Keep track of error/success */
 
     this._error = false
-
-    /* Default messages */
-
-    this._defaultErrorMessage = 'Oops! Looks like something went wrong. Please try again later.'
-    this._defaultSuccessMessage = 'Successfully sent!'
 
     /**
      * Initialize
@@ -125,31 +130,43 @@ class Send {
    */
 
   _initialize () {
-    /* Check that required variables not empty/null */
+    /* Check that required variables not null */
 
-    if (!this.id || !this.form || !this.groupClass || !this.fieldClass || !this.labelClass || !this.submit || !this.inputs || !this.loaders || !this.url) {
-      return false
-    }
+    let error = false
+    const required = [
+      'id',
+      'form',
+      'groupClass',
+      'fieldClass',
+      'labelClass',
+      'submit',
+      'inputs',
+      'url'
+    ]
 
-    /* Default messages if none */
-
-    if (!Object.getOwnPropertyDescriptor(this.result, 'text')) {
-      this.result.text = {
-        error: this._defaultErrorMessage,
-        success: this._defaultSuccessMessage
+    required.forEach((r) => {
+      if (!this[r]) {
+        error = true
       }
-    }
+    })
+
+    if (error) { return false }
 
     /* Prepare for validation */
 
-    this._form = new Form({
+    const formArgs = {
       groupClass: this.groupClass,
       fieldClass: this.fieldClass,
       labelClass: this.labelClass,
-      errorClass: this.errorClass,
-      errorShake: this.shake,
-      inputs: this.inputs
-    })
+      inputs: this.inputs,
+      errorSummary: this.result.error.summary
+    }
+
+    if (this.errorTemplate) {
+      formArgs.errorTemplate = this.errorTemplate
+    }
+
+    this._form = new Form(formArgs)
 
     /* Add event listeners */
 
@@ -165,13 +182,45 @@ class Send {
   /* Display results of form submission */
 
   _displayResult (error = false) {
-    const message = error ? this.result.text.error : this.result.text.success
+    const primaryMessage = this.result[error ? 'error' : 'success'].message.primary
+    const secondaryMessage = this.result[error ? 'error' : 'success'].message.secondary
+    const container = this.result[error ? 'error' : 'success'].container
+    const primaryContainer = this.result[error ? 'error' : 'success'].primary
+    const secondaryContainer = this.result[error ? 'error' : 'success'].secondary
 
-    this.result.textContainer.textContent = message
-    this.result.container.setAttribute('data-type', error ? 'error' : 'success')
+    if (primaryContainer && primaryMessage) {
+      primaryContainer.textContent = primaryMessage
+    }
+
+    if (secondaryContainer && secondaryMessage) {
+      secondaryContainer.textContent = secondaryMessage
+    }
+
+    if (container) {
+      container.style.setProperty('display', 'block')
+      container.focus()
+    }
+
     this._error = error
 
-    setLoaders(this.loaders, [this.submit], false)
+    /* Set loaders off */
+
+    if (this.loaders.length) {
+      setLoaders(this.loaders, [this.submit], false)
+    }
+  }
+
+  _hideResult () {
+    const errorContainer = this.result.error.container
+    const successContainer = this.result.success.container
+
+    if (errorContainer) {
+      errorContainer.style.setProperty('display', 'none')
+    }
+
+    if (successContainer) {
+      successContainer.style.setProperty('display', 'none')
+    }
   }
 
   /**
@@ -185,21 +234,23 @@ class Send {
 
     this._form.submitted = true
 
-    if (this.shake) { removeClass(this.submit, 'a-shake') }
-
     const valid = this._form.validate()
 
     if (!valid) {
-      if (this.shake) { addClass(this.submit, 'a-shake') }
-
       return
     }
 
-    setLoaders(this.loaders, [this.submit], true)
+    /* Set loaders on */
 
-    /* Hide results container */
+    if (this.loaders.length) {
+      setLoaders(this.loaders, [this.submit], true)
+    }
 
-    this.result.container.removeAttribute('data-type')
+    /* Hide result containers */
+
+    this._hideResult()
+
+    /* Get form values */
 
     const formValues = this._form.getFormValues(true, this.filterInputs)
     let data = `id=${this.id}&${formValues}`
@@ -241,13 +292,15 @@ class Send {
   clear (exclude = []) {
     if (this._form) { this._form.clear(exclude) }
 
-    /* End loader */
+    /* Set loaders off */
 
-    this.loader.setAttribute('data-hide', '')
+    if (this.loaders.length) {
+      setLoaders(this.loaders, [this.submit], false)
+    }
 
-    /* Hide results container */
+    /* Hide result containers */
 
-    this.result.container.removeAttribute('data-type')
+    this._hideResult()
   }
 
   getFormInstance () {
