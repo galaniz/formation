@@ -165,3 +165,18 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - All recaptcha references
+
+## [4.0.1] - 2022-10-14
+
+### Added
+- Border radius breakpoints
+
+### Fixed
+- `l-min-height-100-vh` wrong property
+- `l-bottom-0` wrong property
+
+### Removed
+- With padding from container breakpoint and root variables
+
+### Changed
+- `Form` and `Send` class better a11y and flexibility
