@@ -60,7 +60,7 @@ class Form {
 
     this._exp = {
       url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/,
-      email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     }
 
     /* Input data goes here */
@@ -159,15 +159,27 @@ class Form {
 
         /* Label */
 
-        const label = field.querySelector('.' + this.labelClass)
-
+        let label = null
         let labelText = ''
 
-        if (label && !excludeLabel) {
-          labelText = label.textContent.replace(' required', '')
+        if (field) {
+          label = field.querySelector('.' + this.labelClass)
+
+          if (label && !excludeLabel) {
+            labelText = label.textContent.replace(' required', '')
+          }
+
+          if (!label && !excludeLabel) {
+            labelText = input.getAttribute('aria-label')
+          }
         }
 
         this._inputLabels[name] = labelText
+
+        /* Empty and invalid messages */
+
+        const emptyMessage = input.getAttribute('data-empty-message')
+        const invalidMessage = input.getAttribute('data-invalid-message')
 
         /* Group object */
 
@@ -175,11 +187,12 @@ class Form {
           inputs: [input], // Array for checkboxes and radio buttons
           legend,
           label,
-          field,
           required,
           type,
           values: [],
-          valid: false
+          valid: false,
+          emptyMessage,
+          invalidMessage
         }
       }
 
@@ -195,27 +208,15 @@ class Form {
    * Internal helper methods
    */
 
-  _validateInputs (inputs, type, required) {
+  _validateInputs (inputs, type, required, emptyMessage = '', invalidMessage = '') {
     const values = []
-    let emptyMessage = ''
-    let invalidMessage = ''
+
     let message = ''
     let valid = false
 
     /* Get values from inputGroup */
 
     inputs.forEach((input) => {
-      const dataEmptyMessage = input.getAttribute('data-empty-message')
-      const dataInvalidMessage = input.getAttribute('data-invalid-message')
-
-      if (dataEmptyMessage) {
-        emptyMessage = dataEmptyMessage
-      }
-
-      if (dataInvalidMessage) {
-        invalidMessage = dataInvalidMessage
-      }
-
       let value = ''
 
       switch (type) {
@@ -247,7 +248,7 @@ class Form {
 
       switch (type) {
         case 'email':
-          if (values[0].match(this._exp.email)) {
+          if (values[0].toLowerCase().match(this._exp.email)) {
             valid = true
           } else {
             valid = false
@@ -255,7 +256,7 @@ class Form {
           }
           break
         case 'url':
-          if (values[0].match(this._exp.url)) {
+          if (values[0].toLowerCase().match(this._exp.url)) {
             valid = true
           } else {
             valid = false
@@ -279,24 +280,27 @@ class Form {
 
     let validGroup = true
 
-    const inputs = inputGroup.inputs
-    const field = inputGroup.field
-    const legend = inputGroup.legend
-    const label = inputGroup.label
-    const type = inputGroup.type
-    const required = inputGroup.required
+    const {
+      inputs,
+      legend,
+      label,
+      type,
+      required,
+      emptyMessage,
+      invalidMessage
+    } = inputGroup
 
     const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
     /* Validate inputGroup */
 
-    const validate = this._validateInputs(inputs, type, required)
+    const validate = this._validateInputs(inputs, type, required, emptyMessage, invalidMessage)
     const values = validate.values
     const valid = validate.valid
     const message = validate.message
 
     if (!valid) {
-      this._setErrorMessage(inputs, name, type, l, field, message)
+      this._setErrorMessage(inputs, name, type, l, message)
 
       if (l) {
         if (!this._errorSummaryList.ids.includes(l.id)) {
@@ -308,7 +312,7 @@ class Form {
 
       validGroup = false
     } else {
-      this._removeErrorMessage(inputs, name, type, l, field)
+      this._removeErrorMessage(inputs, name, type, l)
 
       if (l) {
         if (this._errorSummaryList.ids.includes(l.id)) {
@@ -335,7 +339,7 @@ class Form {
     return validGroup
   }
 
-  _setErrorMessage (inputs, name, type, label, field, message) {
+  _setErrorMessage (inputs, name, type, label, message) {
     /* Error element id */
 
     const errorId = name + '-error'
@@ -363,7 +367,7 @@ class Form {
     }
   }
 
-  _removeErrorMessage (inputs, name, type, label, field) {
+  _removeErrorMessage (inputs, name, type, label) {
     /* Error element id */
 
     const errorId = name + '-error'
@@ -452,7 +456,6 @@ class Form {
 
   getFormValues (urlEncoded = false, filter = false) {
     let formValues = {}
-    const usedLegends = []
 
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
@@ -472,12 +475,12 @@ class Form {
       if (Object.getOwnPropertyDescriptor(this._inputLegends, name)) {
         const legend = this._inputLegends[name]
 
-        if (usedLegends.indexOf(legend) === -1) { formValuesArgs.legend = legend }
-
-        usedLegends.push(legend)
-      } else {
-        formValuesArgs.label = this._inputLabels[name]
+        if (legend) {
+          formValuesArgs.legend = legend
+        }
       }
+
+      formValuesArgs.label = this._inputLabels[name]
 
       if (filter && typeof filter === 'function') { formValuesArgs = filter(formValuesArgs, inputGroup.inputs) }
 
@@ -495,12 +498,15 @@ class Form {
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
       const inputs = inputGroup.inputs
-      const field = inputGroup.field
       const type = inputGroup.type
+      const legend = inputGroup.legend
+      const label = inputGroup.label
+
+      const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
       /* Remove error markup if exists */
 
-      this._removeErrorMessage(inputs, name, field)
+      this._removeErrorMessage(inputs, name, type, l)
 
       if (exclude.indexOf(name) === -1) {
         inputs.forEach((input) => {

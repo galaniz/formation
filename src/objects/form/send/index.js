@@ -269,7 +269,7 @@ class Send {
       headers: { 'Content-type': 'application/x-www-form-urlencoded' },
       body: data
     }).then(response => {
-      console.log('RESPONSE', response)
+      // console.log('RESPONSE', response)
 
       try {
         this.success(JSON.parse(response))
@@ -278,7 +278,7 @@ class Send {
         this._displayResult(true)
       }
     }).catch(xhr => {
-      console.log('ERROR', xhr)
+      // console.log('ERROR', xhr)
 
       this._displayResult(true)
       this.error()
