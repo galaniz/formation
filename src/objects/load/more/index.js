@@ -311,7 +311,7 @@ class More {
 
   /* Set filter input */
 
-  _setFilter (f, compareValue = undefined, state = 'default') { // if compareValue undefined than clear input
+  _setFilter (f, compareValue = undefined, state = 'default') { // If compareValue undefined than clear input
     let id = f.id
     const value = f.value
     const operator = f.getAttribute('data-operator')
@@ -328,7 +328,7 @@ class More {
 
           break
         case 'radio': {
-          const r = Array.from(document.querySelectorAll(`[name="${id}"]`))
+          const r = Array.from(f.form.querySelectorAll(`[name="${id}"]`))
 
           r.forEach(rr => {
             if (rr.checked) { compareValue = rr.value }
@@ -395,7 +395,7 @@ class More {
     }
 
     if (this._pagination) {
-      this.prev.disabled = isFirstPage // account for one page
+      this.prev.disabled = isFirstPage // Account for one page
       this.prev.setAttribute('aria-disabled', isFirstPage)
 
       if (isFirstPage) {
