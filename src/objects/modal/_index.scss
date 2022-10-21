@@ -6,41 +6,24 @@
 
 @use "sass:map";
 @use "../../config" as con;
-@use "../../utils/functions" as func;
 
 /* Styles */
 
 .o-modal {
-  --prop: visibility;
-  --duration: 0ms;
-  --delay: #{con.$default-duration};
-
   @extend %u-visibility-hidden;
 
   z-index: map.get(con.$z-index, "modal");
 
-  &[aria-hidden="false"] {
-    --delay: 0ms;
-
+  &[data-open="true"] {
     @extend %u-visibility-visible;
   }
 }
 
-.o-modal__overlay {
+.o-modal__overlay,
+.o-modal__window {
   @extend %u-opacity-0;
 
-  .o-modal[aria-hidden="false"] & {
-    --delay: 10ms;
-
-    @extend %u-opacity-1;
-  }
-}
-
-.o-modal__main {
-  @extend %u-opacity-0;
-  @extend %u-transform-origin-0-0;
-
-  .o-modal[aria-hidden="false"] & {
+  .o-modal[data-open="true"] & {
     @extend %u-opacity-1;
   }
 }

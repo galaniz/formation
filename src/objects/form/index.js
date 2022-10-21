@@ -497,16 +497,21 @@ class Form {
   clear (exclude = []) {
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
-      const inputs = inputGroup.inputs
-      const type = inputGroup.type
-      const legend = inputGroup.legend
-      const label = inputGroup.label
+
+      const {
+        inputs,
+        type,
+        legend,
+        label
+      } = inputGroup
 
       const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
       /* Remove error markup if exists */
 
       this._removeErrorMessage(inputs, name, type, l)
+
+      /* Clear values */
 
       if (exclude.indexOf(name) === -1) {
         inputs.forEach((input) => {

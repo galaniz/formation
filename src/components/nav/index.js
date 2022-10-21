@@ -274,7 +274,7 @@ class Nav {
           const refNode = this.list[listIndex].children[index]
 
           this.list[listIndex].insertBefore(item, refNode)
-        } else { // insert
+        } else { // Insert
           frag[listIndex].appendChild(item)
         }
 
@@ -404,7 +404,7 @@ class Nav {
    */
 
   _toggle (close = true) {
-    this.onToggle()
+    this.onToggle(!close)
 
     this._navOpen = !close
 

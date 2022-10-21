@@ -98,7 +98,7 @@ class Remove {
       if (this.cookie.name) {
         this._hide = !!getCookie(this.cookie.name)
       } else {
-        this._hide = this.condition(true) // init true
+        this._hide = this.condition(true) // Init true
       }
     } else {
       this._hide = hide
@@ -127,7 +127,7 @@ class Remove {
 
       hide = true
     } else {
-      hide = this.condition(false) // init false
+      hide = this.condition(false) // Init false
     }
 
     this._setDisplay(false, hide)
