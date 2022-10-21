@@ -180,3 +180,15 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - `Form` and `Send` class better a11y and flexibility
+
+## [4.0.2] - 2022-10-20
+
+### Added
+- `Conditional` class to show/enable inputs
+
+### Removed
+- Outdated rules for IE in input resets
+
+### Changed
+- `Form` and `Send` class better a11y and flexibility
+- Simplify and improve `Modal`
