@@ -404,7 +404,7 @@ class Nav {
    */
 
   _toggle (close = true) {
-    this.onToggle()
+    this.onToggle(!close)
 
     this._navOpen = !close
 
