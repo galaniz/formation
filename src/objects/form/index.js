@@ -494,7 +494,7 @@ class Form {
     return formValues
   }
 
-  clear (exclude = []) {
+  clearErrorMessages () {
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
 
@@ -507,32 +507,10 @@ class Form {
 
       const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
-      /* Remove error markup if exists */
-
       this._removeErrorMessage(inputs, name, type, l)
-
-      /* Clear values */
-
-      if (exclude.indexOf(name) === -1) {
-        inputs.forEach((input) => {
-          switch (type) {
-            case 'checkbox':
-            case 'radio':
-              input.checked = false
-              break
-            default:
-              input.value = ''
-          }
-
-          /* Clear floated label */
-
-          setTimeout(() => {
-            input.focus()
-            input.blur()
-          }, 100)
-        })
-      }
     }
+
+    this._displayErrorSummary(false)
   }
 } // End Form
 

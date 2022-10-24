@@ -8,6 +8,7 @@
  *  @param {array} breakpoints
  *  @param {array} groupItems
  *  @param {boolean} loop
+ *  @param {boolean} reduceMotion
  * }
  */
 
@@ -36,7 +37,8 @@ class Slider extends Tabs {
       targetHeight = null,
       groupItems = [],
       breakpoints = [],
-      loop = false
+      loop = false,
+      reduceMotion = false
     } = args
 
     if (!slider || !track) {
@@ -53,6 +55,7 @@ class Slider extends Tabs {
     this.groupItems = groupItems
     this.breakpoints = breakpoints
     this.loop = loop
+    this.reduceMotion = reduceMotion
 
     this.beforeInitActivate = () => {
       this._beforeInitActivate()
@@ -423,61 +426,65 @@ class Slider extends Tabs {
   }
 
   _scrollTo (to) {
-    let start = null
-    let done = false
-    const duration = 500
-    const from = this.track.scrollLeft
-    const dir = to > from ? 'right' : 'left'
+    if (this.reduceMotion) {
+      this.track.scrollLeft = to
+    } else {
+      let start = null
+      let done = false
+      const duration = 500
+      const from = this.track.scrollLeft
+      const dir = to > from ? 'right' : 'left'
 
-    this.track.style.setProperty('--snap-type', 'none')
+      this.track.style.setProperty('--snap-type', 'none')
 
-    /*
-     Source: https://spicyyoghurt.com/tools/easing-functions
-     t = time
-     b = beginning value
-     c = change in value
-     d = duration
-    */
+      /*
+      Source: https://spicyyoghurt.com/tools/easing-functions
+      t = time
+      b = beginning value
+      c = change in value
+      d = duration
+      */
 
-    const ease = (t, b, c, d) => { // Sine ease in out
-      return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
-    }
-
-    const change = to - from
-
-    const animate = (timestamp) => {
-      if (start === null) {
-        start = timestamp
+      const ease = (t, b, c, d) => { // Sine ease in out
+        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
       }
 
-      const elapsed = timestamp - start
+      const change = to - from
 
-      if (elapsed < duration) {
-        const v = ease(elapsed, from, change, duration)
-
-        this.track.scrollLeft = v
-
-        if (dir === 'right') {
-          if (v >= to) {
-            done = true
-          }
-        } else {
-          if (v <= to) {
-            done = true
-          }
+      const animate = (timestamp) => {
+        if (start === null) {
+          start = timestamp
         }
 
-        if (!done) {
-          window.requestAnimationFrame(animate)
+        const elapsed = timestamp - start
+
+        if (elapsed < duration) {
+          const v = ease(elapsed, from, change, duration)
+
+          this.track.scrollLeft = v
+
+          if (dir === 'right') {
+            if (v >= to) {
+              done = true
+            }
+          } else {
+            if (v <= to) {
+              done = true
+            }
+          }
+
+          if (!done) {
+            window.requestAnimationFrame(animate)
+          } else {
+            this.track.style.setProperty('--snap-type', '')
+          }
         } else {
           this.track.style.setProperty('--snap-type', '')
         }
-      } else {
-        this.track.style.setProperty('--snap-type', '')
       }
-    }
 
-    window.requestAnimationFrame(animate)
+      window.requestAnimationFrame(animate)
+    }
   }
 
   /**
