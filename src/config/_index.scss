@@ -128,7 +128,8 @@ $container-padding: 20px !default;
     $suffix: "-#{$c}";
   }
 
-  $breakpoints: map.merge(("container#{$suffix}": $width ), $breakpoints);
+  $breakpoints: map.merge(( "container#{$suffix}": $width ), $breakpoints);
+  $breakpoints: map.merge(( "container#{$suffix}-no-padding": $width - ($container-padding * 2) ), $breakpoints);
 }
 
 /* Spacing */
@@ -217,10 +218,38 @@ $transitions: m.map-recursive-merge(
   ),
   $transitions
 );
+
+/* Default transition */
+
 $default-prop: map.get($transitions, "default", "prop");
 $default-duration: map.get($transitions, "default", "duration");
 $default-easing: map.get($transitions, "default", "easing");
 $default-delay: map.get($transitions, "default", "delay");
+
+/* Collapsible transition */
+
+$collapsible-prop: visibility, height;
+$collapsible-duration: 0ms, #{$default-duration};
+$collapsible-delay: #{$default-duration}, 10ms;
+$collapsible-delay-expanded: 10ms, 0ms;
+
+/* Loader transition */
+
+$loader-prop: opacity, z-index;
+$loader-duration: #{$default-duration}, 0ms;
+$loader-delay: 10ms, 0ms;
+$loader-delay-hide: 0ms, #{$default-duration};
+
+/* Modal transition */
+
+$modal-prop: visibility;
+$modal-duration: 0ms;
+$modal-delay: #{$default-duration};
+$modal-delay-open: 10ms;
+$modal-overlay-window-prop: visibility, opacity;
+$modal-overlay-window-duration: 0ms, #{$default-duration};
+$modal-overlay-window-delay: #{$default-duration}, 10ms;
+$modal-overlay-window-delay-open: 10ms, 0ms;
 
 /* Z index */
 

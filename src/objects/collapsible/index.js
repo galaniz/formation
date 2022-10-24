@@ -5,8 +5,7 @@
  *  @param {HTMLElement} container
  *  @param {HTMLElement} collapsible
  *  @param {HTMLElement} trigger
- *  @param {boolean} closeOnLastBlur
- *  @param {array} accordianInstances
+ *  @param {string} accordionId
  *  @param {boolean} startOpen
  *  @param {boolean} resize
  * }
@@ -16,7 +15,7 @@
 
 import {
   subscribe,
-  focusSelector
+  publish
 } from '../../utils'
 
 /* Class */
@@ -35,8 +34,7 @@ class Collapsible {
       container = null,
       collapsible = null,
       trigger = null,
-      closeOnLastBlur = false,
-      accordianInstances = [],
+      accordionId = '',
       startOpen = false,
       resize = true
     } = args
@@ -44,8 +42,7 @@ class Collapsible {
     this.container = container
     this.collapsible = collapsible
     this.trigger = trigger
-    this.closeOnLastBlur = closeOnLastBlur
-    this.accordianInstances = accordianInstances
+    this.accordionId = accordionId
     this.startOpen = startOpen
     this.resize = resize
 
@@ -58,6 +55,10 @@ class Collapsible {
     this._resizeTimer = null
     this._viewportWidth = window.innerWidth
 
+    /* Collapsible id for accordion */
+
+    this._collapsibleId = ''
+
     /* Track height */
 
     this._collapsibleHeight = 0
@@ -69,15 +70,6 @@ class Collapsible {
     /* Keep track of state */
 
     this._open = false
-
-    /* For this.closeOnLastBlur */
-
-    this._focusableItems = []
-    this._tabbing = false
-
-    subscribe('tabState', t => {
-      this._tabbing = t[0]
-    })
 
     /**
      * Initialize
@@ -101,13 +93,19 @@ class Collapsible {
 
     if (!this.collapsible || !this.trigger) { return false }
 
-    /* Get focusable elements */
+    /* Add prefix to accordion id */
 
-    this._focusableItems = Array.from(this.container.querySelectorAll(focusSelector))
+    if (this.accordionId) {
+      this.accordionId = `collapsible-${this.accordionId}`
+      this._collapsibleId = this.collapsible.id || performance.now().toString(36)
 
-    if (this.closeOnLastBlur) {
-      this._blurHandler = this._blur.bind(this)
-      document.addEventListener('focusout', this._blurHandler)
+      subscribe(this.accordionId, (args) => {
+        const { collapsibleId } = args
+
+        if (collapsibleId !== this._collapsibleId && this._open) {
+          this._toggleCollapsible(false)
+        }
+      })
     }
 
     /* Event listeners */
@@ -161,11 +159,9 @@ class Collapsible {
         this.trigger.focus() // iOS Safari not focusing on buttons
       }
 
-      if (this.accordianInstances.length) {
-        this.accordianInstances.forEach(a => {
-          if (a._open) { a.toggle(false) }
-        })
-      }
+      publish(this.accordionId, {
+        collapsibleId: this._collapsibleId
+      })
     }
 
     if (open) {
@@ -209,16 +205,6 @@ class Collapsible {
   _trigger () {
     const open = !this._open
     this._toggleCollapsible(open, 'tap')
-  }
-
-  /* Close if focus outside */
-
-  _blur () {
-    setTimeout(() => {
-      if (!this._focusableItems.includes(document.activeElement) && this._open) {
-        this._toggleCollapsible(false, 'blur')
-      }
-    }, 0)
   }
 
   /**

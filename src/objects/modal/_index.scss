@@ -10,20 +10,32 @@
 /* Styles */
 
 .o-modal {
+  --prop: #{con.$modal-prop};
+  --duration: #{con.$modal-duration};
+  --delay: #{con.$modal-delay};
+
   @extend %u-visibility-hidden;
 
   z-index: map.get(con.$z-index, "modal");
 
   &[data-open="true"] {
+    --delay: #{con.$modal-delay-open};
+
     @extend %u-visibility-visible;
   }
 }
 
 .o-modal__overlay,
 .o-modal__window {
+  --prop: #{con.$modal-overlay-window-prop};
+  --duration: #{con.$modal-overlay-window-duration};
+  --delay: #{con.$modal-overlay-window-delay};
+
   @extend %u-opacity-0;
 
   .o-modal[data-open="true"] & {
+    --delay: #{con.$modal-overlay-window-delay-open};
+
     @extend %u-opacity-1;
   }
 }

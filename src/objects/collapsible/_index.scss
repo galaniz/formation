@@ -15,9 +15,9 @@
 }
 
 .o-collapsible__main {
-  --prop: visibility, height;
-  --duration: 0ms, #{con.$default-duration};
-  --delay: #{con.$default-duration}, 10ms;
+  --prop: #{con.$collapsible-prop};
+  --duration: #{con.$collapsible-duration};
+  --delay: #{con.$collapsible-delay};
 
   @extend %u-visibility-hidden;
 
@@ -25,12 +25,10 @@
 
   .o-collapsible[data-set] > & {
     @extend %u-overflow-hidden;
-
-    will-change: height;
   }
 
   .o-collapsible[data-expanded="true"] > & {
-    --delay: 10ms, 0ms;
+    --delay: #{con.$collapsible-delay-expanded};
 
     @extend %u-visibility-visible;
   }
