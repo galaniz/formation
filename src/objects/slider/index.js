@@ -5,6 +5,8 @@
  *  @param {HTMLElement} slider
  *  @param {HTMLElement} track
  *  @param {HTMLElement} targetHeight
+ *  @param {HTMLElement} prev
+ *  @param {HTMLElement} next
  *  @param {array} breakpoints
  *  @param {array} groupItems
  *  @param {boolean} loop
@@ -32,9 +34,12 @@ class Slider extends Tabs {
      */
 
     const {
+      container = null,
       slider = null,
       track = null,
       targetHeight = null,
+      prev = null,
+      next = null,
       groupItems = [],
       breakpoints = [],
       loop = false,
@@ -49,9 +54,12 @@ class Slider extends Tabs {
 
     super(args)
 
+    this.container = container
     this.slider = slider
     this.track = track
     this.targetHeight = targetHeight
+    this.prev = prev
+    this.next = next
     this.groupItems = groupItems
     this.breakpoints = breakpoints
     this.loop = loop
@@ -113,6 +121,8 @@ class Slider extends Tabs {
      * Initialize
      */
 
+    if (!this.container || !this.slider || !this.track) { return false }
+
     const initialize = this._initialize()
 
     if (!initialize) { return false }
@@ -134,6 +144,16 @@ class Slider extends Tabs {
 
     this.track.addEventListener('scroll', this._scrollEvent)
     window.addEventListener('resize', this._resizeEvent)
+
+    /* Prev next listeners */
+
+    if (this.prev && this.next) {
+      this._prevEvent = this._prev.bind(this)
+      this._nextEvent = this._next.bind(this)
+
+      this.prev.addEventListener('click', this._prevEvent)
+      this.next.addEventListener('click', this._nextEvent)
+    }
 
     /* Clone panels for loop slider */
 
@@ -246,6 +266,22 @@ class Slider extends Tabs {
       this._panelIndex = this._currentIndex + (this._ogLength * this._currentInnerIndex)
       this._tabIndex = this._currentIndex
     }
+
+    if (this.prev && this.next) {
+      let prevDisabled = false
+      let nextDisabled = false
+
+      if (this._tabIndex === 0) {
+        prevDisabled = true
+      }
+
+      if (this._tabIndex === this._lastTabIndex) {
+        nextDisabled = true
+      }
+
+      this.prev.disabled = prevDisabled
+      this.next.disabled = nextDisabled
+    }
   }
 
   _onDeactivate (args) {
@@ -309,7 +345,7 @@ class Slider extends Tabs {
 
     const height = this.targetHeight.clientHeight
 
-    this.slider.style.setProperty('--height', (height / 16) + 'rem')
+    this.container.style.setProperty('--height', (height / 16) + 'rem')
   }
 
   _arrangeItems (resize = false) {
@@ -490,6 +526,20 @@ class Slider extends Tabs {
   /**
    * Event handlers
    */
+
+  _prev () {
+    this._activate({
+      currentIndex: this._currentIndex - 1,
+      source: 'click'
+    })
+  }
+
+  _next () {
+    this._activate({
+      currentIndex: this._currentIndex + 1,
+      source: 'click'
+    })
+  }
 
   _scroll () {
     clearTimeout(this._scrollTimer)
