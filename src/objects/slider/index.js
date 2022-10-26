@@ -5,9 +5,12 @@
  *  @param {HTMLElement} slider
  *  @param {HTMLElement} track
  *  @param {HTMLElement} targetHeight
+ *  @param {HTMLElement} prev
+ *  @param {HTMLElement} next
  *  @param {array} breakpoints
  *  @param {array} groupItems
  *  @param {boolean} loop
+ *  @param {boolean} reduceMotion
  * }
  */
 
@@ -31,12 +34,16 @@ class Slider extends Tabs {
      */
 
     const {
+      container = null,
       slider = null,
       track = null,
       targetHeight = null,
+      prev = null,
+      next = null,
       groupItems = [],
       breakpoints = [],
-      loop = false
+      loop = false,
+      reduceMotion = false
     } = args
 
     if (!slider || !track) {
@@ -47,12 +54,16 @@ class Slider extends Tabs {
 
     super(args)
 
+    this.container = container
     this.slider = slider
     this.track = track
     this.targetHeight = targetHeight
+    this.prev = prev
+    this.next = next
     this.groupItems = groupItems
     this.breakpoints = breakpoints
     this.loop = loop
+    this.reduceMotion = reduceMotion
 
     this.beforeInitActivate = () => {
       this._beforeInitActivate()
@@ -110,6 +121,8 @@ class Slider extends Tabs {
      * Initialize
      */
 
+    if (!this.container || !this.slider || !this.track) { return false }
+
     const initialize = this._initialize()
 
     if (!initialize) { return false }
@@ -131,6 +144,16 @@ class Slider extends Tabs {
 
     this.track.addEventListener('scroll', this._scrollEvent)
     window.addEventListener('resize', this._resizeEvent)
+
+    /* Prev next listeners */
+
+    if (this.prev && this.next) {
+      this._prevEvent = this._prev.bind(this)
+      this._nextEvent = this._next.bind(this)
+
+      this.prev.addEventListener('click', this._prevEvent)
+      this.next.addEventListener('click', this._nextEvent)
+    }
 
     /* Clone panels for loop slider */
 
@@ -243,6 +266,22 @@ class Slider extends Tabs {
       this._panelIndex = this._currentIndex + (this._ogLength * this._currentInnerIndex)
       this._tabIndex = this._currentIndex
     }
+
+    if (this.prev && this.next) {
+      let prevDisabled = false
+      let nextDisabled = false
+
+      if (this._tabIndex === 0) {
+        prevDisabled = true
+      }
+
+      if (this._tabIndex === this._lastTabIndex) {
+        nextDisabled = true
+      }
+
+      this.prev.disabled = prevDisabled
+      this.next.disabled = nextDisabled
+    }
   }
 
   _onDeactivate (args) {
@@ -306,7 +345,7 @@ class Slider extends Tabs {
 
     const height = this.targetHeight.clientHeight
 
-    this.slider.style.setProperty('--height', (height / 16) + 'rem')
+    this.container.style.setProperty('--height', (height / 16) + 'rem')
   }
 
   _arrangeItems (resize = false) {
@@ -423,66 +462,84 @@ class Slider extends Tabs {
   }
 
   _scrollTo (to) {
-    let start = null
-    let done = false
-    const duration = 500
-    const from = this.track.scrollLeft
-    const dir = to > from ? 'right' : 'left'
+    if (this.reduceMotion) {
+      this.track.scrollLeft = to
+    } else {
+      let start = null
+      let done = false
+      const duration = 500
+      const from = this.track.scrollLeft
+      const dir = to > from ? 'right' : 'left'
 
-    this.track.style.setProperty('--snap-type', 'none')
+      this.track.style.setProperty('--snap-type', 'none')
 
-    /*
-     Source: https://spicyyoghurt.com/tools/easing-functions
-     t = time
-     b = beginning value
-     c = change in value
-     d = duration
-    */
+      /*
+      Source: https://spicyyoghurt.com/tools/easing-functions
+      t = time
+      b = beginning value
+      c = change in value
+      d = duration
+      */
 
-    const ease = (t, b, c, d) => { // Sine ease in out
-      return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
-    }
-
-    const change = to - from
-
-    const animate = (timestamp) => {
-      if (start === null) {
-        start = timestamp
+      const ease = (t, b, c, d) => { // Sine ease in out
+        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
       }
 
-      const elapsed = timestamp - start
+      const change = to - from
 
-      if (elapsed < duration) {
-        const v = ease(elapsed, from, change, duration)
-
-        this.track.scrollLeft = v
-
-        if (dir === 'right') {
-          if (v >= to) {
-            done = true
-          }
-        } else {
-          if (v <= to) {
-            done = true
-          }
+      const animate = (timestamp) => {
+        if (start === null) {
+          start = timestamp
         }
 
-        if (!done) {
-          window.requestAnimationFrame(animate)
+        const elapsed = timestamp - start
+
+        if (elapsed < duration) {
+          const v = ease(elapsed, from, change, duration)
+
+          this.track.scrollLeft = v
+
+          if (dir === 'right') {
+            if (v >= to) {
+              done = true
+            }
+          } else {
+            if (v <= to) {
+              done = true
+            }
+          }
+
+          if (!done) {
+            window.requestAnimationFrame(animate)
+          } else {
+            this.track.style.setProperty('--snap-type', '')
+          }
         } else {
           this.track.style.setProperty('--snap-type', '')
         }
-      } else {
-        this.track.style.setProperty('--snap-type', '')
       }
-    }
 
-    window.requestAnimationFrame(animate)
+      window.requestAnimationFrame(animate)
+    }
   }
 
   /**
    * Event handlers
    */
+
+  _prev () {
+    this._activate({
+      currentIndex: this._currentIndex - 1,
+      source: 'click'
+    })
+  }
+
+  _next () {
+    this._activate({
+      currentIndex: this._currentIndex + 1,
+      source: 'click'
+    })
+  }
 
   _scroll () {
     clearTimeout(this._scrollTimer)

@@ -249,8 +249,6 @@ class Nav {
     this.nav.setAttribute('data-overflow', 'false')
     this.nav.setAttribute('data-overflow-all', 'false')
 
-    this._lastOverflowFocus = null
-
     if (this._currentOverflowGroups.length > 0) {
       const frag = {}
       let appendFrag = true
@@ -372,15 +370,12 @@ class Nav {
         return
       }
 
-      const firstItemOffset = items[0].offsetTop
+      /* Check for scroll to determine overflow */
 
-      /* Reverse loop to start from last item */
+      const scroll = this.list[index].scrollWidth > this.list[index].clientWidth
 
-      for (let i = itemsLength - 1; i >= 0; i--) {
-        if (items[i].offsetTop > firstItemOffset) {
-          overflow = true
-          return
-        }
+      if (scroll) {
+        overflow = true
       }
     })
 

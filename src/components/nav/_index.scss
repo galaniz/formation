@@ -9,8 +9,10 @@
 /* Styles */
 
 .c-nav__button {
-  .c-nav[data-overflow="false"] & {
-    @extend %u-display-none;
+  @extend %u-display-none;
+
+  .c-nav[data-overflow="true"] & {
+    @extend %u-display-block;
   }
 }
 

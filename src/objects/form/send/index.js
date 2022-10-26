@@ -17,6 +17,7 @@
  *  @param {function} error
  *  @param {string} errorTemplate
  *  @param {object} result
+ *  @param {boolean} clearOnSuccess
  * }
  */
 
@@ -57,7 +58,8 @@ class Send {
       success = () => {},
       error = () => {},
       errorTemplate = '',
-      result = {}
+      result = {},
+      clearOnSuccess = true
     } = args
 
     this.id = id
@@ -75,6 +77,7 @@ class Send {
     this.error = error
     this.errorTemplate = errorTemplate
     this.result = result
+    this.clearOnSuccess = clearOnSuccess
 
     this.result = mergeObjects(
       {
@@ -274,6 +277,10 @@ class Send {
       try {
         this.success(JSON.parse(response))
         this._displayResult()
+
+        if (this.clearOnSuccess) {
+          this.clear()
+        }
       } catch (e) {
         this._displayResult(true)
       }
@@ -289,18 +296,18 @@ class Send {
    * Public methods
    */
 
-  clear (exclude = []) {
-    if (this._form) { this._form.clear(exclude) }
+  clear () {
+    /* Clear form values and messages */
+
+    this.form.reset()
+
+    if (this._form) { this._form.clearErrorMessages() }
 
     /* Set loaders off */
 
     if (this.loaders.length) {
       setLoaders(this.loaders, [this.submit], false)
     }
-
-    /* Hide result containers */
-
-    this._hideResult()
   }
 
   getFormInstance () {

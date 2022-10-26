@@ -18,8 +18,8 @@
  *  @param {int} total - pagination total pages else total number of items
  *  @param {HTMLElement} insertInto
  *  @param {string} insertLocation
- *  @param {function} onInsert
- *  @param {function} afterInsert
+ *  @param {boolean/function} replaceInsert
+ *  @param {boolean/function} afterInsert
  *  @param {function} filterPushUrlParams
  *  @param {function} filterPostData
  *  @param {object} noResults {
@@ -35,7 +35,6 @@ import {
   request,
   setLoaders,
   urlEncode,
-  assetsLoaded,
   focusSelector
 } from '../../../utils'
 
@@ -72,9 +71,8 @@ class More {
       total = 0,
       insertInto = null,
       insertLocation = 'beforeend',
-      insertAfterAssetsLoaded = false,
-      onInsert = () => {},
-      afterInsert = () => {},
+      replaceInsert = false,
+      afterInsert = false,
       filterPushUrlParams = () => {},
       filterControlUrls = () => {},
       filterPostData = () => this._data
@@ -97,8 +95,7 @@ class More {
     this.total = total
     this.insertInto = insertInto
     this.insertLocation = insertLocation
-    this.insertAfterAssetsLoaded = insertAfterAssetsLoaded
-    this.onInsert = onInsert
+    this.replaceInsert = replaceInsert
     this.afterInsert = afterInsert
     this.filterPushUrlParams = filterPushUrlParams
     this.filterControlUrls = filterControlUrls
@@ -439,46 +436,44 @@ class More {
   /* Add output to insertInto element */
 
   _setOutput (output = '', done = () => {}) {
-    const table = this.insertInto.tagName === 'TBODY'
-    const docFragment = document.createDocumentFragment()
-    const div = document.createElement(table ? 'TBODY' : 'DIV')
+    if (this.replaceInsert) {
+      this.replaceInsert(
+        output,
+        this.insertInto,
+        () => {
+          done()
+        }
+      )
+    } else {
+      let lastChildIndex = 0
 
-    div.innerHTML = output
-
-    const insertedItems = Array.from(div.children)
-
-    const insert = () => {
-      this.onInsert(insertedItems)
-
-      if (table) {
-        insertedItems.forEach(item => {
-          this.insertInto.appendChild(item)
-        })
+      if (this._pagination) {
+        this.insertInto.innerHTML = ''
       } else {
-        insertedItems.forEach(item => {
-          docFragment.appendChild(item)
-        })
-
-        if (this._pagination) { this.insertInto.innerHTML = '' }
-
-        this.insertInto.appendChild(docFragment)
+        if (this.afterInsert) {
+          lastChildIndex = this.insertInto.children.length - 1
+        }
       }
+
+      this.insertInto.insertAdjacentHTML(this.insertLocation, output)
 
       done()
 
       setTimeout(() => {
-        this.afterInsert(insertedItems)
+        if (this.afterInsert) {
+          let insertedItems = []
+
+          insertedItems = Array.from(this.insertInto.children)
+
+          if (!this._pagination) {
+            insertedItems = insertedItems.filter((item, index) => {
+              return index > lastChildIndex
+            })
+          }
+
+          this.afterInsert(insertedItems)
+        }
       }, 0)
-    }
-
-    if (this.insertAfterAssetsLoaded) {
-      const imgs = Array.from(div.getElementsByTagName('img'))
-
-      assetsLoaded(imgs, data => {
-        insert()
-      })
-    } else {
-      insert()
     }
   }
 

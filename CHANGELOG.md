@@ -192,3 +192,13 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - `Form` and `Send` class better a11y and flexibility
 - Simplify and improve `Modal`
+
+## [4.0.3] - 2022-10-25
+
+### Added
+- `Slider` reduce motion option and prev next button functionality
+
+### Changed
+- Loader, modal and collapsible configurable transitions
+- `Nav` simplify method to check overflow and reduce layout shifting
+- `Form` clear method to clear error messages and use native reset for form in `Send`

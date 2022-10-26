@@ -10,9 +10,9 @@
 /* Styles */
 
 .o-loader {
-  --prop: opacity, z-index;
-  --duration: #{con.$default-duration}, 0ms;
-  --delay: 10ms, 0ms;
+  --prop: #{con.$loader-prop};
+  --duration: #{con.$loader-duration};
+  --delay: #{con.$loader-delay};
 
   @extend %u-opacity-1;
   @extend %u-background-color-inherit;
@@ -26,7 +26,7 @@
   }
 
   &[data-hide] {
-    --delay: 0ms, #{con.$default-duration};
+    --delay: #{con.$loader-delay-hide};
 
     @extend %u-opacity-0;
 
