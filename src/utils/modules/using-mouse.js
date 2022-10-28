@@ -7,6 +7,7 @@
 /* Imports */
 
 import { publish } from './pub-sub'
+import { getKey } from './get-key'
 
 /* Module */
 
@@ -23,16 +24,14 @@ const usingMouse = () => {
     publish('tabState', [false])
   })
 
-  const tab = [9, 'Tab']
+  /* Prevent keydown delay */
 
-  window.focus() // to prevent keydown delay
+  window.focus()
 
   /* Check for tabbing to remove attribute */
 
   body.addEventListener('keydown', (e) => {
-    const key = e.key || e.keyCode || e.which || e.code
-
-    if (tab.indexOf(key) !== -1) {
+    if (getKey(e) === 'TAB') {
       body.removeAttribute('data-using-mouse')
       publish('tabState', [true])
     }

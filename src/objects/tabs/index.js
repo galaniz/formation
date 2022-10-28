@@ -9,6 +9,12 @@
  * }
  */
 
+/* Imports */
+
+import { getKey } from '../../utils'
+
+/* Class */
+
 class Tabs {
   /**
    * Constructor
@@ -43,21 +49,6 @@ class Tabs {
     /**
      * Internal variables
      */
-
-    /* For key events */
-
-    this._KEYS = {
-      35: 'END',
-      36: 'HOME',
-      ArrowLeft: 'LEFT',
-      37: 'LEFT',
-      ArrowUp: 'UP',
-      38: 'UP',
-      ArrowRight: 'RIGHT',
-      39: 'RIGHT',
-      ArrowDown: 'DOWN',
-      40: 'DOWN'
-    }
 
     /* Track current and previously current */
 
@@ -268,11 +259,10 @@ class Tabs {
   }
 
   _keyDown (e) {
-    const key = e.keyCode || e.which || e.code || e.key
     let index = this._getIndex(e.currentTarget)
     let focus = true
 
-    switch (this._KEYS[key]) {
+    switch (getKey(e)) {
       case 'END': // Last tab
         e.preventDefault()
         index = this._lastTabIndex
@@ -306,11 +296,10 @@ class Tabs {
   }
 
   _keyUp (e) {
-    const key = e.keyCode || e.which || e.code || e.key
     let index = this._getIndex(e.currentTarget)
     let focus = true
 
-    switch (this._KEYS[key]) {
+    switch (getKey(e)) {
       case 'LEFT': // Previous tab
         if (this.orientation === 'vertical') {
           focus = false

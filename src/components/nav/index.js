@@ -18,6 +18,7 @@
  *  @param {function} onResize
  *  @param {function} onToggle
  *  @param {function} endToggle
+ *  @param {function} filterFocusableItems
  *  @param {function} done
  *  @param {object} delay {
  *   @param {int} open
@@ -31,7 +32,8 @@
 import {
   cascade,
   toggleFocusability,
-  focusSelector
+  focusSelector,
+  getKey
 } from '../../utils'
 
 /* Class */
@@ -63,6 +65,7 @@ class Nav {
       onResize = () => {},
       onToggle = () => {},
       endToggle = () => {},
+      filterFocusableItems = (items) => items,
       done = () => {},
       delay = {
         open: 200,
@@ -86,6 +89,7 @@ class Nav {
     this.onResize = onResize
     this.onToggle = onToggle
     this.endToggle = endToggle
+    this.filterFocusableItems = filterFocusableItems
     this.done = done
     this.delay = delay
 
@@ -99,10 +103,6 @@ class Nav {
 
     this._html = document.documentElement
     this._viewportWidth = window.innerWidth
-
-    /* Escape key for closing nav */
-
-    this._esc = [27, 'Escape']
 
     /* Put items into groups */
 
@@ -188,6 +188,8 @@ class Nav {
 
         return false
       })
+
+      this._focusableItems = this.filterFocusableItems(this._focusableItems)
     }
 
     /* Event listeners */
@@ -197,7 +199,8 @@ class Nav {
     this._resizeHandler = this._resize.bind(this)
 
     this.button.addEventListener('click', this._clickHandler)
-    this.nav.addEventListener('keydown', this._keyDownHandler)
+
+    document.body.addEventListener('keydown', this._keyDownHandler)
 
     if (this.overlay) { this.overlay.addEventListener('click', this._clickHandler) }
 
@@ -479,9 +482,9 @@ class Nav {
   /* If hit escape while nav open close */
 
   _keyDown (e) {
-    const key = e.key || e.keyCode || e.which || e.code
-
-    if (this._esc.indexOf(key) !== -1) { this._toggle() }
+    if (getKey(e) === 'ESC' && this._navOpen) {
+      this._toggle()
+    }
   }
 
   /* Viewport resize */
