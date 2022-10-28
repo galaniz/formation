@@ -202,3 +202,12 @@ All notable changes to this project will be documented in this file.
 - Loader, modal and collapsible configurable transitions
 - `Nav` simplify method to check overflow and reduce layout shifting
 - `Form` clear method to clear error messages and use native reset for form in `Send`
+
+## [4.0.4] - 2022-10-28
+
+### Added
+- `getKey` utility method for key codes
+- `Nav` add filter focusable items param
+
+### Changed
+- Update key codes with `getKey`
