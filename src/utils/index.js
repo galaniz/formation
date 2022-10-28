@@ -17,6 +17,7 @@ import { toggleFocusability, focusSelector } from './modules/toggle-focusability
 /* Get values from DOM */
 
 import { closest } from './modules/closest'
+import { getKey } from './modules/get-key'
 import { getScrollY } from './modules/get-scroll-y'
 import { setElements } from './modules/set-elements'
 
@@ -51,6 +52,7 @@ export {
   prefix,
   objectFit,
   closest,
+  getKey,
   getScrollY,
   setElements,
   assetLoaded,

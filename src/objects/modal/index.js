@@ -16,7 +16,8 @@
 
 import {
   toggleFocusability,
-  focusSelector
+  focusSelector,
+  getKey
 } from '../../utils'
 
 /* Class */
@@ -52,13 +53,6 @@ class Modal {
     /**
      * Internal variables
      */
-
-    /* For key events */
-
-    this._KEYS = {
-      27: 'ESC',
-      Escape: 'ESC'
-    }
 
     /* Store focusable elements outside modal */
 
@@ -163,9 +157,7 @@ class Modal {
    */
 
   _keyHandler (e) {
-    const key = e.keyCode || e.which || e.code || e.key
-
-    if (this._KEYS[key] === 'ESC') {
+    if (getKey(e) === 'ESC' && this._open) {
       this._toggle(false)
     }
   }
