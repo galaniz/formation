@@ -22,6 +22,14 @@ body {
   font-size: 100%;
 }
 
+html[data-no-scroll],
+html[data-no-scroll] body {
+  @extend %u-overflow-hidden;
+
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
 /* Resets */
 
 h1,

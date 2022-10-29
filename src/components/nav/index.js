@@ -11,7 +11,6 @@
  *  @param {HTMLElement} button
  *  @param {HTMLElement} overlay
  *  @param {HTMLElement} transition
- *  @param {string} overflowHiddenClass
  *  @param {function} onSet
  *  @param {function} onReset
  *  @param {function} afterReset
@@ -33,7 +32,8 @@ import {
   cascade,
   toggleFocusability,
   focusSelector,
-  getKey
+  getKey,
+  stopScroll
 } from '../../utils'
 
 /* Class */
@@ -58,7 +58,6 @@ class Nav {
       button = null,
       overlay = null,
       transition = null,
-      overflowHiddenClass = 'l-overflow-hidden',
       onSet = () => {},
       onReset = () => {},
       afterReset = () => {},
@@ -82,7 +81,6 @@ class Nav {
     this.button = button
     this.overlay = overlay
     this.transition = transition
-    this.overflowHiddenClass = overflowHiddenClass
     this.onSet = onSet
     this.onReset = onReset
     this.afterReset = afterReset
@@ -101,7 +99,6 @@ class Nav {
      * Internal variables
      */
 
-    this._html = document.documentElement
     this._viewportWidth = window.innerWidth
 
     /* Put items into groups */
@@ -386,18 +383,6 @@ class Nav {
   }
 
   /**
-   * Prevent scroll when open mobile navigation
-   */
-
-  _disableScroll (disable = true) {
-    if (disable) {
-      this._html.classList.add(this.overflowHiddenClass)
-    } else {
-      this._html.classList.remove(this.overflowHiddenClass)
-    }
-  }
-
-  /**
    * Open/close mobile navigation
    */
 
@@ -414,7 +399,7 @@ class Nav {
           action: () => {
             this.button.setAttribute('data-show', '')
 
-            this._disableScroll()
+            stopScroll(true)
 
             this.nav.setAttribute('data-open', 'true')
 
@@ -453,7 +438,7 @@ class Nav {
           action: () => {
             this.nav.setAttribute('data-open', 'false')
 
-            this._disableScroll(false)
+            stopScroll(false)
 
             this.button.focus()
           }

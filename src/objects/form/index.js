@@ -121,7 +121,7 @@ class Form {
         const reqAttr = input.getAttribute('aria-required')
         let required = (reqAttr === 'true' || reqAttr === '1')
 
-        const dataReqAttr = input.getAttribute('data-aria-required') // Required radio buttons and checkboxes
+        const dataReqAttr = input.getAttribute('data-aria-required') // Required radio buttons and checkboxes in groups
 
         if (dataReqAttr === 'true' || dataReqAttr === '1') {
           required = true
@@ -290,7 +290,11 @@ class Form {
       invalidMessage
     } = inputGroup
 
-    const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
+    const useLegend = legend && (type === 'radio' || type === 'checkbox')
+
+    const l = useLegend ? legend : label
+
+    const errorId = useLegend ? l.id : inputs[0].id
 
     /* Validate inputGroup */
 
@@ -303,11 +307,11 @@ class Form {
       this._setErrorMessage(inputs, name, type, l, message)
 
       if (l) {
-        if (!this._errorSummaryList.ids.includes(l.id)) {
-          this._errorSummaryList.ids.push(l.id)
+        if (!this._errorSummaryList.ids.includes(errorId)) {
+          this._errorSummaryList.ids.push(errorId)
         }
 
-        this._errorSummaryList.messages[l.id] = message
+        this._errorSummaryList.messages[errorId] = message
       }
 
       validGroup = false
@@ -315,12 +319,12 @@ class Form {
       this._removeErrorMessage(inputs, name, type, l)
 
       if (l) {
-        if (this._errorSummaryList.ids.includes(l.id)) {
+        if (this._errorSummaryList.ids.includes(errorId)) {
           this._errorSummaryList.ids = this._errorSummaryList.ids.filter((id) => {
-            return l.id !== id
+            return errorId !== id
           })
 
-          this._errorSummaryList.messages[l.id] = ''
+          this._errorSummaryList.messages[errorId] = ''
         }
       }
     }

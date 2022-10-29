@@ -13,10 +13,18 @@ select {
 }
 
 input,
+[type="search"],
 textarea,
 button,
 select {
+  -webkit-appearance: none;
   appearance: none;
+}
+
+input,
+textarea,
+button,
+select {
   box-shadow: none;
   border-radius: 0;
 

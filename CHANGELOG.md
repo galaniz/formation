@@ -211,3 +211,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Update key codes with `getKey`
+
+## [4.0.5] - 2022-10-29
+
+### Added
+- `stopScroll` module for `Nav` and `Modal`
+- Styles for `stopScroll` and overscroll none
+
+### Fixed
+- Search input appearance
+- `Form` error summary link ids
