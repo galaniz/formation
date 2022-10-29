@@ -11,6 +11,7 @@ import { show } from './modules/show'
 import { prefix } from './modules/prefix'
 import { objectFit } from './modules/object-fit'
 import { setLoaders } from './modules/set-loaders'
+import { stopScroll } from './modules/stop-scroll'
 import { usingMouse } from './modules/using-mouse'
 import { toggleFocusability, focusSelector } from './modules/toggle-focusability'
 
@@ -64,6 +65,7 @@ export {
   cascade,
   publish,
   subscribe,
+  stopScroll,
   usingMouse,
   toggleFocusability,
   focusSelector,

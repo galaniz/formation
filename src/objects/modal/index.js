@@ -7,7 +7,6 @@
  *  @param {HTMLElement} overlay
  *  @param {HTMLElement} trigger
  *  @param {HTMLElement} close
- *  @param {string} overflowHiddenClass
  *  @param {function} onToggle
  * }
  */
@@ -17,7 +16,8 @@
 import {
   toggleFocusability,
   focusSelector,
-  getKey
+  getKey,
+  stopScroll
 } from '../../utils'
 
 /* Class */
@@ -38,7 +38,6 @@ class Modal {
       overlay = null,
       trigger = null,
       close = null,
-      overflowHiddenClass = 'l-overflow-hidden',
       onToggle = () => {}
     } = args
 
@@ -47,7 +46,6 @@ class Modal {
     this.overlay = overlay
     this.trigger = trigger
     this.close = close
-    this.overflowHiddenClass = overflowHiddenClass
     this.onToggle = onToggle
 
     /**
@@ -65,10 +63,6 @@ class Modal {
     /* Track modal state */
 
     this._open = false
-
-    /* Store root element */
-
-    this._html = document.documentElement
 
     /**
      * Initialize
@@ -145,10 +139,11 @@ class Modal {
         this._firstFocusableItem.focus()
       }
 
-      this._html.classList.add(this.overflowHiddenClass)
+      stopScroll(true)
     } else {
       this.trigger.focus()
-      this._html.classList.remove(this.overflowHiddenClass)
+
+      stopScroll(false)
     }
   }
 
