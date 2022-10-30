@@ -233,6 +233,10 @@ class Send {
   _submit (e) {
     e.preventDefault()
 
+    /* Hide result containers */
+
+    this._hideResult()
+
     /* On change for inputs */
 
     this._form.submitted = true
@@ -248,10 +252,6 @@ class Send {
     if (this.loaders.length) {
       setLoaders(this.loaders, [this.submit], true)
     }
-
-    /* Hide result containers */
-
-    this._hideResult()
 
     /* Get form values */
 
@@ -272,7 +272,7 @@ class Send {
       headers: { 'Content-type': 'application/x-www-form-urlencoded' },
       body: data
     }).then(response => {
-      // console.log('RESPONSE', response)
+      this._form.submitted = false
 
       try {
         this.success(JSON.parse(response))
@@ -285,7 +285,7 @@ class Send {
         this._displayResult(true)
       }
     }).catch(xhr => {
-      // console.log('ERROR', xhr)
+      this._form.submitted = false
 
       this._displayResult(true)
       this.error()
