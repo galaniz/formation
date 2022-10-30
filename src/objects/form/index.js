@@ -201,6 +201,12 @@ class Form {
       input.addEventListener('blur', this._onBlur.bind(this))
     })
 
+    /* Add blur to error summary container */
+
+    if (this.errorSummary.container) {
+      this.errorSummary.container.addEventListener('blur', this._onErrorSummaryBlur.bind(this))
+    }
+
     return true
   }
 
@@ -396,8 +402,7 @@ class Form {
       return
     }
 
-    const displayValue = display ? 'block' : 'none'
-    this.errorSummary.container.style.setProperty('display', displayValue)
+    this.errorSummary.container.style.setProperty('display', display ? 'block' : 'none')
   }
 
   _setErrorSummaryList () {
@@ -432,6 +437,10 @@ class Form {
     if (this.submitted) { this._validateGroup(inputGroup, name) }
   }
 
+  _onErrorSummaryBlur () {
+    this.errorSummary.container.removeAttribute('role')
+  }
+
   /**
    * Public methods
    */
@@ -451,6 +460,7 @@ class Form {
 
     if (!validForm) {
       if (this.errorSummary.container) {
+        this.errorSummary.container.setAttribute('role', 'alert')
         this.errorSummary.container.focus()
       }
     }
