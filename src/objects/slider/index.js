@@ -9,6 +9,7 @@
  *  @param {HTMLElement} next
  *  @param {array} breakpoints
  *  @param {array} groupItems
+ *  @param {string} groupSelector
  *  @param {boolean} loop
  *  @param {boolean} reduceMotion
  * }
@@ -41,9 +42,11 @@ class Slider extends Tabs {
       prev = null,
       next = null,
       groupItems = [],
+      groupSelector = '',
       breakpoints = [],
       loop = false,
-      reduceMotion = false
+      reduceMotion = false,
+      duration = 500
     } = args
 
     if (!slider || !track) {
@@ -61,9 +64,11 @@ class Slider extends Tabs {
     this.prev = prev
     this.next = next
     this.groupItems = groupItems
+    this.groupSelector = groupSelector
     this.breakpoints = breakpoints
     this.loop = loop
     this.reduceMotion = reduceMotion
+    this.duration = duration
 
     this.beforeInitActivate = () => {
       this._beforeInitActivate()
@@ -80,6 +85,8 @@ class Slider extends Tabs {
     this.onActivate = (args) => {
       this._onActivate(args)
     }
+
+    this.delay = this.duration + 100
 
     this._focusDelay = this.loop ? this.delay : 0
 
@@ -102,7 +109,7 @@ class Slider extends Tabs {
     this._viewportWidth = window.innerWidth
 
     this._groupItemsLength = this.groupItems.length
-    this._rearrange = this._groupItemsLength && this.breakpoints.length
+    this._rearrange = this._groupItemsLength && this.groupSelector && this.breakpoints.length
 
     /* For loop */
 
@@ -398,7 +405,7 @@ class Slider extends Tabs {
 
     frag.appendChild(this.track)
 
-    const groups = Array.from(frag.querySelectorAll('.o-slider__view'))
+    const groups = Array.from(frag.querySelectorAll(this.groupSelector))
 
     groups.forEach((g, index) => {
       if (index >= numberOfPanels) {
@@ -467,7 +474,7 @@ class Slider extends Tabs {
     } else {
       let start = null
       let done = false
-      const duration = 500
+
       const from = this.track.scrollLeft
       const dir = to > from ? 'right' : 'left'
 
@@ -494,8 +501,8 @@ class Slider extends Tabs {
 
         const elapsed = timestamp - start
 
-        if (elapsed < duration) {
-          const v = ease(elapsed, from, change, duration)
+        if (elapsed < this.duration) {
+          const v = ease(elapsed, from, change, this.duration)
 
           this.track.scrollLeft = v
 
