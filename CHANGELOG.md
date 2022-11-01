@@ -221,3 +221,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Search input appearance
 - `Form` error summary link ids
+
+## [4.0.6] - 2022-10-31
+
+### Changed
+- Update error summary alert in `Form` to be less noisy
+- Reset result message and submitted state after submission in `Form`
+- Selector and duration option in `Slider`
