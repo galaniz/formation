@@ -52,9 +52,10 @@ class Modal {
      * Internal variables
      */
 
-    /* Store focusable elements outside modal */
+    /* Store focusable elements */
 
-    this._focusableItems = []
+    this._outerFocusableItems = []
+    this._innerFocusableItems = []
 
     /* Store first focusable element in modal */
 
@@ -95,20 +96,23 @@ class Modal {
 
     /* Get focusable elements */
 
-    const modalFocusableItems = Array.from(this.modal.querySelectorAll(focusSelector))
+    this._innerFocusableItems = Array.from(this.modal.querySelectorAll(focusSelector))
 
-    if (modalFocusableItems.length) {
-      this._firstFocusableItem = modalFocusableItems[0]
-      this._focusableItems = Array.from(document.querySelectorAll(focusSelector))
+    if (this._innerFocusableItems.length) {
+      this._firstFocusableItem = this._innerFocusableItems[0]
 
-      this._focusableItems = this._focusableItems.filter(item => {
-        if (modalFocusableItems.indexOf(item) === -1) {
+      this._outerFocusableItems = Array.from(document.querySelectorAll(focusSelector))
+
+      this._outerFocusableItems = this._outerFocusableItems.filter(item => {
+        if (this._innerFocusableItems.indexOf(item) === -1) {
           return true
         }
 
         return false
       })
     }
+
+    toggleFocusability(false, this._innerFocusableItems)
 
     /* Check if open */
 
@@ -130,7 +134,8 @@ class Modal {
 
     this.onToggle(open)
 
-    toggleFocusability(!this._open, this._focusableItems)
+    toggleFocusability(!this._open, this._innerFocusableItems)
+    toggleFocusability(!this._open, this._outerFocusableItems)
 
     this.modal.setAttribute('data-open', open)
 
