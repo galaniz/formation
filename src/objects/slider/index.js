@@ -352,7 +352,7 @@ class Slider extends Tabs {
 
     const height = this.targetHeight.clientHeight
 
-    this.container.style.setProperty('--height', (height / 16) + 'rem')
+    this.container.style.setProperty('--height', `${height}px`)
   }
 
   _arrangeItems (resize = false) {

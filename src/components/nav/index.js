@@ -17,7 +17,7 @@
  *  @param {function} onResize
  *  @param {function} onToggle
  *  @param {function} endToggle
- *  @param {function} filterFocusableItems
+ *  @param {function} filterFocusableItem
  *  @param {function} done
  *  @param {object} delay {
  *   @param {int} open
@@ -55,7 +55,8 @@ class Nav {
       overflowList = null,
       items = null,
       itemSelector = '',
-      button = null,
+      open = null,
+      close = null,
       overlay = null,
       transition = null,
       onSet = () => {},
@@ -64,7 +65,7 @@ class Nav {
       onResize = () => {},
       onToggle = () => {},
       endToggle = () => {},
-      filterFocusableItems = (items) => items,
+      filterFocusableItem = () => true,
       done = () => {},
       delay = {
         open: 200,
@@ -78,7 +79,8 @@ class Nav {
     this.overflowList = overflowList
     this.items = items
     this.itemSelector = itemSelector
-    this.button = button
+    this.open = open
+    this.close = close
     this.overlay = overlay
     this.transition = transition
     this.onSet = onSet
@@ -87,7 +89,7 @@ class Nav {
     this.onResize = onResize
     this.onToggle = onToggle
     this.endToggle = endToggle
-    this.filterFocusableItems = filterFocusableItems
+    this.filterFocusableItem = filterFocusableItem
     this.done = done
     this.delay = delay
 
@@ -115,6 +117,10 @@ class Nav {
     /* Store focusable elements outside nav */
 
     this._focusableItems = []
+
+    /* Store first focusable element */
+
+    this._firstFocusableItem = null
 
     /* For throttling resize event */
 
@@ -151,7 +157,8 @@ class Nav {
       'overflowList',
       'items',
       'itemSelector',
-      'button'
+      'open',
+      'close'
     ]
 
     required.forEach((r) => {
@@ -173,9 +180,19 @@ class Nav {
 
     /* Get focusable elements */
 
-    const navFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
+    let navFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
     if (navFocusableItems.length) {
+      navFocusableItems = navFocusableItems.filter(item => {
+        if (item !== this.open && this.filterFocusableItem(item)) {
+          return true
+        }
+
+        return false
+      })
+
+      this._firstFocusableItem = navFocusableItems[0]
+
       this._focusableItems = Array.from(document.querySelectorAll(focusSelector))
 
       this._focusableItems = this._focusableItems.filter(item => {
@@ -185,8 +202,6 @@ class Nav {
 
         return false
       })
-
-      this._focusableItems = this.filterFocusableItems(this._focusableItems)
     }
 
     /* Event listeners */
@@ -195,12 +210,14 @@ class Nav {
     this._keyDownHandler = this._keyDown.bind(this)
     this._resizeHandler = this._resize.bind(this)
 
-    this.button.addEventListener('click', this._clickHandler)
+    this.open.addEventListener('click', this._clickHandler)
+    this.close.addEventListener('click', this._clickHandler)
+
+    if (this.overlay) {
+      this.overlay.addEventListener('click', this._clickHandler)
+    }
 
     document.body.addEventListener('keydown', this._keyDownHandler)
-
-    if (this.overlay) { this.overlay.addEventListener('click', this._clickHandler) }
-
     window.addEventListener('resize', this._resizeHandler)
 
     /* Set up overflow groups */
@@ -250,8 +267,9 @@ class Nav {
     this.nav.setAttribute('data-overflow-all', 'false')
 
     if (this._currentOverflowGroups.length > 0) {
-      const frag = {}
       let appendFrag = true
+
+      const frag = {}
       const listIndexes = []
 
       for (const overflowGroupIndex in this._listIndexes) {
@@ -314,7 +332,7 @@ class Nav {
     })
 
     this.isOverflowing = ogOverflow
-    this.button.style.display = 'block'
+    this.open.style.display = 'block'
 
     while (overflow) {
       const overflowGroup = this._overflowGroups[overflowGroupIndex]
@@ -349,7 +367,7 @@ class Nav {
 
     this.onSet()
 
-    this.button.style.display = ''
+    this.open.style.display = ''
 
     if (done !== undefined) { done.call(this) }
   }
@@ -393,11 +411,11 @@ class Nav {
 
     toggleFocusability(!this._navOpen, this._focusableItems)
 
-    if (close === false) {
+    if (!close) {
       cascade([
         {
           action: () => {
-            this.button.setAttribute('data-show', '')
+            this.open.setAttribute('data-show', '')
 
             stopScroll(true)
 
@@ -414,7 +432,18 @@ class Nav {
         },
         {
           action: () => {
+            if (this._firstFocusableItem) {
+              this._firstFocusableItem.focus()
+            }
+
+            this.close.style.setProperty('visibility', 'visible')
+
             this.overflow.setAttribute('data-show-items', '')
+          }
+        },
+        {
+          action: () => {
+            this.open.style.setProperty('visibility', 'hidden')
           }
         }
       ])
@@ -422,12 +451,16 @@ class Nav {
       cascade([
         {
           action: () => {
+            this.open.style.setProperty('visibility', 'visible')
+            this.close.style.setProperty('visibility', 'hidden')
+
             this.overflow.removeAttribute('data-show-items')
           }
         },
         {
           action: () => {
-            this.button.removeAttribute('data-show')
+            this.open.removeAttribute('data-show')
+
             this.overflow.removeAttribute('data-show')
 
             if (this.transition) { this.transition.removeAttribute('data-show') }
@@ -440,7 +473,7 @@ class Nav {
 
             stopScroll(false)
 
-            this.button.focus()
+            this.open.focus()
           }
         },
         {

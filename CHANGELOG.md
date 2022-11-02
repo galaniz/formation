@@ -228,3 +228,12 @@ All notable changes to this project will be documented in this file.
 - Update error summary alert in `Form` to be less noisy
 - Reset result message and submitted state after submission in `Form`
 - Selector and duration option in `Slider`
+
+## [4.0.7] - 2022-11-01
+
+### Added
+- `getDefaultFontSize` module
+
+### Fixed
+- `Nav` modal separate close button
+- `Slider` height in px as rem producing unexpected results
