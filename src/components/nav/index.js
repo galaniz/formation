@@ -205,8 +205,6 @@ class Nav {
       })
     }
 
-    toggleFocusability(false, this._innerFocusableItems)
-
     /* Event listeners */
 
     this._clickOpenHandler = this._clickOpen.bind(this)
@@ -413,7 +411,7 @@ class Nav {
 
     this._navOpen = !close
 
-    toggleFocusability(this._navOpen, this._innerFocusableItems)
+    toggleFocusability(this.isOverflowing ? this._navOpen : true, this._innerFocusableItems)
     toggleFocusability(!this._navOpen, this._outerFocusableItems)
 
     if (!close) {
@@ -438,7 +436,9 @@ class Nav {
         {
           action: () => {
             if (this._firstFocusableItem) {
-              this._firstFocusableItem.focus()
+              setTimeout(() => {
+                this._firstFocusableItem.focus()
+              }, 100)
             }
 
             this.close.style.setProperty('visibility', 'visible')

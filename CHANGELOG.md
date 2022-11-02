@@ -242,3 +242,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - `Nav` and `Modal` remove focusability from items on close
+
+## [4.0.9] - 2022-11-02
+
+### Changed
+- `toggleFocusability` conditional for focus off
+- `Nav` and `Modal` focusability fixes

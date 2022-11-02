@@ -31,15 +31,20 @@ const toggleFocusability = (on = true, items = []) => {
         item.removeAttribute('data-context-inert-tabindex')
       }
     } else {
-      let ariaHiddenValue = item.getAttribute('aria-hidden')
+      if (!item.hasAttribute('data-context-inert-aria-hidden')) {
+        let ariaHiddenValue = item.getAttribute('aria-hidden')
 
-      if (!ariaHiddenValue) { ariaHiddenValue = false }
+        if (!ariaHiddenValue) { ariaHiddenValue = false }
 
-      item.setAttribute('data-context-inert-aria-hidden', ariaHiddenValue)
-      item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
+        item.setAttribute('data-context-inert-aria-hidden', ariaHiddenValue)
+        item.setAttribute('aria-hidden', true)
+      }
 
-      item.setAttribute('tabindex', '-1')
-      item.setAttribute('aria-hidden', true)
+      if (!item.hasAttribute('data-context-inert-tabindex')) {
+        item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
+        item.setAttribute('tabindex', '-1')
+        item.setAttribute('aria-hidden', true)
+      }
     }
   })
 }

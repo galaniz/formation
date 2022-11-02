@@ -134,14 +134,16 @@ class Modal {
 
     this.onToggle(open)
 
-    toggleFocusability(!this._open, this._innerFocusableItems)
+    toggleFocusability(this._open, this._innerFocusableItems)
     toggleFocusability(!this._open, this._outerFocusableItems)
 
     this.modal.setAttribute('data-open', open)
 
     if (open) {
       if (this._firstFocusableItem) {
-        this._firstFocusableItem.focus()
+        setTimeout(() => {
+          this._firstFocusableItem.focus()
+        }, 100)
       }
 
       stopScroll(true)
