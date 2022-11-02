@@ -478,7 +478,9 @@ class Nav {
 
             stopScroll(false)
 
-            this.open.focus()
+            setTimeout(() => {
+              this.open.focus()
+            }, 100)
           }
         },
         {
