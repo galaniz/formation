@@ -20,6 +20,7 @@ import { toggleFocusability, focusSelector } from './modules/toggle-focusability
 import { closest } from './modules/closest'
 import { getKey } from './modules/get-key'
 import { getScrollY } from './modules/get-scroll-y'
+import { getDefaultFontSize } from './modules/get-default-font-size'
 import { setElements } from './modules/set-elements'
 
 /* Check DOM */
@@ -55,6 +56,7 @@ export {
   closest,
   getKey,
   getScrollY,
+  getDefaultFontSize,
   setElements,
   assetLoaded,
   assetsLoaded,
