@@ -237,3 +237,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `Nav` modal separate close button
 - `Slider` height in px as rem producing unexpected results
+
+## [4.0.8] - 2022-11-01
+
+### Changed
+- `Nav` and `Modal` remove focusability from items on close

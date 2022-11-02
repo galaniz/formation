@@ -114,9 +114,10 @@ class Nav {
 
     this._currentOverflowGroups = []
 
-    /* Store focusable elements outside nav */
+    /* Store focusable elements */
 
-    this._focusableItems = []
+    this._outerFocusableItems = []
+    this._innerFocusableItems = []
 
     /* Store first focusable element */
 
@@ -180,10 +181,10 @@ class Nav {
 
     /* Get focusable elements */
 
-    let navFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
+    this._innerFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
-    if (navFocusableItems.length) {
-      navFocusableItems = navFocusableItems.filter(item => {
+    if (this._innerFocusableItems.length) {
+      this._innerFocusableItems = this._innerFocusableItems.filter(item => {
         if (item !== this.open && this.filterFocusableItem(item)) {
           return true
         }
@@ -191,12 +192,12 @@ class Nav {
         return false
       })
 
-      this._firstFocusableItem = navFocusableItems[0]
+      this._firstFocusableItem = this._innerFocusableItems[0]
 
-      this._focusableItems = Array.from(document.querySelectorAll(focusSelector))
+      this._outerFocusableItems = Array.from(document.querySelectorAll(focusSelector))
 
-      this._focusableItems = this._focusableItems.filter(item => {
-        if (navFocusableItems.indexOf(item) === -1) {
+      this._outerFocusableItems = this._outerFocusableItems.filter(item => {
+        if (this._innerFocusableItems.indexOf(item) === -1) {
           return true
         }
 
@@ -204,17 +205,20 @@ class Nav {
       })
     }
 
+    toggleFocusability(false, this._innerFocusableItems)
+
     /* Event listeners */
 
-    this._clickHandler = this._click.bind(this)
+    this._clickOpenHandler = this._clickOpen.bind(this)
+    this._clickCloseHandler = this._clickClose.bind(this)
     this._keyDownHandler = this._keyDown.bind(this)
     this._resizeHandler = this._resize.bind(this)
 
-    this.open.addEventListener('click', this._clickHandler)
-    this.close.addEventListener('click', this._clickHandler)
+    this.open.addEventListener('click', this._clickOpenHandler)
+    this.close.addEventListener('click', this._clickCloseHandler)
 
     if (this.overlay) {
-      this.overlay.addEventListener('click', this._clickHandler)
+      this.overlay.addEventListener('click', this._clickCloseHandler)
     }
 
     document.body.addEventListener('keydown', this._keyDownHandler)
@@ -409,7 +413,8 @@ class Nav {
 
     this._navOpen = !close
 
-    toggleFocusability(!this._navOpen, this._focusableItems)
+    toggleFocusability(this._navOpen, this._innerFocusableItems)
+    toggleFocusability(!this._navOpen, this._outerFocusableItems)
 
     if (!close) {
       cascade([
@@ -491,10 +496,16 @@ class Nav {
 
   /* When click on button/overlay */
 
-  _click (e) {
+  _clickClose (e) {
     e.preventDefault()
 
-    this._toggle(this._navOpen)
+    this._toggle()
+  }
+
+  _clickOpen (e) {
+    e.preventDefault()
+
+    this._toggle(false)
   }
 
   /* If hit escape while nav open close */
@@ -531,7 +542,7 @@ class Nav {
   addFocusableItem (item) {
     if (!item) { return }
 
-    this._focusableItems.push(item)
+    this._outerFocusableItems.push(item)
   }
 } // End Nav
 
