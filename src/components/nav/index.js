@@ -32,6 +32,8 @@ import {
   cascade,
   toggleFocusability,
   focusSelector,
+  innerFocusableItems,
+  getOuterFocusableItems,
   getKey,
   stopScroll
 } from '../../utils'
@@ -114,11 +116,6 @@ class Nav {
 
     this._currentOverflowGroups = []
 
-    /* Store focusable elements */
-
-    this._outerFocusableItems = []
-    this._innerFocusableItems = []
-
     /* Store first focusable element */
 
     this._firstFocusableItem = null
@@ -181,10 +178,10 @@ class Nav {
 
     /* Get focusable elements */
 
-    this._innerFocusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
+    let focusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
-    if (this._innerFocusableItems.length) {
-      this._innerFocusableItems = this._innerFocusableItems.filter(item => {
+    if (focusableItems.length) {
+      focusableItems = focusableItems.filter(item => {
         if (item !== this.open && this.filterFocusableItem(item)) {
           return true
         }
@@ -192,18 +189,12 @@ class Nav {
         return false
       })
 
-      this._firstFocusableItem = this._innerFocusableItems[0]
-
-      this._outerFocusableItems = Array.from(document.querySelectorAll(focusSelector))
-
-      this._outerFocusableItems = this._outerFocusableItems.filter(item => {
-        if (this._innerFocusableItems.indexOf(item) === -1) {
-          return true
-        }
-
-        return false
-      })
+      this._firstFocusableItem = focusableItems[0]
     }
+
+    innerFocusableItems[this.nav.id] = focusableItems
+
+    toggleFocusability(false, focusableItems)
 
     /* Event listeners */
 
@@ -411,8 +402,8 @@ class Nav {
 
     this._navOpen = !close
 
-    toggleFocusability(this.isOverflowing ? this._navOpen : true, this._innerFocusableItems)
-    toggleFocusability(!this._navOpen, this._outerFocusableItems)
+    toggleFocusability(this.isOverflowing ? this._navOpen : true, innerFocusableItems[this.nav.id])
+    toggleFocusability(!this._navOpen, getOuterFocusableItems())
 
     if (!close) {
       cascade([
@@ -478,7 +469,9 @@ class Nav {
 
             stopScroll(false)
 
-            this.open.focus()
+            setTimeout(() => {
+              this.open.focus()
+            }, 100)
           }
         },
         {
@@ -533,16 +526,6 @@ class Nav {
       this._setNav()
       this.onResize()
     }, 100)
-  }
-
-  /**
-   * Public methods
-   */
-
-  addFocusableItem (item) {
-    if (!item) { return }
-
-    this._outerFocusableItems.push(item)
   }
 } // End Nav
 

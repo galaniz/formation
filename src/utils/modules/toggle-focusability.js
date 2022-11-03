@@ -3,7 +3,7 @@
  *
  * Source: https://bit.ly/3paRHkt
  *
- * @param {boolean} focusContext
+ * @param {boolean} state
  * @param {array} items
  */
 
@@ -14,13 +14,13 @@ const toggleFocusability = (on = true, items = []) => {
 
   items.forEach(item => {
     if (on) {
-      if (item.hasAttribute('data-context-inert-aria-hidden')) {
-        item.setAttribute('aria-hidden', item.getAttribute('data-context-inert-aria-hidden'))
-        item.removeAttribute('data-context-inert-aria-hidden')
+      if (item.hasAttribute('data-tf-aria-hidden')) {
+        item.setAttribute('aria-hidden', item.getAttribute('data-tf-aria-hidden'))
+        item.removeAttribute('data-tf-aria-hidden')
       }
 
-      if (item.hasAttribute('data-context-inert-tabindex')) {
-        const initTabIndex = item.getAttribute('data-context-inert-tabindex')
+      if (item.hasAttribute('data-tf-tabindex')) {
+        const initTabIndex = item.getAttribute('data-tf-tabindex')
 
         if (initTabIndex !== 'null') {
           item.setAttribute('tabindex', initTabIndex)
@@ -28,20 +28,20 @@ const toggleFocusability = (on = true, items = []) => {
           item.removeAttribute('tabindex')
         }
 
-        item.removeAttribute('data-context-inert-tabindex')
+        item.removeAttribute('data-tf-tabindex')
       }
     } else {
-      if (!item.hasAttribute('data-context-inert-aria-hidden')) {
+      if (!item.hasAttribute('data-tf-aria-hidden')) {
         let ariaHiddenValue = item.getAttribute('aria-hidden')
 
         if (!ariaHiddenValue) { ariaHiddenValue = false }
 
-        item.setAttribute('data-context-inert-aria-hidden', ariaHiddenValue)
+        item.setAttribute('data-tf-aria-hidden', ariaHiddenValue)
         item.setAttribute('aria-hidden', true)
       }
 
-      if (!item.hasAttribute('data-context-inert-tabindex')) {
-        item.setAttribute('data-context-inert-tabindex', item.getAttribute('tabindex'))
+      if (!item.hasAttribute('data-tf-tabindex')) {
+        item.setAttribute('data-tf-tabindex', item.getAttribute('tabindex'))
         item.setAttribute('tabindex', '-1')
         item.setAttribute('aria-hidden', true)
       }
@@ -53,8 +53,36 @@ const toggleFocusability = (on = true, items = []) => {
  * Selector string to get focusable items
  */
 
-const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-context-inert-tabindex], iframe'
+const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-tf-tabindex], iframe'
+
+/**
+ * Get outer focusable items
+ */
+
+let allFocusableItems = Array.from(document.querySelectorAll(focusSelector))
+
+const innerFocusableItems = {}
+
+const getOuterFocusableItems = (resetAll = false) => {
+  if (resetAll) {
+    allFocusableItems = Array.from(document.querySelectorAll(focusSelector))
+  }
+
+  let exclude = []
+
+  Object.keys(innerFocusableItems).forEach((key) => {
+    exclude = exclude.concat(innerFocusableItems[key])
+  })
+
+  return allFocusableItems.filter(item => {
+    if (exclude.indexOf(item) === -1) {
+      return true
+    }
+
+    return false
+  })
+}
 
 /* Exports */
 
-export { toggleFocusability, focusSelector }
+export { toggleFocusability, focusSelector, innerFocusableItems, getOuterFocusableItems }

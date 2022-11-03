@@ -248,3 +248,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - `toggleFocusability` conditional for focus off
 - `Nav` and `Modal` focusability fixes
+
+## [4.0.10] - 2022-11-02
+
+### Changed
+- Focusability fixes for `toggleFocusability`, `Nav` and `Modal`

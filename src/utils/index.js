@@ -13,7 +13,12 @@ import { objectFit } from './modules/object-fit'
 import { setLoaders } from './modules/set-loaders'
 import { stopScroll } from './modules/stop-scroll'
 import { usingMouse } from './modules/using-mouse'
-import { toggleFocusability, focusSelector } from './modules/toggle-focusability'
+import {
+  toggleFocusability,
+  focusSelector,
+  innerFocusableItems,
+  getOuterFocusableItems
+} from './modules/toggle-focusability'
 
 /* Get values from DOM */
 
@@ -71,6 +76,8 @@ export {
   usingMouse,
   toggleFocusability,
   focusSelector,
+  innerFocusableItems,
+  getOuterFocusableItems,
   setCookie,
   getCookie
 }
