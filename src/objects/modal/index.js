@@ -16,6 +16,8 @@
 import {
   toggleFocusability,
   focusSelector,
+  innerFocusableItems,
+  getOuterFocusableItems,
   getKey,
   stopScroll
 } from '../../utils'
@@ -51,11 +53,6 @@ class Modal {
     /**
      * Internal variables
      */
-
-    /* Store focusable elements */
-
-    this._outerFocusableItems = []
-    this._innerFocusableItems = []
 
     /* Store first focusable element in modal */
 
@@ -94,31 +91,17 @@ class Modal {
 
     document.body.addEventListener('keydown', this._keyHandler.bind(this))
 
-    /* Get focusable elements */
+    /* Store focusable elements */
 
-    this._innerFocusableItems = Array.from(this.modal.querySelectorAll(focusSelector))
+    const focusableItems = Array.from(this.modal.querySelectorAll(focusSelector))
 
-    if (this._innerFocusableItems.length) {
-      this._firstFocusableItem = this._innerFocusableItems[0]
-
-      this._outerFocusableItems = Array.from(document.querySelectorAll(focusSelector))
-
-      this._outerFocusableItems = this._outerFocusableItems.filter(item => {
-        if (this._innerFocusableItems.indexOf(item) === -1) {
-          return true
-        }
-
-        return false
-      })
+    if (focusableItems.length) {
+      this._firstFocusableItem = focusableItems[0]
     }
 
-    toggleFocusability(false, this._innerFocusableItems)
+    innerFocusableItems[this.modal.id] = focusableItems
 
-    /* Check if open */
-
-    if (this.modal.getAttribute('data-open') === 'true') {
-      this._toggle(true)
-    }
+    toggleFocusability(false, focusableItems)
 
     return true
   }
@@ -134,8 +117,8 @@ class Modal {
 
     this.onToggle(open)
 
-    toggleFocusability(this._open, this._innerFocusableItems)
-    toggleFocusability(!this._open, this._outerFocusableItems)
+    toggleFocusability(this._open, innerFocusableItems[this.modal.id])
+    toggleFocusability(!this._open, getOuterFocusableItems())
 
     this.modal.setAttribute('data-open', open)
 
