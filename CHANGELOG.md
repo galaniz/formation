@@ -259,3 +259,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Attributes instead of style property for `Nav` buttons
 - appendChild instead of append for `getDefaultFontSize` module
+
+## [4.0.12] - 2022-11-08
+
+### Fixed
+- Focusable items in overflow false for `Nav`
