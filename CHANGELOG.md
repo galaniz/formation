@@ -253,3 +253,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Focusability fixes for `toggleFocusability`, `Nav` and `Modal`
+
+## [4.0.11] - 2022-11-08
+
+### Changed
+- Attributes instead of style property for `Nav` buttons
+- appendChild instead of append for `getDefaultFontSize` module
