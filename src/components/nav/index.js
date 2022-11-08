@@ -116,9 +116,10 @@ class Nav {
 
     this._currentOverflowGroups = []
 
-    /* Store first focusable element */
+    /* Store focusable elements */
 
     this._firstFocusableItem = null
+    this._focusableItems = []
 
     /* For throttling resize event */
 
@@ -178,10 +179,10 @@ class Nav {
 
     /* Get focusable elements */
 
-    let focusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
+    this._focusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
 
-    if (focusableItems.length) {
-      focusableItems = focusableItems.filter(item => {
+    if (this._focusableItems.length) {
+      this._focusableItems = this._focusableItems.filter(item => {
         if (item !== this.open && this.filterFocusableItem(item)) {
           return true
         }
@@ -189,12 +190,12 @@ class Nav {
         return false
       })
 
-      this._firstFocusableItem = focusableItems[0]
+      this._firstFocusableItem = this._focusableItems[0]
     }
 
-    innerFocusableItems[this.nav.id] = focusableItems
+    innerFocusableItems[this.nav.id] = this._focusableItems
 
-    toggleFocusability(false, focusableItems)
+    toggleFocusability(false, this._focusableItems)
 
     /* Event listeners */
 
@@ -354,8 +355,12 @@ class Nav {
       if (this._currentOverflowGroups.length === this._overflowGroupsLength) {
         if (this.nav.getAttribute('data-overflow-all') === 'false') { this.nav.setAttribute('data-overflow-all', 'true') }
       }
+
+      innerFocusableItems[this.nav.id] = this._focusableItems
     } else {
       this._toggle(true)
+
+      innerFocusableItems[this.nav.id] = []
     }
 
     this.onSet()
