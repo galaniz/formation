@@ -410,6 +410,7 @@ class Nav {
         {
           action: () => {
             this.open.setAttribute('data-show', '')
+            this.close.setAttribute('data-show', '')
 
             stopScroll(true)
 
@@ -429,17 +430,17 @@ class Nav {
             if (this._firstFocusableItem) {
               setTimeout(() => {
                 this._firstFocusableItem.focus()
-              }, 100)
+              }, this.delay.open)
             }
 
-            this.close.style.setProperty('visibility', 'visible')
+            this.close.setAttribute('data-visible', 'true')
 
             this.overflow.setAttribute('data-show-items', '')
           }
         },
         {
           action: () => {
-            this.open.style.setProperty('visibility', 'hidden')
+            this.open.setAttribute('data-visible', 'false')
           }
         }
       ])
@@ -447,8 +448,8 @@ class Nav {
       cascade([
         {
           action: () => {
-            this.open.style.setProperty('visibility', 'visible')
-            this.close.style.setProperty('visibility', 'hidden')
+            this.open.setAttribute('data-visible', 'true')
+            this.close.setAttribute('data-visible', 'false')
 
             this.overflow.removeAttribute('data-show-items')
           }
@@ -456,6 +457,7 @@ class Nav {
         {
           action: () => {
             this.open.removeAttribute('data-show')
+            this.close.removeAttribute('data-show')
 
             this.overflow.removeAttribute('data-show')
 
