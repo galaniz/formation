@@ -12,7 +12,7 @@ const getDefaultFontSize = () => {
   const element = document.createElement('div')
   element.style.width = '1rem'
 
-  document.body.append(element)
+  document.body.appendChild(element)
 
   const width = element.clientWidth
 
