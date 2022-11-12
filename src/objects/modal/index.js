@@ -154,6 +154,20 @@ class Modal {
   _closeHandler (e) {
     this._toggle(false)
   }
+
+  /**
+   * Public methods
+   */
+
+  getFirstFocusableItem () {
+    return this._firstFocusableItem
+  }
+
+  setFirstFocusableItem (item) {
+    if (item) {
+      this._firstFocusableItem = item
+    }
+  }
 } // End Modal
 
 /* Exports */

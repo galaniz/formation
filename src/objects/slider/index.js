@@ -2,6 +2,7 @@
  * Objects: slider
  *
  * @param {object} args {
+ *  @param {HTMLElement} container
  *  @param {HTMLElement} slider
  *  @param {HTMLElement} track
  *  @param {HTMLElement} targetHeight
@@ -12,6 +13,8 @@
  *  @param {string} groupSelector
  *  @param {boolean} loop
  *  @param {boolean} reduceMotion
+ *  @param {boolean} variableWidths
+ *  @param {integer} duration
  * }
  */
 
@@ -46,6 +49,7 @@ class Slider extends Tabs {
       breakpoints = [],
       loop = false,
       reduceMotion = false,
+      variableWidths = false,
       duration = 500
     } = args
 
@@ -68,6 +72,7 @@ class Slider extends Tabs {
     this.breakpoints = breakpoints
     this.loop = loop
     this.reduceMotion = reduceMotion
+    this.variableWidths = variableWidths
     this.duration = duration
 
     this.beforeInitActivate = () => {
@@ -101,7 +106,8 @@ class Slider extends Tabs {
     /* For scroll event and setting */
 
     this._scrollTimer = null
-    this._scrollOffsets = []
+    this._scrollLeftOffsets = []
+    this._scrollRightOffsets = []
 
     /* For scroll with grouped panels */
 
@@ -237,7 +243,13 @@ class Slider extends Tabs {
         return
       }
 
-      this._scrollOffsets.push(panel.offsetLeft)
+      const offset = panel.offsetLeft
+
+      this._scrollLeftOffsets.push(offset)
+
+      if (this.variableWidths) {
+        this._scrollRightOffsets.push(offset + panel.clientWidth)
+      }
     })
   }
 
@@ -318,7 +330,7 @@ class Slider extends Tabs {
     } = args
 
     if (source !== 'scroll') {
-      this._scrollTo(this._scrollOffsets[this._panelIndex])
+      this._scrollTo(this._scrollLeftOffsets[this._panelIndex])
     }
   }
 
@@ -458,7 +470,7 @@ class Slider extends Tabs {
     }
 
     if (newIndex !== -1) {
-      this.track.scrollLeft = this._scrollOffsets[newIndex]
+      this.track.scrollLeft = this._scrollLeftOffsets[newIndex]
     }
 
     if (end) {
@@ -555,13 +567,31 @@ class Slider extends Tabs {
       let newIndex = this._currentIndex
 
       const target = this.track.scrollLeft
-      const offsets = this._scrollOffsets
+      const offsets = this._scrollLeftOffsets
 
-      const closestOffset = this._scrollOffsets.reduce((prev, curr) => {
-        return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
-      })
+      if (this.variableWidths) {
+        const lastIndex = this.panels.length - 1
+        const secondLastIndex = this.panels.length - 2
 
-      newIndex = offsets.indexOf(closestOffset)
+        this._scrollLeftOffsets.forEach((leftOffset, index) => {
+          if (target >= leftOffset && target <= this._scrollRightOffsets[index]) {
+            newIndex = index
+          }
+        })
+
+        if (newIndex === secondLastIndex) {
+          const l = Math.abs(this._scrollLeftOffsets[secondLastIndex] - target)
+          const c = Math.abs(this._scrollLeftOffsets[lastIndex] - target)
+
+          newIndex = l < c ? newIndex : lastIndex
+        }
+      } else {
+        const closestOffset = this._scrollLeftOffsets.reduce((prev, curr) => {
+          return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
+        })
+
+        newIndex = offsets.indexOf(closestOffset)
+      }
 
       if (newIndex !== -1) {
         this._activate({
@@ -576,7 +606,7 @@ class Slider extends Tabs {
       if (this.loop) {
         if (!this._lastVisible) {
           const targetX = target + this._trackWidth
-          const lastX = this._scrollOffsets[this._length - 1] + this._panelInnerOffset
+          const lastX = this._scrollLeftOffsets[this._length - 1] + this._panelInnerOffset
 
           if (targetX > lastX) {
             this._lastVisible = true
@@ -585,7 +615,7 @@ class Slider extends Tabs {
         }
 
         if (!this._firstVisible) {
-          const firstX = this._scrollOffsets[0] + this._panelInnerOffset
+          const firstX = this._scrollLeftOffsets[0] + this._panelInnerOffset
 
           if (Math.floor(target) <= firstX + this._panelWidth) {
             this._firstVisible = true
@@ -628,14 +658,20 @@ class Slider extends Tabs {
 
       /* Reset offsets */
 
-      this._scrollOffsets = []
+      this._scrollLeftOffsets = []
 
       this.panels.forEach((panel, index) => {
         if (!this.loop && index > this._lastTabIndex) {
           return
         }
 
-        this._scrollOffsets.push(panel.offsetLeft)
+        const offset = panel.offsetLeft
+
+        this._scrollLeftOffsets.push(offset)
+
+        if (this.variableWidths) {
+          this._scrollRightOffsets.push(offset + panel.clientWidth)
+        }
       })
 
       /* Activate */
