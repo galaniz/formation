@@ -13,8 +13,8 @@
  *  @param {object} data
  *  @param {array} loaders
  *  @param {string} url
- *  @param {function} success
- *  @param {function} error
+ *  @param {function} onSuccess
+ *  @param {function} onError
  *  @param {string} errorTemplate
  *  @param {object} result
  *  @param {boolean} clearOnSuccess
@@ -55,8 +55,8 @@ class Send {
       data = {},
       loaders = [],
       url = '',
-      success = () => {},
-      error = () => {},
+      onSuccess = () => {},
+      onError = () => {},
       errorTemplate = '',
       result = {},
       clearOnSuccess = true
@@ -73,8 +73,8 @@ class Send {
     this.data = data
     this.loaders = loaders
     this.url = url
-    this.success = success
-    this.error = error
+    this.onSuccess = onSuccess
+    this.onError = onError
     this.errorTemplate = errorTemplate
     this.result = result
     this.clearOnSuccess = clearOnSuccess
@@ -271,25 +271,27 @@ class Send {
       url: this.url,
       headers: { 'Content-type': 'application/x-www-form-urlencoded' },
       body: data
-    }).then(response => {
-      this._form.submitted = false
+    })
+      .then(response => {
+        return JSON.parse(response)
+      })
+      .then(res => {
+        this.onSuccess(res)
 
-      try {
-        this.success(JSON.parse(response))
+        this._form.submitted = false
+
         this._displayResult()
 
         if (this.clearOnSuccess) {
           this.clear()
         }
-      } catch (e) {
-        this._displayResult(true)
-      }
-    }).catch(xhr => {
-      this._form.submitted = false
+      }).catch(xhr => {
+        this.onError(xhr)
 
-      this._displayResult(true)
-      this.error()
-    })
+        this._form.submitted = false
+
+        this._displayResult(true)
+      })
   }
 
   /**
