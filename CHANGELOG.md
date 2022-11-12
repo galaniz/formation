@@ -264,3 +264,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Focusable items in overflow false for `Nav`
+
+## [4.0.13] - 2022-11-11
+
+### Added
+- Focusable methods in `Modal`
+- Variable widths option in `Slider` to determine new index on scroll
