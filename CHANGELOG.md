@@ -270,3 +270,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Focusable methods in `Modal`
 - Variable widths option in `Slider` to determine new index on scroll
+
+## [4.0.14] - 2022-11-12
+
+### Changed
+- Pass data to `onError` callback for `Send`
+- Use another then block instead of try catch block in `Send`
