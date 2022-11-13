@@ -276,3 +276,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Pass data to `onError` callback for `Send`
 - Use another then block instead of try catch block in `Send`
+
+## [4.0.15] - 2022-11-13
+
+### Changed
+- Improve how aria-hidden set and removed in `toggleFocusability`
