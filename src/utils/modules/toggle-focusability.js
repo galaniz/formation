@@ -15,7 +15,14 @@ const toggleFocusability = (on = true, items = []) => {
   items.forEach(item => {
     if (on) {
       if (item.hasAttribute('data-tf-aria-hidden')) {
-        item.setAttribute('aria-hidden', item.getAttribute('data-tf-aria-hidden'))
+        const initAriaHidden = item.getAttribute('data-tf-aria-hidden')
+
+        if (initAriaHidden !== 'null') {
+          item.setAttribute('aria-hidden', initAriaHidden)
+        } else {
+          item.removeAttribute('aria-hidden')
+        }
+
         item.removeAttribute('data-tf-aria-hidden')
       }
 
@@ -32,9 +39,11 @@ const toggleFocusability = (on = true, items = []) => {
       }
     } else {
       if (!item.hasAttribute('data-tf-aria-hidden')) {
-        let ariaHiddenValue = item.getAttribute('aria-hidden')
+        let ariaHiddenValue = 'null'
 
-        if (!ariaHiddenValue) { ariaHiddenValue = false }
+        if (item.hasAttribute('aria-hidden')) {
+          ariaHiddenValue = item.getAttribute('aria-hidden')
+        }
 
         item.setAttribute('data-tf-aria-hidden', ariaHiddenValue)
         item.setAttribute('aria-hidden', true)
@@ -43,7 +52,6 @@ const toggleFocusability = (on = true, items = []) => {
       if (!item.hasAttribute('data-tf-tabindex')) {
         item.setAttribute('data-tf-tabindex', item.getAttribute('tabindex'))
         item.setAttribute('tabindex', '-1')
-        item.setAttribute('aria-hidden', true)
       }
     }
   })
