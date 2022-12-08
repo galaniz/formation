@@ -122,9 +122,11 @@ class Form {
         let required = (reqAttr === 'true' || reqAttr === '1')
 
         const dataReqAttr = input.getAttribute('data-aria-required') // Required radio buttons and checkboxes in groups
+        let excludeAriaInvalid = false
 
         if (dataReqAttr === 'true' || dataReqAttr === '1') {
           required = true
+          excludeAriaInvalid = true
         }
 
         /* Type */
@@ -192,7 +194,8 @@ class Form {
           values: [],
           valid: false,
           emptyMessage,
-          invalidMessage
+          invalidMessage,
+          excludeAriaInvalid
         }
       }
 
@@ -292,6 +295,7 @@ class Form {
       label,
       type,
       required,
+      excludeAriaInvalid,
       emptyMessage,
       invalidMessage
     } = inputGroup
@@ -310,7 +314,7 @@ class Form {
     const message = validate.message
 
     if (!valid) {
-      this._setErrorMessage(inputs, name, type, l, message)
+      this._setErrorMessage(inputs, name, type, l, message, excludeAriaInvalid)
 
       if (l) {
         if (!this._errorSummaryList.ids.includes(errorId)) {
@@ -322,7 +326,7 @@ class Form {
 
       validGroup = false
     } else {
-      this._removeErrorMessage(inputs, name, type, l)
+      this._removeErrorMessage(inputs, name, type, l, excludeAriaInvalid)
 
       if (l) {
         if (this._errorSummaryList.ids.includes(errorId)) {
@@ -349,7 +353,7 @@ class Form {
     return validGroup
   }
 
-  _setErrorMessage (inputs, name, type, label, message) {
+  _setErrorMessage (inputs, name, type, label, message, excludeAriaInvalid) {
     /* Error element id */
 
     const errorId = name + '-error'
@@ -370,14 +374,14 @@ class Form {
 
     /* Set inputs as invalid */
 
-    if (type !== 'radio' && type !== 'checkbox') {
+    if (!excludeAriaInvalid) {
       inputs.forEach((input) => {
         input.setAttribute('aria-invalid', true)
       })
     }
   }
 
-  _removeErrorMessage (inputs, name, type, label) {
+  _removeErrorMessage (inputs, name, type, label, excludeAriaInvalid) {
     /* Error element id */
 
     const errorId = name + '-error'
@@ -390,7 +394,7 @@ class Form {
 
     /* Set inputs as valid */
 
-    if (type !== 'radio' && type !== 'checkbox') {
+    if (!excludeAriaInvalid) {
       inputs.forEach((input) => {
         input.setAttribute('aria-invalid', false)
       })
