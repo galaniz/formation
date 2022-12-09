@@ -65,3 +65,7 @@
 .l-z-index--1 {
   @extend %u-z-index--1;
 }
+
+.l-isolate {
+  isolation: isolate;
+}
