@@ -281,3 +281,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Improve how aria-hidden set and removed in `toggleFocusability`
+
+## [4.0.16] - 2022-12-08
+
+### Changed
+- Update way aria-invalid set in `Form`
+- Add isolation class
