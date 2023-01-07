@@ -12,6 +12,7 @@
 /* Styles */
 
 $transition-classes: ();
+$transition-classes-store: ();
 
 @each $t, $v in con.$transitions {
   $suffix: "";
@@ -21,7 +22,7 @@ $transition-classes: ();
   }
 
   $class: ".e-transition#{$suffix}";
-  $v: map.set($v, "class", $class);
+  $transition-classes-store: map.merge($transition-classes-store, (#{$t}: $class));
   $transition-classes: list.append($transition-classes, $class, $separator: comma);
 }
 
@@ -34,17 +35,17 @@ $transition-classes: ();
 
 @each $t, $v in con.$transitions {
   @if $t != "default" {
-    $class: map.get("class", $v);
+    $class: map.get($transition-classes-store, $t);
 
     #{$class} {
       @each $tt, $vv in $v {
         @if $tt == "prop" {
           --prop: #{$vv};
-        } @else if $r == "easing" {
+        } @else if $tt == "easing" {
           --easing: #{$vv};
-        } @else if $r == "duration" {
+        } @else if $tt == "duration" {
           --duration: #{$vv};
-        } @else if $r == "delay" {
+        } @else if $tt == "delay" {
           --delay: #{$vv};
         }
       }
