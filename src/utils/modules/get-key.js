@@ -26,7 +26,11 @@ const getKey = (event) => {
     ArrowRight: 'RIGHT',
     39: 'RIGHT',
     ArrowDown: 'DOWN',
-    40: 'DOWN'
+    40: 'DOWN',
+    Space: 'SPACE',
+    32: 'SPACE',
+    Enter: 'ENTER',
+    13: 'ENTER'
   }
 
   if (Object.getOwnPropertyDescriptor(keys, k)) {
