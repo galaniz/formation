@@ -9,7 +9,7 @@
 
 /* Styles */
 
-[class*="l-gap-margin"] {
+%l-gap-margin {
   margin: calc(var(--gap-margin) * -1) 0 0 calc(var(--gap-margin) * -1);
 
   & > * {
@@ -19,6 +19,8 @@
 
 @each $g in con.$gaps {
   .l-gap-margin-#{$g} {
+    @extend %l-gap-margin;
+
     --gap-margin: var(--#{$g});
   }
 }

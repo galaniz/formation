@@ -120,6 +120,7 @@ class Nav {
 
     this._firstFocusableItem = null
     this._focusableItems = []
+    this._focusableIndex = null
 
     /* For throttling resize event */
 
@@ -193,7 +194,9 @@ class Nav {
       this._firstFocusableItem = this._focusableItems[0]
     }
 
-    innerFocusableItems[this.nav.id] = this._focusableItems
+    const focusableLength = innerFocusableItems.push(this._focusableItems)
+
+    this._focusableIndex = focusableLength - 1
 
     toggleFocusability(false, this._focusableItems)
 
@@ -356,11 +359,11 @@ class Nav {
         if (this.nav.getAttribute('data-overflow-all') === 'false') { this.nav.setAttribute('data-overflow-all', 'true') }
       }
 
-      innerFocusableItems[this.nav.id] = this._focusableItems
+      innerFocusableItems[this._focusableIndex] = this._focusableItems
     } else {
       this._toggle(true)
 
-      innerFocusableItems[this.nav.id] = []
+      innerFocusableItems[this._focusableIndex] = []
     }
 
     this.onSet()
@@ -407,7 +410,7 @@ class Nav {
 
     this._navOpen = !close
 
-    toggleFocusability(this.isOverflowing ? this._navOpen : true, innerFocusableItems[this.nav.id])
+    toggleFocusability(this.isOverflowing ? this._navOpen : true, innerFocusableItems[this._focusableIndex])
     toggleFocusability(!this._navOpen, getOuterFocusableItems())
 
     if (!close) {

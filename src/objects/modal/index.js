@@ -57,6 +57,7 @@ class Modal {
     /* Store first focusable element in modal */
 
     this._firstFocusableItem = null
+    this._focusableIndex = null
 
     /* Track modal state */
 
@@ -99,7 +100,9 @@ class Modal {
       this._firstFocusableItem = focusableItems[0]
     }
 
-    innerFocusableItems[this.modal.id] = focusableItems
+    const focusableLength = innerFocusableItems.push(this._focusableItems)
+
+    this._focusableIndex = focusableLength - 1
 
     toggleFocusability(false, focusableItems)
 
@@ -117,7 +120,7 @@ class Modal {
 
     this.onToggle(open)
 
-    toggleFocusability(this._open, innerFocusableItems[this.modal.id])
+    toggleFocusability(this._open, innerFocusableItems[this._focusableIndex])
     toggleFocusability(!this._open, getOuterFocusableItems())
 
     this.modal.setAttribute('data-open', open)

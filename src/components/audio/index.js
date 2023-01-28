@@ -11,7 +11,10 @@
 import {
   prefix,
   setLoaders,
-  getKey
+  getKey,
+  toggleFocusability,
+  focusSelector,
+  innerFocusableItems
 } from '../../utils'
 
 /* Class */
@@ -27,6 +30,7 @@ class Audio {
      */
 
     const {
+      container = null,
       audio = null,
       source = null,
       loader = null,
@@ -38,16 +42,20 @@ class Audio {
       duration = null,
       close = null,
       tracks = [],
-      fallbacks = [],
-      text = [],
+      update = [],
       currentIndex = 0,
       progress = {
         slider: null,
-        fill: null,
+        bar: null,
         scrub: null
+      },
+      delay = {
+        open: 0,
+        close: 300
       }
     } = args
 
+    this.container = container
     this.audio = audio
     this.source = source
     this.loader = loader
@@ -58,11 +66,11 @@ class Audio {
     this.time = time
     this.duration = duration
     this.close = close
-    this.text = text
     this.tracks = tracks
-    this.fallbacks = fallbacks
+    this.update = update
     this.currentIndex = currentIndex
     this.progress = progress
+    this.delay = delay
 
     /**
      * Internal variables
@@ -88,16 +96,13 @@ class Audio {
 
     this._progress = {
       width: 0,
-      maxX: 0,
       offsetX: 0, // For touch
       offsetY: 0,
       pointerDown: false,
       startX: 0,
       endX: 0,
-      startY: 0,
       currentX: 0,
       currentXPercent: 0,
-      letItGo: null,
       time: 0
     }
 
@@ -106,7 +111,7 @@ class Audio {
     this._durationText = ''
     this._duration = 0
 
-    /* */
+    /* Avoid setting time & progress bar on keydown */
 
     this._keyTime = false
 
@@ -115,6 +120,11 @@ class Audio {
     this._resizeTimer = null
     this._viewportWidth = window.innerWidth
     this._viewportHeight = window.innerHeight
+
+    /* Store focusable elements */
+
+    this._focusableItems = []
+    this._focusableIndex = null
 
     /**
      * Initialize
@@ -137,15 +147,14 @@ class Audio {
     let error = false
 
     const required = [
+      'container',
       'audio',
       'source',
       'error',
       'play',
       'time',
       'duration',
-      'text',
       'tracks',
-      'fallbacks',
       'progress'
     ]
 
@@ -179,7 +188,6 @@ class Audio {
       'resize',
       'mousedownProgress',
       'mouseupProgress',
-      'mouseleaveProgress',
       'mousemoveProgress',
       'touchstartProgress',
       'touchendProgress',
@@ -233,19 +241,24 @@ class Audio {
 
     if (this.progress.slider && this.progress.scrub) {
       this.progress.slider.addEventListener('click', this._clickProgress)
-      this.progress.scrub.addEventListener('touchstart', this._touchstartProgress)
-      this.progress.scrub.addEventListener('touchend', this._touchendProgress)
-      this.progress.scrub.addEventListener('touchmove', this._touchmoveProgress)
-      this.progress.scrub.addEventListener('mousedown', this._mousedownProgress)
-      this.progress.scrub.addEventListener('mouseup', this._mouseupProgress)
-      this.progress.scrub.addEventListener('mouseleave', this._mouseleaveProgress)
-      this.progress.scrub.addEventListener('mousemove', this._mousemoveProgress)
+      this.progress.slider.addEventListener('touchstart', this._touchstartProgress)
+      this.progress.slider.addEventListener('mousedown', this._mousedownProgress)
     }
 
     window.addEventListener('resize', this._resize)
 
     document.addEventListener('keydown', this._keyDown)
     document.addEventListener('keyup', this._keyUp)
+
+    /* Store focusable elements */
+
+    const focusableItems = Array.from(this.container.querySelectorAll(focusSelector))
+
+    const focusableLength = innerFocusableItems.push(focusableItems)
+
+    this._focusableIndex = focusableLength - 1
+
+    toggleFocusability(false, focusableItems)
 
     return true
   }
@@ -254,7 +267,7 @@ class Audio {
    * Helper get and set methods
    */
 
-  _getTime (seconds, text = false) {
+  _getTime (seconds, words = false) {
     const hours = Math.floor(seconds / 3600)
     const min = Math.floor((seconds - (hours * 3600)) / 60)
 
@@ -262,12 +275,12 @@ class Audio {
 
     let t = ''
 
-    if (!text) {
+    if (!words) {
       if (hours) {
-        t += (hours < 10 ? '0' : '') + hours + ':'
+        t += (hours < 10 && hours > 0 ? '0' : '') + hours + ':'
       }
 
-      t += (min < 10 ? '0' : '') + min + ':'
+      t += (min < 10 && min > 0 ? '0' : '') + min + ':'
 
       t += (seconds < 10 ? '0' : '') + seconds
     } else {
@@ -313,13 +326,12 @@ class Audio {
       this._progress.width = r.width
       this._progress.offsetX = r.left
       this._progress.offsetY = r.top
-      this._progress.maxX = this._progress.width - this.progress.scrub.clientWidth
     }
   }
 
-  _setProgressFill (n) {
-    if (this.progress.fill) {
-      prefix('transform', this.progress.fill, `scaleX(${n})`)
+  _setProgressBar (n) {
+    if (this.progress.bar) {
+      prefix('transform', this.progress.bar, `scaleX(${n})`)
     }
   }
 
@@ -338,12 +350,12 @@ class Audio {
       transform = this._progress.width
     }
 
-    const fillTransform = transform / this._progress.width
+    const barTransform = transform / this._progress.width
 
-    this._setProgressFill(fillTransform)
+    this._setProgressBar(barTransform)
 
-    if (transform > this._progress.maxX) {
-      transform = this._progress.maxX
+    if (transform > this._progress.width) {
+      transform = this._progress.width
     }
 
     prefix('transform', this.progress.scrub, `translateX(${transform}px)`)
@@ -355,7 +367,7 @@ class Audio {
 
     /* Time update */
 
-    const time = this.audio.duration * fillTransform
+    const time = this.audio.duration * barTransform
 
     this._progress.time = time
 
@@ -368,24 +380,42 @@ class Audio {
     const {
       item,
       button,
-      text
+      title
     } = track
 
     if (pause) {
       item.setAttribute('data-active', 'false')
 
       button.setAttribute('data-state', 'play')
-      button.setAttribute('aria-label', `Play ${text[0].label}`)
+      button.setAttribute('aria-label', `Play ${title}`)
 
       this.tracks[index].active = false
     } else {
       item.setAttribute('data-active', 'true')
 
       button.setAttribute('data-state', 'pause')
-      button.setAttribute('aria-label', `Pause ${text[0].label}`)
+      button.setAttribute('aria-label', `Pause ${title}`)
 
       this.tracks[index].active = true
     }
+  }
+
+  _toggle (open = true) {
+    if (open) {
+      if (this._audioPlayerOpen) {
+        return
+      }
+    } else {
+      if (!this._audioPlayerOpen) {
+        return
+      }
+    }
+
+    toggleFocusability(open, innerFocusableItems[this._focusableIndex])
+
+    document.body.setAttribute('data-audio-open', open)
+
+    this._audioPlayerOpen = open
   }
 
   _togglePlay () {
@@ -439,7 +469,6 @@ class Audio {
     const {
       url,
       type,
-      text,
       duration
     } = track
 
@@ -448,16 +477,15 @@ class Audio {
     this.source.src = url
     this.source.type = type
 
-    if (this.text.length) {
-      this.text.forEach((t, i) => {
-        t.href = text[i].url
-        t.textContent = text[i].label
-      })
-    }
+    if (this.update.length) {
+      this.update.forEach(u => {
+        const { item, attr } = u
 
-    if (this.fallbacks.length0) {
-      this.fallbacks.forEach(f => {
-        f.href = url
+        if (item) {
+          Object.keys(attr).forEach(prop => {
+            item[prop] = track[attr[prop]]
+          })
+        }
       })
     }
 
@@ -487,11 +515,15 @@ class Audio {
     this._setProgressScrub(x / this._progress.width)
   }
 
+  _startDrag () {
+    this.progress.slider.setAttribute('data-dragging', true)
+  }
+
   _clearDrag () {
     this._progress.startX = 0
     this._progress.endX = 0
-    this._progress.startY = 0
-    this._progress.letItGo = null
+
+    this.progress.slider.setAttribute('data-dragging', false)
   }
 
   /**
@@ -512,24 +544,18 @@ class Audio {
   }
 
   _close () {
+    this._toggle(false)
+
     if (this._audioPlayerOpen) {
       if (this._state) {
         this._state = 0
         this._togglePlay()
       }
-
-      document.body.removeAttribute('data-audio-open')
-
-      this._audioPlayerOpen = false
     }
   }
 
   _playTrack (e) {
-    if (!this._audioPlayerOpen) {
-      document.body.setAttribute('data-audio-open', '')
-
-      this._audioPlayerOpen = true
-    }
+    this._toggle(true)
 
     const index = parseInt(e.currentTarget.getAttribute('data-index'))
 
@@ -572,7 +598,7 @@ class Audio {
   _time () {
     if (!this._progress.pointerDown && !this._keyTime) {
       this._setTime(this.audio.currentTime)
-      this._setProgressFill(this.audio.currentTime / this.audio.duration)
+      this._setProgressBar(this.audio.currentTime / this.audio.duration)
       this._setProgressScrub(this.audio.currentTime / this.audio.duration)
     }
   }
@@ -608,6 +634,11 @@ class Audio {
 
     this._progress.pointerDown = true
     this._progress.startX = e.pageX
+
+    this._startDrag()
+
+    document.addEventListener('mousemove', this._mousemoveProgress)
+    document.addEventListener('mouseup', this._mouseupProgress)
   }
 
   _mouseupProgress (e) {
@@ -618,6 +649,9 @@ class Audio {
     this._clearDrag()
 
     this.audio.currentTime = this._progress.time
+
+    document.removeEventListener('mousemove', this._mousemoveProgress)
+    document.removeEventListener('mouseup', this._mouseupProgress)
   }
 
   _mousemoveProgress (e) {
@@ -630,21 +664,16 @@ class Audio {
     }
   }
 
-  _mouseleaveProgress (e) {
-    if (this._progress.pointerDown) {
-      this._progress.pointerDown = false
-      this._progress.endX = e.pageX
-
-      this._clearDrag()
-    }
-  }
-
   _touchstartProgress (e) {
     e.stopPropagation()
 
     this._progress.pointerDown = true
     this._progress.startX = e.touches[0].pageX
-    this._progress.startY = e.touches[0].page
+
+    this._startDrag()
+
+    document.addEventListener('touchmove', this._touchmoveProgress)
+    document.addEventListener('touchend', this._touchendProgress)
   }
 
   _touchendProgress (e) {
@@ -655,22 +684,21 @@ class Audio {
     this._clearDrag()
 
     this.audio.currentTime = this._progress.time
+
+    document.removeEventListener('touchmove', this._touchmoveProgress)
+    document.removeEventListener('touchend', this._touchendProgress)
   }
 
   _touchmoveProgress (e) {
     e.stopPropagation()
 
     const x = e.touches[0].pageX
-    const y = e.touches[0].pageY
 
-    if (this._progress.letItGo === null) {
-      this._progress.letItGo = Math.abs(this._progress.startY - y) < Math.abs(this._progress.startX - x)
-    }
-
-    if (this._progress.pointerDown && this._progress.letItGo) {
+    if (this._progress.pointerDown) {
       e.preventDefault()
 
       this._progress.endX = x
+
       this._dragging(x)
     }
   }
