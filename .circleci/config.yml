@@ -22,6 +22,6 @@ workflows:
       - publish-release:
           filters:
             branches:
-              only: master
+              only: main
             tags:
               ignore: /.*/
