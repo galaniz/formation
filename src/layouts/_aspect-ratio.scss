@@ -8,7 +8,7 @@
 
 /* Styles */
 
-[class*="l-aspect-ratio"] {
+%l-aspect-ratio {
   &::before {
     @extend %u-content-empty;
     @extend %u-display-block;
@@ -19,6 +19,8 @@
 
 @each $p, $v in con.$aspect-ratio-padding {
   .l-aspect-ratio-#{$p} {
+    @extend %l-aspect-ratio;
+
     --aspect-ratio-padding: #{$v};
   }
 }

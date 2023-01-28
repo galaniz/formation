@@ -18,6 +18,7 @@
  *  @param {string} errorTemplate
  *  @param {object} result
  *  @param {boolean} clearOnSuccess
+ *  @param {boolean} JSONresponse
  * }
  */
 
@@ -59,7 +60,8 @@ class Send {
       onError = () => {},
       errorTemplate = '',
       result = {},
-      clearOnSuccess = true
+      clearOnSuccess = true,
+      JSONresponse = true
     } = args
 
     this.id = id
@@ -78,6 +80,7 @@ class Send {
     this.errorTemplate = errorTemplate
     this.result = result
     this.clearOnSuccess = clearOnSuccess
+    this.JSONresponse = JSONresponse
 
     this.result = mergeObjects(
       {
@@ -273,7 +276,7 @@ class Send {
       body: data
     })
       .then(response => {
-        return JSON.parse(response)
+        return this.JSONresponse ? JSON.parse(response) : response
       })
       .then(res => {
         this.onSuccess(res)

@@ -287,3 +287,18 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Update way aria-invalid set in `Form`
 - Add isolation class
+
+## [4.0.17] - 2022-01-27
+
+### Fixed
+- Margin and transition classes unexpected output
+
+### Changed
+- `toggleFocusability` simplify inner array and update `Modal` and `Nav` accordingly
+- Table styles more accessible
+- Wild class selector for container, aspect ratio and gap margin classes
+
+### Added
+- `Audio` player class
+- `getKey` more key codes
+- `Send` json response option

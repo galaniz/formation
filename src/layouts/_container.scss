@@ -8,7 +8,7 @@
 
 /* Styles */
 
-[class*="l-container"] {
+%l-container {
   @extend %u-margin-auto;
 
   padding-left: var(--container-padding);
@@ -23,6 +23,8 @@
   }
 
   .l-container#{$suffix} {
+    @extend %l-container;
+
     max-width: var(--container#{$suffix});
   }
 }

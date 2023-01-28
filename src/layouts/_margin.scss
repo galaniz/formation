@@ -47,7 +47,7 @@
   $selector: ".l-margin-bottom-#{$m}";
 
   @if list.index(con.$margin-bottom-all, $m) {
-    $selector: "#{$selector}, #{$selector}-all > *";
+    $selector: "#{$selector}, #{$selector}-all > *:not(:last-child)";
   }
 
   #{string.unquote($selector)} {
@@ -64,7 +64,13 @@
     }
 
     @each $m in con.$margin-bottom {
-      .l-margin-bottom-#{$m}-#{$b} {
+      $selector: ".l-margin-bottom-#{$m}";
+
+      @if list.index(con.$margin-bottom-all, $m) {
+        $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > *:not(:last-child)";
+      }
+
+      #{string.unquote($selector)} {
         margin-bottom: var(--#{$m});
       }
     }

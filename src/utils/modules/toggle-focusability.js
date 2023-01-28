@@ -69,7 +69,7 @@ const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [da
 
 let allFocusableItems = Array.from(document.querySelectorAll(focusSelector))
 
-const innerFocusableItems = {}
+const innerFocusableItems = []
 
 const getOuterFocusableItems = (resetAll = false) => {
   if (resetAll) {
@@ -78,8 +78,8 @@ const getOuterFocusableItems = (resetAll = false) => {
 
   let exclude = []
 
-  Object.keys(innerFocusableItems).forEach((key) => {
-    exclude = exclude.concat(innerFocusableItems[key])
+  innerFocusableItems.forEach((items) => {
+    exclude = exclude.concat(items)
   })
 
   return allFocusableItems.filter(item => {

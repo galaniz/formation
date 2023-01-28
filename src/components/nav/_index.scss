@@ -8,11 +8,9 @@
 
 /* Styles */
 
-.c-nav__button {
-  @extend %u-display-none;
-
-  .c-nav[data-overflow="true"] & {
-    @extend %u-display-block;
+.c-nav__hide {
+  [data-overflow="false"] & {
+    @extend %u-display-none;
   }
 }
 
