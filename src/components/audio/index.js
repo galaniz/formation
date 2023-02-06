@@ -546,11 +546,9 @@ class Audio {
   _close () {
     this._toggle(false)
 
-    if (this._audioPlayerOpen) {
-      if (this._state) {
-        this._state = 0
-        this._togglePlay()
-      }
+    if (this._state) {
+      this._state = 0
+      this._togglePlay()
     }
   }
 

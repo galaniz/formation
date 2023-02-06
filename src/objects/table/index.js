@@ -69,6 +69,8 @@ class Table {
     const collapse = currentWidth > targetWidth
 
     this.table.style.maxWidth = ''
+    this.table.style.setProperty('--target-width', `${targetWidth}px`)
+    this.table.style.setProperty('--current-width', `${currentWidth}px`)
     this.table.setAttribute('data-collapse', collapse)
   }
 
