@@ -8,7 +8,7 @@
  *  @prop {string} body - url encoded or [form data]
  * }
  *
- * @return {promise} - width response/error passed to it
+ * @return {promise}
  */
 
 /* Module */

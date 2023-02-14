@@ -12,10 +12,7 @@
 
 /* Imports */
 
-import {
-  closest,
-  urlEncode
-} from '../../utils'
+import { closest } from '../../utils'
 
 /* Class */
 
@@ -472,8 +469,8 @@ class Form {
     return validForm
   }
 
-  getFormValues (urlEncoded = false, filter = false) {
-    let formValues = {}
+  appendFormValues (formData, formJson, filter = false) {
+    formJson.inputs = {}
 
     for (const name in this._inputGroups) {
       const inputGroup = this._inputGroups[name]
@@ -485,7 +482,7 @@ class Form {
         values = values[0]
       }
 
-      let formValuesArgs = {
+      let formObj = {
         value: values,
         type: this._inputTypes[name]
       }
@@ -494,22 +491,22 @@ class Form {
         const legend = this._inputLegends[name]
 
         if (legend) {
-          formValuesArgs.legend = legend
+          formObj.legend = legend
         }
       }
 
-      formValuesArgs.label = this._inputLabels[name]
+      formObj.label = this._inputLabels[name]
 
-      if (filter && typeof filter === 'function') { formValuesArgs = filter(formValuesArgs, inputGroup.inputs) }
+      if (filter && typeof filter === 'function') {
+        formObj = filter(formObj, inputGroup.inputs)
+      }
 
-      formValues[name] = formValuesArgs
+      Object.keys(formObj).forEach((f) => {
+        formData.append(`inputs[${name}][${f}]`, formObj[f])
+      })
+
+      formJson.inputs[name] = formObj
     }
-
-    formValues = { inputs: formValues }
-
-    if (urlEncoded) { formValues = urlEncode(formValues) }
-
-    return formValues
   }
 
   clearErrorMessages () {

@@ -13,12 +13,13 @@
  *  @param {object} data
  *  @param {array} loaders
  *  @param {string} url
+ *  @param {boolean} urlEncoded
  *  @param {function} onSuccess
  *  @param {function} onError
  *  @param {string} errorTemplate
  *  @param {object} result
  *  @param {boolean} clearOnSuccess
- *  @param {boolean} JSONresponse
+ *  @param {boolean} jsonResponse
  * }
  */
 
@@ -56,12 +57,14 @@ class Send {
       data = {},
       loaders = [],
       url = '',
+      urlEncoded = true,
+      jsonEncoded = false,
       onSuccess = () => {},
       onError = () => {},
       errorTemplate = '',
       result = {},
       clearOnSuccess = true,
-      JSONresponse = true
+      jsonResponse = true
     } = args
 
     this.id = id
@@ -75,12 +78,14 @@ class Send {
     this.data = data
     this.loaders = loaders
     this.url = url
+    this.urlEncoded = urlEncoded
+    this.jsonEncoded = jsonEncoded
     this.onSuccess = onSuccess
     this.onError = onError
     this.errorTemplate = errorTemplate
     this.result = result
     this.clearOnSuccess = clearOnSuccess
-    this.JSONresponse = JSONresponse
+    this.jsonResponse = jsonResponse
 
     this.result = mergeObjects(
       {
@@ -256,27 +261,53 @@ class Send {
       setLoaders(this.loaders, [this.submit], true)
     }
 
+    /* Request args */
+
+    const args = {
+      method: 'POST',
+      url: this.url
+    }
+
     /* Get form values */
 
-    const formValues = this._form.getFormValues(true, this.filterInputs)
-    let data = `id=${this.id}&${formValues}`
+    let formData = new FormData()
+    let formJson = {}
+
+    formData.append('id', this.id)
+    formJson.id = this.id
+
+    this._form.appendFormValues(formData, formJson, this.filterInputs)
 
     if (this.data) {
-      for (const d in this.data) {
-        data += `&${d}=${this.data[d]}`
+      Object.keys(this.data).forEach((d) => {
+        formData.append(d, this.data[d])
+        formJson[d] = this.data[d]
+      })
+    }
+
+    if (this.urlEncoded && Object.getOwnPropertyDescriptor(window, 'URLSearchParams')) {
+      formData = new URLSearchParams(formData).toString()
+
+      args.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     }
 
+    if (this.jsonEncoded) {
+      formJson = JSON.stringify(formJson)
+
+      args.headers = {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    args.body = this.jsonEncoded ? formJson : formData
+
     /* Send */
 
-    request({
-      method: 'POST',
-      url: this.url,
-      headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-      body: data
-    })
+    request(args)
       .then(response => {
-        return this.JSONresponse ? JSON.parse(response) : response
+        return this.jsonResponse ? JSON.parse(response) : response
       })
       .then(res => {
         this.onSuccess(res)

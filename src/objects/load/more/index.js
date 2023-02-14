@@ -707,8 +707,6 @@ class More {
 
       const encodedData = urlEncode(this.filterPostData(this._data))
 
-      // console.log('DATA', this._data)
-
       setTimeout(() => {
         /* Fetch more items */
 
@@ -735,8 +733,6 @@ class More {
             const rowCount = result.row_count
             const output = result.output
             const total = parseInt(result.total)
-
-            // console.log('RESULT', result)
 
             if (reset) { this.insertInto.innerHTML = '' }
 
@@ -770,8 +766,6 @@ class More {
             }
           })
           .catch(xhr => {
-            // console.log('ERROR', xhr)
-
             this._data.total = 0
             this._data.count = 0
             this._data.page = 1
