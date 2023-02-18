@@ -1,11 +1,13 @@
 /**
- * Utils: capitalize string
+ * Utils - capitalize
  */
+
+/* Imports */
 
 @use "sass:string";
 
 /**
- * Function
+ * Function - convert string to capital case
  *
  * @param {string} $str
  * @return {string}

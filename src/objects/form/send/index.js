@@ -1,5 +1,5 @@
 /**
- * Objects: send and validate form
+ * Objects - send and validate form
  *
  * @param {object} args {
  *  @param {string} id
@@ -8,10 +8,10 @@
  *  @param {string} fieldClass
  *  @param {string} labelClass
  *  @param {HTMLElement} submit
- *  @param {nodelist} inputs
+ *  @param {NodeList} inputs
  *  @param {boolean} filterInputs
  *  @param {object} data
- *  @param {array} loaders
+ *  @param {array<HTMLElement>} loaders
  *  @param {string} url
  *  @param {boolean} urlEncoded
  *  @param {function} onSuccess
@@ -28,7 +28,8 @@
 import {
   mergeObjects,
   setLoaders,
-  request
+  request,
+  urlEncode
 } from '../../../utils'
 
 import Form from '../index'
@@ -133,7 +134,9 @@ class Send {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -161,7 +164,9 @@ class Send {
       }
     })
 
-    if (error) { return false }
+    if (error) {
+      return false
+    }
 
     /* Prepare for validation */
 
@@ -270,7 +275,7 @@ class Send {
 
     /* Get form values */
 
-    let formData = new FormData()
+    let formData = new FormData() // eslint-disable-line no-undef
     let formJson = {}
 
     formData.append('id', this.id)
@@ -285,8 +290,8 @@ class Send {
       })
     }
 
-    if (this.urlEncoded && Object.getOwnPropertyDescriptor(window, 'URLSearchParams')) {
-      formData = new URLSearchParams(formData).toString()
+    if (this.urlEncoded) {
+      formData = urlEncode(formJson)
 
       args.headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -319,8 +324,8 @@ class Send {
         if (this.clearOnSuccess) {
           this.clear()
         }
-      }).catch(xhr => {
-        this.onError(xhr)
+      }).catch(err => {
+        this.onError(err)
 
         this._form.submitted = false
 
@@ -337,7 +342,9 @@ class Send {
 
     this.form.reset()
 
-    if (this._form) { this._form.clearErrorMessages() }
+    if (this._form) {
+      this._form.clearErrorMessages()
+    }
 
     /* Set loaders off */
 
@@ -349,7 +356,7 @@ class Send {
   getFormInstance () {
     return this._form
   }
-} // End Send
+}
 
 /* Exports */
 

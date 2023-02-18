@@ -1,9 +1,5 @@
 /**
- * Components: audio
- *
- * @param {object} args {
- *  @param {HTMLElement} audio
- * }
+ * Components - audio
  */
 
 /* Imports */
@@ -12,23 +8,49 @@ import {
   prefix,
   setLoaders,
   getKey,
+  getDuration,
   toggleFocusability,
   focusSelector,
   innerFocusableItems
 } from '../../utils'
 
-/* Class */
+/**
+ * Class - play, pause and progress audio tracks
+ */
 
 class Audio {
   /**
-   * Constructor
+   * Set public properties and initialize
+   *
+   * @param {object} args {
+   *  @prop {HTMLElement} container
+   *  @prop {HTMLElement} audio
+   *  @prop {HTMLElement} source
+   *  @prop {HTMLElement} loader
+   *  @prop {HTMLElement} error
+   *  @prop {HTMLElement} play
+   *  @prop {HTMLElement} prev
+   *  @prop {HTMLElement} next
+   *  @prop {HTMLElement} time
+   *  @prop {HTMLElement} duration
+   *  @prop {HTMLElement} close
+   *  @prop {array<object>} tracks
+   *  @prop {array<object>} update
+   *  @prop {number} currentIndex
+   *  @prop {object} progress {
+   *   @prop {HTMLElement} slider
+   *   @prop {HTMLElement} bar
+   *   @prop {HTMLElement} scrub
+   *  }
+   *  @prop {object} delay {
+   *   @prop {number} open
+   *   @prop {number} close
+   *  }
+   * }
+   * @return {void|boolean} - false if init errors
    */
 
   constructor (args) {
-    /**
-     * Public variables
-     */
-
     const {
       container = null,
       audio = null,
@@ -73,62 +95,116 @@ class Audio {
     this.delay = delay
 
     /**
-     * Internal variables
+     * Store open state
+     *
+     * @type {boolean}
+     * @private
      */
-
-    /* Store open state */
 
     this._playerOpen = false
 
-    /* Keep track of play state */
+    /**
+     * Keep track of play state
+     *
+     * @type {number}
+     * @private
+     */
 
     this._state = 0
 
-    /* Keey track of loaded state */
+    /**
+     * Keep track of loaded state
+     *
+     * @type {boolean}
+     * @private
+     */
 
     this._trackLoaded = false
 
-    /* Last track index */
+    /**
+     * Last track index
+     *
+     * @type {number}
+     * @private
+     */
 
     this._lastIndex = 0
 
-    /* Progress slider */
+    /**
+     * Progress slider properties
+     *
+     * @type {object}
+     * @prop {number} width
+     * @prop {number} offsetX
+     * @prop {boolean} pointerDown
+     * @prop {number} currentX - Float
+     * @prop {number} time
+     * @private
+     */
 
     this._progress = {
       width: 0,
       offsetX: 0, // For touch
-      offsetY: 0,
       pointerDown: false,
-      startX: 0,
-      endX: 0,
       currentX: 0,
-      currentXPercent: 0,
       time: 0
     }
 
-    /* Store duration */
+    /**
+     * Store duration in words
+     *
+     * @type {string}
+     * @private
+     */
 
     this._durationText = ''
+
+    /**
+     * Store duration in seconds
+     *
+     * @type {number}
+     * @private
+     */
+
     this._duration = 0
 
-    /* Avoid setting time & progress bar on keydown */
+    /**
+     * Avoid setting time & progress bar on keydown
+     *
+     * @type {boolean}
+     * @private
+     */
 
     this._keyTime = false
 
-    /* Resize event */
+    /**
+     * Store timeout id in resize event
+     *
+     * @type {number}
+     * @private
+     */
 
-    this._resizeTimer = null
-    this._viewportWidth = window.innerWidth
-    this._viewportHeight = window.innerHeight
-
-    /* Store focusable elements */
-
-    this._focusableItems = []
-    this._focusableIndex = null
+    this._resizeTimer = -1
 
     /**
-     * Initialize
+     * Store viewport width for resize event
+     *
+     * @type {number}
+     * @private
      */
+
+    this._viewportWidth = window.innerWidth
+
+    /**
+     * Store index in innerFocusableItems array
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._focusableIndex = 0
+
+    /* Initialize */
 
     const init = this._initialize()
 
@@ -138,11 +214,14 @@ class Audio {
   }
 
   /**
-   * Initialize
+   * Initialize - check required props, set event listeners and focusability
+   *
+   * @private
+   * @return {boolean}
    */
 
   _initialize () {
-    /* Check that required variables not null */
+    /* Check that required properties not null */
 
     let error = false
 
@@ -253,7 +332,6 @@ class Audio {
     /* Store focusable elements */
 
     const focusableItems = Array.from(this.container.querySelectorAll(focusSelector))
-
     const focusableLength = innerFocusableItems.push(focusableItems)
 
     this._focusableIndex = focusableLength - 1
@@ -264,45 +342,23 @@ class Audio {
   }
 
   /**
-   * Helper get and set methods
+   * Set tracks last index
+   *
+   * @private
+   * @return {void}
    */
-
-  _getTime (seconds, words = false) {
-    const hours = Math.floor(seconds / 3600)
-    const min = Math.floor((seconds - (hours * 3600)) / 60)
-
-    seconds = seconds - (hours * 3600) - (min * 60)
-
-    let t = ''
-
-    if (!words) {
-      if (hours) {
-        t += (hours < 10 && hours > 0 ? '0' : '') + hours + ':'
-      }
-
-      t += (hours && min < 10 ? '0' : '') + min + ':'
-
-      t += (seconds < 10 ? '0' : '') + seconds
-    } else {
-      if (hours) {
-        t += hours + (hours > 1 ? ' hours' : ' hour') + (min ? ' ' : '')
-      }
-
-      if (min) {
-        t += min + (min > 1 ? ' minutes' : ' minute') + (seconds ? ' ' : '')
-      }
-
-      if (seconds) {
-        t += seconds + (seconds > 1 ? ' seconds' : ' second')
-      }
-    }
-
-    return t
-  }
 
   _setLastIndex () {
     this._lastIndex = this.tracks.length - 1
   }
+
+  /**
+   * Set time on progress slider and time elements
+   *
+   * @private
+   * @param {number} seconds
+   * @return {void}
+   */
 
   _setTime (seconds) {
     if (isNaN(seconds)) {
@@ -311,13 +367,22 @@ class Audio {
 
     seconds = parseInt(seconds.toFixed())
 
-    this.time.textContent = this._getTime(seconds)
-    this.progress.slider.setAttribute('aria-valuenow', seconds)
+    this.time.textContent = getDuration(seconds)
 
-    const timeText = this._getTime(seconds, true) + ' of ' + this._durationText
+    if (this.progress.slider) {
+      const timeText = getDuration(seconds, true) + ' of ' + this._durationText
 
-    this.progress.slider.setAttribute('aria-valuetext', timeText)
+      this.progress.slider.setAttribute('aria-valuenow', seconds)
+      this.progress.slider.setAttribute('aria-valuetext', timeText)
+    }
   }
+
+  /**
+   * Set progress slider width and left offset
+   *
+   * @private
+   * @return {void}
+   */
 
   _setProgressWidth () {
     if (this.progress.slider) {
@@ -325,15 +390,30 @@ class Audio {
 
       this._progress.width = r.width
       this._progress.offsetX = r.left
-      this._progress.offsetY = r.top
     }
   }
+
+  /**
+   * Set progress bar width through transform
+   *
+   * @private
+   * @param {number} n - float
+   * @return {void}
+   */
 
   _setProgressBar (n) {
     if (this.progress.bar) {
       prefix('transform', this.progress.bar, `scaleX(${n})`)
     }
   }
+
+  /**
+   * Set progress bar width, scrub position and time through transform
+   *
+   * @private
+   * @param {number} n - float
+   * @return {void}
+   */
 
   _setProgressScrub (n) {
     if (!this.progress.slider && !this.progress.scrub) {
@@ -362,8 +442,7 @@ class Audio {
 
     /* Save x position */
 
-    this._progress.currentX = transform
-    this._progress.currentXPercent = transform / this._progress.width
+    this._progress.currentX = transform / this._progress.width
 
     /* Time update */
 
@@ -373,6 +452,15 @@ class Audio {
 
     this._setTime(time)
   }
+
+  /**
+   * Set track item and button attributes
+   *
+   * @private
+   * @param {number} index
+   * @param {boolean} pause
+   * @return {void}
+   */
 
   _setTrackAttr (index = 0, pause = true) {
     const track = this.tracks[index]
@@ -400,13 +488,21 @@ class Audio {
     }
   }
 
+  /**
+   * Open and close player
+   *
+   * @private
+   * @param {boolean} open
+   * @return {void}
+   */
+
   _toggle (open = true) {
     if (open) {
-      if (this._audioPlayerOpen) {
+      if (this._playerOpen) {
         return
       }
     } else {
-      if (!this._audioPlayerOpen) {
+      if (!this._playerOpen) {
         return
       }
     }
@@ -415,8 +511,15 @@ class Audio {
 
     document.body.setAttribute('data-audio-open', open)
 
-    this._audioPlayerOpen = open
+    this._playerOpen = open
   }
+
+  /**
+   * Play and pause audio and update attributes to reflect state
+   *
+   * @private
+   * @return {void}
+   */
 
   _togglePlay () {
     if (this._state) {
@@ -432,7 +535,11 @@ class Audio {
   }
 
   /**
-   * Go to track
+   * Load and set new track and unset previous track
+   *
+   * @private
+   * @param {number} index
+   * @return {void}
    */
 
   _goTo (index = 0) {
@@ -492,10 +599,10 @@ class Audio {
     const dur = parseInt(duration.toFixed())
 
     if (this.duration) {
-      this.duration.textContent = this._getTime(dur)
+      this.duration.textContent = getDuration(dur)
     }
 
-    this._durationText = this._getTime(dur, true)
+    this._durationText = getDuration(dur, true)
     this._duration = dur
 
     if (this.progress.slider) {
@@ -506,7 +613,11 @@ class Audio {
   }
 
   /**
-   * Progress drag (mousemove, touchmove)
+   * Pass x position from mousemove and touchmove to set progress bar, scrub and time
+   *
+   * @private
+   * @param {number} x
+   * @return {void}
    */
 
   _dragging (x) {
@@ -515,19 +626,33 @@ class Audio {
     this._setProgressScrub(x / this._progress.width)
   }
 
+  /**
+   * Set dragging attribute to true
+   *
+   * @private
+   * @return {void}
+   */
+
   _startDrag () {
     this.progress.slider.setAttribute('data-dragging', true)
   }
 
-  _clearDrag () {
-    this._progress.startX = 0
-    this._progress.endX = 0
+  /**
+   * Set dragging attribute to false
+   *
+   * @private
+   * @return {void}
+   */
 
+  _clearDrag () {
     this.progress.slider.setAttribute('data-dragging', false)
   }
 
   /**
-   * Event handlers - controls
+   * Click handler on player pause button and general method to play/pause audio
+   *
+   * @private
+   * @return {void}
    */
 
   _play () {
@@ -535,13 +660,34 @@ class Audio {
     this._togglePlay()
   }
 
+  /**
+   * Click handler on player previous track button
+   *
+   * @private
+   * @return {void}
+   */
+
   _prev () {
     this._goTo(this.currentIndex - 1)
   }
 
+  /**
+   * Click handler on player next track button
+   *
+   * @private
+   * @return {void}
+   */
+
   _next () {
     this._goTo(this.currentIndex + 1)
   }
+
+  /**
+   * Click handler on player close button - hide player and pause audio
+   *
+   * @private
+   * @return {void}
+   */
 
   _close () {
     this._toggle(false)
@@ -551,6 +697,14 @@ class Audio {
       this._togglePlay()
     }
   }
+
+  /**
+   * Click handler on track play/pause button - show player and load track
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
 
   _playTrack (e) {
     this._toggle(true)
@@ -565,7 +719,10 @@ class Audio {
   }
 
   /**
-   * Event handlers - audio element
+   * Can play through handler on audio element to play when ready
+   *
+   * @private
+   * @return {void}
    */
 
   _canPlay () {
@@ -584,6 +741,13 @@ class Audio {
     this._play()
   }
 
+  /**
+   * Error handler on audio element - display error element
+   *
+   * @private
+   * @return {void}
+   */
+
   _error () {
     if (this.loader) {
       setLoaders([this.loader], [], false)
@@ -593,6 +757,13 @@ class Audio {
     this.error.focus()
   }
 
+  /**
+   * Time update handler on audio element - update time and progress elements
+   *
+   * @private
+   * @return {void}
+   */
+
   _time () {
     if (!this._progress.pointerDown && !this._keyTime) {
       this._setTime(this.audio.currentTime)
@@ -601,18 +772,28 @@ class Audio {
     }
   }
 
+  /**
+   * Ended handler on audio element - update state
+   *
+   * @private
+   * @return {void}
+   */
+
   _end () {
     this._state = 0
     this._togglePlay()
   }
 
   /**
-   * Event handlers - progress
+   * Click handler on progress slider element - update progress bar, scrub and time
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
    */
 
   _clickProgress (e) {
     this._progress.pointerDown = true
-    this._progress.endX = e.pageX
 
     this._dragging(e.pageX)
 
@@ -626,18 +807,33 @@ class Audio {
     e.preventDefault()
   }
 
+  /**
+   * Mousedown handler on progress slider element - add mouse listeners
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
+
   _mousedownProgress (e) {
     e.stopPropagation()
     e.preventDefault()
 
     this._progress.pointerDown = true
-    this._progress.startX = e.pageX
 
     this._startDrag()
 
     document.addEventListener('mousemove', this._mousemoveProgress)
     document.addEventListener('mouseup', this._mouseupProgress)
   }
+
+  /**
+   * Mouseup handler on document element - reset and remove mouse listeners
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
 
   _mouseupProgress (e) {
     e.stopPropagation()
@@ -652,27 +848,48 @@ class Audio {
     document.removeEventListener('mouseup', this._mouseupProgress)
   }
 
+  /**
+   * Mousemove handler on document element - update progress bar, scrub and time
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
+
   _mousemoveProgress (e) {
     e.preventDefault()
 
     if (this._progress.pointerDown) {
-      this._progress.endX = e.pageX
-
       this._dragging(e.pageX)
     }
   }
+
+  /**
+   * Touchstart handler on progress slider element - add touch listeners
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
 
   _touchstartProgress (e) {
     e.stopPropagation()
 
     this._progress.pointerDown = true
-    this._progress.startX = e.touches[0].pageX
 
     this._startDrag()
 
     document.addEventListener('touchmove', this._touchmoveProgress)
     document.addEventListener('touchend', this._touchendProgress)
   }
+
+  /**
+   * Touchend handler on document element - reset and remove touch listeners
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
 
   _touchendProgress (e) {
     e.stopPropagation()
@@ -687,6 +904,14 @@ class Audio {
     document.removeEventListener('touchend', this._touchendProgress)
   }
 
+  /**
+   * Touchmove handler on document element - update progress bar, scrub and time
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
+
   _touchmoveProgress (e) {
     e.stopPropagation()
 
@@ -695,14 +920,15 @@ class Audio {
     if (this._progress.pointerDown) {
       e.preventDefault()
 
-      this._progress.endX = x
-
       this._dragging(x)
     }
   }
 
   /**
-   * Event handler - window resize
+   * Resize event handler - reset progress dimensions and positions
+   *
+   * @private
+   * @return {void}
    */
 
   _resize () {
@@ -711,8 +937,6 @@ class Audio {
     this._resizeTimer = setTimeout(() => {
       const viewportWidth = window.innerWidth
 
-      this._viewportHeight = window.innerHeight
-
       if (viewportWidth !== this._viewportWidth) {
         this._viewportWidth = viewportWidth
       } else {
@@ -720,12 +944,16 @@ class Audio {
       }
 
       this._setProgressWidth()
-      this._setProgressScrub(this._progress.currentXPercent)
+      this._setProgressScrub(this._progress.currentX)
     }, 100)
   }
 
   /**
-   * Event handlers - document keys
+   * Keydown handler on document element - pause/play on space and update scrub on right/left
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
    */
 
   _keyDown (e) {
@@ -750,7 +978,7 @@ class Audio {
       case 'SPACE': {
         space = true
 
-        if (this._audioPlayerOpen) {
+        if (this._playerOpen) {
           this._play()
 
           e.preventDefault()
@@ -799,6 +1027,14 @@ class Audio {
     }
   }
 
+  /**
+   * Keyup handler on document element - update time here instead of keydown
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
+
   _keyUp (e) {
     if (getKey(e) === 'SPACE') {
       e.preventDefault()
@@ -811,7 +1047,10 @@ class Audio {
   }
 
   /**
-   * Public methods
+   * Public method - add item to tracks array and set attributes
+   *
+   * @param {object} props
+   * @return {void}
    */
 
   addTrack (props) {
@@ -823,7 +1062,7 @@ class Audio {
     this._setLastIndex()
     this._setTrackAttr(props)
   }
-} // End Audio
+}
 
 /* Exports */
 

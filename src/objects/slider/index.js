@@ -1,5 +1,5 @@
 /**
- * Objects: slider
+ * Objects - slider
  *
  * @param {object} args {
  *  @param {HTMLElement} container
@@ -8,13 +8,13 @@
  *  @param {HTMLElement} targetHeight
  *  @param {HTMLElement} prev
  *  @param {HTMLElement} next
- *  @param {array} breakpoints
- *  @param {array} groupItems
+ *  @param {array<object>} breakpoints
+ *  @param {array<HTMLElement>} groupItems
  *  @param {string} groupSelector
  *  @param {boolean} loop
  *  @param {boolean} reduceMotion
  *  @param {boolean} variableWidths
- *  @param {integer} duration
+ *  @param {number} duration
  * }
  */
 
@@ -134,11 +134,15 @@ class Slider extends Tabs {
      * Initialize
      */
 
-    if (!this.container || !this.slider || !this.track) { return false }
+    if (!this.container || !this.slider || !this.track) {
+      return false
+    }
 
     const initialize = this._initialize()
 
-    if (!initialize) { return false }
+    if (!initialize) {
+      return false
+    }
   }
 
   /**
@@ -220,7 +224,9 @@ class Slider extends Tabs {
         const low = s.breakpoint
         let high = 99999
 
-        if (breakpointsLength > 1 && i < breakpointsLength - 1) { high = this.breakpoints[i + 1].breakpoint }
+        if (breakpointsLength > 1 && i < breakpointsLength - 1) {
+          high = this.breakpoints[i + 1].breakpoint
+        }
 
         s.low = low
         s.high = high
@@ -340,7 +346,9 @@ class Slider extends Tabs {
   }
 
   _toggleFocusability (on = true, items = []) {
-    if (!items.length) { return }
+    if (!items.length) {
+      return
+    }
 
     items.forEach(item => {
       if (on) {
@@ -683,7 +691,7 @@ class Slider extends Tabs {
       })
     }, 100)
   }
-} // End Slider
+}
 
 /* Exports */
 

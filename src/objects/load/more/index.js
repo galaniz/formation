@@ -1,5 +1,5 @@
 /**
- * Objects: load more content
+ * Objects - load more content
  *
  * @param {object} args {
  *  @param {HTMLElement} next
@@ -7,15 +7,15 @@
  *  @param {HTMLElement} prev - pagination
  *  @param {HTMLElement} current - pagination
  *  @param {HTMLElement} tot - pagination
- *  @param {array} filters
+ *  @param {array<HTMLElement>} filters
  *  @param {HTMLElement} filtersForm
- *  @param {array} loaders
+ *  @param {HTMLElement} loader
  *  @param {HTMLElement} error
  *  @param {string} url
  *  @param {object} data
- *  @param {int} ppp - per page
- *  @param {int} page - pagination
- *  @param {int} total - pagination total pages else total number of items
+ *  @param {number} ppp - per page
+ *  @param {number} page - pagination
+ *  @param {number} total - pagination total pages else total number of items
  *  @param {HTMLElement} insertInto
  *  @param {string} insertLocation
  *  @param {boolean/function} replaceInsert
@@ -23,8 +23,8 @@
  *  @param {function} filterPushUrlParams
  *  @param {function} filterPostData
  *  @param {object} noResults {
- *   @param {array} containers
- *   @param {array} buttons
+ *   @param {array<HTMLElement>} containers
+ *   @param {array<HTMLElement>} buttons
  *  }
  * }
  */
@@ -128,7 +128,9 @@ class More {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -171,7 +173,9 @@ class More {
 
       this._controls.push(this.next)
 
-      if (this.prev) { this._controls.push(this.prev) }
+      if (this.prev) {
+        this._controls.push(this.prev)
+      }
     }
 
     /* setLoaders expects array */
@@ -198,15 +202,21 @@ class More {
 
     /* Append public data */
 
-    for (const d in this.data) { this._data[d] = this.data[d] }
+    Object.keys(this.data).forEach((d) => {
+      this._data[d] = this.data[d]
+    })
 
     /* Add event listeners */
 
     this.next.addEventListener('click', this._load.bind(this))
 
-    if (this.prev) { this.prev.addEventListener('click', this._load.bind(this)) }
+    if (this.prev) {
+      this.prev.addEventListener('click', this._load.bind(this))
+    }
 
-    if (this._pagination) { window.onpopstate = this._popState.bind(this) }
+    if (this._pagination) {
+      window.onpopstate = this._popState.bind(this)
+    }
 
     /* Set filters */
 
@@ -218,7 +228,9 @@ class More {
       })
 
       this.filters.forEach(f => {
-        const args = { currentTarget: f }
+        const args = {
+          currentTarget: f
+        }
 
         f.addEventListener('change', this._filter.bind(this))
 
@@ -229,7 +241,9 @@ class More {
 
       /* Disable if no items to start */
 
-      if (!this._initCount) { this._disableFilters(true) }
+      if (!this._initCount) {
+        this._disableFilters(true)
+      }
     }
 
     /* Back to all results */
@@ -258,9 +272,7 @@ class More {
 
     /* Set controls for initial state */
 
-    window.addEventListener('load', () => {
-      this._setControls()
-    })
+    this._setControls()
 
     return true
   }
@@ -278,7 +290,9 @@ class More {
     if (!loadMoreType) {
       type = input.tagName.toLowerCase()
 
-      if (type === 'input') { type = input.type }
+      if (type === 'input') {
+        type = input.type
+      }
 
       input.setAttribute('data-load-more-type', type)
     } else {
@@ -296,7 +310,9 @@ class More {
     /* For page beyond first add previous page item counts */
 
     if (this._pagination) {
-      if (this._data.page > 1) { c += this.ppp * (this._data.page - 1) }
+      if (this._data.page > 1) {
+        c += this.ppp * (this._data.page - 1)
+      }
     }
 
     return c
@@ -314,27 +330,35 @@ class More {
     const operator = f.getAttribute('data-operator')
     const type = this._getType(f)
 
-    if (type === 'radio') { id = f.name }
+    if (type === 'radio') {
+      id = f.name
+    }
 
     if (state === 'init') {
       compareValue = 'null'
 
       switch (type) {
         case 'checkbox':
-          if (f.checked) { compareValue = value }
+          if (f.checked) {
+            compareValue = value
+          }
 
           break
         case 'radio': {
           const r = Array.from(f.form.querySelectorAll(`[name="${id}"]`))
 
           r.forEach(rr => {
-            if (rr.checked) { compareValue = rr.value }
+            if (rr.checked) {
+              compareValue = rr.value
+            }
           })
 
           break
         }
         default:
-          if (value) { compareValue = value }
+          if (value) {
+            compareValue = value
+          }
       }
     }
 
@@ -375,7 +399,9 @@ class More {
     const isFirstPage = this._data.page === 1
 
     if (this._data.count >= this._data.total) {
-      if (this.nextContainer) { this.nextContainer.style.display = 'none' }
+      if (this.nextContainer) {
+        this.nextContainer.style.display = 'none'
+      }
 
       if (this._pagination) {
         this.next.disabled = true
@@ -383,7 +409,9 @@ class More {
         this.next.removeAttribute('href')
       }
     } else {
-      if (this.nextContainer) { this.nextContainer.style.display = 'block' }
+      if (this.nextContainer) {
+        this.nextContainer.style.display = 'block'
+      }
 
       if (this._pagination) {
         this.next.disabled = false
@@ -480,9 +508,13 @@ class More {
   /* Set pagination numbers */
 
   _setPagNum (total) {
-    if (this.current) { this.current.textContent = total ? this._data.page : 0 }
+    if (this.current) {
+      this.current.textContent = total ? this._data.page : 0
+    }
 
-    if (this.tot) { this.tot.textContent = Math.ceil(total / this.ppp) }
+    if (this.tot) {
+      this.tot.textContent = Math.ceil(total / this.ppp)
+    }
   }
 
   /**
@@ -517,7 +549,9 @@ class More {
   _noResults (show = true) {
     this._disableFilters(show)
 
-    if (show) { this.insertInto.innerHTML = '' }
+    if (show) {
+      this.insertInto.innerHTML = ''
+    }
 
     /* Show nothing found message */
 
@@ -531,7 +565,9 @@ class More {
   _error (show = true) {
     this._disableFilters(show)
 
-    if (this.error) { this.error.style.display = show ? 'block' : 'none' }
+    if (this.error) {
+      this.error.style.display = show ? 'block' : 'none'
+    }
   }
 
   /**
@@ -541,7 +577,9 @@ class More {
   /* Add url and data to browser history */
 
   _pushState (state, output) {
-    if (!this._pagination) { return }
+    if (!this._pagination) {
+      return
+    }
 
     let url = ''
     const data = {
@@ -555,7 +593,7 @@ class More {
 
       this._setControlUrls(params)
 
-      for (const u in params) {
+      Object.keys(params).forEach((u) => {
         const v = params[u]
 
         if (v === 'load_more_delete_param') {
@@ -563,7 +601,7 @@ class More {
         } else {
           this._url.searchParams.set(u, v)
         }
-      }
+      })
 
       url = this._url
     }
@@ -593,7 +631,9 @@ class More {
 
     /* Get new total */
 
-    if (a.reset) { this._data.total = a.total }
+    if (a.reset) {
+      this._data.total = a.total
+    }
 
     this._setControls()
     this._setPagNum(a.total)
@@ -617,7 +657,9 @@ class More {
   }
 
   _popState (e) {
-    if (!this._pagination) { return }
+    if (!this._pagination) {
+      return
+    }
 
     if (e.state) {
       this._data = Object.assign(this._data, e.state.data)
@@ -632,7 +674,9 @@ class More {
           let id = f.id
           const type = this._getType(f)
 
-          if (type === 'radio') { id = f.name }
+          if (type === 'radio') {
+            id = f.name
+          }
 
           let compareValue = 'null'
 
@@ -662,13 +706,19 @@ class More {
     let state = 'default'
     let reset = false
 
-    if (typeof e === 'string' || e instanceof String) { state = e }
+    if (typeof e === 'string' || e instanceof String) {
+      state = e
+    }
 
-    if (e === 'reset' || e === 'reset-no-res') { reset = true }
+    if (e === 'reset' || e === 'reset-no-res') {
+      reset = true
+    }
 
     /* Reset */
 
-    if (reset) { this._reset() }
+    if (reset) {
+      this._reset()
+    }
 
     this._noResults(false)
     this._error(false)
@@ -699,7 +749,9 @@ class More {
         } else {
           this._data.page -= 1
 
-          if (this._data.page < 1) { this._data.page = 1 }
+          if (this._data.page < 1) {
+            this._data.page = 1
+          }
         }
       }
 
@@ -713,12 +765,16 @@ class More {
         request({
           method: 'POST',
           url: this.url,
-          headers: { 'Content-type': 'application/x-www-form-urlencoded' },
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          },
           body: encodedData
         })
           .then(response => {
             if (!response) {
-              if (reset) { this._noResults() }
+              if (reset) {
+                this._noResults()
+              }
 
               this._afterResponse({
                 reset,
@@ -734,10 +790,14 @@ class More {
             const output = result.output
             const total = parseInt(result.total)
 
-            if (reset) { this.insertInto.innerHTML = '' }
+            if (reset) {
+              this.insertInto.innerHTML = ''
+            }
 
             if (rowCount > 0 && output !== '') {
-              if (!this._pagination) { this._data.offset += this.ppp }
+              if (!this._pagination) {
+                this._data.offset += this.ppp
+              }
 
               this._setOutput(output, () => {
                 const firstFocusable = this.insertInto.querySelector(focusSelector)
@@ -756,7 +816,9 @@ class More {
                 }, 0)
               })
             } else {
-              if (reset) { this._noResults() }
+              if (reset) {
+                this._noResults()
+              }
 
               this._afterResponse({
                 reset,
@@ -765,7 +827,7 @@ class More {
               })
             }
           })
-          .catch(xhr => {
+          .catch(() => {
             this._data.total = 0
             this._data.count = 0
             this._data.page = 1
@@ -780,7 +842,7 @@ class More {
       }, 0)
     }
   }
-} // End More
+}
 
 /* Exports */
 

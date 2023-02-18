@@ -1,5 +1,5 @@
 /**
- * Utils: fluid sizes (font-size, padding, margins...)
+ * Utils - fluid size
  */
 
 /* Imports */
@@ -13,13 +13,14 @@
 @use "breakpoint" as b;
 
 /**
- * Mixin
+ * Mixin - fluidly resize between breakpoints
  *
  * @param {string} $prop
  * @param {list} $sizes
- * @param {list} $widths
+ * @param {list} $widths - $breakpoint props
  * @param {list} $other-values
- * @param {bool} $important
+ * @param {boolean} $important
+ * @return {void}
  */
 
 @mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {

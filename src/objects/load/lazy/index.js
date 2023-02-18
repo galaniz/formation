@@ -1,7 +1,7 @@
 /**
- * Objects: lazy load (images + iframes)
+ * Objects - lazy load (images + iframes)
  *
- * @param {array} args
+ * @param {array<HTMLElement>} items
  */
 
 /* Imports */
@@ -24,7 +24,9 @@ class Lazy {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -79,23 +81,29 @@ class Lazy {
   _setSrc (item) {
     const url = item.getAttribute('data-src')
 
-    if (!url) { return }
+    if (!url) {
+      return
+    }
 
     item.src = url
 
-    if (item.hasAttribute('data-srcset')) { item.srcset = item.getAttribute('data-srcset') }
+    if (item.hasAttribute('data-srcset')) {
+      item.srcset = item.getAttribute('data-srcset')
+    }
 
-    if (item.hasAttribute('data-sizes')) { item.sizes = item.getAttribute('data-sizes') }
+    if (item.hasAttribute('data-sizes')) {
+      item.sizes = item.getAttribute('data-sizes')
+    }
 
     assetLoaded(item)
-      .then(asset => {
+      .then(() => {
         item.setAttribute('data-loaded', true)
       })
       .catch(() => {
         item.setAttribute('data-loaded', 'err')
       })
   }
-} // End Lazy
+}
 
 /* Exports */
 

@@ -1,5 +1,5 @@
 /**
- * Objects: remove elements (if cookie or other condition + trigger click)
+ * Objects - remove elements (if cookie or other condition + trigger click)
  *
  * @param {object} args {
  *  @param {HTMLElement} item
@@ -60,7 +60,9 @@ class Remove {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -70,9 +72,13 @@ class Remove {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.item || !this.trigger) { return false }
+    if (!this.item || !this.trigger) {
+      return false
+    }
 
-    if (this.cookie.name) { this._cookieCondition = true }
+    if (this.cookie.name) {
+      this._cookieCondition = true
+    }
 
     /* Add event listeners */
 
@@ -82,9 +88,9 @@ class Remove {
 
     this._setDisplay(true)
 
-    window.addEventListener('load', () => {
-      this._remove()
-    })
+    /* */
+
+    this._remove()
 
     return true
   }
@@ -141,7 +147,7 @@ class Remove {
   getHide () {
     return this._hide
   }
-} // End Remove
+}
 
 /* Exports */
 

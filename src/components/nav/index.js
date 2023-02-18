@@ -1,29 +1,5 @@
 /**
- * Components: nav
- *
- * @param {object} args {
- *  @param {HTMLElement} nav
- *  @param {HTMLElement/array} list
- *  @param {HTMLElement} overflow
- *  @param {HTMLElement/array} overflowList
- *  @param {HTMLElement} items
- *  @param {string} itemSelector
- *  @param {HTMLElement} button
- *  @param {HTMLElement} overlay
- *  @param {HTMLElement} transition
- *  @param {function} onSet
- *  @param {function} onReset
- *  @param {function} afterReset
- *  @param {function} onResize
- *  @param {function} onToggle
- *  @param {function} endToggle
- *  @param {function} filterFocusableItem
- *  @param {function} done
- *  @param {object} delay {
- *   @param {int} open
- *   @param {int} close
- *  }
- * }
+ * Components - nav
  */
 
 /* Imports */
@@ -38,18 +14,41 @@ import {
   stopScroll
 } from '../../utils'
 
-/* Class */
+/**
+ * Class - responsively move nav items based on overflow and toggle overflow element
+ */
 
 class Nav {
   /**
-   * Constructor
+   * Set public properties and initialize
+   *
+   * @param {object} args {
+   *  @prop {HTMLElement} nav
+   *  @prop {HTMLElement/array} list
+   *  @prop {HTMLElement} overflow
+   *  @prop {HTMLElement/array} overflowList
+   *  @prop {HTMLElement} items
+   *  @prop {string} itemSelector
+   *  @prop {HTMLElement} button
+   *  @prop {HTMLElement} overlay
+   *  @prop {HTMLElement} transition
+   *  @prop {function} onSet
+   *  @prop {function} onReset
+   *  @prop {function} afterReset
+   *  @prop {function} onResize
+   *  @prop {function} onToggle
+   *  @prop {function} endToggle
+   *  @prop {function} filterFocusableItem
+   *  @prop {function} done
+   *  @prop {object} delay {
+   *   @prop {number} open
+   *   @prop {number} close
+   *  }
+   * }
+   * @return {void|boolean} - false if init errors
    */
 
   constructor (args) {
-    /**
-     * Public variables
-     */
-
     const {
       nav = null,
       list = null,
@@ -95,59 +94,122 @@ class Nav {
     this.done = done
     this.delay = delay
 
-    /* Not part of args but can be changed in function args */
+    /**
+     * Expose/alter overflow state
+     *
+     * @type {boolean}
+     */
 
     this.isOverflowing = false
 
     /**
-     * Internal variables
+     * Store open state
+     *
+     * @type {boolean}
+     * @private
      */
-
-    this._viewportWidth = window.innerWidth
-
-    /* Put items into groups */
-
-    this._overflowGroups = {}
-    this._overflowGroupsLength = 0
-
-    this._listIndexes = {}
-
-    /* Store groups currently overflown */
-
-    this._currentOverflowGroups = []
-
-    /* Store focusable elements */
-
-    this._firstFocusableItem = null
-    this._focusableItems = []
-    this._focusableIndex = null
-
-    /* For throttling resize event */
-
-    this._resizeTimer = null
-
-    /* Store if nav is open */
 
     this._navOpen = false
 
     /**
-     * Initialize
+     * Group items by overflow group attribute
+     *
+     * @type {object}
+     * @private
      */
+
+    this._overflowGroups = {}
+
+    /**
+     * Store total number of groups
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._overflowGroupsLength = 0
+
+    /**
+     * Store items by list index for instances where multiple overflowList elements
+     *
+     * @type {object}
+     * @private
+     */
+
+    this._listIndexes = {}
+
+    /**
+     * Store groups currently overflown
+     *
+     * @type {array<object>}
+     * @private
+     */
+
+    this._currentOverflowGroups = []
+
+    /**
+     * Store first focusable element for when overflow element opens
+     *
+     * @type {HTMLElement}
+     * @private
+     */
+
+    this._firstFocusableItem = null
+
+    /**
+     * Store focusable elements to have more control over toggleFocusability
+     *
+     * @type {array<HTMLElement>}
+     * @private
+     */
+
+    this._focusableItems = []
+
+    /**
+     * Store index in innerFocusableItems array
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._focusableIndex = 0
+
+    /**
+     * Store timeout id in resize event
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._resizeTimer = -1
+
+    /**
+     * Store viewport width for resize event
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._viewportWidth = window.innerWidth
+
+    /* Initialize */
 
     const init = this._initialize()
 
     if (!init) {
-      this.done()
       return false
     }
   }
 
   /**
-   * Initialize
+   * Initialize - check required props, set event listeners, overflow groups and focusability
+   *
+   * @private
+   * @return {boolean}
    */
 
   _initialize () {
-    /* Check that required variables not null */
+    /* Check that required properties not null */
 
     let error = false
     const required = [
@@ -167,7 +229,9 @@ class Nav {
       }
     })
 
-    if (error) { return false }
+    if (error) {
+      return false
+    }
 
     /* Convert list(s) and overflow list(s) to arrays */
 
@@ -176,7 +240,9 @@ class Nav {
 
     this.items = Array.from(this.items)
 
-    if (!this.items.length) { return false }
+    if (!this.items.length) {
+      return false
+    }
 
     /* Get focusable elements */
 
@@ -214,7 +280,7 @@ class Nav {
       this.overlay.addEventListener('click', this._clickCloseHandler)
     }
 
-    document.body.addEventListener('keydown', this._keyDownHandler)
+    document.addEventListener('keydown', this._keyDownHandler)
     window.addEventListener('resize', this._resizeHandler)
 
     /* Set up overflow groups */
@@ -229,7 +295,9 @@ class Nav {
         listIndex = parseInt(item.getAttribute('data-list-index'))
       }
 
-      if (isNaN(overflowGroupIndex)) { overflowGroupIndex = index }
+      if (isNaN(overflowGroupIndex)) {
+        overflowGroupIndex = index
+      }
 
       if (!Object.getOwnPropertyDescriptor(this._overflowGroups, overflowGroupIndex)) {
         this._overflowGroups[overflowGroupIndex] = []
@@ -239,23 +307,26 @@ class Nav {
 
       this._overflowGroups[overflowGroupIndex].push(item)
 
-      if (this._listIndexes[overflowGroupIndex].indexOf(listIndex) === -1) { this._listIndexes[overflowGroupIndex].push(listIndex) }
+      if (this._listIndexes[overflowGroupIndex].indexOf(listIndex) === -1) {
+        this._listIndexes[overflowGroupIndex].push(listIndex)
+      }
     })
 
-    window.addEventListener('load', () => {
-      this._setNav(() => {
-        this.done()
-      })
+    /* Check overflow and move elements accordingly */
+
+    this._setNav(() => {
+      this.done()
     })
 
     return true
   }
 
   /**
-   * Helper methods for setting up nav
+   * Return overflowing items to list
+   *
+   * @private
+   * @return {void}
    */
-
-  /* Return overflowing items to list */
 
   _resetNav () {
     this.onReset()
@@ -269,11 +340,11 @@ class Nav {
       const frag = {}
       const listIndexes = []
 
-      for (const overflowGroupIndex in this._listIndexes) {
+      Object.keys(this._listIndexes).forEach((overflowGroupIndex) => {
         this._listIndexes[overflowGroupIndex].forEach((index) => {
           frag[index] = document.createDocumentFragment()
         })
-      }
+      })
 
       this.items.forEach((item, i) => {
         const listIndex = parseInt(item.getAttribute('data-list-index'))
@@ -291,7 +362,9 @@ class Nav {
           frag[listIndex].appendChild(item)
         }
 
-        if (listIndexes.indexOf(listIndex) === -1) { listIndexes.push(listIndex) }
+        if (listIndexes.indexOf(listIndex) === -1) {
+          listIndexes.push(listIndex)
+        }
       })
 
       /* Append overflowing items */
@@ -303,16 +376,22 @@ class Nav {
       }
     }
 
-    for (const overflowGroupIndex in this._listIndexes) {
+    Object.keys(this._listIndexes).forEach((overflowGroupIndex) => {
       this._listIndexes[overflowGroupIndex].forEach((index) => {
         this.overflowList[index].innerHTML = ''
       })
-    }
+    })
 
     this._currentOverflowGroups = []
   }
 
-  /* If overflowing transfer items over to overflow element */
+  /**
+   * Reset, check overflow and move items to overflow element if overflowing
+   *
+   * @private
+   * @param {function} done
+   * @return {void}
+   */
 
   _setNav (done) {
     this._resetNav()
@@ -345,7 +424,9 @@ class Nav {
       overflowGroupIndex++
       overflow = this._overflowing(this._listIndexes[overflowGroupIndex])
 
-      if (overflow) { lastOverflowGroupIndex = overflowGroupIndex }
+      if (overflow) {
+        lastOverflowGroupIndex = overflowGroupIndex
+      }
     }
 
     this._listIndexes[lastOverflowGroupIndex].forEach((index) => {
@@ -353,10 +434,14 @@ class Nav {
     })
 
     if (this._currentOverflowGroups.length > 0) {
-      if (this.nav.getAttribute('data-overflow') === 'false') { this.nav.setAttribute('data-overflow', 'true') }
+      if (this.nav.getAttribute('data-overflow') === 'false') {
+        this.nav.setAttribute('data-overflow', 'true')
+      }
 
       if (this._currentOverflowGroups.length === this._overflowGroupsLength) {
-        if (this.nav.getAttribute('data-overflow-all') === 'false') { this.nav.setAttribute('data-overflow-all', 'true') }
+        if (this.nav.getAttribute('data-overflow-all') === 'false') {
+          this.nav.setAttribute('data-overflow-all', 'true')
+        }
       }
 
       innerFocusableItems[this._focusableIndex] = this._focusableItems
@@ -370,10 +455,18 @@ class Nav {
 
     this.open.style.display = ''
 
-    if (done !== undefined) { done.call(this) }
+    if (done !== undefined) {
+      done.call(this)
+    }
   }
 
-  /* Check if items are overflowing/wrapping into new line */
+  /**
+   * Check if items are overflowing onto new line
+   *
+   * @private
+   * @param {array} listIndexes
+   * @return {void}
+   */
 
   _overflowing (listIndexes = [0]) {
     let overflow = false
@@ -402,7 +495,11 @@ class Nav {
   }
 
   /**
-   * Open/close mobile navigation
+   * Open/close overflow element - set and unset data attributes and toggleFocusability
+   *
+   * @private
+   * @param {boolean} close
+   * @return {void}
    */
 
   _toggle (close = true) {
@@ -424,7 +521,9 @@ class Nav {
 
             this.nav.setAttribute('data-open', 'true')
 
-            if (this.transition) { this.transition.setAttribute('data-show', '') }
+            if (this.transition) {
+              this.transition.setAttribute('data-show', '')
+            }
           }
         },
         {
@@ -469,7 +568,9 @@ class Nav {
 
             this.overflow.removeAttribute('data-show')
 
-            if (this.transition) { this.transition.removeAttribute('data-show') }
+            if (this.transition) {
+              this.transition.removeAttribute('data-show')
+            }
           },
           delay: this.delay.close
         },
@@ -494,10 +595,12 @@ class Nav {
   }
 
   /**
-   * Event handlers
+   * Click handler on close button and overlay element - close overflow element
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
    */
-
-  /* When click on button/overlay */
 
   _clickClose (e) {
     e.preventDefault()
@@ -505,13 +608,27 @@ class Nav {
     this._toggle()
   }
 
+  /**
+   * Click handler on open button element - open overflow element
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
+
   _clickOpen (e) {
     e.preventDefault()
 
     this._toggle(false)
   }
 
-  /* If hit escape while nav open close */
+  /**
+   * Keydown handler on document element - close overflow element on escape
+   *
+   * @private
+   * @param {object} e
+   * @return {void}
+   */
 
   _keyDown (e) {
     if (getKey(e) === 'ESC' && this._navOpen) {
@@ -519,7 +636,12 @@ class Nav {
     }
   }
 
-  /* Viewport resize */
+  /**
+   * Resize event handler - reset overflow
+   *
+   * @private
+   * @return {void}
+   */
 
   _resize () {
     clearTimeout(this._resizeTimer)
@@ -537,7 +659,7 @@ class Nav {
       this.onResize()
     }, 100)
   }
-} // End Nav
+}
 
 /* Exports */
 

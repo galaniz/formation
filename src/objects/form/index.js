@@ -1,8 +1,8 @@
 /**
- * Objects: form validation and get values
+ * Objects - form validation and get values
  *
  * @param {object} args {
- *  @param {nodelist} inputs
+ *  @param {NodeList} inputs
  *  @param {string} fieldClass
  *  @param {string} groupClass
  *  @param {string} labelClass
@@ -89,7 +89,9 @@ class Form {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -99,7 +101,9 @@ class Form {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.inputs || !this.fieldClass) { return false }
+    if (!this.inputs || !this.fieldClass) {
+      return false
+    }
 
     this.inputs = Array.from(this.inputs)
 
@@ -130,7 +134,9 @@ class Form {
 
         let type = input.tagName.toLowerCase()
 
-        if (type === 'input') { type = input.type }
+        if (type === 'input') {
+          type = input.type
+        }
 
         this._inputTypes[name] = type
 
@@ -237,7 +243,9 @@ class Form {
           value = input.value.trim()
       }
 
-      if (value !== '') { values.push(value) }
+      if (value !== '') {
+        values.push(value)
+      }
     })
 
     /* Check if has values */
@@ -387,7 +395,9 @@ class Form {
 
     const error = document.getElementById(errorId)
 
-    if (error !== null) { label.removeChild(error) }
+    if (error !== null) {
+      label.removeChild(error)
+    }
 
     /* Set inputs as valid */
 
@@ -435,7 +445,9 @@ class Form {
     const name = input.name
     const inputGroup = this._inputGroups[name]
 
-    if (this.submitted) { this._validateGroup(inputGroup, name) }
+    if (this.submitted) {
+      this._validateGroup(inputGroup, name)
+    }
   }
 
   _onErrorSummaryBlur () {
@@ -451,11 +463,13 @@ class Form {
 
     /* Validate individual input groups */
 
-    for (const name in this._inputGroups) {
+    Object.keys(this._inputGroups).forEach((name) => {
       const validGroup = this._validateGroup(this._inputGroups[name], name)
 
-      if (!validGroup) { validForm = false }
-    }
+      if (!validGroup) {
+        validForm = false
+      }
+    })
 
     this._displayErrorSummary(!validForm)
 
@@ -472,7 +486,7 @@ class Form {
   appendFormValues (formData, formJson, filter = false) {
     formJson.inputs = {}
 
-    for (const name in this._inputGroups) {
+    Object.keys(this._inputGroups).forEach((name) => {
       const inputGroup = this._inputGroups[name]
       let values = inputGroup.values
 
@@ -506,11 +520,11 @@ class Form {
       })
 
       formJson.inputs[name] = formObj
-    }
+    })
   }
 
   clearErrorMessages () {
-    for (const name in this._inputGroups) {
+    Object.keys(this._inputGroups).forEach((name) => {
       const inputGroup = this._inputGroups[name]
 
       const {
@@ -523,11 +537,11 @@ class Form {
       const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
 
       this._removeErrorMessage(inputs, name, type, l)
-    }
+    })
 
     this._displayErrorSummary(false)
   }
-} // End Form
+}
 
 /* Exports */
 

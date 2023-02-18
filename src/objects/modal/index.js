@@ -1,5 +1,5 @@
 /**
- * Objects: modal
+ * Objects - modal
  *
  * @param {object} args {
  *  @param {HTMLElement} modal
@@ -69,7 +69,9 @@ class Modal {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -79,7 +81,9 @@ class Modal {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.modal || !this.window || !this.trigger || !this.close) { return false }
+    if (!this.modal || !this.window || !this.trigger || !this.close) {
+      return false
+    }
 
     /* Add event listeners */
 
@@ -171,7 +175,7 @@ class Modal {
       this._firstFocusableItem = item
     }
   }
-} // End Modal
+}
 
 /* Exports */
 

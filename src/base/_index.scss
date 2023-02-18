@@ -30,8 +30,6 @@ html[data-no-scroll] body {
   -webkit-overflow-scrolling: auto;
 }
 
-/* Resets */
-
 h1,
 h2,
 h3,
@@ -54,8 +52,6 @@ figure {
   padding: 0;
 }
 
-/* Links */
-
 a {
   text-decoration: none;
 
@@ -74,8 +70,6 @@ a {
     outline: 0;
   }
 }
-
-/* Misc resets */
 
 embed,
 iframe,
@@ -101,8 +95,6 @@ img {
 address {
   font-style: normal;
 }
-
-/* Svg */
 
 svg {
   fill: inherit;

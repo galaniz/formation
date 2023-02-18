@@ -4,7 +4,7 @@
 
 /* Variables */
 
-@use "../../../src/config" with (
+@use "../../../../src/config" with (
 
   $padding-top: ("s", "m", "l"),
   $padding-bottom: ("s", "m", "l"),

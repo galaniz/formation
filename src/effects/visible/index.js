@@ -1,54 +1,49 @@
 /**
- * Effects: visible in viewport check
- *
- * @param {object} args {
- *  @param {HTMLElement} item
- *  @param {HTMLElement} visibleItem
- *  @param {int} visibleOffset
- *  @param {int} visibleOffsetPercentage
- *  @param {boolean} visAll
- *  @param {boolean} allowUnset
- *  @param {int} delay
- *  @param {string} wait
- *  @param {boolean} sticky
- *  @param {int} stickyOffset
- *  @param {int} stickyDelay
- *  @param {function} onVisible
- *  @param {function} endVisible
- *  @param {function} onInit
- *  @param {object} parallax {
- *   @param {float} rate
- *   @param {int} x
- *   @param {int} y
- *   @param {int} z
- *  }
- *  @param {object} breakpoints {
- *   @param {int} min
- *   @param {int} max
- *  }
- * }
+ * Effects - visible
  */
 
 /* Imports */
 
-import {
-  prefix,
-  getScrollY,
-  subscribe
-} from '../../utils'
+import { prefix, subscribe } from '../../utils'
 
-/* Class */
+/**
+ * Class - check if item visible in viewport
+ */
 
 class Visible {
   /**
-   * Constructor
+   * Set public properties and initialize
+   *
+   * @param {object} args {
+   *  @prop {HTMLElement} item
+   *  @prop {HTMLElement} visibleItem
+   *  @prop {number} visibleOffset
+   *  @prop {number} visibleOffsetPercentage
+   *  @prop {boolean} visAll
+   *  @prop {boolean} allowUnset
+   *  @prop {number} delay
+   *  @prop {string} wait
+   *  @prop {boolean} sticky
+   *  @prop {number} stickyOffset
+   *  @prop {number} stickyDelay
+   *  @prop {function} onVisible
+   *  @prop {function} endVisible
+   *  @prop {function} onInit
+   *  @prop {object} parallax {
+   *   @prop {float} rate
+   *   @prop {number} x
+   *   @prop {number} y
+   *   @prop {number} z
+   *  }
+   *  @prop {object} breakpoints {
+   *   @prop {number} min
+   *   @prop {number} max
+   *  }
+   * }
+   * @return {void|boolean} - false if init errors
    */
 
   constructor (args) {
-    /**
-     * Public variables
-     */
-
     const {
       item = null,
       visibleItem = null,
@@ -94,44 +89,95 @@ class Visible {
     this.breakpoints = breakpoints
 
     /**
-     * Internal variables
+     * Check if already initialized
+     *
+     * @type {boolean}
+     * @private
      */
-
-    /* Check if already initialized */
 
     this._initDone = false
 
-    /* Check if requestanimationframe supported */
+    /**
+     * Check if requestanimationframe supported
+     *
+     * @type {boolean}
+     * @private
+     */
 
     this._requestAnimationSupported = Object.getOwnPropertyDescriptor(window, 'requestAnimationFrame')
 
-    /* Check if scrolling up or down */
+    /**
+     * Check if scrolling up or down
+     *
+     * @type {boolean}
+     * @private
+     */
 
     this._scrollDown = true
 
-    /* Check if visible */
+    /**
+     * Store visible state
+     *
+     * @type {boolean}
+     * @private
+     */
 
     this._isVisible = false
 
-    /* For scroll event */
+    /**
+     * Store window scroll y position - visible check, item position and parallax
+     *
+     * @type {number}
+     * @private
+     */
 
     this._scrollY = 0
+
+    /**
+     * Store last window scroll y position to check if scrolling up or down
+     *
+     * @type {number}
+     * @private
+     */
+
     this._lastScrollY = 0
-    this._parallaxScrollY = null
 
-    /* For throttling resize event */
+    /**
+     * Store timeout id in resize event
+     *
+     * @type {number}
+     * @private
+     */
 
-    this._resizeTimer = null
+    this._resizeTimer = -1
 
-    /* For resizing only on x axis */
+    /**
+     * Store viewport width for resize event
+     *
+     * @type {number}
+     * @private
+     */
 
     this._viewportWidth = window.innerWidth
 
-    /* For checking if item visible */
+    /**
+     * Store viewport height - visible check and parallax
+     *
+     * @type {number}
+     * @private
+     */
 
     this._viewportHeight = window.innerHeight
 
-    /* Offset/dimensions info for item */
+    /**
+     * Store offset and dimension info for item
+     *
+     * @type {object}
+     * @prop {number} top
+     * @prop {number} bottom
+     * @prop {number} height
+     * @private
+     */
 
     this._rect = {
       top: 0,
@@ -139,21 +185,29 @@ class Visible {
       height: 0
     }
 
-    /* If sticky get height of item */
+    /**
+     * If sticky store height of item
+     *
+     * @type {number}
+     * @private
+     */
 
     this._stickyItemHeight = 0
 
-    /**
-     * Initialize
-     */
+    /* Initialize */
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
-   * Internal methods
+   * Initialize - check required props, set item offsets, event listeners and run scroll handler
+   *
+   * @private
+   * @return {boolean}
    */
 
   _initialize () {
@@ -162,7 +216,9 @@ class Visible {
     if (!this.item) {
       return false
     } else {
-      if (this._withinBreakpoints()) { this._setItemRect() }
+      if (this._withinBreakpoints()) {
+        this._setItemRect()
+      }
     }
 
     /* Make sure item doesn't have transition */
@@ -170,6 +226,8 @@ class Visible {
     if (this.parallax) {
       prefix('transition', this.item, 'none')
     }
+
+    /* Event listeners and */
 
     if (!this.wait) {
       this._eventListeners()
@@ -181,6 +239,8 @@ class Visible {
       })
     }
 
+    /* Init done */
+
     if (!this._initDone) {
       this.onInit()
       this._initDone = true
@@ -189,20 +249,41 @@ class Visible {
     return true
   }
 
+  /**
+   * Set window event listeners
+   *
+   * @private
+   * @return {void}
+   */
+
   _eventListeners () {
     window.addEventListener('scroll', this._scrollHandler.bind(this))
     window.addEventListener('resize', this._resizeHandler.bind(this))
   }
 
+  /**
+   * Check if within specified breakpoints
+   *
+   * @private
+   * @return {boolean}
+   */
+
   _withinBreakpoints () {
     return (this._viewportWidth > this.breakpoints.min && this._viewportWidth < this.breakpoints.max)
   }
+
+  /**
+   * Store item dimensions and offsets
+   *
+   * @private
+   * @return {void}
+   */
 
   _setItemRect () {
     const visibleItem = this.visibleItem ? this.visibleItem : this.item
     const rect = visibleItem.getBoundingClientRect()
 
-    this._scrollY = getScrollY()
+    this._scrollY = window.scrollY
 
     const top = rect.top + this._scrollY
     const bottom = rect.bottom + this._scrollY
@@ -215,14 +296,25 @@ class Visible {
       height: rect.height
     }
 
-    if (this.sticky) { this._stickyItemHeight = this.item.clientHeight }
+    if (this.sticky) {
+      this._stickyItemHeight = this.item.clientHeight
+    }
   }
+
+  /**
+   * Add visible offset to item offsets on scroll
+   *
+   * @private
+   * @return {void}
+   */
 
   _setOffset () {
     let percent = 0
     const offset = this.visibleOffset
 
-    if (this.visibleOffsetPercentage) { percent = (this.visibleOffsetPercentage / 100) * this._rect.height }
+    if (this.visibleOffsetPercentage) {
+      percent = (this.visibleOffsetPercentage / 100) * this._rect.height
+    }
 
     if (this._scrollDown) {
       this._rect.top = this._rect.ogTop + percent + offset
@@ -233,11 +325,20 @@ class Visible {
     }
   }
 
+  /**
+   * Set visible attributes and parallax transform
+   *
+   * @private
+   * @return {void}
+   */
+
   _set () {
     if (!this._isVisible) {
       this.item.setAttribute('data-vis', true)
 
-      if (this.visAll) { this.item.setAttribute('data-vis-all', true) }
+      if (this.visAll) {
+        this.item.setAttribute('data-vis-all', true)
+      }
 
       this._isVisible = true
 
@@ -249,11 +350,20 @@ class Visible {
     }
   }
 
+  /**
+   * Unset visible and sticky attributes and parallax transform
+   *
+   * @private
+   * @return {void}
+   */
+
   _unset () {
     if (this._isVisible) {
       this.item.setAttribute('data-vis', false)
 
-      if (this.visAll) { this.item.setAttribute('data-vis-all', false) }
+      if (this.visAll) {
+        this.item.setAttribute('data-vis-all', false)
+      }
 
       this._isVisible = false
 
@@ -265,8 +375,17 @@ class Visible {
       this.item.removeAttribute('data-sticky-pos')
     }
 
-    if (this.parallax) { prefix('transform', this.item, '') }
+    if (this.parallax) {
+      prefix('transform', this.item, '')
+    }
   }
+
+  /**
+   * Set parallax transform on item
+   *
+   * @private
+   * @return {void}
+   */
 
   _parallax () {
     const scrollAmount = this._scrollY - (this._rect.top > this._viewportHeight ? this._rect.top : 0)
@@ -278,9 +397,23 @@ class Visible {
     prefix('transform', this.item, `translate3d(${this.parallax.x}, ${transformY}px, ${this.parallax.z})`)
   }
 
+  /**
+   * Check if visible based on item offsets, viewport height and scroll position
+   *
+   * @private
+   * @return {boolean}
+   */
+
   _visible () {
     return ((this._scrollY + this._viewportHeight >= this._rect.top) && this._scrollY <= this._rect.bottom)
   }
+
+  /**
+   * Check if sticky element is visible - account for sticky offset and height
+   *
+   * @private
+   * @return {boolean}
+   */
 
   _stickyVisible () {
     return (
@@ -289,28 +422,29 @@ class Visible {
   }
 
   /**
-   * Event handlers
+   * Scroll handler on window and general method to check if visible and/or sticky and set/unset attributes
+   *
+   * @private
+   * @return {void}
    */
 
   _scrollHandler () {
-    this._scrollY = getScrollY()
+    this._scrollY = window.scrollY
     this._scrollDown = this._lastScrollY - this._scrollY <= 0
 
     this._setOffset()
 
     if (this._withinBreakpoints()) {
-      if (this._visible(this._scrollY)) {
-        if (this._parallaxScrollY === null) { this._parallaxScrollY = this._scrollY }
-
+      if (this._visible()) {
         const delay = this.delay
 
         setTimeout(() => {
           this._set()
         }, delay)
       } else {
-        this._parallaxScrollY = null
-
-        if (this.allowUnset) { this._unset() }
+        if (this.allowUnset) {
+          this._unset()
+        }
       }
 
       if (this.sticky) {
@@ -345,9 +479,14 @@ class Visible {
     this._lastScrollY = this._scrollY
   }
 
-  _resizeHandler () {
-    /* Throttles resize event */
+  /**
+   * Resize event handler - reset item offsets and run scroll handler
+   *
+   * @private
+   * @return {void}
+   */
 
+  _resizeHandler () {
     clearTimeout(this._resizeTimer)
 
     this._resizeTimer = setTimeout(() => {
@@ -356,24 +495,28 @@ class Visible {
       if (viewportWidth !== this._viewportWidth) {
         this._viewportWidth = viewportWidth
       } else {
-        /* On touch devices changing height of viewport on scroll */
+        /* On touch devices account for variable viewport height on scroll */
 
-        if (!this.sticky) { return }
+        if (!this.sticky) {
+          return
+        }
       }
 
       if (this._withinBreakpoints()) {
         this._viewportHeight = window.innerHeight
         this._setItemRect()
 
-        /* On touch devices changing height of viewport on scroll */
+        /* On touch devices account for variable viewport height on scroll */
 
-        if (this.sticky || this.parallax !== false) { this._scrollHandler() }
+        if (this.sticky || this.parallax !== false) {
+          this._scrollHandler()
+        }
       } else {
         this._unset()
       }
     }, 100)
   }
-} // End Visible
+}
 
 /* Exports */
 

@@ -1,5 +1,5 @@
 /**
- * Config: mixins
+ * Config - mixins
  */
 
 /* Imports */
@@ -9,9 +9,10 @@
 @use "sass:string";
 
 /**
- * Set placeholder
+ * Mixin - set placeholder
  *
  * @param {string} $name
+ * @return {void}
  */
 
 @mixin set-placeholder($name) {
@@ -21,9 +22,10 @@
 }
 
 /**
- * Make placeholder
+ * Mixin - make placeholder
  *
  * @param {map} $map
+ * @return {void}
  */
 
 @mixin make-placeholder($map) {

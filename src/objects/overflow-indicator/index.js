@@ -1,5 +1,5 @@
 /**
- * Objects: overflow indicator
+ * Objects - overflow indicator
  *
  * @param {object} args {
  *  @param {HTMLElement} indicator
@@ -70,7 +70,9 @@ class OverflowIndicator {
   _initialize () {
     /* Check that required items exist */
 
-    if (!this.indicator || !this.scroll) { return false }
+    if (!this.indicator || !this.scroll) {
+      return false
+    }
 
     this._resizeHandler = this._resize.bind(this)
     window.addEventListener('resize', this._resizeHandler)
@@ -134,7 +136,7 @@ class OverflowIndicator {
       this._show()
     }, 100)
   }
-} // End OverflowIndicator
+}
 
 /* Exports */
 

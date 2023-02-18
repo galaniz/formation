@@ -1,39 +1,81 @@
 /**
- * Effects: page transition on link click
- *
- * @param {array} links
- * @param {HTMLElement} transitionElement
- * @param {int} delay
- * @param {boolean/function} init
- * @param {boolean/function} beforeShow
+ * Effects - page transition
  */
 
-/* Variables */
+/**
+ * Store transitionElement
+ *
+ * @type {HTMLElement}
+ * @private
+ */
 
-let t = null
-let d = 800
-let run = true
-let b = () => {}
+let _t = null
 
-/* Event handlers */
+/**
+ * Store delay
+ *
+ * @type {number}
+ * @private
+ */
 
-const clickHandler = (e) => {
+let _d = 800
+
+/**
+ * Allow transition to run on click callback
+ *
+ * @type {boolean}
+ * @private
+ */
+
+let _run = true
+
+/**
+ * Call before show attribute set on transitionElement
+ *
+ * @type {function}
+ * @private
+ */
+
+let _b = () => {}
+
+/**
+ * Function - link click prevent url change until delay done
+ *
+ * @private
+ * @param {object} e
+ * @return {void}
+ */
+
+const _clickHandler = (e) => {
   e.preventDefault()
 
-  if (!run) { return }
+  if (!_run) {
+    return
+  }
 
   const url = e.currentTarget.href
 
-  b()
+  _b()
 
-  t.setAttribute('data-show', 'true')
+  _t.setAttribute('data-show', 'true')
 
   setTimeout(() => {
     window.location = url
-  }, d)
+  }, _d)
 }
 
-/* Modules */
+/**
+ * Function - page transition on link click
+ *
+ * @param {object} args {
+ *  @prop {array<HTMLElement>} links
+ *  @prop {HTMLElement} transitionElement
+ *  @prop {number} delay
+ *  @prop {boolean|function} init
+ *  @prop {boolean|function} beforeShow
+ * }
+ * @return {void}
+ */
 
 const pageTransition = (args) => {
   const {
@@ -44,22 +86,37 @@ const pageTransition = (args) => {
     beforeShow = false
   } = args
 
-  if (!links || !transitionElement) { return }
+  if (!links || !transitionElement) {
+    return
+  }
 
-  t = transitionElement
-  d = delay
+  _t = transitionElement
+  _d = delay
 
-  if (beforeShow) { b = beforeShow }
+  if (beforeShow) {
+    _b = beforeShow
+  }
 
   links.forEach((link) => {
-    if (link.href.indexOf('#') === -1) { link.addEventListener('click', clickHandler) }
+    if (link.href.indexOf('#') === -1) {
+      link.addEventListener('click', _clickHandler)
+    }
   })
 
-  if (init) { init() }
+  if (init) {
+    init()
+  }
 }
 
+/**
+ * Function - set run variable to allow/disallow transition
+ *
+ * @param {boolean} r
+ * @return {void}
+ */
+
 const setPageTransitionRun = (r) => {
-  run = r
+  _run = r
 }
 
 /* Exports */

@@ -1,29 +1,28 @@
 /**
- * Layouts: masonry by placing items into columns
- *
- * @param {object} args {
- *  @param {HTMLElement} container
- *  @param {nodelist} items
- *  @param {array} breakpoints
- *  @param {object} column {
- *   @param {string} tag
- *   @param {string} class
- *  }
- * }
+ * Layouts - masonry
  */
 
-/* Class */
+/**
+ * Class - create masonry layout by placing items into columns
+ */
 
 class Masonry {
   /**
-   * Constructor
+   * Set public properties and initialize
+   *
+   * @param {object} args {
+   *  @prop {HTMLElement} container
+   *  @prop {NodeList} items
+   *  @prop {array<object>} breakpoints
+   *  @prop {object} column {
+   *   @prop {string} tag
+   *   @prop {string} class
+   *  }
+   * }
+   * @return {void|boolean} - false if init errors
    */
 
   constructor (args) {
-    /**
-     * Public variables
-     */
-
     const {
       container = null,
       items = null,
@@ -40,38 +39,54 @@ class Masonry {
     this.column = column
 
     /**
-     * Internal variables (more set in init)
+     * Store break point ranges
+     *
+     * @type {array<object>}
+     * @private
      */
-
-    /* Store break point ranges */
 
     this._bkRanges = []
 
-    /* For throttling resize event */
+    /**
+     * Store timeout id in resize event
+     *
+     * @type {number}
+     * @private
+     */
 
-    this._resizeTimer = null
+    this._resizeTimer = -1
 
-    /* For resize event and arrange */
+    /**
+     * Store viewport width for resize event and check if within breakpoints
+     *
+     * @type {number}
+     * @private
+     */
 
     this._viewportWidth = window.innerWidth
 
-    /**
-     * Initialize
-     */
+    /* Initialize */
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
-   * Initialize
+   * Initialize - check required props, set breakpoint ranges and arrange
+   *
+   * @private
+   * @return {boolean}
    */
 
   _initialize () {
-    /* Check that required variables not null */
+    /* Check that required properties not null */
 
-    if (!this.container || !this.items || this.items.length === 0) { return false }
+    if (!this.container || !this.items || this.items.length === 0) {
+      return false
+    }
 
     /* Convert items to array */
 
@@ -125,10 +140,15 @@ class Masonry {
     /* Arrange into columns */
 
     this._arrange()
+
+    return true
   }
 
   /**
-   * Determine columns from what current range
+   * Determine columns from current breakpoint range and arrange items
+   *
+   * @private
+   * @return {void}
    */
 
   _arrange () {
@@ -149,7 +169,11 @@ class Masonry {
   }
 
   /**
-   * Wrap and unwrap helper methods
+   * Wrap and unwrap items from columns
+   *
+   * @private
+   * @param {number} cols
+   * @return {void}
    */
 
   _wrapItems (cols) {
@@ -173,12 +197,14 @@ class Masonry {
 
       indexTracker++
 
-      if (colKeys.indexOf(indexTracker) === -1) { indexTracker = 0 }
+      if (colKeys.indexOf(indexTracker) === -1) {
+        indexTracker = 0
+      }
 
       indexTracker = colKeys[indexTracker]
     })
 
-    for (const index in colItems) {
+    Object.keys(colItems).forEach((index) => {
       const elem = document.createElement(this.column.tag)
       elem.setAttribute('class', this.column.class)
 
@@ -187,7 +213,7 @@ class Masonry {
       })
 
       fragment.appendChild(elem)
-    }
+    })
 
     this.container.innerHTML = ''
     this.container.appendChild(fragment)
@@ -226,12 +252,13 @@ class Masonry {
   }
 
   /**
-   * Event handlers
+   * Resize event handler - re-arrange
+   *
+   * @private
+   * @return {void}
    */
 
   _resizeHandler () {
-    /* Throttles resize event */
-
     clearTimeout(this._resizeTimer)
 
     this._resizeTimer = setTimeout(() => {
@@ -248,7 +275,10 @@ class Masonry {
   }
 
   /**
-   * Public methods
+   * Public method - add items and re-arrange
+   *
+   * @param {NodeList} items
+   * @return {void}
    */
 
   addItems (items) {
@@ -262,7 +292,7 @@ class Masonry {
 
     this._arrange()
   }
-} // End Masonry
+}
 
 /* Exports */
 

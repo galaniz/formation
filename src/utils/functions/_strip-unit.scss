@@ -1,5 +1,5 @@
 /**
- * Utils: strip unit from number
+ * Utils - strip unit
  */
 
 /* Imports */
@@ -8,9 +8,9 @@
 @use "sass:meta";
 
 /**
- * Function
+ * Function - remove unit from number
  *
- * Source: https://css-tricks.com/snippets/css/fluid-typography
+ * Source - https://css-tricks.com/snippets/css/fluid-typography
  *
  * @param {number} $number
  * @return {number}

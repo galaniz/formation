@@ -4,63 +4,52 @@
 
 /* Alter DOM */
 
-import { addClass } from './modules/add-class'
-import { hasClass } from './modules/has-class'
-import { removeClass } from './modules/remove-class'
-import { show } from './modules/show'
-import { prefix } from './modules/prefix'
-import { objectFit } from './modules/object-fit'
-import { setLoaders } from './modules/set-loaders'
-import { stopScroll } from './modules/stop-scroll'
-import { usingMouse } from './modules/using-mouse'
+import { prefix } from './functions/prefix'
+import { setLoaders } from './functions/set-loaders'
+import { stopScroll } from './functions/stop-scroll'
+import { usingMouse } from './functions/using-mouse'
 import {
   toggleFocusability,
   focusSelector,
   innerFocusableItems,
   getOuterFocusableItems
-} from './modules/toggle-focusability'
+} from './functions/toggle-focusability'
 
 /* Get values from DOM */
 
-import { closest } from './modules/closest'
-import { getKey } from './modules/get-key'
-import { getScrollY } from './modules/get-scroll-y'
-import { getDefaultFontSize } from './modules/get-default-font-size'
-import { setElements } from './modules/set-elements'
+import { closest } from './functions/closest'
+import { getKey } from './functions/get-key'
+import { getDefaultFontSize } from './functions/get-default-font-size'
+import { setElements } from './functions/set-elements'
 
 /* Check DOM */
 
-import { assetLoaded, assetsLoaded } from './modules/assets-loaded'
+import { assetLoaded, assetsLoaded } from './functions/assets-loaded'
 
 /* Object helpers */
 
-import { mergeObjects } from './modules/merge-objects'
-import { recurseObject } from './modules/recurse-object'
+import { mergeObjects } from './functions/merge-objects'
+import { recurseObject } from './functions/recurse-object'
 
 /* Ajax requests */
 
-import { urlEncode } from './modules/url-encode'
-import { request } from './modules/request'
+import { urlEncode } from './functions/url-encode'
+import { request } from './functions/request'
 
 /* Misc */
 
-import { cascade } from './modules/cascade'
-import { publish, subscribe } from './modules/pub-sub'
-import { setCookie, getCookie } from './modules/cookie'
+import { cascade } from './functions/cascade'
+import { publish, subscribe } from './functions/pub-sub'
+import { setCookie, getCookie } from './functions/cookie'
+import { getDuration } from './functions/get-duration'
 
 /* Exports */
 
 export {
-  addClass,
-  removeClass,
-  hasClass,
-  show,
   setLoaders,
   prefix,
-  objectFit,
   closest,
   getKey,
-  getScrollY,
   getDefaultFontSize,
   setElements,
   assetLoaded,
@@ -79,5 +68,6 @@ export {
   innerFocusableItems,
   getOuterFocusableItems,
   setCookie,
-  getCookie
+  getCookie,
+  getDuration
 }
