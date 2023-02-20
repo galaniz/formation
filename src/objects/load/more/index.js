@@ -12,6 +12,8 @@
  *  @param {HTMLElement} loader
  *  @param {HTMLElement} error
  *  @param {string} url
+ *  @param {boolean} urlEncoded
+ *  @param {boolean} jsonEncoded
  *  @param {object} data
  *  @param {number} ppp - per page
  *  @param {number} page - pagination
@@ -34,7 +36,6 @@
 import {
   request,
   setLoaders,
-  urlEncode,
   focusSelector
 } from '../../../utils'
 
@@ -65,6 +66,8 @@ class More {
       },
       error = null,
       url = '',
+      urlEncoded = true,
+      jsonEncoded = false,
       data = {},
       ppp = 0,
       page = 1,
@@ -89,6 +92,8 @@ class More {
     this.noResults = noResults
     this.error = error
     this.url = url
+    this.urlEncoded = urlEncoded
+    this.jsonEncoded = jsonEncoded
     this.data = data
     this.ppp = ppp
     this.page = page
@@ -755,21 +760,33 @@ class More {
         }
       }
 
-      /* Get data as url encoded string */
+      /* Request args */
 
-      const encodedData = urlEncode(this.filterPostData(this._data))
+      const args = {
+        method: 'POST',
+        url: this.url
+      }
+
+      if (this.urlEncoded) {
+        args.encode = 'url'
+      }
+
+      if (this.jsonEncoded) {
+        args.encode = 'json'
+      }
+
+      if (!this.urlEncoded && !this.jsonEncoded) {
+        args.encode = 'form-data'
+      }
+
+      args.body = this.filterPostData(this._data)
+
+      /* Make request */
 
       setTimeout(() => {
         /* Fetch more items */
 
-        request({
-          method: 'POST',
-          url: this.url,
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
-          },
-          body: encodedData
-        })
+        request(args)
           .then(response => {
             if (!response) {
               if (reset) {

@@ -2,14 +2,20 @@
  * Utils - request
  */
 
+/* Imports */
+
+import { urlEncode } from './url-encode'
+import { objectToFormData } from './object-to-form-data'
+
 /**
- * Function - handle ajax requests with fetch method
+ * Function - handle ajax requests with fetch method and encode data
  *
  * @param {object} args {
  *  @prop {string} method
  *  @prop {string} url
  *  @prop {object} headers
  *  @prop {string} body
+ *  @prop {string|null} encode
  * }
  * @return {Promise}
  */
@@ -19,21 +25,52 @@ const request = (args) => {
     method = 'GET',
     url = '',
     headers,
-    body
+    body,
+    encode = 'url'
   } = args
 
-  /* Fetch options */
+  /* Method */
 
   const reqArgs = {
     method
   }
 
+  /* Headers */
+
   if (headers) {
     reqArgs.headers = headers
   }
 
+  /* Body */
+
   if (body) {
     reqArgs.body = body
+  }
+
+  /* Encode */
+
+  if (encode === 'url' || encode === 'json') {
+    if (!Object.getOwnPropertyDescriptor(reqArgs, 'headers')) {
+      reqArgs.headers = {}
+    }
+  }
+
+  if (encode === 'url') {
+    reqArgs.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    reqArgs.body = urlEncode(body)
+  }
+
+  if (encode === 'json') {
+    reqArgs.headers['Content-Type'] = 'application/json'
+    reqArgs.body = JSON.stringify(body)
+  }
+
+  if (encode === 'form-data') {
+    const formData = new FormData() // eslint-disable-line no-undef
+
+    objectToFormData(body, formData)
+
+    reqArgs.body = formData
   }
 
   /* Make request */

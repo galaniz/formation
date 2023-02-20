@@ -302,3 +302,25 @@ All notable changes to this project will be documented in this file.
 - `Audio` player class
 - `getKey` more key codes
 - `Send` json response option
+
+## [4.1.0] - 2023-02-19
+
+### Fixed
+- `Audio` pause on close
+
+### Added
+- `object-to-form-data` and `get-duration` utility functions
+- `LoadMore` and `Send` url and json encoded options
+- Start new documentation files
+
+### Removed
+- Readme files (newer docs to come)
+- Object fallback, gradient, add/has/remove classes, show, generate ids get scroll y files
+
+### Changed
+- `Table` current and target width css variables
+- Replace all for in loops with forEach loops using object keys
+- `request` Fetch instead of XMLHttpRequest and add more options like encoding
+- Comments more detailed/more JSDoc like throughout except for files in objects folder
+- Moved utility modules files to utility functions folder
+- Esbuild instead of webpack for test build

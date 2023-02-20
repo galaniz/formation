@@ -483,8 +483,8 @@ class Form {
     return validForm
   }
 
-  appendFormValues (formData, formJson, filter = false) {
-    formJson.inputs = {}
+  appendFormValues (formValues, filter = false) {
+    formValues.inputs = {}
 
     Object.keys(this._inputGroups || {}).forEach((name) => {
       const inputGroup = this._inputGroups[name]
@@ -515,11 +515,7 @@ class Form {
         formObj = filter(formObj, inputGroup.inputs)
       }
 
-      Object.keys(formObj || {}).forEach((f) => {
-        formData.append(`inputs[${name}][${f}]`, formObj[f])
-      })
-
-      formJson.inputs[name] = formObj
+      formValues.inputs[name] = formObj
     })
   }
 

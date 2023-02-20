@@ -6,7 +6,7 @@
  * Function - recursively convert object key value pairs into url encoded string
  *
  * @param {object} o - only parameter that needs to be pased
- * @param {string} _key - store key to refect nested properties
+ * @param {string} _key - store key to reflect nested properties
  * @param {array} _list - store key value pairs for iteration
  * @return {string}
  */

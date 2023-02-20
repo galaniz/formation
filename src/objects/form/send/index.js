@@ -14,6 +14,7 @@
  *  @param {array<HTMLElement>} loaders
  *  @param {string} url
  *  @param {boolean} urlEncoded
+ *  @param {boolean} jsonEncoded
  *  @param {function} onSuccess
  *  @param {function} onError
  *  @param {string} errorTemplate
@@ -28,8 +29,7 @@
 import {
   mergeObjects,
   setLoaders,
-  request,
-  urlEncode
+  request
 } from '../../../utils'
 
 import Form from '../index'
@@ -275,38 +275,33 @@ class Send {
 
     /* Get form values */
 
-    let formData = new FormData() // eslint-disable-line no-undef
-    let formJson = {}
+    const body = {
+      id: this.id
+    }
 
-    formData.append('id', this.id)
-    formJson.id = this.id
-
-    this._form.appendFormValues(formData, formJson, this.filterInputs)
+    this._form.appendFormValues(body, this.filterInputs)
 
     if (this.data) {
       Object.keys(this.data || {}).forEach((d) => {
-        formData.append(d, this.data[d])
-        formJson[d] = this.data[d]
+        body[d] = this.data[d]
       })
     }
 
-    if (this.urlEncoded) {
-      formData = urlEncode(formJson)
+    /* More request args */
 
-      args.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+    if (this.urlEncoded) {
+      args.encode = 'url'
     }
 
     if (this.jsonEncoded) {
-      formJson = JSON.stringify(formJson)
-
-      args.headers = {
-        'Content-Type': 'application/json'
-      }
+      args.encode = 'json'
     }
 
-    args.body = this.jsonEncoded ? formJson : formData
+    if (!this.urlEncoded && !this.jsonEncoded) {
+      args.encode = 'form-data'
+    }
+
+    args.body = body
 
     /* Send */
 

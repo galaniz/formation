@@ -34,6 +34,7 @@ import { recurseObject } from './functions/recurse-object'
 /* Ajax requests */
 
 import { urlEncode } from './functions/url-encode'
+import { objectToFormData } from './functions/object-to-form-data'
 import { request } from './functions/request'
 
 /* Misc */
@@ -57,6 +58,7 @@ export {
   mergeObjects,
   recurseObject,
   urlEncode,
+  objectToFormData,
   request,
   cascade,
   publish,
