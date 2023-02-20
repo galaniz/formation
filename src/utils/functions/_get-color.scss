@@ -1,12 +1,14 @@
 /**
- * Utils: get color from $colors map
+ * Utils - get color
  */
+
+/* Imports */
 
 @use "sass:map";
 @use "../../config" as con;
 
 /**
- * Function
+ * Function - get hex color from name in $colors-flat map
  *
  * @param {string} $color
  * @return {string}

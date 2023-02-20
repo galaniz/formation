@@ -1,10 +1,10 @@
 /**
- * Objects: tabs
+ * Objects - tabs
  *
  * @param {object} args {
- *  @param {nodelist} tabs
- *  @param {nodelist} panels
- *  @param {int} delay
+ *  @param {NodeList} tabs
+ *  @param {NodeList} panels
+ *  @param {number} delay
  *  @param {string} orientation
  * }
  */
@@ -80,7 +80,9 @@ class Tabs {
     if (init) {
       const initialize = this._initialize()
 
-      if (!initialize) { return false }
+      if (!initialize) {
+        return false
+      }
     }
   }
 
@@ -91,7 +93,9 @@ class Tabs {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.tabs || !this.panels) { return false }
+    if (!this.tabs || !this.panels) {
+      return false
+    }
 
     this.tabs = Array.from(this.tabs)
     this.panels = Array.from(this.panels)
@@ -121,7 +125,9 @@ class Tabs {
 
       const selected = tab.getAttribute('aria-selected')
 
-      if (selected === 'true') { currentIndex = index }
+      if (selected === 'true') {
+        currentIndex = index
+      }
     })
 
     /* Set current based on location hash */
@@ -240,9 +246,13 @@ class Tabs {
   }
 
   _focus (index) {
-    if (index < 0) { index = this._lastTabIndex }
+    if (index < 0) {
+      index = this._lastTabIndex
+    }
 
-    if (index > this._lastTabIndex) { index = 0 }
+    if (index > this._lastTabIndex) {
+      index = 0
+    }
 
     this.tabs[index].focus()
   }
@@ -292,7 +302,9 @@ class Tabs {
         break
     }
 
-    if (focus) { this._focus(index) }
+    if (focus) {
+      this._focus(index)
+    }
   }
 
   _keyUp (e) {
@@ -316,9 +328,11 @@ class Tabs {
         break
     }
 
-    if (focus) { this._focus(index) }
+    if (focus) {
+      this._focus(index)
+    }
   }
-} // End Tabs
+}
 
 /* Exports */
 

@@ -1,5 +1,5 @@
 /**
- * Objects: collapsible
+ * Objects - collapsible
  *
  * @param {object} args {
  *  @param {HTMLElement} container
@@ -91,7 +91,9 @@ class Collapsible {
   _initialize () {
     /* Check that required items exist */
 
-    if (!this.collapsible || !this.trigger) { return false }
+    if (!this.collapsible || !this.trigger) {
+      return false
+    }
 
     /* Add prefix to accordion id */
 
@@ -117,11 +119,9 @@ class Collapsible {
 
     window.addEventListener('resize', this._resizeHandler.bind(this))
 
-    window.addEventListener('load', () => {
-      this._setCollapsibleHeight()
-      this._toggleCollapsible(this.startOpen)
-      this._setContainer()
-    })
+    this._setCollapsibleHeight()
+    this._toggleCollapsible(this.startOpen)
+    this._setContainer()
 
     return true
   }
@@ -131,7 +131,9 @@ class Collapsible {
    */
 
   _setContainer () {
-    if (!this.container) { return }
+    if (!this.container) {
+      return
+    }
 
     if (this._set) {
       this.container.setAttribute('data-set', '')
@@ -143,13 +145,17 @@ class Collapsible {
   _setCollapsibleHeight () {
     this.collapsible.style.height = 'auto'
 
-    if (!this._set) { return }
+    if (!this._set) {
+      return
+    }
 
     this._collapsibleHeight = this.collapsible.clientHeight
   }
 
   _toggleCollapsible (open = true, source = '') {
-    if (!this._set) { return }
+    if (!this._set) {
+      return
+    }
 
     this._open = open
     this.trigger.setAttribute('aria-expanded', open)
@@ -165,16 +171,22 @@ class Collapsible {
     }
 
     if (open) {
-      if (this.container) { this.container.setAttribute('data-expanded', 'true') }
+      if (this.container) {
+        this.container.setAttribute('data-expanded', 'true')
+      }
 
       this.collapsible.style.height = this._collapsibleHeight + 'px'
     } else {
-      if (this.container) { this.container.setAttribute('data-expanded', 'false') }
+      if (this.container) {
+        this.container.setAttribute('data-expanded', 'false')
+      }
 
       this.collapsible.style.height = ''
     }
 
-    if (this.container) { this.container.setAttribute('data-source', source) }
+    if (this.container) {
+      this.container.setAttribute('data-source', source)
+    }
   }
 
   /**
@@ -182,7 +194,9 @@ class Collapsible {
    */
 
   _resize () {
-    if (!this.resize) { return }
+    if (!this.resize) {
+      return
+    }
 
     /* Throttles resize event */
 
@@ -226,7 +240,7 @@ class Collapsible {
   toggle (open = true) {
     this._toggleCollapsible(open)
   }
-} // End Collapsible
+}
 
 /* Exports */
 

@@ -1,5 +1,5 @@
 /**
- * Objects: table collapse dynamically
+ * Objects - table collapse dynamically
  *
  * @param {object} args {
  *  @param {HTMLElement} table
@@ -41,7 +41,9 @@ class Table {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -51,7 +53,9 @@ class Table {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.table || !this.equalWidthTo) { return false }
+    if (!this.table || !this.equalWidthTo) {
+      return false
+    }
 
     window.addEventListener('resize', this._resizeHandler.bind(this))
 
@@ -69,6 +73,8 @@ class Table {
     const collapse = currentWidth > targetWidth
 
     this.table.style.maxWidth = ''
+    this.table.style.setProperty('--target-width', `${targetWidth}px`)
+    this.table.style.setProperty('--current-width', `${currentWidth}px`)
     this.table.setAttribute('data-collapse', collapse)
   }
 
@@ -85,7 +91,7 @@ class Table {
       this._go()
     }, 100)
   }
-} // End Table
+}
 
 /* Exports */
 

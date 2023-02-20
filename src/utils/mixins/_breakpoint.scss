@@ -1,5 +1,5 @@
 /**
- * Utils: media queries
+ * Utils - breakpoint
  */
 
 /* Imports */
@@ -9,9 +9,10 @@
 @use "../functions/calc-rem" as c;
 
 /**
- * Min media query
+ * Mixin - min media query
  *
- * @param {string/number} $min
+ * @param {string|number} $min - prop in $breakpoints map
+ * @return {void}
  */
 
 @mixin breakpoint-min($min) {
@@ -27,9 +28,10 @@
 }
 
 /**
- * Max media query
+ * Mixin - max media query
  *
- * @param {string/number} $max
+ * @param {string|number} $max - prop in $breakpoints map
+ * @return {void}
  */
 
 @mixin breakpoint-max($max) {
@@ -45,10 +47,11 @@
 }
 
 /**
- * Min/max media query
+ * Mixin - min/max media query
  *
- * @param {string/number} $min
- * @param {string/number} $max
+ * @param {string|number} $min - prop in $breakpoints map
+ * @param {string|number} $max - prop in $breakpoints map
+ * @return {void}
  */
 
 @mixin breakpoint-min-max($min, $max) {

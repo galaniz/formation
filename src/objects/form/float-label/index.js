@@ -1,5 +1,5 @@
 /**
- * Objects: float labels above inputs
+ * Objects - float labels above inputs
  *
  * @param {object} args {
  *  @param {HTMLElement} input
@@ -29,7 +29,9 @@ class FloatLabel {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -39,7 +41,9 @@ class FloatLabel {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.input || !this.label) { return false }
+    if (!this.input || !this.label) {
+      return false
+    }
 
     /* Add event listeners */
 
@@ -79,7 +83,7 @@ class FloatLabel {
       this.label.removeAttribute('data-float')
     }
   }
-} // End FloatLabel
+}
 
 /* Exports */
 

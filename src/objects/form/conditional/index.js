@@ -1,5 +1,5 @@
 /**
- * Objects: conditional show/enable fields
+ * Objects - conditional show/enable fields
  *
  * @param {HTMLElement} item
  */
@@ -230,7 +230,7 @@ class Conditional {
 
     this._clearItem(!enable)
   }
-} // End Conditional
+}
 
 /* Exports */
 

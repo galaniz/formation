@@ -1,5 +1,5 @@
 /**
- * Base: mixins
+ * Base - mixins
  */
 
 /* Imports */
@@ -11,6 +11,8 @@
 
 /**
  * Set root variables
+ *
+ * @return {void}
  */
 
 @mixin set-root() {

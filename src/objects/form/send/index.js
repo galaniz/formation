@@ -1,5 +1,5 @@
 /**
- * Objects: send and validate form
+ * Objects - send and validate form
  *
  * @param {object} args {
  *  @param {string} id
@@ -8,17 +8,19 @@
  *  @param {string} fieldClass
  *  @param {string} labelClass
  *  @param {HTMLElement} submit
- *  @param {nodelist} inputs
+ *  @param {NodeList} inputs
  *  @param {boolean} filterInputs
  *  @param {object} data
- *  @param {array} loaders
+ *  @param {array<HTMLElement>} loaders
  *  @param {string} url
+ *  @param {boolean} urlEncoded
+ *  @param {boolean} jsonEncoded
  *  @param {function} onSuccess
  *  @param {function} onError
  *  @param {string} errorTemplate
  *  @param {object} result
  *  @param {boolean} clearOnSuccess
- *  @param {boolean} JSONresponse
+ *  @param {boolean} jsonResponse
  * }
  */
 
@@ -56,12 +58,14 @@ class Send {
       data = {},
       loaders = [],
       url = '',
+      urlEncoded = true,
+      jsonEncoded = false,
       onSuccess = () => {},
       onError = () => {},
       errorTemplate = '',
       result = {},
       clearOnSuccess = true,
-      JSONresponse = true
+      jsonResponse = true
     } = args
 
     this.id = id
@@ -75,12 +79,14 @@ class Send {
     this.data = data
     this.loaders = loaders
     this.url = url
+    this.urlEncoded = urlEncoded
+    this.jsonEncoded = jsonEncoded
     this.onSuccess = onSuccess
     this.onError = onError
     this.errorTemplate = errorTemplate
     this.result = result
     this.clearOnSuccess = clearOnSuccess
-    this.JSONresponse = JSONresponse
+    this.jsonResponse = jsonResponse
 
     this.result = mergeObjects(
       {
@@ -128,7 +134,9 @@ class Send {
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
@@ -156,7 +164,9 @@ class Send {
       }
     })
 
-    if (error) { return false }
+    if (error) {
+      return false
+    }
 
     /* Prepare for validation */
 
@@ -256,27 +266,48 @@ class Send {
       setLoaders(this.loaders, [this.submit], true)
     }
 
+    /* Request args */
+
+    const args = {
+      method: 'POST',
+      url: this.url
+    }
+
     /* Get form values */
 
-    const formValues = this._form.getFormValues(true, this.filterInputs)
-    let data = `id=${this.id}&${formValues}`
+    const body = {
+      id: this.id
+    }
+
+    this._form.appendFormValues(body, this.filterInputs)
 
     if (this.data) {
-      for (const d in this.data) {
-        data += `&${d}=${this.data[d]}`
-      }
+      Object.keys(this.data || {}).forEach((d) => {
+        body[d] = this.data[d]
+      })
     }
+
+    /* More request args */
+
+    if (this.urlEncoded) {
+      args.encode = 'url'
+    }
+
+    if (this.jsonEncoded) {
+      args.encode = 'json'
+    }
+
+    if (!this.urlEncoded && !this.jsonEncoded) {
+      args.encode = 'form-data'
+    }
+
+    args.body = body
 
     /* Send */
 
-    request({
-      method: 'POST',
-      url: this.url,
-      headers: { 'Content-type': 'application/x-www-form-urlencoded' },
-      body: data
-    })
+    request(args)
       .then(response => {
-        return this.JSONresponse ? JSON.parse(response) : response
+        return this.jsonResponse ? JSON.parse(response) : response
       })
       .then(res => {
         this.onSuccess(res)
@@ -288,8 +319,8 @@ class Send {
         if (this.clearOnSuccess) {
           this.clear()
         }
-      }).catch(xhr => {
-        this.onError(xhr)
+      }).catch(err => {
+        this.onError(err)
 
         this._form.submitted = false
 
@@ -306,7 +337,9 @@ class Send {
 
     this.form.reset()
 
-    if (this._form) { this._form.clearErrorMessages() }
+    if (this._form) {
+      this._form.clearErrorMessages()
+    }
 
     /* Set loaders off */
 
@@ -318,7 +351,7 @@ class Send {
   getFormInstance () {
     return this._form
   }
-} // End Send
+}
 
 /* Exports */
 

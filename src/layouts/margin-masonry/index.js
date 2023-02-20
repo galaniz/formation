@@ -1,30 +1,25 @@
 /**
- * Layouts: masonry with negative margins
- *
- * @param {object} args {
- *  @param {HTMLElement} container
- *  @param {nodelist} items
- *  @param {string} itemSelector
- *  @param {array} breakpoints
- * }
+ * Layouts - margin masonry
  */
 
-/* Imports */
-
-import { getScrollY } from '../../utils'
-
-/* Class */
+/**
+ * Class - create masonry layout with negative margins
+ */
 
 class MarginMasonry {
   /**
-   * Constructor
+   * Set public properties and initialize
+   *
+   * @param {object} args {
+   *  @prop {HTMLElement} container
+   *  @prop {NodeList} items
+   *  @prop {string} itemSelector
+   *  @prop {array<object>} breakpoints
+   * }
+   * @return {void|boolean} - false if init errors
    */
 
   constructor (args) {
-    /**
-     * Public variables
-     */
-
     const {
       container = null,
       items = null,
@@ -38,43 +33,97 @@ class MarginMasonry {
     this.breakpoints = breakpoints
 
     /**
-     * Internal variables
+     * Store items info - element, offsets, height and indexes
+     *
+     * @type {array<object>}
+     * @private
      */
 
     this._itemInfo = []
+
+    /**
+     * Store items and height by top offset
+     *
+     * @type {object}
+     * @private
+     */
+
     this._rows = {}
+
+    /**
+     * Store heights from previous rows to get offsets
+     *
+     * @type {number}
+     * @private
+     */
 
     this._cumulativeOffset = 0
 
+    /**
+     * Store specified column in breakpoints array/adjusted column number
+     *
+     * @type {number}
+     * @private
+     */
+
     this._currentColumns = 0
-    this._currentMargin = 0
-
-    /* For throttling resize event */
-
-    this._resizeTimer = null
-
-    this._viewportWidth = window.innerWidth
-    this._viewportHeight = window.innerHeight
 
     /**
-     * Initialize
+     * Store specified margin in breakpoints array
+     *
+     * @type {number}
+     * @private
      */
+
+    this._currentMargin = 0
+
+    /**
+     * Store timeout id in resize event
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._resizeTimer = -1
+
+    /**
+     * Store viewport width for resize event and check if within breakpoints
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._viewportWidth = window.innerWidth
+
+    /* Initialize */
 
     const init = this._initialize()
 
-    if (!init) { return false }
+    if (!init) {
+      return false
+    }
   }
 
   /**
-   * Initialize
+   * Initialize - check required props, set breakpoint ranges
+   *
+   * @private
+   * @return {boolean}
    */
 
   _initialize () {
-    /* Check that required variables not null */
+    /* Check that required properties not null */
 
-    if (!this.container || !this.items || !this.itemSelector || !this.breakpoints) { return false }
+    if (!this.container || !this.items || !this.itemSelector || !this.breakpoints) {
+      return false
+    }
+
+    /* Make sure items are array instead of nodelist */
 
     this.items = Array.from(this.items)
+
+    /* Store container parent for appending adjusted items */
+
     this._containerParent = this.container.parentNode
 
     /* Set breakpoint ranges */
@@ -85,11 +134,15 @@ class MarginMasonry {
       const low = bk.width
       let high = 99999
 
-      if (breakpointLength > 1 && i < breakpointLength - 1) { high = this.breakpoints[i + 1].width }
+      if (breakpointLength > 1 && i < breakpointLength - 1) {
+        high = this.breakpoints[i + 1].width
+      }
 
       bk.low = low
       bk.high = high
     })
+
+    /* Set rows and item info and margins */
 
     const set = this._setVars(true)
 
@@ -98,14 +151,21 @@ class MarginMasonry {
       this._setMargins()
     }
 
+    /* Event listeners */
+
     this._resizeHandler = this._resize.bind(this)
+
     window.addEventListener('resize', this._resizeHandler)
 
     return true
   }
 
   /**
-   * Internal helpers
+   * Set column number and margin, reset cumulative offset, rows and item info
+   *
+   * @private
+   * @param {boolean} init
+   * @return {boolean}
    */
 
   _setVars (init = false) {
@@ -134,7 +194,9 @@ class MarginMasonry {
     for (let i = 0; i < this.items.length; i++) {
       const offset = this.items[i].offsetTop
 
-      if (i === 0) { firstOffset = offset }
+      if (i === 0) {
+        firstOffset = offset
+      }
 
       if (offset === firstOffset) {
         c++
@@ -143,18 +205,21 @@ class MarginMasonry {
       }
     }
 
-    if (c) { this._currentColumns = c }
+    if (c) {
+      this._currentColumns = c
+    }
 
     /* Item and row info */
 
-    if (!init) { this._setMargins(true) }
+    if (!init) {
+      this._setMargins(true)
+    }
 
     this._cumulativeOffset = 0
-
     this._rows = {}
     this._itemInfo = []
 
-    const scrollY = getScrollY()
+    const scrollY = window.scrollY
 
     this.items.forEach((item, i) => {
       const rect = item.getBoundingClientRect()
@@ -190,24 +255,35 @@ class MarginMasonry {
       })
     })
 
-    for (const r in this._rows) {
+    Object.keys(this._rows || {}).forEach((r) => {
       const rr = this._rows[r]
       rr.ogHeight = Math.max(...rr.ogHeights)
-    }
+    })
 
     return true
   }
 
+  /**
+   * Update item info objects - margin top and bottom offset
+   *
+   * @private
+   * @return {void}
+   */
+
   _getMargins () {
     this._itemInfo.forEach((it, i) => {
-      if (it.sisterIndex === undefined) { return }
+      if (it.sisterIndex === undefined) {
+        return
+      }
 
       const sister = this._itemInfo[it.sisterIndex]
       const sisterOffset = sister.bottom
       const itOffset = it.top - this._cumulativeOffset
       let marginTop = itOffset - sisterOffset - this._currentMargin
 
-      if (marginTop < 0) { marginTop = 0 }
+      if (marginTop < 0) {
+        marginTop = 0
+      }
 
       const newItHeight = it.height - marginTop
 
@@ -227,6 +303,14 @@ class MarginMasonry {
     })
   }
 
+  /**
+   * Set and unset item margins
+   *
+   * @private
+   * @param {boolean} unset
+   * @return {void}
+   */
+
   _setMargins (unset = false) {
     const frag = new window.DocumentFragment()
 
@@ -243,7 +327,9 @@ class MarginMasonry {
     actualItems.forEach((item, i) => {
       let val = 0
 
-      if (!unset) { val = this._itemInfo[i].marginTop }
+      if (!unset) {
+        val = this._itemInfo[i].marginTop
+      }
 
       const marginTop = unset ? '' : `-${val}px`
 
@@ -254,18 +340,17 @@ class MarginMasonry {
   }
 
   /**
-   * Event handlers
+   * Resize event handler - reset margins
+   *
+   * @private
+   * @return {void}
    */
 
   _resize () {
-    /* Throttles resize event */
-
     clearTimeout(this._resizeTimer)
 
     this._resizeTimer = setTimeout(() => {
       const viewportWidth = window.innerWidth
-
-      this._viewportHeight = window.innerHeight
 
       if (viewportWidth !== this._viewportWidth) {
         this._viewportWidth = viewportWidth
@@ -283,7 +368,7 @@ class MarginMasonry {
       }
     }, 100)
   }
-} // End MarginMasonry
+}
 
 /* Exports */
 

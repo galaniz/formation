@@ -1,5 +1,5 @@
 /**
- * Utils: fluid sizes (font-size, padding, margins...)
+ * Utils - fluid size
  */
 
 /* Imports */
@@ -13,13 +13,14 @@
 @use "breakpoint" as b;
 
 /**
- * Mixin
+ * Mixin - fluidly resize between breakpoints
  *
  * @param {string} $prop
  * @param {list} $sizes
- * @param {list} $widths
+ * @param {list} $widths - $breakpoint props
  * @param {list} $other-values
- * @param {bool} $important
+ * @param {boolean} $important
+ * @return {void}
  */
 
 @mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {
@@ -28,12 +29,12 @@
   @each $s in $sizes {
     $i: list.index($sizes, $s);
     $w: list.nth($widths, $i);
-    $ww: c.calc-rem(map.get(con.$breakpoints, list.nth($widths, $i)));
+    $ww: c.calc-rem(map.get(con.$breakpoints, $w));
     $o: null;
     $m: null;
 
     @if meta.type-of($other-values) == "list" {
-      $o: list.nth($widths, $i);
+      $o: $w;
     }
 
     @if $important {

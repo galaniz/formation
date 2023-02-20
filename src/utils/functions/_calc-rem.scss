@@ -1,5 +1,5 @@
 /**
- * Utils: convert to rem units
+ * Utils - calc rem
  */
 
 /* Imports */
@@ -8,7 +8,7 @@
 @use "../../config" as con;
 
 /**
- * Function
+ * Function - convert px to rem
  *
  * @param {number} $px
  * @return {number}

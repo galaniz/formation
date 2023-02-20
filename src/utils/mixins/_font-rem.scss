@@ -1,5 +1,5 @@
 /**
- * Utils: font size in rem units
+ * Utils - font rem
  */
 
 /* Imports */
@@ -7,9 +7,10 @@
 @use "../functions/calc-rem" as c;
 
 /**
- * Mixin
+ * Mixin - output font size in rems
  *
  * @param {number} $size
+ * @return {void}
  */
 
 @mixin font-rem($size) {

@@ -1,5 +1,5 @@
 /**
- * Config: functions
+ * Config - functions
  */
 
 /* Imports */
@@ -8,13 +8,12 @@
 @use "sass:meta";
 
 /**
- * Convert map to one level map
+ * Function - convert map to one level map
  *
  * @param {map} $map
  * @param {map} $new-map
  * @param {string} $prefix
- * @param {null/string} $new-prefix
- *
+ * @param {null|string} $new-prefix
  * @return {map}
  */
 
