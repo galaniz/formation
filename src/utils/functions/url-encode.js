@@ -13,7 +13,7 @@
 
 const urlEncode = (o, _key, _list = []) => {
   if (typeof (o) === 'object') {
-    Object.keys(o).forEach((idx) => {
+    Object.keys(o || {}).forEach((idx) => {
       urlEncode(o[idx], _key ? _key + '[' + idx + ']' : idx, _list)
     })
   } else {

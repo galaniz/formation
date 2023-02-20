@@ -202,7 +202,7 @@ class More {
 
     /* Append public data */
 
-    Object.keys(this.data).forEach((d) => {
+    Object.keys(this.data || {}).forEach((d) => {
       this._data[d] = this.data[d]
     })
 
@@ -593,7 +593,7 @@ class More {
 
       this._setControlUrls(params)
 
-      Object.keys(params).forEach((u) => {
+      Object.keys(params || {}).forEach((u) => {
         const v = params[u]
 
         if (v === 'load_more_delete_param') {

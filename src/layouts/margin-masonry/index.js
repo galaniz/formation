@@ -255,7 +255,7 @@ class MarginMasonry {
       })
     })
 
-    Object.keys(this._rows).forEach((r) => {
+    Object.keys(this._rows || {}).forEach((r) => {
       const rr = this._rows[r]
       rr.ogHeight = Math.max(...rr.ogHeights)
     })

@@ -463,7 +463,7 @@ class Form {
 
     /* Validate individual input groups */
 
-    Object.keys(this._inputGroups).forEach((name) => {
+    Object.keys(this._inputGroups || {}).forEach((name) => {
       const validGroup = this._validateGroup(this._inputGroups[name], name)
 
       if (!validGroup) {
@@ -486,7 +486,7 @@ class Form {
   appendFormValues (formData, formJson, filter = false) {
     formJson.inputs = {}
 
-    Object.keys(this._inputGroups).forEach((name) => {
+    Object.keys(this._inputGroups || {}).forEach((name) => {
       const inputGroup = this._inputGroups[name]
       let values = inputGroup.values
 
@@ -515,7 +515,7 @@ class Form {
         formObj = filter(formObj, inputGroup.inputs)
       }
 
-      Object.keys(formObj).forEach((f) => {
+      Object.keys(formObj || {}).forEach((f) => {
         formData.append(`inputs[${name}][${f}]`, formObj[f])
       })
 
@@ -524,7 +524,7 @@ class Form {
   }
 
   clearErrorMessages () {
-    Object.keys(this._inputGroups).forEach((name) => {
+    Object.keys(this._inputGroups || {}).forEach((name) => {
       const inputGroup = this._inputGroups[name]
 
       const {

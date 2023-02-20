@@ -284,7 +284,7 @@ class Send {
     this._form.appendFormValues(formData, formJson, this.filterInputs)
 
     if (this.data) {
-      Object.keys(this.data).forEach((d) => {
+      Object.keys(this.data || {}).forEach((d) => {
         formData.append(d, this.data[d])
         formJson[d] = this.data[d]
       })

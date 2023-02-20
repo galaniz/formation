@@ -11,7 +11,7 @@
  */
 
 const mergeObjects = (x, y) => {
-  Object.keys(y).forEach((i) => {
+  Object.keys(y || {}).forEach((i) => {
     /* If not null or an html element and an object run again */
 
     if (y[i] !== undefined &&

@@ -589,7 +589,7 @@ class Audio {
         const { item, attr } = u
 
         if (item) {
-          Object.keys(attr).forEach(prop => {
+          Object.keys(attr || {}).forEach(prop => {
             item[prop] = track[attr[prop]]
           })
         }

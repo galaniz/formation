@@ -78,7 +78,7 @@ module.exports = [
     `
   },
   {
-    text: 'closest(item, className, max)',
+    text: 'closest(item, classes, max)',
     description: 'Traverse up DOM until find element with class.',
     parameters: {
       required: [
@@ -86,7 +86,7 @@ module.exports = [
           text: 'item {HTMLElement}'
         },
         {
-          text: 'className {string}'
+          text: 'classes {string}'
         }
       ],
       optional: [

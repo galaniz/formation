@@ -12,7 +12,7 @@
  */
 
 const recurseObject = (obj, callback = false, condition = () => true) => {
-  Object.keys(obj).forEach((o) => {
+  Object.keys(obj || {}).forEach((o) => {
     if (condition(o, obj[o]) &&
       obj[o] !== null &&
       typeof (obj[o]) === 'object' &&

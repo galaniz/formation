@@ -204,7 +204,7 @@ class Masonry {
       indexTracker = colKeys[indexTracker]
     })
 
-    Object.keys(colItems).forEach((index) => {
+    Object.keys(colItems || {}).forEach((index) => {
       const elem = document.createElement(this.column.tag)
       elem.setAttribute('class', this.column.class)
 

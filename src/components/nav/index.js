@@ -340,7 +340,7 @@ class Nav {
       const frag = {}
       const listIndexes = []
 
-      Object.keys(this._listIndexes).forEach((overflowGroupIndex) => {
+      Object.keys(this._listIndexes || {}).forEach((overflowGroupIndex) => {
         this._listIndexes[overflowGroupIndex].forEach((index) => {
           frag[index] = document.createDocumentFragment()
         })
@@ -376,7 +376,7 @@ class Nav {
       }
     }
 
-    Object.keys(this._listIndexes).forEach((overflowGroupIndex) => {
+    Object.keys(this._listIndexes || {}).forEach((overflowGroupIndex) => {
       this._listIndexes[overflowGroupIndex].forEach((index) => {
         this.overflowList[index].innerHTML = ''
       })
