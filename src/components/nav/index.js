@@ -24,9 +24,9 @@ class Nav {
    *
    * @param {object} args {
    *  @prop {HTMLElement} nav
-   *  @prop {HTMLElement/array} list
+   *  @prop {HTMLElement|array} list
    *  @prop {HTMLElement} overflow
-   *  @prop {HTMLElement/array} overflowList
+   *  @prop {HTMLElement|array} overflowList
    *  @prop {HTMLElement} items
    *  @prop {string} itemSelector
    *  @prop {HTMLElement} button
@@ -45,7 +45,7 @@ class Nav {
    *   @prop {number} close
    *  }
    * }
-   * @return {void|boolean} - false if init errors
+   * @return {void|boolean} - False if init errors
    */
 
   constructor (args) {

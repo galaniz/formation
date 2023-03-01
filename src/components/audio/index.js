@@ -47,7 +47,7 @@ class Audio {
    *   @prop {number} close
    *  }
    * }
-   * @return {void|boolean} - false if init errors
+   * @return {void|boolean} - False if init errors
    */
 
   constructor (args) {
