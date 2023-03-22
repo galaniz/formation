@@ -324,3 +324,16 @@ All notable changes to this project will be documented in this file.
 - Comments more detailed/more JSDoc like throughout except for files in objects folder
 - Moved utility modules files to utility functions folder
 - Esbuild instead of webpack for test build
+
+## [4.1.1] - 2023-03-21
+
+### Fixed
+- `Modal` focusableItems
+
+### Changed
+- General function comment updates
+- `pageTransition` delay
+- `Audio` passive listener for touchStart
+
+### Removed
+- Page loader fallback styles

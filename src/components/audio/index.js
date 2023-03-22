@@ -47,7 +47,7 @@ class Audio {
    *   @prop {number} close
    *  }
    * }
-   * @return {void|boolean} - false if init errors
+   * @return {void|boolean} - False if init errors
    */
 
   constructor (args) {
@@ -318,9 +318,23 @@ class Audio {
       this.close.addEventListener('click', this._close)
     }
 
+    let passiveIfSupported = false
+
+    try {
+      window.addEventListener(
+        'test',
+        null,
+        Object.defineProperty({}, 'passive', {
+          get () {
+            passiveIfSupported = { passive: true }
+          }
+        })
+      )
+    } catch (err) {}
+
     if (this.progress.slider && this.progress.scrub) {
       this.progress.slider.addEventListener('click', this._clickProgress)
-      this.progress.slider.addEventListener('touchstart', this._touchstartProgress)
+      this.progress.slider.addEventListener('touchstart', this._touchstartProgress, passiveIfSupported)
       this.progress.slider.addEventListener('mousedown', this._mousedownProgress)
     }
 

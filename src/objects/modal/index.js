@@ -104,7 +104,7 @@ class Modal {
       this._firstFocusableItem = focusableItems[0]
     }
 
-    const focusableLength = innerFocusableItems.push(this._focusableItems)
+    const focusableLength = innerFocusableItems.push(focusableItems)
 
     this._focusableIndex = focusableLength - 1
 

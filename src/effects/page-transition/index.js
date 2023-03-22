@@ -5,8 +5,8 @@
 /**
  * Store transitionElement
  *
- * @type {HTMLElement}
  * @private
+ * @type {HTMLElement}
  */
 
 let _t = null
@@ -14,17 +14,17 @@ let _t = null
 /**
  * Store delay
  *
- * @type {number}
  * @private
+ * @type {number}
  */
 
-let _d = 800
+let _d = 150
 
 /**
  * Allow transition to run on click callback
  *
- * @type {boolean}
  * @private
+ * @type {boolean}
  */
 
 let _run = true
@@ -32,8 +32,8 @@ let _run = true
 /**
  * Call before show attribute set on transitionElement
  *
- * @type {function}
  * @private
+ * @type {function}
  */
 
 let _b = () => {}
@@ -81,7 +81,7 @@ const pageTransition = (args) => {
   const {
     links = [],
     transitionElement = null,
-    delay = 800,
+    delay = 150,
     init = false,
     beforeShow = false
   } = args
