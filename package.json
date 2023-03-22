@@ -19,14 +19,14 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "autoprefixer": "^10.4.13",
-    "esbuild": "^0.16.17",
-    "esbuild-sass-plugin": "^2.5.0",
+    "autoprefixer": "^10.4.14",
+    "esbuild": "^0.17.12",
+    "esbuild-sass-plugin": "^2.7.0",
     "postcss": "^8.4.21",
     "postcss-preset-env": "^8.0.1",
-    "release-it": "^15.6.0",
+    "release-it": "^15.9.1",
     "standard": "^17.0.0",
-    "stylelint": "^15.1.0",
+    "stylelint": "^15.3.0",
     "stylelint-config-standard-scss": "^7.0.1"
   },
   "release-it": {
