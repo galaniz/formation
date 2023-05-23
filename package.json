@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "A collection of front end components and utilities",
   "main": "index.js",
   "scripts": {
