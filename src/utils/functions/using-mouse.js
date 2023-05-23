@@ -28,10 +28,6 @@ const usingMouse = () => {
     publish('tabState', [false])
   })
 
-  /* Prevent keydown delay */
-
-  window.focus()
-
   /* Check for tabbing to remove attribute */
 
   body.addEventListener('keydown', (e) => {

@@ -11,7 +11,8 @@ import { usingMouse } from './functions/using-mouse'
 import {
   toggleFocusability,
   focusSelector,
-  innerFocusableItems,
+  isItemFocusable,
+  getInnerFocusableItems,
   getOuterFocusableItems
 } from './functions/toggle-focusability'
 
@@ -20,7 +21,9 @@ import {
 import { closest } from './functions/closest'
 import { getKey } from './functions/get-key'
 import { getDefaultFontSize } from './functions/get-default-font-size'
+import { getOuterElements } from './functions/get-outer-elements'
 import { setElements } from './functions/set-elements'
+import { setSettings } from './functions/set-settings'
 
 /* Check DOM */
 
@@ -52,7 +55,9 @@ export {
   closest,
   getKey,
   getDefaultFontSize,
+  getOuterElements,
   setElements,
+  setSettings,
   assetLoaded,
   assetsLoaded,
   mergeObjects,
@@ -67,7 +72,8 @@ export {
   usingMouse,
   toggleFocusability,
   focusSelector,
-  innerFocusableItems,
+  isItemFocusable,
+  getInnerFocusableItems,
   getOuterFocusableItems,
   setCookie,
   getCookie,

@@ -15,8 +15,7 @@
 
 import {
   toggleFocusability,
-  focusSelector,
-  innerFocusableItems,
+  getInnerFocusableItems,
   getOuterFocusableItems,
   getKey,
   stopScroll
@@ -51,13 +50,40 @@ class Modal {
     this.onToggle = onToggle
 
     /**
-     * Internal variables
+     * Store first focusable element for when overflow element opens
+     *
+     * @type {HTMLElement}
+     * @private
      */
 
-    /* Store first focusable element in modal */
-
     this._firstFocusableItem = null
-    this._focusableIndex = null
+
+    /**
+     * Store index in innerFocusableItems array
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._innerFocusableIndex = 0
+
+    /**
+     * Store index in outerFocusableItems array
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._outerFocusableIndex = 0
+
+    /**
+     * Check if focusable indexes are numbers
+     *
+     * @type {boolean}
+     * @private
+     */
+
+    this._focusableIndexesValid = false
 
     /* Track modal state */
 
@@ -96,19 +122,15 @@ class Modal {
 
     document.body.addEventListener('keydown', this._keyHandler.bind(this))
 
-    /* Store focusable elements */
+    /* Set first focusable item */
 
-    const focusableItems = Array.from(this.modal.querySelectorAll(focusSelector))
+    const innerFocusableItems = getInnerFocusableItems(this.modal)
 
-    if (focusableItems.length) {
-      this._firstFocusableItem = focusableItems[0]
+    if (getInnerFocusableItems.length) {
+      this._firstFocusableItem = innerFocusableItems[0]
     }
 
-    const focusableLength = innerFocusableItems.push(focusableItems)
-
-    this._focusableIndex = focusableLength - 1
-
-    toggleFocusability(false, focusableItems)
+    /* Init successful */
 
     return true
   }
@@ -124,8 +146,7 @@ class Modal {
 
     this.onToggle(open)
 
-    toggleFocusability(this._open, innerFocusableItems[this._focusableIndex])
-    toggleFocusability(!this._open, getOuterFocusableItems())
+    toggleFocusability(!this._open, getOuterFocusableItems(this.modal))
 
     this.modal.setAttribute('data-open', open)
 

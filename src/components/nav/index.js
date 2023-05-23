@@ -7,8 +7,7 @@
 import {
   cascade,
   toggleFocusability,
-  focusSelector,
-  innerFocusableItems,
+  getInnerFocusableItems,
   getOuterFocusableItems,
   getKey,
   stopScroll
@@ -22,29 +21,26 @@ class Nav {
   /**
    * Set public properties and initialize
    *
-   * @param {object} args {
-   *  @prop {HTMLElement} nav
-   *  @prop {HTMLElement|array} list
-   *  @prop {HTMLElement} overflow
-   *  @prop {HTMLElement|array} overflowList
-   *  @prop {HTMLElement} items
-   *  @prop {string} itemSelector
-   *  @prop {HTMLElement} button
-   *  @prop {HTMLElement} overlay
-   *  @prop {HTMLElement} transition
-   *  @prop {function} onSet
-   *  @prop {function} onReset
-   *  @prop {function} afterReset
-   *  @prop {function} onResize
-   *  @prop {function} onToggle
-   *  @prop {function} endToggle
-   *  @prop {function} filterFocusableItem
-   *  @prop {function} done
-   *  @prop {object} delay {
-   *   @prop {number} open
-   *   @prop {number} close
-   *  }
-   * }
+   * @param {object} args
+   * @param {HTMLElement} args.nav
+   * @param {HTMLElement|array} args.list
+   * @param {HTMLElement} args.overflow
+   * @param {HTMLElement|array} args.overflowList
+   * @param {HTMLElement} args.items
+   * @param {string} args.itemSelector
+   * @param {HTMLElement} args.button
+   * @param {HTMLElement} args.overlay
+   * @param {HTMLElement} args.transition
+   * @param {function} args.onSet
+   * @param {function} args.onReset
+   * @param {function} args.afterReset
+   * @param {function} args.onResize
+   * @param {function} args.onToggle
+   * @param {function} args.endToggle
+   * @param {function} args.done
+   * @param {object} args.delay
+   * @param {number} args.delay.open
+   * @param {number} args.delay.close
    * @return {void|boolean} - False if init errors
    */
 
@@ -66,7 +62,6 @@ class Nav {
       onResize = () => {},
       onToggle = () => {},
       endToggle = () => {},
-      filterFocusableItem = () => true,
       done = () => {},
       delay = {
         open: 200,
@@ -90,7 +85,6 @@ class Nav {
     this.onResize = onResize
     this.onToggle = onToggle
     this.endToggle = endToggle
-    this.filterFocusableItem = filterFocusableItem
     this.done = done
     this.delay = delay
 
@@ -105,8 +99,8 @@ class Nav {
     /**
      * Store open state
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._navOpen = false
@@ -114,8 +108,8 @@ class Nav {
     /**
      * Group items by overflow group attribute
      *
-     * @type {object}
      * @private
+     * @type {object}
      */
 
     this._overflowGroups = {}
@@ -123,8 +117,8 @@ class Nav {
     /**
      * Store total number of groups
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._overflowGroupsLength = 0
@@ -132,8 +126,8 @@ class Nav {
     /**
      * Store items by list index for instances where multiple overflowList elements
      *
-     * @type {object}
      * @private
+     * @type {object}
      */
 
     this._listIndexes = {}
@@ -141,8 +135,8 @@ class Nav {
     /**
      * Store groups currently overflown
      *
-     * @type {array<object>}
      * @private
+     * @type {array<object>}
      */
 
     this._currentOverflowGroups = []
@@ -150,35 +144,17 @@ class Nav {
     /**
      * Store first focusable element for when overflow element opens
      *
-     * @type {HTMLElement}
      * @private
+     * @type {HTMLElement}
      */
 
     this._firstFocusableItem = null
 
     /**
-     * Store focusable elements to have more control over toggleFocusability
-     *
-     * @type {array<HTMLElement>}
-     * @private
-     */
-
-    this._focusableItems = []
-
-    /**
-     * Store index in innerFocusableItems array
-     *
-     * @type {number}
-     * @private
-     */
-
-    this._focusableIndex = 0
-
-    /**
      * Store timeout id in resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._resizeTimer = -1
@@ -186,8 +162,8 @@ class Nav {
     /**
      * Store viewport width for resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportWidth = window.innerWidth
@@ -244,28 +220,6 @@ class Nav {
       return false
     }
 
-    /* Get focusable elements */
-
-    this._focusableItems = Array.from(this.nav.querySelectorAll(focusSelector))
-
-    if (this._focusableItems.length) {
-      this._focusableItems = this._focusableItems.filter(item => {
-        if (item !== this.open && this.filterFocusableItem(item)) {
-          return true
-        }
-
-        return false
-      })
-
-      this._firstFocusableItem = this._focusableItems[0]
-    }
-
-    const focusableLength = innerFocusableItems.push(this._focusableItems)
-
-    this._focusableIndex = focusableLength - 1
-
-    toggleFocusability(false, this._focusableItems)
-
     /* Event listeners */
 
     this._clickOpenHandler = this._clickOpen.bind(this)
@@ -316,7 +270,17 @@ class Nav {
 
     this._setNav(() => {
       this.done()
+
+      /* Set first focusable item */
+
+      const innerFocusableItems = getInnerFocusableItems(this.overflow)
+
+      if (getInnerFocusableItems.length) {
+        this._firstFocusableItem = innerFocusableItems[0]
+      }
     })
+
+    /* Init successful */
 
     return true
   }
@@ -443,12 +407,8 @@ class Nav {
           this.nav.setAttribute('data-overflow-all', 'true')
         }
       }
-
-      innerFocusableItems[this._focusableIndex] = this._focusableItems
     } else {
       this._toggle(true)
-
-      innerFocusableItems[this._focusableIndex] = []
     }
 
     this.onSet()
@@ -507,8 +467,7 @@ class Nav {
 
     this._navOpen = !close
 
-    toggleFocusability(this.isOverflowing ? this._navOpen : true, innerFocusableItems[this._focusableIndex])
-    toggleFocusability(!this._navOpen, getOuterFocusableItems())
+    toggleFocusability(!this._navOpen, getOuterFocusableItems(this.overflow))
 
     if (!close) {
       cascade([

@@ -337,3 +337,22 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Page loader fallback styles
+
+## [4.1.2] - 2023-05-23
+
+### Fixed
+- `Form` error summary focus when elements changed or removed
+- `assetLoaded` iframe and video elements and callbacks
+
+### Added 
+- `Video` class to pause/play video
+- `getOuterElements` utility
+- `settings` and `setSettings` for feature check
+
+### Changed
+- `toggleFocusability` fetch elements moment of interaction
+- `Nav`, `Modal` and `Audio` to new `toggleFocusability`
+
+### Removed
+- 900px breakpoint from `$breakpoints` map
+- window focus in `usingMouse`
