@@ -12,7 +12,7 @@
 
 /* Imports */
 
-import { closest } from '../../utils'
+import { closest, focusSelector, getOuterElements, isItemFocusable } from '../../utils'
 
 /* Class */
 
@@ -80,7 +80,8 @@ class Form {
 
     this._errorSummaryList = {
       ids: [],
-      messages: {}
+      messages: {},
+      items: {}
     }
 
     /**
@@ -212,6 +213,8 @@ class Form {
     if (this.errorSummary.container) {
       this.errorSummary.container.addEventListener('blur', this._onErrorSummaryBlur.bind(this))
     }
+
+    /* Successful init */
 
     return true
   }
@@ -426,18 +429,43 @@ class Form {
     }
 
     const frag = new window.DocumentFragment()
+    let focusItem = null
 
     this._errorSummaryList.ids.forEach((id) => {
-      const li = document.createElement('LI')
-      const message = this._errorSummaryList.messages[id]
+      const existingItem = this._errorSummaryList.items[id] || {}
+      const { message, item } = existingItem
 
-      li.innerHTML = `<a href="#${id}">${message}</a>`
+      let currentItem = null
+      const currentMessage = this._errorSummaryList.messages[id]
 
-      frag.appendChild(li)
+      if (existingItem && message === currentMessage) {
+        currentItem = item
+
+        if (currentItem.firstElementChild === document.activeElement) {
+          focusItem = document.activeElement
+        }
+      }
+
+      if (!currentItem) {
+        currentItem = document.createElement('LI')
+        currentItem.innerHTML = `<a href="#${id}">${currentMessage}</a>`
+      }
+
+      const returnItem = frag.appendChild(currentItem)
+
+      this._errorSummaryList.items[id] = {
+        id,
+        message: currentMessage,
+        item: returnItem
+      }
     })
 
     this.errorSummary.list.innerHTML = ''
     this.errorSummary.list.appendChild(frag)
+
+    if (focusItem) {
+      focusItem.focus()
+    }
   }
 
   _onBlur (e) {
@@ -446,7 +474,55 @@ class Form {
     const inputGroup = this._inputGroups[name]
 
     if (this.submitted) {
-      this._validateGroup(inputGroup, name)
+      setTimeout(() => {
+        let focusInErrorSummary = false
+
+        if (this.errorSummary.container) {
+          focusInErrorSummary = this.errorSummary.container.contains(document.activeElement)
+        }
+
+        this._validateGroup(inputGroup, name)
+
+        if (this._errorSummaryList.ids.length) {
+          this._displayErrorSummary(true)
+        } else {
+          let prevFocusItem = null
+
+          /* Previous focusable element from error summary */
+
+          getOuterElements(
+            this.errorSummary.container,
+            'prev',
+            (store) => {
+              let stop = false
+
+              for (let i = 0; i < store.length; i++) {
+                const item = store[i]
+
+                if (isItemFocusable(item)) {
+                  stop = true
+                  prevFocusItem = item
+                  break
+                } else {
+                  const f = item.querySelectorAll(focusSelector)
+
+                  if (f.length) {
+                    stop = true
+                    prevFocusItem = f[0]
+                    break
+                  }
+                }
+              }
+
+              return { store, stop }
+            }
+          )
+
+          if (focusInErrorSummary && prevFocusItem) {
+            prevFocusItem.focus()
+          }
+        }
+      }, 10) // Delay to get correct active element
     }
   }
 

@@ -10,8 +10,7 @@ import {
   getKey,
   getDuration,
   toggleFocusability,
-  focusSelector,
-  innerFocusableItems
+  getInnerFocusableItems
 } from '../../utils'
 
 /**
@@ -202,7 +201,25 @@ class Audio {
      * @private
      */
 
-    this._focusableIndex = 0
+    this._innerFocusableIndex = 0
+
+    /**
+     * Store index in outerFocusableItems array
+     *
+     * @type {number}
+     * @private
+     */
+
+    this._outerFocusableIndex = 0
+
+    /**
+     * Check if focusable indexes are numbers
+     *
+     * @type {boolean}
+     * @private
+     */
+
+    this._focusableIndexesValid = false
 
     /* Initialize */
 
@@ -343,14 +360,11 @@ class Audio {
     document.addEventListener('keydown', this._keyDown)
     document.addEventListener('keyup', this._keyUp)
 
-    /* Store focusable elements */
+    /* Remove focusability to start */
 
-    const focusableItems = Array.from(this.container.querySelectorAll(focusSelector))
-    const focusableLength = innerFocusableItems.push(focusableItems)
+    toggleFocusability(false, getInnerFocusableItems(this.container))
 
-    this._focusableIndex = focusableLength - 1
-
-    toggleFocusability(false, focusableItems)
+    /* Init successful */
 
     return true
   }
@@ -521,7 +535,7 @@ class Audio {
       }
     }
 
-    toggleFocusability(open, innerFocusableItems[this._focusableIndex])
+    toggleFocusability(open, getInnerFocusableItems(this.container))
 
     document.body.setAttribute('data-audio-open', open)
 

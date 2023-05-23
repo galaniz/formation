@@ -2,12 +2,17 @@
  * Utils - toggle focusability
  */
 
+/* Imports */
+
+import { settings } from './set-settings'
+import { getOuterElements } from './get-outer-elements'
+
 /**
- * Function - toggle focusability of specified elements
+ * Function - manage focusability of specified elements
  *
  * Source - https://bit.ly/3paRHkt
  *
- * @param {boolean} state
+ * @param {boolean} on
  * @param {array<HTMLElement>} items
  * @return {void}
  */
@@ -17,49 +22,59 @@ const toggleFocusability = (on = true, items = []) => {
     return
   }
 
-  items.forEach(item => {
-    if (on) {
-      if (item.hasAttribute('data-tf-aria-hidden')) {
-        const initAriaHidden = item.getAttribute('data-tf-aria-hidden')
+  if (settings.inert) {
+    items.forEach(item => {
+      if (on) {
+        item.removeAttribute('inert')
+      } else {
+        item.setAttribute('inert', '')
+      }
+    })
+  } else {
+    items.forEach(item => {
+      if (on) {
+        if (item.hasAttribute('data-tf-aria-hidden')) {
+          const initAriaHidden = item.getAttribute('data-tf-aria-hidden')
 
-        if (initAriaHidden !== 'null') {
-          item.setAttribute('aria-hidden', initAriaHidden)
-        } else {
-          item.removeAttribute('aria-hidden')
+          if (initAriaHidden !== 'null') {
+            item.setAttribute('aria-hidden', initAriaHidden)
+          } else {
+            item.removeAttribute('aria-hidden')
+          }
+
+          item.removeAttribute('data-tf-aria-hidden')
         }
 
-        item.removeAttribute('data-tf-aria-hidden')
-      }
+        if (item.hasAttribute('data-tf-tabindex')) {
+          const initTabIndex = item.getAttribute('data-tf-tabindex')
 
-      if (item.hasAttribute('data-tf-tabindex')) {
-        const initTabIndex = item.getAttribute('data-tf-tabindex')
+          if (initTabIndex !== 'null') {
+            item.setAttribute('tabindex', initTabIndex)
+          } else {
+            item.removeAttribute('tabindex')
+          }
 
-        if (initTabIndex !== 'null') {
-          item.setAttribute('tabindex', initTabIndex)
-        } else {
-          item.removeAttribute('tabindex')
+          item.removeAttribute('data-tf-tabindex')
+        }
+      } else {
+        if (!item.hasAttribute('data-tf-aria-hidden')) {
+          let ariaHiddenValue = 'null'
+
+          if (item.hasAttribute('aria-hidden')) {
+            ariaHiddenValue = item.getAttribute('aria-hidden')
+          }
+
+          item.setAttribute('data-tf-aria-hidden', ariaHiddenValue)
+          item.setAttribute('aria-hidden', true)
         }
 
-        item.removeAttribute('data-tf-tabindex')
-      }
-    } else {
-      if (!item.hasAttribute('data-tf-aria-hidden')) {
-        let ariaHiddenValue = 'null'
-
-        if (item.hasAttribute('aria-hidden')) {
-          ariaHiddenValue = item.getAttribute('aria-hidden')
+        if (!item.hasAttribute('data-tf-tabindex')) {
+          item.setAttribute('data-tf-tabindex', item.getAttribute('tabindex'))
+          item.setAttribute('tabindex', '-1')
         }
-
-        item.setAttribute('data-tf-aria-hidden', ariaHiddenValue)
-        item.setAttribute('aria-hidden', true)
       }
-
-      if (!item.hasAttribute('data-tf-tabindex')) {
-        item.setAttribute('data-tf-tabindex', item.getAttribute('tabindex'))
-        item.setAttribute('tabindex', '-1')
-      }
-    }
-  })
+    })
+  }
 }
 
 /**
@@ -71,46 +86,68 @@ const toggleFocusability = (on = true, items = []) => {
 const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-tf-tabindex], iframe'
 
 /**
- * Store document focusable items
+ * Function - check if element is focusable
  *
- * @type {array<HTMLElement>}
+ * @param {HTMLElement} item
+ * @return {boolean}
  */
 
-let _allFocusableItems = Array.from(document.querySelectorAll(focusSelector))
+const isItemFocusable = (item) => {
+  if (!item) {
+    return false
+  }
+
+  const focusableTags = ['a', 'area', 'input', 'select', 'textarea', 'button', 'iframe']
+
+  return focusableTags.includes(item.tagName.toLowerCase()) || item.hasAttribute('tabindex') || item.hasAttribute('data-tf-tabindex')
+}
 
 /**
- * Store items to exclude from getOuterFocusableItems
+ * Function - get all focusable elements inside item
  *
- * @type {array<HTMLElement>}
- */
-
-const innerFocusableItems = []
-
-/**
- * Function - get outer focusable items
- *
- * @param {boolean} resetAll
+ * @param {HTMLElement} item
  * @return {array<HTMLElement>}
  */
 
-const getOuterFocusableItems = (resetAll = false) => {
-  if (resetAll) {
-    _allFocusableItems = Array.from(document.querySelectorAll(focusSelector))
+const getInnerFocusableItems = (item) => {
+  if (!item) {
+    return []
   }
 
-  let exclude = []
+  return Array.from(item.querySelectorAll(focusSelector))
+}
 
-  innerFocusableItems.forEach((items) => {
-    exclude = exclude.concat(items)
-  })
+/**
+ * Function - get all focusable elements outside item
+ *
+ * @param {HTMLElement} item
+ * @return {array<HTMLElement>}
+ */
 
-  return _allFocusableItems.filter(item => {
-    if (exclude.indexOf(item) === -1) {
-      return true
-    }
+const getOuterFocusableItems = (item) => {
+  if (!item) {
+    return []
+  }
 
-    return false
-  })
+  let outerItems = getOuterElements(item)
+
+  if (!settings.inert) {
+    let outerFocusableItems = []
+
+    outerItems.forEach((o) => {
+      if (isItemFocusable(o)) {
+        outerFocusableItems.push(o)
+      } else {
+        outerFocusableItems = outerFocusableItems.concat(
+          Array.from(o.querySelectorAll(focusSelector))
+        )
+      }
+    })
+
+    outerItems = outerFocusableItems
+  }
+
+  return outerItems
 }
 
 /* Exports */
@@ -118,6 +155,7 @@ const getOuterFocusableItems = (resetAll = false) => {
 export {
   toggleFocusability,
   focusSelector,
-  innerFocusableItems,
+  isItemFocusable,
+  getInnerFocusableItems,
   getOuterFocusableItems
 }

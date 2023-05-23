@@ -16,18 +16,16 @@ const assetLoaded = (asset) => {
     let proxy = null
 
     if (type === 'IMG') {
-      proxy = new window.Image()
-    }
-
-    if (type === 'IFRAME') {
-      proxy = new window.Iframe()
+      proxy = document.createElement('img')
     }
 
     if (type === 'VIDEO') {
-      proxy = new window.Video()
+      proxy = document.createElement('video')
     }
 
-    proxy.src = asset.src
+    if (type === 'IFRAME') {
+      proxy = asset
+    }
 
     const res = () => {
       resolve(asset)
@@ -37,12 +35,25 @@ const assetLoaded = (asset) => {
       reject(message)
     }
 
+    if (!asset.src) {
+      err()
+    }
+
+    proxy.onerror = err
+
+    if (type === 'VIDEO') {
+      proxy.oncanplay = () => {
+        res()
+      }
+    } else {
+      proxy.onload = res
+    }
+
+    proxy.src = asset.src
+
     if (proxy.complete) {
       res()
     }
-
-    proxy.onload = res
-    proxy.onerror = err
   })
 }
 
