@@ -62,12 +62,6 @@ a {
   h6 & {
     @extend %u-color-inherit;
   }
-
-  &:hover,
-  &:active,
-  &:focus {
-    outline: 0;
-  }
 }
 
 embed,

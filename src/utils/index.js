@@ -7,7 +7,6 @@
 import { prefix } from './functions/prefix'
 import { setLoaders } from './functions/set-loaders'
 import { stopScroll } from './functions/stop-scroll'
-import { usingMouse } from './functions/using-mouse'
 import {
   toggleFocusability,
   focusSelector,
@@ -69,7 +68,6 @@ export {
   publish,
   subscribe,
   stopScroll,
-  usingMouse,
   toggleFocusability,
   focusSelector,
   isItemFocusable,

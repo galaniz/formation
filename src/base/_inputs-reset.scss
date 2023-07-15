@@ -8,7 +8,6 @@ button,
 fieldset,
 select {
   border: 0;
-  outline: none;
   background: transparent;
 }
 
@@ -33,7 +32,6 @@ select {
   &:focus {
     box-shadow: none;
     background-image: none;
-    outline: none;
   }
 }
 

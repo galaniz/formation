@@ -15,16 +15,13 @@ const assetLoaded = (asset) => {
   return new Promise((resolve, reject) => {
     let proxy = null
 
-    if (type === 'IMG') {
-      proxy = document.createElement('img')
+    if (type === 'IMG' || type === 'IFRAME') {
+      proxy = asset
     }
 
     if (type === 'VIDEO') {
       proxy = document.createElement('video')
-    }
-
-    if (type === 'IFRAME') {
-      proxy = asset
+      proxy.src = asset.src
     }
 
     const res = () => {
@@ -35,7 +32,7 @@ const assetLoaded = (asset) => {
       reject(message)
     }
 
-    if (!asset.src) {
+    if (!proxy) {
       err()
     }
 
@@ -48,8 +45,6 @@ const assetLoaded = (asset) => {
     } else {
       proxy.onload = res
     }
-
-    proxy.src = asset.src
 
     if (proxy.complete) {
       res()
