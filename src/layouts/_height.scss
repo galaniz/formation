@@ -10,11 +10,11 @@
 /* Relative units */
 
 .l-height-100-pc {
-  @extend %u-height-100-pc;
+  height: 100%;
 }
 
 .l-height-100-vh {
-  @extend %u-height-100-vh;
+  height: 100vh;
 }
 
 .l-min-height-100-vh {

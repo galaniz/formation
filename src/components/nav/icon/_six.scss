@@ -15,28 +15,28 @@
 
   /* Lines */
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__middle,
-  & .c-nav-icon__bottom {
+  .c-nav-icon__top,
+  .c-nav-icon__middle,
+  .c-nav-icon__bottom {
     transform: scaleX(1);
     transform-origin: 0 50%;
   }
 
-  & .c-nav-icon__top {
+  .c-nav-icon__top {
     --delay: 500ms;
   }
 
-  & .c-nav-icon__middle {
+  .c-nav-icon__middle {
     --delay: 625ms;
   }
 
-  & .c-nav-icon__bottom {
+  .c-nav-icon__bottom {
     --delay: 750ms;
   }
 
   /* Cross */
 
-  & .c-nav-icon__cross {
+  .c-nav-icon__cross {
     $w: func.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
 
     transform: rotate(45deg);
@@ -44,19 +44,19 @@
     width: $w;
   }
 
-  & .c-nav-icon__left,
-  & .c-nav-icon__right {
-    @extend %u-transform-origin-0-0;
+  .c-nav-icon__left,
+  .c-nav-icon__right {
+    transform-origin: 0 0;
   }
 
-  & .c-nav-icon__left {
+  .c-nav-icon__left {
     --delay: 0ms;
 
     transform: scaleY(0) translateX(-50%);
     left: 50%;
   }
 
-  & .c-nav-icon__right {
+  .c-nav-icon__right {
     --delay: 250ms;
 
     transform: scaleX(0) translateY(-50%);
@@ -64,31 +64,31 @@
   }
 
   .c-nav__button[data-show] & {
-    & .c-nav-icon__top,
-    & .c-nav-icon__middle,
-    & .c-nav-icon__bottom {
+    .c-nav-icon__top,
+    .c-nav-icon__middle,
+    .c-nav-icon__bottom {
       transform: scaleX(0);
     }
 
-    & .c-nav-icon__top {
+    .c-nav-icon__top {
       --delay: 0ms;
     }
 
-    & .c-nav-icon__middle {
+    .c-nav-icon__middle {
       --delay: 125ms;
     }
 
-    & .c-nav-icon__bottom {
+    .c-nav-icon__bottom {
       --delay: 250ms;
     }
 
-    & .c-nav-icon__left {
+    .c-nav-icon__left {
       --delay: 625ms;
 
       transform: scaleY(1) translateX(-50%);
     }
 
-    & .c-nav-icon__right {
+    .c-nav-icon__right {
       --delay: 375ms;
 
       transform: scaleX(1) translateY(-50%);

@@ -11,7 +11,7 @@
 /* Styles */
 
 .b-radius-100-pc {
-  @extend %u-border-radius-100-pc;
+  border-radius: 100%;
 }
 
 @each $r, $v in con.$border-radius {

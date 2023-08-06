@@ -2,12 +2,6 @@
  * Base
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 *,
 *::before,
 *::after {
@@ -23,8 +17,7 @@ body {
 
 html[data-no-scroll],
 html[data-no-scroll] body {
-  @extend %u-overflow-hidden;
-
+  overflow: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
 }
@@ -60,7 +53,7 @@ a {
   h4 &,
   h5 &,
   h6 & {
-    @extend %u-color-inherit;
+    color: inherit;
   }
 }
 
@@ -86,7 +79,7 @@ iframe {
 main,
 time,
 img {
-  @extend %u-display-block;
+  display: block;
 }
 
 address {

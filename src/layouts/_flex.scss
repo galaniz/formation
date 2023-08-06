@@ -10,51 +10,51 @@
 /* Styles */
 
 .l-flex-column {
-  @extend %u-flex-direction-column;
+  flex-direction: column;
 }
 
 .l-flex-row {
-  @extend %u-flex-direction-row;
+  flex-direction: row;
 }
 
 .l-flex-wrap {
-  @extend %u-flex-wrap-wrap;
+  flex-wrap: wrap;
 }
 
 .l-justify-between {
-  @extend %u-justify-content-space-between;
+  justify-content: space-between;
 }
 
 .l-justify-center {
-  @extend %u-justify-content-center;
+  justify-content: center;
 }
 
 .l-justify-start {
-  @extend %u-justify-content-flex-start;
+  justify-content: flex-start;
 }
 
 .l-justify-end {
-  @extend %u-justify-content-flex-end;
+  justify-content: flex-end;
 }
 
 .l-align-center {
-  @extend %u-align-items-center;
+  align-items: center;
 }
 
 .l-align-start {
-  @extend %u-align-items-flex-start;
+  align-items: flex-start;
 }
 
 .l-align-end {
-  @extend %u-align-items-flex-end;
+  align-items: flex-end;
 }
 
 .l-flex-shrink-0 {
-  @extend %u-flex-shrink-0;
+  flex-shrink: 0;
 }
 
 .l-flex-grow-1 {
-  @extend %u-flex-grow-1;
+  flex-grow: 1;
 }
 
 @each $b in con.$flex-column-breakpoints {

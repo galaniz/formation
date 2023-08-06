@@ -9,8 +9,9 @@
 /* Styles */
 
 .o-collapsible {
-  &[data-set] {
-    @extend %u-overflow-hidden;
+  &[data-set],
+  &[data-set] > .o-collapsible__main {
+    overflow: hidden;
   }
 }
 
@@ -18,18 +19,13 @@
   --prop: #{con.$collapsible-prop};
   --duration: #{con.$collapsible-duration};
   --delay: #{con.$collapsible-delay};
-
-  @extend %u-visibility-hidden;
+  --visibility: hidden;
 
   height: 0;
-
-  .o-collapsible[data-set] > & {
-    @extend %u-overflow-hidden;
-  }
+  visibility: var(--visibility);
 
   .o-collapsible[data-expanded="true"] > & {
     --delay: #{con.$collapsible-delay-expanded};
-
-    @extend %u-visibility-visible;
+    --visibility: visible;
   }
 }

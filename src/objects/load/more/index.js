@@ -12,8 +12,7 @@
  *  @param {HTMLElement} loader
  *  @param {HTMLElement} error
  *  @param {string} url
- *  @param {boolean} urlEncoded
- *  @param {boolean} jsonEncoded
+ *  @param {string} encode
  *  @param {object} data
  *  @param {number} ppp - per page
  *  @param {number} page - pagination
@@ -66,8 +65,7 @@ class More {
       },
       error = null,
       url = '',
-      urlEncoded = true,
-      jsonEncoded = false,
+      encode = 'url',
       data = {},
       ppp = 0,
       page = 1,
@@ -92,8 +90,7 @@ class More {
     this.noResults = noResults
     this.error = error
     this.url = url
-    this.urlEncoded = urlEncoded
-    this.jsonEncoded = jsonEncoded
+    this.encode = encode
     this.data = data
     this.ppp = ppp
     this.page = page
@@ -764,19 +761,8 @@ class More {
 
       const args = {
         method: 'POST',
-        url: this.url
-      }
-
-      if (this.urlEncoded) {
-        args.encode = 'url'
-      }
-
-      if (this.jsonEncoded) {
-        args.encode = 'json'
-      }
-
-      if (!this.urlEncoded && !this.jsonEncoded) {
-        args.encode = 'form-data'
+        url: this.url,
+        encode: this.encode
       }
 
       args.body = this.filterPostData(this._data)

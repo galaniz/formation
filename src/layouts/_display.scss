@@ -2,28 +2,22 @@
  * Layouts - display
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .l-none {
-  @extend %u-display-none;
+  display: none;
 }
 
 .l-block {
-  @extend %u-display-block;
+  display: block;
 }
 
 .l-inline-block {
-  @extend %u-display-inline-block;
+  display: inline-block;
 }
 
 .l-flex {
-  @extend %u-display-flex;
+  display: flex;
 }
 
 .l-inline-flex {
-  @extend %u-display-inline-flex;
+  display: inline-flex;
 }

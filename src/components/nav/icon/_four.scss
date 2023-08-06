@@ -5,41 +5,40 @@
 /* Imports */
 
 @use "index" as icon;
-@use "../../../config" as con;
 
 /* Styles */
 
 .c-nav-icon[data-num="4"] {
+  --opacity: 1;
+
   transform: rotateY(0deg);
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__middle,
-  & .c-nav-icon__bottom {
+  .c-nav-icon__top,
+  .c-nav-icon__middle,
+  .c-nav-icon__bottom {
     --duration: 0ms;
     --delay: 100ms;
   }
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__bottom {
+  .c-nav-icon__top,
+  .c-nav-icon__bottom {
     transform: translateY(0) rotate(0deg);
   }
 
-  & .c-nav-icon__middle {
-    @extend %u-opacity-1;
+  .c-nav-icon__middle {
+    opacity: var(--opacity);
   }
 
   .c-nav__button[data-show] & {
+    --opacity: 0;
+
     transform: rotateY(180deg);
 
-    & .c-nav-icon__top {
+    .c-nav-icon__top {
       transform: translateY(icon.$y) rotate(45deg);
     }
 
-    & .c-nav-icon__middle {
-      @extend %u-opacity-0;
-    }
-
-    & .c-nav-icon__bottom {
+    .c-nav-icon__bottom {
       transform: translateY(#{icon.$y * -1}) rotate(-45deg);
     }
   }

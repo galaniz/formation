@@ -2,15 +2,8 @@
  * Base - table
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 table {
-  @extend %u-width-100-pc;
-
+  width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
 }

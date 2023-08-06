@@ -2,21 +2,15 @@
  * Layouts - table
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .l-table {
-  @extend %u-display-table;
+  display: table;
 }
 
 .l-table-row {
-  @extend %u-display-table-row;
+  display: table-row;
 }
 
 .l-table-cell {
-  @extend %u-display-table-cell;
-  @extend %u-vertical-align-middle;
+  display: table-cell;
+  vertical-align: middle;
 }

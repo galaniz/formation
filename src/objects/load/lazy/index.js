@@ -97,10 +97,10 @@ class Lazy {
 
     assetLoaded(item)
       .then(() => {
-        item.setAttribute('data-loaded', true)
+        item.setAttribute('data-loaded', 'true')
       })
       .catch(() => {
-        item.setAttribute('data-loaded', 'err')
+        item.setAttribute('data-loaded', 'error')
       })
   }
 }

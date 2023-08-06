@@ -10,6 +10,6 @@
 
 @each $f, $v in con.$font-families {
   .t-#{$f}-family {
-    @extend %u-#{"font-family-#{$f}"};
+    font-family: var(--font-family-#{$f});
   }
 }

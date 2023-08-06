@@ -10,9 +10,8 @@
 
 %l-aspect-ratio {
   &::before {
-    @extend %u-content-empty;
-    @extend %u-display-block;
-
+    content: "";
+    display: block;
     padding-top: var(--aspect-ratio-padding);
   }
 }

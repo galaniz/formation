@@ -5,32 +5,30 @@
 /* Imports */
 
 @use "index" as icon;
-@use "../../../config" as con;
 
 /* Styles */
 
 .c-nav-icon[data-num="2"] {
   --duration: 175ms;
+  --opacity: 1;
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__bottom {
+  .c-nav-icon__top,
+  .c-nav-icon__bottom {
     transform: translateY(0);
   }
 
-  & .c-nav-icon__middle {
-    @extend %u-opacity-1;
+  .c-nav-icon__middle {
+    opacity: var(--opacity);
   }
 
   .c-nav__button[data-show] & {
-    & .c-nav-icon__top {
+    --opacity: 0;
+
+    .c-nav-icon__top {
       transform: translateY(icon.$y);
     }
 
-    & .c-nav-icon__middle {
-      @extend %u-opacity-0;
-    }
-
-    & .c-nav-icon__bottom {
+    .c-nav-icon__bottom {
       transform: translateY(#{icon.$y * -1});
     }
   }

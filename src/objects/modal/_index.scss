@@ -13,15 +13,14 @@
   --prop: #{con.$modal-prop};
   --duration: #{con.$modal-duration};
   --delay: #{con.$modal-delay};
-
-  @extend %u-visibility-hidden;
+  --visibility: hidden;
 
   z-index: map.get(con.$z-index, "modal");
+  visibility: var(--visibility);
 
   &[data-open="true"] {
     --delay: #{con.$modal-delay-open};
-
-    @extend %u-visibility-visible;
+    --visibility: visible;
   }
 }
 
@@ -30,12 +29,12 @@
   --prop: #{con.$modal-overlay-window-prop};
   --duration: #{con.$modal-overlay-window-duration};
   --delay: #{con.$modal-overlay-window-delay};
+  --opacity: 0;
 
-  @extend %u-opacity-0;
+  opacity: var(--opacity);
 
   .o-modal[data-open="true"] & {
     --delay: #{con.$modal-overlay-window-delay-open};
-
-    @extend %u-opacity-1;
+    --opacity: 1;
   }
 }

@@ -10,6 +10,6 @@
 
 @each $w, $v in con.$font-weights {
   .t-weight-#{$w} {
-    @extend %u-#{"font-weight-#{$w}"};
+    font-weight: var(--font-weight-#{$w});
   }
 }

@@ -2,22 +2,9 @@
  * Objects - table
  */
 
-/* Imports */
-
-@use "../../config" as con;
-
-/* Styles */
-
 .o-table {
-  &[data-collapse="false"] {
-    [data-mobile] {
-      @extend %u-display-none;
-    }
-  }
-
-  &[data-collapse="true"] {
-    [data-desktop] {
-      @extend %u-display-none;
-    }
+  &[data-collapse="false"] [data-mobile],
+  &[data-collapse="true"] [data-desktop] {
+    display: none;
   }
 }

@@ -22,31 +22,29 @@
 
   transform: rotate(0deg);
 
-  & .c-nav-icon__top,
-  & .c-nav-icon__bottom {
+  .c-nav-icon__top,
+  .c-nav-icon__bottom {
     width: 50%;
   }
 
-  & .c-nav-icon__top {
-    @extend %u-transform-origin-0-0;
-
+  .c-nav-icon__top {
+    transform-origin: 0 0;
     margin-right: 50%;
   }
 
-  & .c-nav-icon__bottom {
-    @extend %u-transform-origin-100-pc-100-pc;
-
+  .c-nav-icon__bottom {
+    transform-origin: 100% 100%;
     margin-left: 50%;
   }
 
   .c-nav__button[data-show] & {
     transform: rotate(-45deg);
 
-    & .c-nav-icon__top {
+    .c-nav-icon__top {
       transform: translate($x, $y) rotate(-90deg);
     }
 
-    & .c-nav-icon__bottom {
+    .c-nav-icon__bottom {
       transform: translate(#{$x * -1}, #{$y * -1}) rotate(-90deg);
     }
   }

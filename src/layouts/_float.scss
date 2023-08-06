@@ -2,22 +2,16 @@
  * Layouts - float
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .l-clearfix::after {
-  @extend %u-content-empty;
-  @extend %u-display-table;
-  @extend %u-clear-both;
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .l-float-right {
-  @extend %u-float-right;
+  float: right;
 }
 
 .l-float-left {
-  @extend %u-float-left;
+  float: left;
 }

@@ -10,11 +10,11 @@
 /* Relative units */
 
 .l-width-100-pc {
-  @extend %u-width-100-pc;
+  width: 100%;
 }
 
 .l-width-100-vw {
-  @extend %u-width-100-vw;
+  width: 100vw;
 }
 
 /* Config widths */

@@ -2,16 +2,10 @@
  * Layouts - object fit
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .l-object-contain {
-  @extend %u-object-fit-contain;
+  object-fit: contain;
 }
 
 .l-object-cover {
-  @extend %u-object-fit-cover;
+  object-fit: cover;
 }

@@ -12,27 +12,27 @@
 /* Defaults */
 
 .l-margin-0 {
-  @extend %u-margin-0;
+  margin: 0;
 }
 
 .l-margin-auto {
-  @extend %u-margin-auto;
+  margin: auto;
 }
 
 .l-margin-top-auto {
-  @extend %u-margin-top-auto;
+  margin-top: auto;
 }
 
 .l-margin-left-auto {
-  @extend %u-margin-left-auto;
+  margin-left: auto;
 }
 
 .l-margin-right-auto {
-  @extend %u-margin-right-auto;
+  margin-right: auto;
 }
 
 .l-margin-bottom-auto {
-  @extend %u-margin-bottom-auto;
+  margin-bottom: auto;
 }
 
 /* Config margins */
@@ -108,5 +108,5 @@
 /* Defaults */
 
 .l-margin-0-last > *:last-child {
-  @extend %u-margin-0;
+  margin: 0;
 }

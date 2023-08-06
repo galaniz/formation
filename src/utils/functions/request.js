@@ -10,13 +10,12 @@ import { objectToFormData } from './object-to-form-data'
 /**
  * Function - handle ajax requests with fetch method and encode data
  *
- * @param {object} args {
- *  @prop {string} method
- *  @prop {string} url
- *  @prop {object} headers
- *  @prop {string} body
- *  @prop {string|null} encode
- * }
+ * @param {object} args
+ * @param {string} args.method
+ * @param {string} args.url
+ * @param {object} args.headers
+ * @param {string} args.body
+ * @param {string} args.encode
  * @return {Promise}
  */
 

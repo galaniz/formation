@@ -2,20 +2,14 @@
  * Text - align
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .t-align-center {
-  @extend %u-text-align-center;
+  text-align: center;
 }
 
 .t-align-left {
-  @extend %u-text-align-left;
+  text-align: left;
 }
 
 .t-align-right {
-  @extend %u-text-align-right;
+  text-align: right;
 }

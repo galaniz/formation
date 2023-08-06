@@ -13,8 +13,7 @@
  *  @param {object} data
  *  @param {array<HTMLElement>} loaders
  *  @param {string} url
- *  @param {boolean} urlEncoded
- *  @param {boolean} jsonEncoded
+ *  @param {string} encode
  *  @param {function} onSuccess
  *  @param {function} onError
  *  @param {string} errorTemplate
@@ -58,8 +57,7 @@ class Send {
       data = {},
       loaders = [],
       url = '',
-      urlEncoded = true,
-      jsonEncoded = false,
+      encode = 'url',
       onSuccess = () => {},
       onError = () => {},
       errorTemplate = '',
@@ -79,8 +77,7 @@ class Send {
     this.data = data
     this.loaders = loaders
     this.url = url
-    this.urlEncoded = urlEncoded
-    this.jsonEncoded = jsonEncoded
+    this.encode = encode
     this.onSuccess = onSuccess
     this.onError = onError
     this.errorTemplate = errorTemplate
@@ -270,7 +267,8 @@ class Send {
 
     const args = {
       method: 'POST',
-      url: this.url
+      url: this.url,
+      encode: this.encode
     }
 
     /* Get form values */
@@ -285,20 +283,6 @@ class Send {
       Object.keys(this.data || {}).forEach((d) => {
         body[d] = this.data[d]
       })
-    }
-
-    /* More request args */
-
-    if (this.urlEncoded) {
-      args.encode = 'url'
-    }
-
-    if (this.jsonEncoded) {
-      args.encode = 'json'
-    }
-
-    if (!this.urlEncoded && !this.jsonEncoded) {
-      args.encode = 'form-data'
     }
 
     args.body = body

@@ -2,18 +2,11 @@
  * Layouts - breakout
  */
 
-/* Imports */
-
-@use "../config";
-
-/* Styles */
-
 .l-breakout {
-  @extend %u-position-relative;
-  @extend %u-margin-left-auto;
-  @extend %u-margin-right-auto;
-  @extend %u-width-100-vw;
-
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
   transform: translateX(-50%);
+  width: 100vw;
   left: 50%;
 }

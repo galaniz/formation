@@ -2,19 +2,14 @@
  * Objects - lazy load
  */
 
-/* Imports */
-
-@use "../../../config";
-
-/* Styles */
-
 .o-lazy {
   --duration: 200ms;
+  --opacity: 0;
 
-  @extend %u-opacity-0;
+  opacity: var(--opacity);
 
   &[data-loaded="true"],
-  &[data-loaded="err"] {
-    @extend %u-opacity-1;
+  &[data-loaded="error"] {
+    --opacity: 1;
   }
 }

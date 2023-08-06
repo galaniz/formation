@@ -9,10 +9,10 @@
 /* Styles */
 
 %l-container {
-  @extend %u-margin-auto;
-
   padding-left: var(--container-padding);
   padding-right: var(--container-padding);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @each $c, $v in con.$containers {

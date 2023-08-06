@@ -13,22 +13,19 @@
   --prop: #{con.$loader-prop};
   --duration: #{con.$loader-duration};
   --delay: #{con.$loader-delay};
-
-  @extend %u-opacity-1;
-  @extend %u-background-color-inherit;
+  --opacity: 1;
 
   z-index: map.get(con.$z-index, "loader", "default");
+  background-color: inherit;
+  opacity: var(--opacity);
 
   &[data-page] {
-    @extend %u-position-fixed;
-
     z-index: map.get(con.$z-index, "loader", "page");
   }
 
   &[data-hide] {
     --delay: #{con.$loader-delay-hide};
-
-    @extend %u-opacity-0;
+    --opacity: 0;
 
     z-index: -1;
   }

@@ -5,43 +5,42 @@
 /* Imports */
 
 @use "index" as icon;
-@use "../../../config" as con;
 
 /* Styles */
 
 .c-nav-icon[data-num="5"] {
-  & .c-nav-icon__top {
-    animation: 300ms ease forwards a-collapse-rotate-top-reverse;
+  .c-nav-icon__top {
+    animation: 300ms ease forwards e-collapse-rotate-top-reverse;
   }
 
-  & .c-nav-icon__bottom {
-    animation: 300ms ease forwards a-collapse-rotate-bottom-reverse;
+  .c-nav-icon__bottom {
+    animation: 300ms ease forwards e-collapse-rotate-bottom-reverse;
   }
 
-  & .c-nav-icon__middle {
+  .c-nav-icon__middle {
     --duration: 150ms;
     --delay: 100ms;
+    --opacity: 1;
 
-    @extend %u-opacity-1;
+    opacity: var(--opacity);
   }
 
   .c-nav__button[data-show] & {
-    & .c-nav-icon__middle {
+    .c-nav-icon__middle {
       --delay: 0ms;
-
-      @extend %u-opacity-0;
+      --opacity: 0;
     }
 
-    & .c-nav-icon__top {
-      animation: 300ms ease forwards a-collapse-rotate-top;
+    .c-nav-icon__top {
+      animation: 300ms ease forwards e-collapse-rotate-top;
     }
 
-    & .c-nav-icon__bottom {
-      animation: 300ms ease forwards a-collapse-rotate-bottom;
+    .c-nav-icon__bottom {
+      animation: 300ms ease forwards e-collapse-rotate-bottom;
     }
   }
 
-  @keyframes a-collapse-rotate-top-reverse {
+  @keyframes e-collapse-rotate-top-reverse {
     0% {
       transform: translateY(icon.$y) rotate(45deg);
     }
@@ -51,7 +50,7 @@
     }
   }
 
-  @keyframes a-collapse-rotate-bottom-reverse {
+  @keyframes e-collapse-rotate-bottom-reverse {
     0% {
       transform: translateY(#{icon.$y * -1}) rotate(-45deg);
     }
@@ -61,7 +60,7 @@
     }
   }
 
-  @keyframes a-collapse-rotate-top {
+  @keyframes e-collapse-rotate-top {
     0% {
       transform: translateY(icon.$y);
     }
@@ -71,7 +70,7 @@
     }
   }
 
-  @keyframes a-collapse-rotate-bottom {
+  @keyframes e-collapse-rotate-bottom {
     0% {
       transform: translateY(0) rotate(0);
     }
