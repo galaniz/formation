@@ -13,7 +13,7 @@ import { getOuterElements } from './get-outer-elements'
  * Source - https://bit.ly/3paRHkt
  *
  * @param {boolean} on
- * @param {array<HTMLElement>} items
+ * @param {HTMLElement[]} items
  * @return {void}
  */
 
@@ -106,7 +106,7 @@ const isItemFocusable = (item) => {
  * Function - get all focusable elements inside item
  *
  * @param {HTMLElement} item
- * @return {array<HTMLElement>}
+ * @return {HTMLElement[]}
  */
 
 const getInnerFocusableItems = (item) => {
@@ -121,7 +121,7 @@ const getInnerFocusableItems = (item) => {
  * Function - get all focusable elements outside item
  *
  * @param {HTMLElement} item
- * @return {array<HTMLElement>}
+ * @return {HTMLElement[]}
  */
 
 const getOuterFocusableItems = (item) => {

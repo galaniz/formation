@@ -1,21 +1,20 @@
 /**
  * Objects - slider
  *
- * @param {object} args {
- *  @param {HTMLElement} container
- *  @param {HTMLElement} slider
- *  @param {HTMLElement} track
- *  @param {HTMLElement} targetHeight
- *  @param {HTMLElement} prev
- *  @param {HTMLElement} next
- *  @param {array<object>} breakpoints
- *  @param {array<HTMLElement>} groupItems
- *  @param {string} groupSelector
- *  @param {boolean} loop
- *  @param {boolean} reduceMotion
- *  @param {boolean} variableWidths
- *  @param {number} duration
- * }
+ * @param {object} args
+ * @param {HTMLElement} args.container
+ * @param {HTMLElement} args.slider
+ * @param {HTMLElement} args.track
+ * @param {HTMLElement} args.targetHeight
+ * @param {HTMLElement} args.prev
+ * @param {HTMLElement} args.next
+ * @param {object[]} args.breakpoints
+ * @param {HTMLElement[]} args.groupItems
+ * @param {string} args.groupSelector
+ * @param {boolean} args.loop
+ * @param {boolean} args.reduceMotion
+ * @param {boolean} args.variableWidths
+ * @param {number} args.duration
  */
 
 /* Imports */

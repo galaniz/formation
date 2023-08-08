@@ -1,14 +1,14 @@
 /**
  * Objects - collapsible
  *
- * @param {object} args {
- *  @param {HTMLElement} container
- *  @param {HTMLElement} collapsible
- *  @param {HTMLElement} trigger
- *  @param {string} accordionId
- *  @param {boolean} startOpen
- *  @param {boolean} resize
- * }
+ * @param {object} args
+ * @param {HTMLElement} args.container
+ * @param {HTMLElement} args.collapsible
+ * @param {HTMLElement} args.trigger
+ * @param {string} args.accordionId
+ * @param {boolean} args.startOpen
+ * @param {boolean} args.resize
+ * @return {void}
  */
 
 /* Imports */

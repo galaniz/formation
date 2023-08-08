@@ -1,13 +1,13 @@
 /**
  * Objects - form validation and get values
  *
- * @param {object} args {
- *  @param {NodeList} inputs
- *  @param {string} fieldClass
- *  @param {string} groupClass
- *  @param {string} labelClass
- *  @param {boolean} submitted
- *  @param {function} onValidate
+ * @param {object} args
+ * @param {NodeList} args.inputs
+ * @param {string} args.fieldClass
+ * @param {string} args.groupClass
+ * @param {string} args.labelClass
+ * @param {boolean} args.submitted
+ * @param {function} args.onValidate
  */
 
 /* Imports */

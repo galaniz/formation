@@ -6,14 +6,13 @@
  * Function - fetch and set elements by selector
  *
  * @param {HTMLElement} context
- * @param {array<object>} meta {
- *  @prop {string} prop
- *  @prop {string} selector
- *  @prop {boolean} all
- *  @prop {boolean} array
- *  @prop {array<object>} items
- *  @prop {HTMLElement} context
- * }
+ * @param {object[]} meta
+ * @param {string} meta[].prop
+ * @param {string} meta[].selector
+ * @param {boolean} meta[].all
+ * @param {boolean} meta[].array
+ * @param {object[]} meta[].items
+ * @param {HTMLElement} meta[].context
  * @param {object} obj - empty object to pass elements into
  * @param {function} done - callback when done recursing through meta and setting object
  * @return {void}

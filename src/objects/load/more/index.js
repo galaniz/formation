@@ -1,33 +1,31 @@
 /**
  * Objects - load more content
  *
- * @param {object} args {
- *  @param {HTMLElement} next
- *  @param {HTMLElement} nextContainer - no pagination
- *  @param {HTMLElement} prev - pagination
- *  @param {HTMLElement} current - pagination
- *  @param {HTMLElement} tot - pagination
- *  @param {array<HTMLElement>} filters
- *  @param {HTMLElement} filtersForm
- *  @param {HTMLElement} loader
- *  @param {HTMLElement} error
- *  @param {string} url
- *  @param {string} encode
- *  @param {object} data
- *  @param {number} ppp - per page
- *  @param {number} page - pagination
- *  @param {number} total - pagination total pages else total number of items
- *  @param {HTMLElement} insertInto
- *  @param {string} insertLocation
- *  @param {boolean/function} replaceInsert
- *  @param {boolean/function} afterInsert
- *  @param {function} filterPushUrlParams
- *  @param {function} filterPostData
- *  @param {object} noResults {
- *   @param {array<HTMLElement>} containers
- *   @param {array<HTMLElement>} buttons
- *  }
- * }
+ * @param {object} args
+ * @param {HTMLElement} args.next
+ * @param {HTMLElement} args.nextContainer - no pagination
+ * @param {HTMLElement} args.prev - pagination
+ * @param {HTMLElement} args.current - pagination
+ * @param {HTMLElement} args.tot - pagination
+ * @param {HTMLElement[]} args.filters
+ * @param {HTMLElement} args.filtersForm
+ * @param {HTMLElement} args.loader
+ * @param {HTMLElement} args.error
+ * @param {string} args.url
+ * @param {string} args.encode
+ * @param {object} args.data
+ * @param {number} args.ppp - per page
+ * @param {number} args.page - pagination
+ * @param {number} args.total - pagination total pages else total number of items
+ * @param {HTMLElement} args.insertInto
+ * @param {string} args.insertLocation
+ * @param {boolean/function} args.replaceInsert
+ * @param {boolean/function} args.afterInsert
+ * @param {function} args.filterPushUrlParams
+ * @param {function} args.filterPostData
+ * @param {object} args.noResults
+ * @param {HTMLElement[]} args.noResults.containers
+ * @param {HTMLElement[]} args.noResults.buttons
  */
 
 /* Imports */

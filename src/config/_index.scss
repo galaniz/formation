@@ -17,6 +17,8 @@ $root: (
   "colors",
   "font-families",
   "font-weights",
+  "letter-spacing",
+  "line-heights",
   "spacing",
   "gap",
   "containers",
@@ -93,6 +95,14 @@ $font-families: (
 $font-weights: (
   "normal": 400,
 ) !default;
+
+/* Line heights */
+
+$line-heights: () !default;
+
+/* Letter spacing */
+
+$letter-spacing: () !default;
 
 /* Nav */
 

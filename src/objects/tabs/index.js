@@ -1,12 +1,11 @@
 /**
  * Objects - tabs
  *
- * @param {object} args {
- *  @param {NodeList} tabs
- *  @param {NodeList} panels
- *  @param {number} delay
- *  @param {string} orientation
- * }
+ * @param {object} args
+ * @param {NodeList} args.tabs
+ * @param {NodeList} args.panels
+ * @param {number} args.delay
+ * @param {string} args.orientation
  */
 
 /* Imports */

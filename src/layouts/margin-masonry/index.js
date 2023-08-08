@@ -10,12 +10,11 @@ class MarginMasonry {
   /**
    * Set public properties and initialize
    *
-   * @param {object} args {
-   *  @prop {HTMLElement} container
-   *  @prop {NodeList} items
-   *  @prop {string} itemSelector
-   *  @prop {array<object>} breakpoints
-   * }
+   * @param {object} args
+   * @param {HTMLElement} args.container
+   * @param {NodeList} args.items
+   * @param {string} args.itemSelector
+   * @param {object[]} args.breakpoints
    * @return {void|boolean} - false if init errors
    */
 
@@ -35,8 +34,8 @@ class MarginMasonry {
     /**
      * Store items info - element, offsets, height and indexes
      *
-     * @type {array<object>}
      * @private
+     * @type {object[]}
      */
 
     this._itemInfo = []
@@ -44,8 +43,8 @@ class MarginMasonry {
     /**
      * Store items and height by top offset
      *
-     * @type {object}
      * @private
+     * @type {object}
      */
 
     this._rows = {}
@@ -53,8 +52,8 @@ class MarginMasonry {
     /**
      * Store heights from previous rows to get offsets
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._cumulativeOffset = 0
@@ -62,8 +61,8 @@ class MarginMasonry {
     /**
      * Store specified column in breakpoints array/adjusted column number
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._currentColumns = 0
@@ -71,8 +70,8 @@ class MarginMasonry {
     /**
      * Store specified margin in breakpoints array
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._currentMargin = 0
@@ -80,8 +79,8 @@ class MarginMasonry {
     /**
      * Store timeout id in resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._resizeTimer = -1
@@ -89,8 +88,8 @@ class MarginMasonry {
     /**
      * Store viewport width for resize event and check if within breakpoints
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportWidth = window.innerWidth

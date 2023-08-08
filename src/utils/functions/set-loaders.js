@@ -5,8 +5,8 @@
 /**
  * Function - toggle display of loaders/disable buttons
  *
- * @param {array<HTMLElement>} loaders
- * @param {array<HTMLElement>} buttons
+ * @param {HTMLElement[]} loaders
+ * @param {HTMLElement[]} buttons
  * @param {boolean} show
  * @return {void}
  */

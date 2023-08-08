@@ -1,14 +1,13 @@
 /**
  * Objects - modal
  *
- * @param {object} args {
- *  @param {HTMLElement} modal
- *  @param {HTMLElement} window
- *  @param {HTMLElement} overlay
- *  @param {HTMLElement} trigger
- *  @param {HTMLElement} close
- *  @param {function} onToggle
- * }
+ * @param {object} args
+ * @param {HTMLElement} args.modal
+ * @param {HTMLElement} args.window
+ * @param {HTMLElement} args.overlay
+ * @param {HTMLElement} args.trigger
+ * @param {HTMLElement} args.close
+ * @param {function} args.onToggle
  */
 
 /* Imports */
@@ -52,8 +51,8 @@ class Modal {
     /**
      * Store first focusable element for when overflow element opens
      *
-     * @type {HTMLElement}
      * @private
+     * @type {HTMLElement}
      */
 
     this._firstFocusableItem = null
@@ -61,8 +60,8 @@ class Modal {
     /**
      * Store index in innerFocusableItems array
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._innerFocusableIndex = 0
@@ -70,8 +69,8 @@ class Modal {
     /**
      * Store index in outerFocusableItems array
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._outerFocusableIndex = 0
@@ -79,8 +78,8 @@ class Modal {
     /**
      * Check if focusable indexes are numbers
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._focusableIndexesValid = false

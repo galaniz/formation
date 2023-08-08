@@ -136,7 +136,7 @@ class Nav {
      * Store groups currently overflown
      *
      * @private
-     * @type {array<object>}
+     * @type {object[]}
      */
 
     this._currentOverflowGroups = []

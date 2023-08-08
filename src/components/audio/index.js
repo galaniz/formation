@@ -21,31 +21,28 @@ class Audio {
   /**
    * Set public properties and initialize
    *
-   * @param {object} args {
-   *  @prop {HTMLElement} container
-   *  @prop {HTMLElement} audio
-   *  @prop {HTMLElement} source
-   *  @prop {HTMLElement} loader
-   *  @prop {HTMLElement} error
-   *  @prop {HTMLElement} play
-   *  @prop {HTMLElement} prev
-   *  @prop {HTMLElement} next
-   *  @prop {HTMLElement} time
-   *  @prop {HTMLElement} duration
-   *  @prop {HTMLElement} close
-   *  @prop {array<object>} tracks
-   *  @prop {array<object>} update
-   *  @prop {number} currentIndex
-   *  @prop {object} progress {
-   *   @prop {HTMLElement} slider
-   *   @prop {HTMLElement} bar
-   *   @prop {HTMLElement} scrub
-   *  }
-   *  @prop {object} delay {
-   *   @prop {number} open
-   *   @prop {number} close
-   *  }
-   * }
+   * @param {object} args
+   * @param {HTMLElement} args.container
+   * @param {HTMLElement} args.audio
+   * @param {HTMLElement} args.source
+   * @param {HTMLElement} args.loader
+   * @param {HTMLElement} args.error
+   * @param {HTMLElement} args.play
+   * @param {HTMLElement} args.prev
+   * @param {HTMLElement} args.next
+   * @param {HTMLElement} args.time
+   * @param {HTMLElement} args.duration
+   * @param {HTMLElement} args.close
+   * @param {object[]} args.tracks
+   * @param {object[]} args.update
+   * @param {number} args.currentIndex
+   * @param {object} args.progress
+   * @param {HTMLElement} args.progress.slider
+   * @param {HTMLElement} args.progress.bar
+   * @param {HTMLElement} args.progress.scrub
+   * @param {object} args.delay
+   * @param {number} args.delay.open
+   * @param {number} args.delay.close
    * @return {void|boolean} - False if init errors
    */
 
@@ -96,8 +93,8 @@ class Audio {
     /**
      * Store open state
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._playerOpen = false
@@ -105,8 +102,8 @@ class Audio {
     /**
      * Keep track of play state
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._state = 0
@@ -114,8 +111,8 @@ class Audio {
     /**
      * Keep track of loaded state
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._trackLoaded = false
@@ -123,8 +120,8 @@ class Audio {
     /**
      * Last track index
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._lastIndex = 0
@@ -132,13 +129,13 @@ class Audio {
     /**
      * Progress slider properties
      *
+     * @private
      * @type {object}
      * @prop {number} width
      * @prop {number} offsetX
      * @prop {boolean} pointerDown
      * @prop {number} currentX - Float
      * @prop {number} time
-     * @private
      */
 
     this._progress = {
@@ -152,8 +149,8 @@ class Audio {
     /**
      * Store duration in words
      *
-     * @type {string}
      * @private
+     * @type {string}
      */
 
     this._durationText = ''
@@ -161,8 +158,8 @@ class Audio {
     /**
      * Store duration in seconds
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._duration = 0
@@ -170,8 +167,8 @@ class Audio {
     /**
      * Avoid setting time & progress bar on keydown
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._keyTime = false
@@ -179,8 +176,8 @@ class Audio {
     /**
      * Store timeout id in resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._resizeTimer = -1
@@ -188,8 +185,8 @@ class Audio {
     /**
      * Store viewport width for resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportWidth = window.innerWidth
@@ -197,8 +194,8 @@ class Audio {
     /**
      * Store index in innerFocusableItems array
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._innerFocusableIndex = 0
@@ -206,8 +203,8 @@ class Audio {
     /**
      * Store index in outerFocusableItems array
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._outerFocusableIndex = 0
@@ -215,8 +212,8 @@ class Audio {
     /**
      * Check if focusable indexes are numbers
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._focusableIndexesValid = false

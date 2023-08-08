@@ -8,8 +8,8 @@
  * @param {HTMLElement} item
  * @param {string} type - all || prev || next
  * @param {function} filter
- * @param {array<HTMLElement>} _store
- * @return {array<HTMLElement>}
+ * @param {HTMLElement[]} _store
+ * @return {HTMLElement[]}
  */
 
 const getOuterElements = (item = null, type = 'all', filter, _store = []) => {

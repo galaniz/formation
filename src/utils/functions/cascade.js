@@ -5,11 +5,10 @@
 /**
  * Function - sequentially and recursively call and delay functions
  *
- * @param {array<object>} events {
- *  @prop {function} action - with optional callback
- *  @prop {number} delay
- *  @prop {number} increment
- * }
+ * @param {object[]} events
+ * @param {function} events[].action - with optional callback
+ * @param {number} event[].delay
+ * @param {number} events[].increment
  * @param {number} repeat
  * @return {void}
  */

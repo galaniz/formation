@@ -14,32 +14,29 @@ class Visible {
   /**
    * Set public properties and initialize
    *
-   * @param {object} args {
-   *  @prop {HTMLElement} item
-   *  @prop {HTMLElement} visibleItem
-   *  @prop {number} visibleOffset
-   *  @prop {number} visibleOffsetPercentage
-   *  @prop {boolean} visAll
-   *  @prop {boolean} allowUnset
-   *  @prop {number} delay
-   *  @prop {string} wait
-   *  @prop {boolean} sticky
-   *  @prop {number} stickyOffset
-   *  @prop {number} stickyDelay
-   *  @prop {function} onVisible
-   *  @prop {function} endVisible
-   *  @prop {function} onInit
-   *  @prop {object} parallax {
-   *   @prop {float} rate
-   *   @prop {number} x
-   *   @prop {number} y
-   *   @prop {number} z
-   *  }
-   *  @prop {object} breakpoints {
-   *   @prop {number} min
-   *   @prop {number} max
-   *  }
-   * }
+   * @param {object} args
+   * @param {HTMLElement} args.item
+   * @param {HTMLElement} args.visibleItem
+   * @param {number} args.visibleOffset
+   * @param {number} args.visibleOffsetPercentage
+   * @param {boolean} args.visAll
+   * @param {boolean} args.allowUnset
+   * @param {number} args.delay
+   * @param {string} args.wait
+   * @param {boolean} args.sticky
+   * @param {number} args.stickyOffset
+   * @param {number} args.stickyDelay
+   * @param {function} args.onVisible
+   * @param {function} args.endVisible
+   * @param {function} args.onInit
+   * @param {object} args.parallax
+   * @param {float} args.parallax.rate
+   * @param {number} args.parallax.x
+   * @param {number} args.parallax.y
+   * @param {number} args.parallax.z
+   * @param {object} args.breakpoints
+   * @param {number} args.breakpoints.min
+   * @param {number} args.breakpoints.max
    * @return {void|boolean} - False if init errors
    */
 
@@ -91,8 +88,8 @@ class Visible {
     /**
      * Check if already initialized
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._initDone = false
@@ -100,8 +97,8 @@ class Visible {
     /**
      * Check if requestanimationframe supported
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._requestAnimationSupported = Object.getOwnPropertyDescriptor(window, 'requestAnimationFrame')
@@ -109,8 +106,8 @@ class Visible {
     /**
      * Check if scrolling up or down
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._scrollDown = true
@@ -118,8 +115,8 @@ class Visible {
     /**
      * Store visible state
      *
-     * @type {boolean}
      * @private
+     * @type {boolean}
      */
 
     this._isVisible = false
@@ -127,8 +124,8 @@ class Visible {
     /**
      * Store window scroll y position - visible check, item position and parallax
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._scrollY = 0
@@ -136,8 +133,8 @@ class Visible {
     /**
      * Store last window scroll y position to check if scrolling up or down
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._lastScrollY = 0
@@ -145,8 +142,8 @@ class Visible {
     /**
      * Store timeout id in resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._resizeTimer = -1
@@ -154,8 +151,8 @@ class Visible {
     /**
      * Store viewport width for resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportWidth = window.innerWidth
@@ -163,8 +160,8 @@ class Visible {
     /**
      * Store viewport height - visible check and parallax
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportHeight = window.innerHeight
@@ -172,11 +169,11 @@ class Visible {
     /**
      * Store offset and dimension info for item
      *
+     * @private
      * @type {object}
      * @prop {number} top
      * @prop {number} bottom
      * @prop {number} height
-     * @private
      */
 
     this._rect = {
@@ -188,8 +185,8 @@ class Visible {
     /**
      * If sticky store height of item
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._stickyItemHeight = 0

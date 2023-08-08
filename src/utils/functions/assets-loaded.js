@@ -55,7 +55,7 @@ const assetLoaded = (asset) => {
 /**
  * Function - check if multiple assets are loaded
  *
- * @param {array<HTMLElement>} assets
+ * @param {HTMLElement[]} assets
  * @param {function} done - callback when finished on error or success
  * @return {void}
  */

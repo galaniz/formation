@@ -17,12 +17,12 @@ class Video {
    * @param {object} args
    * @param {HTMLElement} args.container
    * @param {HTMLElement} args.video
-   * @param {HTMLElement|array<HTMLElement>} args.source
+   * @param {HTMLElement|HTMLElement[]} args.source
    * @param {HTMLElement} args.play
    * @param {HTMLElement} args.pause
    * @param {HTMLElement} args.loader
    * @param {HTMLElement} args.error
-   * @param {string|array<string>} args.url
+   * @param {string|string[]} args.url
    * @return {void|boolean} - False if init errors
    */
 

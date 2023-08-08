@@ -10,15 +10,13 @@ class Masonry {
   /**
    * Set public properties and initialize
    *
-   * @param {object} args {
-   *  @prop {HTMLElement} container
-   *  @prop {NodeList} items
-   *  @prop {array<object>} breakpoints
-   *  @prop {object} column {
-   *   @prop {string} tag
-   *   @prop {string} class
-   *  }
-   * }
+   * @param {object} args
+   * @param {HTMLElement} args.container
+   * @param {NodeList} args.items
+   * @param {object[]} args.breakpoints
+   * @param {object} args.column
+   * @param {string} args.column.tag
+   * @param {string} args.column.class
    * @return {void|boolean} - false if init errors
    */
 
@@ -41,8 +39,8 @@ class Masonry {
     /**
      * Store break point ranges
      *
-     * @type {array<object>}
      * @private
+     * @type {object[]}
      */
 
     this._bkRanges = []
@@ -50,8 +48,8 @@ class Masonry {
     /**
      * Store timeout id in resize event
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._resizeTimer = -1
@@ -59,8 +57,8 @@ class Masonry {
     /**
      * Store viewport width for resize event and check if within breakpoints
      *
-     * @type {number}
      * @private
+     * @type {number}
      */
 
     this._viewportWidth = window.innerWidth

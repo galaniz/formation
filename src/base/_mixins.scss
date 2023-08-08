@@ -31,6 +31,14 @@
       @each $f, $v in con.$font-weights {
         --font-weight-#{$f}: #{$v};
       }
+    } @else if $r == "letter-spacing" {
+      @each $l, $v in con.$letter-spacing {
+        --letter-spacing-#{$l}: #{$v};
+      }
+    } @else if $r == "line-heights" {
+      @each $l, $v in con.$line-heights {
+        --line-height-#{$l}: #{$v};
+      }
     } @else if $r == "spacing" {
       @each $s, $v in con.$spacing {
         --#{$s}: #{func.calc-rem($v)};

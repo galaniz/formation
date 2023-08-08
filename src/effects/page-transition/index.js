@@ -67,13 +67,12 @@ const _clickHandler = (e) => {
 /**
  * Function - page transition on link click
  *
- * @param {object} args {
- *  @prop {array<HTMLElement>} links
- *  @prop {HTMLElement} transitionElement
- *  @prop {number} delay
- *  @prop {boolean|function} init
- *  @prop {boolean|function} beforeShow
- * }
+ * @param {object} args
+ * @param {HTMLElement[]} args.links
+ * @param {HTMLElement} args.transitionElement
+ * @param {number} args.delay
+ * @param {boolean|function} args.init
+ * @param {boolean|function} args.beforeShow
  * @return {void}
  */
 

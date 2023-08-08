@@ -1,26 +1,25 @@
 /**
  * Objects - send and validate form
  *
- * @param {object} args {
- *  @param {string} id
- *  @param {HTMLElement} form
- *  @param {string} groupClass
- *  @param {string} fieldClass
- *  @param {string} labelClass
- *  @param {HTMLElement} submit
- *  @param {NodeList} inputs
- *  @param {boolean} filterInputs
- *  @param {object} data
- *  @param {array<HTMLElement>} loaders
- *  @param {string} url
- *  @param {string} encode
- *  @param {function} onSuccess
- *  @param {function} onError
- *  @param {string} errorTemplate
- *  @param {object} result
- *  @param {boolean} clearOnSuccess
- *  @param {boolean} jsonResponse
- * }
+ * @param {object} args
+ * @param {string} args.id
+ * @param {HTMLElement} args.form
+ * @param {string} args.groupClass
+ * @param {string} args.fieldClass
+ * @param {string} args.labelClass
+ * @param {HTMLElement} args.submit
+ * @param {NodeList} args.inputs
+ * @param {boolean} args.filterInputs
+ * @param {object} args.data
+ * @param {HTMLElement[]} args.loaders
+ * @param {string} args.url
+ * @param {string} args.encode
+ * @param {function} args.onSuccess
+ * @param {function} args.onError
+ * @param {string} args.errorTemplate
+ * @param {object} args.result
+ * @param {boolean} args.clearOnSuccess
+ * @param {boolean} args.jsonResponse
  */
 
 /* Imports */

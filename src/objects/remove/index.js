@@ -1,16 +1,14 @@
 /**
  * Objects - remove elements (if cookie or other condition + trigger click)
  *
- * @param {object} args {
- *  @param {HTMLElement} item
- *  @param {HTMLElement} trigger
- *  @param {function} condition
- *  @param {object} cookie {
- *   @param {string} name
- *   @param {string} value
- *   @param {string} expirationDays
- *  }
- * }
+ * @param {object} args
+ * @param {HTMLElement} args.item
+ * @param {HTMLElement} args.trigger
+ * @param {function} args.condition
+ * @param {object} args.cookie
+ * @param {string} args.cookie.name
+ * @param {string} args.cookie.value
+ * @param {string} args.cookie.expirationDays
  */
 
 /* Imports */
