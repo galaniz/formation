@@ -19,9 +19,9 @@
 
 @each $g in con.$gaps {
   .l-gap-margin-#{$g} {
-    @extend %l-gap-margin;
-
     --gap-margin: var(--#{$g});
+
+    @extend %l-gap-margin;
   }
 }
 

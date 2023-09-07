@@ -2,6 +2,10 @@
  * Utils - set settings
  */
 
+/* Imports */
+
+import { getDefaultFontSize } from './get-default-font-size'
+
 /**
  * Store settings attributes
  *
@@ -11,7 +15,10 @@
 const settings = {
   inert: false,
   reduceMotion: false,
-  intersectionObserver: false
+  defaultFontSize: 16,
+  fontSizeMultiplier: 1,
+  intersectionObserver: false,
+  flexGap: false
 }
 
 /**
@@ -43,6 +50,18 @@ const setSettings = () => {
 
   const body = document.body
 
+  /* Javascript enabled */
+
+  body.classList.remove('no-js')
+  body.classList.add('js')
+
+  /* Default font size */
+
+  const defaultFontSize = getDefaultFontSize()
+
+  settings.defaultFontSize = defaultFontSize
+  settings.fontSizeMultiplier = defaultFontSize / 16
+
   /* Intersection observer */
 
   if ('IntersectionObserver' in window &&
@@ -56,10 +75,26 @@ const setSettings = () => {
     body.classList.add('io')
   }
 
-  /* Javascript enabled */
+  /* Flexbox gap - source: https://ishadeed.com/article/flexbox-gap/ */
 
-  body.classList.remove('no-js')
-  body.classList.add('js')
+  const flex = document.createElement('div')
+
+  flex.style.display = 'flex'
+  flex.style.flexDirection = 'column'
+  flex.style.rowGap = '1px'
+
+  flex.appendChild(document.createElement('div'))
+  flex.appendChild(document.createElement('div'))
+
+  body.appendChild(flex)
+
+  if (flex.scrollHeight === 1) {
+    settings.flexGap = true
+  } else {
+    body.classList.add('no-flex-gap')
+  }
+
+  flex.parentNode.removeChild(flex)
 }
 
 /* Export */
