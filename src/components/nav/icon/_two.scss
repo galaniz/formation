@@ -8,28 +8,27 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="2"] {
+[data-nav-icon="2"] {
   --duration: 175ms;
+  --y: 0;
+  ---y: 0;
   --opacity: 1;
 
-  .c-nav-icon__top,
+  .c-nav-icon__top {
+    transform: translateY(var(--y));
+  }
+
   .c-nav-icon__bottom {
-    transform: translateY(0);
+    transform: translateY(var(---y));
   }
 
   .c-nav-icon__middle {
     opacity: var(--opacity);
   }
 
-  .c-nav__button[data-show] & {
+  [data-nav-show] & {
+    --y: #{icon.$y};
+    ---y: #{icon.$y * -1};
     --opacity: 0;
-
-    .c-nav-icon__top {
-      transform: translateY(icon.$y);
-    }
-
-    .c-nav-icon__bottom {
-      transform: translateY(#{icon.$y * -1});
-    }
   }
 }

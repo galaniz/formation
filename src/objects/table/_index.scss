@@ -3,8 +3,8 @@
  */
 
 .o-table {
-  &[data-collapse="false"] [data-mobile],
-  &[data-collapse="true"] [data-desktop] {
+  &[data-table-overflow="false"] [data-mobile],
+  &[data-table-overflow="true"] [data-desktop] {
     display: none;
   }
 }

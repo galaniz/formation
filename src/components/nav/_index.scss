@@ -3,17 +3,18 @@
  */
 
 .c-nav__hide {
-  [data-overflow="false"] & {
+  [data-nav-overflow="false"] & {
     display: none;
   }
 }
 
+.c-nav__overflow,
 .c-nav__overlay {
   --visibility: hidden;
 
   visibility: var(--visibility);
 
-  .c-nav[data-open="true"] & {
+  [data-nav-open="true"] & {
     --visibility: visible;
   }
 }

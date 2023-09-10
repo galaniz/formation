@@ -244,10 +244,18 @@ $collapsible-delay-expanded: 10ms, 0ms;
 
 /* Loader transition */
 
-$loader-prop: opacity, z-index;
-$loader-duration: #{$default-duration}, 0ms;
-$loader-delay: 10ms, 0ms;
-$loader-delay-hide: 0ms, #{$default-duration};
+$loader-prop: visibility, opacity;
+$loader-duration: 0ms, #{$default-duration};
+$loader-delay: #{$default-duration}, 0ms;
+$loader-delay-show: 0ms, 10ms;
+
+/* Page transition */
+
+$page-transition-prop: visibility, opacity;
+$page-transition-duration: 0ms, #{$default-duration};
+$page-transition-easing: #{$default-easing};
+$page-transition-delay: #{$default-duration}, 10ms;
+$page-transition-delay-show: 10ms, 0ms;
 
 /* Modal transition */
 
@@ -269,10 +277,7 @@ $z-index: m.map-recursive-merge(
     "page-transition": 100,
     "modal": 90,
     "nav": 85,
-    "loader": (
-      "default": 80,
-      "page": 110
-    )
+    "loader": 80,
   ),
   $z-index
 );

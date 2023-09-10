@@ -13,9 +13,9 @@ const stopScroll = (on = true) => {
   const html = document.documentElement
 
   if (on) {
-    html.setAttribute('data-no-scroll', '')
+    html.setAttribute('data-stop-scroll', '')
   } else {
-    html.removeAttribute('data-no-scroll', '')
+    html.removeAttribute('data-stop-scroll')
   }
 }
 

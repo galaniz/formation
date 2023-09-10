@@ -8,32 +8,33 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="3"] {
+[data-nav-icon="3"] {
   --duration: 225ms;
+  --rotate: 0deg;
+  --rotate-in: 0deg;
+  --y: 0;
+  ---y: 0;
   --opacity: 1;
 
-  transform: rotate(0deg);
+  transform: rotate(var(--rotate));
 
-  .c-nav-icon__top,
+  .c-nav-icon__top {
+    transform: translateY(var(--y)) rotate(var(--rotate-in));
+  }
+
   .c-nav-icon__bottom {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(var(---y)) rotate(var(--rotate-in));
   }
 
   .c-nav-icon__middle {
     opacity: var(--opacity);
   }
 
-  .c-nav__button[data-show] & {
+  [data-nav-show] & {
+    --rotate: 45deg;
+    --rotate-in: 90deg;
+    --y: #{icon.$y};
+    ---y: #{icon.$y * -1};
     --opacity: 0;
-
-    transform: rotate(45deg);
-
-    .c-nav-icon__top {
-      transform: translateY(icon.$y);
-    }
-
-    .c-nav-icon__bottom {
-      transform: translateY(#{icon.$y * -1}) rotate(90deg);
-    }
   }
 }

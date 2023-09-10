@@ -6,33 +6,39 @@
 
 @use "index" as icon;
 
+/* Variables */
+
+$y: icon.$y + 0.0313rem; // 0.0313 to make corner sharp
+
 /* Styles */
 
-.c-nav-icon[data-num="9"] {
-  $y: icon.$y + 0.0313rem; // 0.0313 to make corner sharp
+[data-nav-icon="9"] {
+  --y: 0;
+  ---y: 0;
+  --rotate: 0deg;
+  ---rotate: 0deg;
+  --scale: 1;
 
   .c-nav-icon__top,
   .c-nav-icon__bottom {
     --duration: 200ms;
-
-    transform: translate(0, 0) rotate(0deg) scaleX(1);
   }
 
   .c-nav-icon__top {
+    transform: translateY(var(--y)) rotate(var(--rotate)) scaleX(var(--scale));
     transform-origin: 100% 100%;
   }
 
   .c-nav-icon__bottom {
+    transform: translateY(var(---y)) rotate(var(---rotate)) scaleX(var(--scale));
     transform-origin: 100% 0;
   }
 
-  .c-nav__button[data-show] & {
-    .c-nav-icon__top {
-      transform: translate(0, $y) rotate(45deg) scaleX(0.6);
-    }
-
-    .c-nav-icon__bottom {
-      transform: translate(0, #{$y * -1}) rotate(-45deg) scaleX(0.6);
-    }
+  [data-nav-show] & {
+    --y: #{$y};
+    ---y: #{$y * -1};
+    --rotate: 45deg;
+    ---rotate: -45deg;
+    --scale: 0.6;
   }
 }

@@ -47,7 +47,7 @@
   $selector: ".l-margin-bottom-#{$m}";
 
   @if list.index(con.$margin-bottom-all, $m) {
-    $selector: "#{$selector}, #{$selector}-all > *:not(:last-child)";
+    $selector: "#{$selector}, #{$selector}-all > :not(:last-child)";
   }
 
   #{string.unquote($selector)} {
@@ -67,7 +67,7 @@
       $selector: ".l-margin-bottom-#{$m}";
 
       @if list.index(con.$margin-bottom-all, $m) {
-        $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > *:not(:last-child)";
+        $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > :not(:last-child)";
       }
 
       #{string.unquote($selector)} {
@@ -107,6 +107,6 @@
 
 /* Defaults */
 
-.l-margin-0-last > *:last-child {
+.l-margin-last-0 > :last-child {
   margin: 0;
 }

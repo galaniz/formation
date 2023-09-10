@@ -57,7 +57,7 @@ const _clickHandler = (e) => {
 
   _b()
 
-  _t.setAttribute('data-show', 'true')
+  _t.setAttribute('data-page-transition-show', '')
 
   setTimeout(() => {
     window.location = url

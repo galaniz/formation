@@ -1,5 +1,5 @@
 /**
- * Objects - table collapse dynamically
+ * Objects - table
  *
  * @param {object} args
  * @param {HTMLElement} args.table
@@ -64,17 +64,17 @@ class Table {
   }
 
   _go () {
-    this.table.setAttribute('data-collapse', false)
+    this.table.setAttribute('data-table-overflow', false)
     this.table.style.maxWidth = 'none'
 
     const targetWidth = this.equalWidthTo.clientWidth
     const currentWidth = this.table.clientWidth
-    const collapse = currentWidth > targetWidth
+    const overflow = currentWidth > targetWidth
 
     this.table.style.maxWidth = ''
     this.table.style.setProperty('--target-width', `${targetWidth}px`)
     this.table.style.setProperty('--current-width', `${currentWidth}px`)
-    this.table.setAttribute('data-collapse', collapse)
+    this.table.setAttribute('data-table-overflow', overflow)
   }
 
   /**

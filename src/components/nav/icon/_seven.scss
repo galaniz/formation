@@ -8,9 +8,32 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="7"] {
+@keyframes e-nav-icon-fluctuate {
+  0% {
+    transform: scale(var(--scale-0));
+  }
+
+  50% {
+    transform: scale(var(--scale-50));
+  }
+
+  100% {
+    transform: scale(var(--scale-100));
+  }
+}
+
+[data-nav-icon="7"] {
   --duration: 200ms;
+  --scale-0: 1;
+  --scale-50: 0.2;
+  --scale-100: 1;
   --opacity: 1;
+  --rotate: 0deg;
+  ---rotate: 0deg;
+  --y: 0;
+  ---y: 0;
+
+  animation: e-nav-icon-fluctuate 300ms;
 
   .c-nav-icon__top,
   .c-nav-icon__bottom,
@@ -24,53 +47,25 @@
     transform: translateY(0) rotate(0deg);
   }
 
+  .c-nav-icon__top {
+    transform: translateY(var(--y)) rotate(var(--rotate));
+  }
+
+  .c-nav-icon__bottom {
+    transform: translateY(var(---y)) rotate(var(---rotate));
+  }
+
   .c-nav-icon__middle {
     opacity: var(--opacity);
   }
 
-  .c-nav__button:not([data-show]) & {
-    animation: e-nav-icon-grow-shrink-copy 300ms;
-  }
-
-  .c-nav__button[data-show] & {
+  [data-nav-show] & {
     --opacity: 0;
+    --rotate: 45deg;
+    ---rotate: -45deg;
+    --y: #{icon.$y};
+    ---y: #{icon.$y * -1};
 
-    .c-nav-icon__top {
-      transform: translateY(icon.$y) rotate(45deg);
-    }
-
-    .c-nav-icon__bottom {
-      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
-    }
-
-    animation: e-nav-icon-grow-shrink 300ms;
-  }
-
-  @keyframes e-nav-icon-grow-shrink-copy {
-    0% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(0.2);
-    }
-
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes e-nav-icon-grow-shrink {
-    0% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(0.2);
-    }
-
-    100% {
-      transform: scale(1);
-    }
+    animation: e-nav-icon-fluctuate 300ms;
   }
 }

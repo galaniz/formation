@@ -136,9 +136,9 @@ class Collapsible {
     }
 
     if (this._set) {
-      this.container.setAttribute('data-set', '')
+      this.container.setAttribute('data-collapsible-set', '')
     } else {
-      this.container.removeAttribute('data-set')
+      this.container.removeAttribute('data-collapsible-set')
     }
   }
 
@@ -172,20 +172,20 @@ class Collapsible {
 
     if (open) {
       if (this.container) {
-        this.container.setAttribute('data-expanded', 'true')
+        this.container.setAttribute('data-collapsible-expanded', 'true')
       }
 
       this.collapsible.style.height = this._collapsibleHeight + 'px'
     } else {
       if (this.container) {
-        this.container.setAttribute('data-expanded', 'false')
+        this.container.setAttribute('data-collapsible-expanded', 'false')
       }
 
       this.collapsible.style.height = ''
     }
 
     if (this.container) {
-      this.container.setAttribute('data-source', source)
+      this.container.setAttribute('data-collapsible-source', source)
     }
   }
 

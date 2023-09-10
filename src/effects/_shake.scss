@@ -8,10 +8,6 @@
 
 /* Styles */
 
-.e-shake {
-  animation: e-shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
 @keyframes e-shake {
   10%,
   90% {
@@ -33,4 +29,8 @@
   60% {
     transform: translateX(#{func.calc-rem(4px)});
   }
+}
+
+.e-shake {
+  animation: e-shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

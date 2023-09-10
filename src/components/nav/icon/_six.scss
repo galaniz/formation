@@ -10,28 +10,44 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="6"] {
+.c-nav-icon__right {
+  height: func.calc-rem(map.get(con.$nav, "icon", "line-width"));
+}
+
+.c-nav-icon__left {
+  width: func.calc-rem(map.get(con.$nav, "icon", "line-width"));
+}
+
+[data-nav-icon="6"] {
   --duration: 200ms;
+  --delay-top: 500ms;
+  --delay-middle: 625ms;
+  --delay-bottom: 750ms;
+  --delay-left: 0ms;
+  --delay-right: 250ms;
+  --scale-lines: 1;
+  --scale-cross: 0;
+  --t-cross: -50%;
 
   /* Lines */
 
   .c-nav-icon__top,
   .c-nav-icon__middle,
   .c-nav-icon__bottom {
-    transform: scaleX(1);
+    transform: scaleX(var(--scale-lines));
     transform-origin: 0 50%;
   }
 
   .c-nav-icon__top {
-    --delay: 500ms;
+    --delay: var(--delay-top);
   }
 
   .c-nav-icon__middle {
-    --delay: 625ms;
+    --delay: var(--delay-middle);
   }
 
   .c-nav-icon__bottom {
-    --delay: 750ms;
+    --delay: var(--delay-bottom);
   }
 
   /* Cross */
@@ -50,48 +66,28 @@
   }
 
   .c-nav-icon__left {
-    --delay: 0ms;
+    --delay: var(--delay-left);
 
-    transform: scaleY(0) translateX(-50%);
+    transform: scaleY(var(--scale-cross)) translateX(var(--t-cross));
     left: 50%;
   }
 
   .c-nav-icon__right {
-    --delay: 250ms;
+    --delay: var(--delay-right);
 
-    transform: scaleX(0) translateY(-50%);
+    transform: scaleX(var(--scale-cross)) translateY(var(--t-cross));
     top: 50%;
   }
 
-  .c-nav__button[data-show] & {
-    .c-nav-icon__top,
-    .c-nav-icon__middle,
-    .c-nav-icon__bottom {
-      transform: scaleX(0);
-    }
+  /* Transform */
 
-    .c-nav-icon__top {
-      --delay: 0ms;
-    }
-
-    .c-nav-icon__middle {
-      --delay: 125ms;
-    }
-
-    .c-nav-icon__bottom {
-      --delay: 250ms;
-    }
-
-    .c-nav-icon__left {
-      --delay: 625ms;
-
-      transform: scaleY(1) translateX(-50%);
-    }
-
-    .c-nav-icon__right {
-      --delay: 375ms;
-
-      transform: scaleX(1) translateY(-50%);
-    }
+  [data-nav-show] & {
+    --delay-top: 0ms;
+    --delay-middle: 125ms;
+    --delay-bottom: 250ms;
+    --delay-left: 625ms;
+    --delay-right: 375ms;
+    --scale-lines: 0;
+    --scale-cross: 1;
   }
 }

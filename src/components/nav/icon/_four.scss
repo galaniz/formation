@@ -8,10 +8,15 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="4"] {
+[data-nav-icon="4"] {
+  --rotate: 0deg;
+  --rotate-in: 0deg;
+  ---rotate-in: 0deg;
+  --y: 0;
+  ---y: 0;
   --opacity: 1;
 
-  transform: rotateY(0deg);
+  transform: rotateY(var(--rotate));
 
   .c-nav-icon__top,
   .c-nav-icon__middle,
@@ -20,26 +25,24 @@
     --delay: 100ms;
   }
 
-  .c-nav-icon__top,
+  .c-nav-icon__top {
+    transform: translateY(var(--y)) rotate(var(--rotate-in));
+  }
+
   .c-nav-icon__bottom {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(var(---y)) rotate(var(---rotate-in));
   }
 
   .c-nav-icon__middle {
     opacity: var(--opacity);
   }
 
-  .c-nav__button[data-show] & {
+  [data-nav-show] & {
+    --rotate: 180deg;
+    --rotate-in: 45deg;
+    ---rotate-in: -45deg;
+    --y: #{icon.$y};
+    ---y: #{icon.$y * -1};
     --opacity: 0;
-
-    transform: rotateY(180deg);
-
-    .c-nav-icon__top {
-      transform: translateY(icon.$y) rotate(45deg);
-    }
-
-    .c-nav-icon__bottom {
-      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
-    }
   }
 }

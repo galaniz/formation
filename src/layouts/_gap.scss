@@ -12,6 +12,8 @@
 @each $g in con.$gaps {
   .l-gap-#{$g} {
     --gap: var(--#{$g});
+
+    gap: var(--gap);
   }
 }
 

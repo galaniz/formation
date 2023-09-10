@@ -12,7 +12,11 @@
     outline: none;
   }
 
-  :focus-visible {
+  :focus-visible,
+  button:focus-visible,
+  [type="button"]:focus-visible,
+  [type="reset"]:focus-visible,
+  [type="submit"]:focus-visible {
     outline: var(--outline-width) solid var(--outline-color);
   }
 }

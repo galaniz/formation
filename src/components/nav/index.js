@@ -30,7 +30,6 @@ class Nav {
    * @param {string} args.itemSelector
    * @param {HTMLElement} args.button
    * @param {HTMLElement} args.overlay
-   * @param {HTMLElement} args.transition
    * @param {function} args.onSet
    * @param {function} args.onReset
    * @param {function} args.afterReset
@@ -55,7 +54,6 @@ class Nav {
       open = null,
       close = null,
       overlay = null,
-      transition = null,
       onSet = () => {},
       onReset = () => {},
       afterReset = () => {},
@@ -78,7 +76,6 @@ class Nav {
     this.open = open
     this.close = close
     this.overlay = overlay
-    this.transition = transition
     this.onSet = onSet
     this.onReset = onReset
     this.afterReset = afterReset
@@ -237,20 +234,19 @@ class Nav {
     document.addEventListener('keydown', this._keyDownHandler)
     window.addEventListener('resize', this._resizeHandler)
 
-    /* Set up overflow groups */
+    /* Set up overflow groups by index */
 
-    this.items.forEach((item, index) => {
-      let overflowGroupIndex = parseInt(item.getAttribute('data-overflow-group'))
-      let listIndex = 0
-
-      if (!item.hasAttribute('data-list-index')) {
-        item.setAttribute('data-list-index', listIndex)
-      } else {
-        listIndex = parseInt(item.getAttribute('data-list-index'))
-      }
+    this.items.forEach((item) => {
+      let overflowGroupIndex = parseInt(item.getAttribute('data-group-index'))
+      let listIndex = parseInt(item.getAttribute('data-list-index'))
 
       if (isNaN(overflowGroupIndex)) {
-        overflowGroupIndex = index
+        overflowGroupIndex = 0
+      }
+
+      if (isNaN(listIndex)) {
+        listIndex = 0
+        item.setAttribute('data-list-index', listIndex)
       }
 
       if (!Object.getOwnPropertyDescriptor(this._overflowGroups, overflowGroupIndex)) {
@@ -295,8 +291,8 @@ class Nav {
   _resetNav () {
     this.onReset()
 
-    this.nav.setAttribute('data-overflow', 'false')
-    this.nav.setAttribute('data-overflow-all', 'false')
+    this.nav.setAttribute('data-nav-overflow', 'false')
+    this.nav.setAttribute('data-nav-overflow-all', 'false')
 
     if (this._currentOverflowGroups.length > 0) {
       let appendFrag = true
@@ -310,7 +306,7 @@ class Nav {
         })
       })
 
-      this.items.forEach((item, i) => {
+      this.items.forEach((item) => {
         const listIndex = parseInt(item.getAttribute('data-list-index'))
 
         /* Insert at specific index */
@@ -398,13 +394,13 @@ class Nav {
     })
 
     if (this._currentOverflowGroups.length > 0) {
-      if (this.nav.getAttribute('data-overflow') === 'false') {
-        this.nav.setAttribute('data-overflow', 'true')
+      if (this.nav.getAttribute('data-nav-overflow') === 'false') {
+        this.nav.setAttribute('data-nav-overflow', 'true')
       }
 
       if (this._currentOverflowGroups.length === this._overflowGroupsLength) {
-        if (this.nav.getAttribute('data-overflow-all') === 'false') {
-          this.nav.setAttribute('data-overflow-all', 'true')
+        if (this.nav.getAttribute('data-nav-overflow-all') === 'false') {
+          this.nav.setAttribute('data-nav-overflow-all', 'true')
         }
       }
     } else {
@@ -473,21 +469,15 @@ class Nav {
       cascade([
         {
           action: () => {
-            this.open.setAttribute('data-show', '')
-            this.close.setAttribute('data-show', '')
-
             stopScroll(true)
 
-            this.nav.setAttribute('data-open', 'true')
-
-            if (this.transition) {
-              this.transition.setAttribute('data-show', '')
-            }
+            this.nav.setAttribute('data-nav-show', '')
+            this.nav.setAttribute('data-nav-open', 'true')
           }
         },
         {
           action: () => {
-            this.overflow.setAttribute('data-show', '')
+            this.nav.setAttribute('data-nav-show-overflow', '')
           },
           delay: this.delay.open
         },
@@ -499,14 +489,7 @@ class Nav {
               }, this.delay.open)
             }
 
-            this.close.setAttribute('data-visible', 'true')
-
-            this.overflow.setAttribute('data-show-items', '')
-          }
-        },
-        {
-          action: () => {
-            this.open.setAttribute('data-visible', 'false')
+            this.nav.setAttribute('data-nav-show-overflow', 'items')
           }
         }
       ])
@@ -514,28 +497,19 @@ class Nav {
       cascade([
         {
           action: () => {
-            this.open.setAttribute('data-visible', 'true')
-            this.close.setAttribute('data-visible', 'false')
-
-            this.overflow.removeAttribute('data-show-items')
+            this.nav.setAttribute('data-nav-show-overflow', '')
           }
         },
         {
           action: () => {
-            this.open.removeAttribute('data-show')
-            this.close.removeAttribute('data-show')
-
-            this.overflow.removeAttribute('data-show')
-
-            if (this.transition) {
-              this.transition.removeAttribute('data-show')
-            }
+            this.nav.removeAttribute('data-nav-show')
+            this.nav.removeAttribute('data-nav-show-overflow')
           },
           delay: this.delay.close
         },
         {
           action: () => {
-            this.nav.setAttribute('data-open', 'false')
+            this.nav.setAttribute('data-nav-open', 'false')
 
             stopScroll(false)
 

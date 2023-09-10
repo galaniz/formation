@@ -8,25 +8,31 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="1"] {
+[data-nav-icon="1"] {
   --duration: 200ms;
+  --y: 0;
+  ---y: 0;
+  --rotate: 0deg;
+  ---rotate: 0deg;
+  --scale: 1;
 
-  .c-nav-icon__top,
-  .c-nav-icon__bottom {
-    transform: translateY(0) rotate(0deg);
+  .c-nav-icon__top {
+    transform: translateY(var(--y)) rotate(var(--rotate));
   }
 
-  .c-nav__button[data-show] & {
-    .c-nav-icon__top {
-      transform: translateY(icon.$y) rotate(45deg);
-    }
+  .c-nav-icon__middle {
+    transform: scaleX(var(--scale));
+  }
 
-    .c-nav-icon__middle {
-      transform: scaleX(0);
-    }
+  .c-nav-icon__bottom {
+    transform: translateY(var(---y)) rotate(var(---rotate));
+  }
 
-    .c-nav-icon__bottom {
-      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
-    }
+  [data-nav-show] & {
+    --y: #{icon.$y};
+    ---y: #{icon.$y * -1};
+    --rotate: 45deg;
+    ---rotate: -45deg;
+    --scale: 0;
   }
 }

@@ -9,8 +9,12 @@
 /* Styles */
 
 .o-collapsible {
-  &[data-set] {
-    overflow: hidden;
+  --overflow: visible;
+
+  overflow: var(--overflow);
+
+  &[data-collapsible-set] {
+    --overflow: hidden;
   }
 }
 
@@ -25,7 +29,7 @@
   visibility: var(--visibility);
   overflow: inherit;
 
-  .o-collapsible[data-expanded="true"] > & {
+  [data-collapsible-expanded="true"] > & {
     --delay: #{con.$collapsible-delay-expanded};
     --visibility: visible;
   }

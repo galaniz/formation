@@ -18,7 +18,7 @@
   z-index: map.get(con.$z-index, "modal");
   visibility: var(--visibility);
 
-  &[data-open="true"] {
+  &[data-modal-open="true"] {
     --delay: #{con.$modal-delay-open};
     --visibility: visible;
   }
@@ -33,7 +33,7 @@
 
   opacity: var(--opacity);
 
-  .o-modal[data-open="true"] & {
+  [data-modal-open="true"] & {
     --delay: #{con.$modal-overlay-window-delay-open};
     --opacity: 1;
   }

@@ -11,6 +11,7 @@
 @use "base" as b;
 @use "../../../src/base";
 @use "../../../src/base/inputs-reset";
+@use "../../../src/base/table";
 @use "../../../src/base/focus";
 
 /* A11y */
@@ -27,6 +28,7 @@
 @use "../../../src/layouts/flex";
 @use "../../../src/layouts/float";
 @use "../../../src/layouts/gap";
+@use "../../../src/layouts/gap-fallback";
 @use "../../../src/layouts/gap-margin";
 @use "../../../src/layouts/height";
 @use "../../../src/layouts/margin";
@@ -35,7 +37,7 @@
 @use "../../../src/layouts/overflow" as o;
 @use "../../../src/layouts/padding";
 @use "../../../src/layouts/position";
-@use "../../../src/layouts/table";
+@use "../../../src/layouts/table" as t;
 
 /* Text */
 
@@ -43,6 +45,8 @@
 @use "../../../src/text/color";
 @use "../../../src/text/family";
 @use "../../../src/text/weight";
+@use "../../../src/text/letter-spacing";
+@use "../../../src/text/line-height";
 
 /* Backgrounds */
 
@@ -51,6 +55,7 @@
 /* Borders */
 
 @use "../../../src/borders";
+@use "../../../src/borders/radius";
 
 /* Effects */
 
@@ -62,7 +67,6 @@
 
 @use "../../../src/components/skip-link";
 @use "../../../src/components/nav";
-@use "../../../src/components/nav/overflow";
 @use "../../../src/components/nav/icon";
 @use "../../../src/components/nav/icon/one";
 @use "../../../src/components/nav/icon/two";
@@ -80,4 +84,4 @@
 @use "../../../src/objects/load/lazy";
 @use "../../../src/objects/load/loader";
 @use "../../../src/objects/modal";
-@use "../../../src/objects/table" as t;
+@use "../../../src/objects/table" as ta;

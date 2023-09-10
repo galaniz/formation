@@ -8,13 +8,40 @@
 
 /* Styles */
 
-.c-nav-icon[data-num="5"] {
+@keyframes e-nav-icon-collapse {
+  0% {
+    transform: translateY(var(--y-0)) rotate(var(--r-0));
+  }
+
+  1% {
+    transform: translateY(var(--y-1)) rotate(var(--r-0));
+  }
+
+  100% {
+    transform: translateY(var(--y-100)) rotate(var(--r-100));
+  }
+}
+
+[data-nav-icon="5"] {
   .c-nav-icon__top {
-    animation: 300ms ease forwards e-collapse-rotate-top-reverse;
+    --y-0: #{icon.$y};
+    --y-1: #{icon.$y};
+    --y-100: 0;
+    --r-0: 45deg;
+    --r-100: 0deg;
   }
 
   .c-nav-icon__bottom {
-    animation: 300ms ease forwards e-collapse-rotate-bottom-reverse;
+    --y-0: #{icon.$y * -1};
+    --y-1: #{icon.$y * -1};
+    --y-100: 0;
+    --r-0: -45deg;
+    --r-100: 0deg;
+  }
+
+  .c-nav-icon__top,
+  .c-nav-icon__bottom {
+    animation: 300ms ease forwards e-nav-icon-collapse;
   }
 
   .c-nav-icon__middle {
@@ -25,62 +52,31 @@
     opacity: var(--opacity);
   }
 
-  .c-nav__button[data-show] & {
+  [data-nav-show] & {
     .c-nav-icon__middle {
       --delay: 0ms;
       --opacity: 0;
     }
 
     .c-nav-icon__top {
-      animation: 300ms ease forwards e-collapse-rotate-top;
+      --y-0: #{icon.$y};
+      --y-1: #{icon.$y};
+      --y-100: #{icon.$y};
+      --r-0: 0deg;
+      --r-100: 45deg;
     }
 
     .c-nav-icon__bottom {
-      animation: 300ms ease forwards e-collapse-rotate-bottom;
-    }
-  }
-
-  @keyframes e-collapse-rotate-top-reverse {
-    0% {
-      transform: translateY(icon.$y) rotate(45deg);
+      --y-0: 0;
+      --y-1: #{icon.$y * -1};
+      --y-100: #{icon.$y * -1};
+      --r-0: 0deg;
+      --r-100: -45deg;
     }
 
-    100% {
-      transform: translateY(0) rotate(0);
-    }
-  }
-
-  @keyframes e-collapse-rotate-bottom-reverse {
-    0% {
-      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
-    }
-
-    100% {
-      transform: translateY(0) rotate(0);
-    }
-  }
-
-  @keyframes e-collapse-rotate-top {
-    0% {
-      transform: translateY(icon.$y);
-    }
-
-    100% {
-      transform: translateY(icon.$y) rotate(45deg);
-    }
-  }
-
-  @keyframes e-collapse-rotate-bottom {
-    0% {
-      transform: translateY(0) rotate(0);
-    }
-
-    1% {
-      transform: translateY(#{icon.$y * -1});
-    }
-
-    100% {
-      transform: translateY(#{icon.$y * -1}) rotate(-45deg);
+    .c-nav-icon__top,
+    .c-nav-icon__bottom {
+      animation: 300ms ease forwards e-nav-icon-collapse;
     }
   }
 }

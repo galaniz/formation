@@ -15,9 +15,9 @@ const setLoaders = (loaders = [], buttons = [], show = true) => {
   if (loaders.length) {
     loaders.forEach(l => {
       if (show) {
-        l.removeAttribute('data-hide')
+        l.setAttribute('data-loader-show', '')
       } else {
-        l.setAttribute('data-hide', '')
+        l.removeAttribute('data-loader-show')
       }
     })
   }

@@ -43,7 +43,7 @@
   .no-flex-gap .l-gap-fallback.l-container#{$suffix} {
     left: 50%;
     position: relative;
-    transform: translateX(calc(-50% + var(--container-padding)));
+    transform: translateX(calc(-50% + var(--gap) / 2));
     max-width: calc(var(--container#{$suffix}) + var(--gap));
   }
 }

@@ -147,7 +147,7 @@ class Modal {
 
     toggleFocusability(!this._open, getOuterFocusableItems(this.modal))
 
-    this.modal.setAttribute('data-open', open)
+    this.modal.setAttribute('data-modal-open', open)
 
     if (open) {
       if (this._firstFocusableItem) {
