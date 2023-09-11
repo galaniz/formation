@@ -24,9 +24,9 @@ $y: (icon.$y + func.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 t
   --rotate: 0deg;
   --rotate-in: 0deg;
   --x: 0;
-  ---x: 0;
+  --x-r: 0;
   --y: 0;
-  ---y: 0;
+  --y-r: 0;
 
   transform: rotate(var(--rotate));
 
@@ -42,7 +42,7 @@ $y: (icon.$y + func.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 t
   }
 
   .c-nav-icon__bottom {
-    transform: translate(var(---x), var(---y)) rotate(var(--rotate-in));
+    transform: translate(var(--x-r), var(--y-r)) rotate(var(--rotate-in));
     transform-origin: 100% 100%;
     margin-left: 50%;
   }
@@ -51,8 +51,8 @@ $y: (icon.$y + func.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 t
     --rotate: -45deg;
     --rotate-in: -90deg;
     --x: #{$x};
-    ---x: #{$x * -1};
+    --x-r: #{$x * -1};
     --y: #{$y};
-    ---y: #{$y * -1};
+    --y-r: #{$y * -1};
   }
 }

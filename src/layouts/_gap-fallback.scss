@@ -24,7 +24,7 @@
 /* Styles */
 
 %l-gap-fallback {
-  @include set-fallback();
+  @include set-fallback;
 }
 
 @each $g in con.$gaps {

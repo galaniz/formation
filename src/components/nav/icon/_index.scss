@@ -22,11 +22,6 @@ $y: func.calc-rem(map.get(con.$nav, "icon", "margin") + map.get(con.$nav, "icon"
 .c-nav-icon__middle,
 .c-nav-icon__bottom {
   height: func.calc-rem(map.get(con.$nav, "icon", "line-width"));
-}
-
-.c-nav-icon__top,
-.c-nav-icon__middle,
-.c-nav-icon__bottom {
   margin: func.calc-rem(map.get(con.$nav, "icon", "margin")) auto;
 }
 
