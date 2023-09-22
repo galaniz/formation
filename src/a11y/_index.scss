@@ -8,11 +8,11 @@
 
 /* Styles */
 
-.a11y-visually-hidden {
+.a-visually-hidden {
   @extend %u-visually-hidden;
 }
 
-.a11y-hide-input {
+.a-hide-input {
   position: absolute;
   opacity: 0;
   width: 1em;

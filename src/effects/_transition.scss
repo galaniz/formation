@@ -27,7 +27,10 @@ $transition-classes-store: ();
 }
 
 #{$transition-classes} {
-  transition: var(--prop) var(--duration) var(--easing) var(--delay);
+  transition-property: var(--prop);
+  transition-duration: var(--duration);
+  transition-timing-function: var(--easing);
+  transition-delay: var(--delay);
 }
 
 @each $t, $v in con.$transitions {

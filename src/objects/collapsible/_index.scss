@@ -8,28 +8,20 @@
 
 /* Styles */
 
-.o-collapsible {
-  --overflow: visible;
-
-  overflow: var(--overflow);
-
-  &[data-collapsible-set] {
-    --overflow: hidden;
-  }
-}
-
 .o-collapsible__main {
   --prop: #{con.$collapsible-prop};
   --duration: #{con.$collapsible-duration};
   --delay: #{con.$collapsible-delay};
   --visibility: hidden;
-  --height: 0;
+  --overflow: hidden;
+  --h: 0;
 
-  height: var(--height);
+  height: var(--h);
   visibility: var(--visibility);
-  overflow: inherit;
+  overflow: var(--overflow);
 
   [data-collapsible-expanded="true"] > & {
+    --h: var(--height);
     --delay: #{con.$collapsible-delay-expanded};
     --visibility: visible;
   }

@@ -2,9 +2,7 @@
  * Objects - table
  */
 
-.o-table {
-  &[data-table-overflow="false"] [data-mobile],
-  &[data-table-overflow="true"] [data-desktop] {
-    display: none;
-  }
+[data-table-overflow="false"] .o-table__hide,
+[data-table-overflow="true"] .o-table__show {
+  display: none;
 }

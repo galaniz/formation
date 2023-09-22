@@ -42,7 +42,7 @@ import { request } from './functions/request'
 /* Misc */
 
 import { cascade } from './functions/cascade'
-import { publish, subscribe } from './functions/pub-sub'
+import { addAction, doActions } from './functions/actions'
 import { setCookie, getCookie } from './functions/cookie'
 import { getDuration } from './functions/get-duration'
 
@@ -65,8 +65,8 @@ export {
   objectToFormData,
   request,
   cascade,
-  publish,
-  subscribe,
+  addAction,
+  doActions,
   stopScroll,
   toggleFocusability,
   focusSelector,

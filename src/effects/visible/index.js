@@ -4,7 +4,8 @@
 
 /* Imports */
 
-import { prefix, subscribe } from '../../utils'
+import { prefix } from '../../utils/functions/prefix'
+import { addAction } from '../../utils/functions/actions'
 
 /**
  * Class - check if item visible in viewport
@@ -230,7 +231,7 @@ class Visible {
       this._eventListeners()
       this._scrollHandler()
     } else {
-      subscribe(this.wait, () => {
+      addAction(this.wait, () => {
         this._eventListeners()
         this._scrollHandler()
       })
