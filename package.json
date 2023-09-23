@@ -6,7 +6,9 @@
   "scripts": {
     "build": "./test-build.js",
     "release": "release-it",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "repository": {
     "type": "git",
@@ -19,15 +21,25 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "autoprefixer": "^10.4.14",
-    "esbuild": "^0.17.12",
-    "esbuild-sass-plugin": "^2.7.0",
-    "postcss": "^8.4.21",
-    "postcss-preset-env": "^8.0.1",
-    "release-it": "^15.9.1",
-    "standard": "^17.0.0",
-    "stylelint": "^15.3.0",
-    "stylelint-config-standard-scss": "^7.0.1"
+    "@storybook/addon-essentials": "^7.4.3",
+    "@storybook/addon-interactions": "^7.4.3",
+    "@storybook/addon-links": "^7.4.3",
+    "@storybook/blocks": "^7.4.3",
+    "@storybook/html": "^7.4.3",
+    "@storybook/html-vite": "^7.4.3",
+    "@storybook/testing-library": "^0.2.1",
+    "autoprefixer": "^10.4.16",
+    "esbuild": "^0.19.3",
+    "esbuild-sass-plugin": "^2.15.0",
+    "postcss": "^8.4.30",
+    "postcss-preset-env": "^9.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "release-it": "^16.1.5",
+    "standard": "^17.1.0",
+    "storybook": "^7.4.3",
+    "stylelint": "^15.10.3",
+    "stylelint-config-standard-scss": "^11.0.0"
   },
   "release-it": {
     "git": {
