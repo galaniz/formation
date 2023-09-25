@@ -66,17 +66,11 @@ $colors-flat: func.map-flatten($colors, (), "");
 
 /* Text colors */
 
-$text-colors: (
-  "foreground-base",
-  "foreground-dark",
-) !default;
+$text-colors: () !default;
 
 /* Background colors */
 
-$background-colors: (
-  "background-base",
-  "background-dark",
-) !default;
+$background-colors: () !default;
 
 /* Fonts families  */
 
@@ -107,10 +101,11 @@ $nav: (
 /* Breakpoints */
 
 $breakpoints: (
-  "xs": 400px,
+  "0": 0px,
+  "xs": 300px,
   "s": 600px,
-  "m": 800px,
-  "l": 1000px,
+  "m": 900px,
+  "l": 1200px,
 ) !default;
 
 /* Containers and padding */
@@ -118,7 +113,7 @@ $breakpoints: (
 $containers: ( "default": 1300px ) !default;
 $container-padding: 20px !default;
 
-/* Append to breakpoints */
+/* Append containers to breakpoints */
 
 @each $c, $width in $containers {
   $suffix: "";
@@ -139,7 +134,7 @@ $spacing: (
   "l": 24px,
 ) !default;
 
-/* Widths */
+/* Width percentages */
 
 $width-percentages: (
   "1-1": 100%,
@@ -153,9 +148,15 @@ $width-percentages: (
   "1-4": 25%,
   "1-5": 20%
 ) !default;
-$width-percentage-breakpoints: ("s", "m") !default;
+$width-percentage-breakpoints: () !default;
+
+/* Widths */
+
 $widths: () !default;
 $width-breakpoints: () !default;
+
+/* Max widths */
+
 $max-widths: () !default;
 $max-width-breakpoints: () !default;
 
@@ -168,7 +169,7 @@ $height-breakpoints: () !default;
 
 $padding-top: () !default;
 $padding-bottom: () !default;
-$padding-vertical-breakpoints: ("l") !default;
+$padding-vertical-breakpoints: () !default;
 $padding-left: () !default;
 $padding-right: () !default;
 $padding-horizontal-breakpoints: () !default;
@@ -186,7 +187,7 @@ $margin-horizontal-breakpoints: () !default;
 /* Gap */
 
 $gaps: () !default;
-$gap-breakpoints: ("l") !default;
+$gap-breakpoints: () !default;
 
 /* Flex */
 
@@ -272,9 +273,18 @@ $z-index: m.map-recursive-merge(
 $outline: () !default;
 $outline: m.map-recursive-merge(
   (
-    "width": 0.25rem,
-    "color": "var(--primary-dark)",
-    "offset": 0.25rem,
+    "widths": (
+      "default": 0.25rem
+    ),
+    "colors": (
+      "default": "var(--primary-dark)"
+    ),
+    "offsets": (
+      "default": 0.25rem,
+      "snug": 0,
+      "tight": -0.25rem
+    ),
+    "none": false,
   ),
   $outline
 );
@@ -284,12 +294,18 @@ $outline: m.map-recursive-merge(
 $borders: () !default;
 $borders: m.map-recursive-merge(
   (
-    "sides": ("all", "top", "left", "right", "bottom"),
+    "sides": (
+      "all",
+      "top",
+      "left",
+      "right",
+      "bottom",
+    ),
     "colors": (
       "default": currentcolor,
     ),
     "widths": (
-      "default": 0.125rem,
+      "default": 0.0625rem,
     ),
   ),
   $borders
