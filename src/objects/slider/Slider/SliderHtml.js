@@ -1,5 +1,5 @@
 /**
- * Objects - slider html
+ * Objects - Slider Html
  */
 
 /**
@@ -10,6 +10,7 @@
  * @param {string} props.args.label
  * @param {string} props.args.type - single || group || flex
  * @param {boolean} props.args.loop - Only applies to single
+ * @param {boolean} props.args.contain
  * @param {number} props.args.width - 100 || 50 || 33 || 25
  * @param {number} props.args.widthSmall - 100 || 50 || 33 || 25
  * @param {number} props.args.widthMedium - 100 || 50 || 33 || 25
@@ -26,6 +27,7 @@ const SliderHtml = ({ args = {}, children = [] }) => {
   const {
     label = '',
     type = 'single',
+    contain = false,
     width = 100,
     widthSmall = 100,
     widthMedium = 100,
@@ -134,7 +136,7 @@ const SliderHtml = ({ args = {}, children = [] }) => {
     tablist.push(`
       <li class="l-flex" role="presentation">
         <button class="o-slider__tab t-current l-flex l-align-center l-justify-center l-width-6 l-height-6" type="button" role="tab" tabindex="${selected ? 0 : -1}" aria-selected="${selected}" aria-label="${buttonLabel}">
-          <span class="o-slider__dot l-block b-radius-100-pc b-all l-width-4 l-height-4"></span>
+          <span class="o-slider__dot l-block b-radius-100-pc b-all l-width-3 l-height-3"></span>
         </button>
       </li>
     `)
@@ -144,7 +146,7 @@ const SliderHtml = ({ args = {}, children = [] }) => {
 
   if (tablist.length > 0) {
     tabListOutput = `
-      <ul class="l-flex l-justify-center l-padding-top-10 l-padding-top-16-l l-gap-margin-2 l-gap-margin-5-l t-list-style-none" role="tablist" aria-label="${label} controls">
+      <ul class="l-flex l-justify-center l-padding-top-10 l-padding-top-16-l l-gap-margin-1 l-gap-margin-2-l t-list-style-none" role="tablist" aria-label="${label} controls">
         ${tablist.join('')}
       </ul>
     `
@@ -162,7 +164,7 @@ const SliderHtml = ({ args = {}, children = [] }) => {
 
   return {
     start: `
-      <div class="o-slider l-flex l-flex-column l-margin-auto l-relative" ${attrs}>
+      <div class="o-slider${contain ? ' o-slider--contain' : ''} l-flex l-flex-column l-margin-auto l-relative" ${attrs}>
         <div class="o-slider__main l-overflow-hidden">
           <div class="o-slider__track l-overflow-x-auto l-padding-bottom-10 l-relative" tabindex="-1">
             <div class="l-flex${gapClasses.length > 0 ? ` ${gapClasses.join(' ')}` : ''}">
@@ -173,10 +175,10 @@ const SliderHtml = ({ args = {}, children = [] }) => {
           </div>
         </div>
         ${tabListOutput}
-        <button type="button" class="o-slider__prev t-current l-width-5 l-height-5 l-absolute l-left-0 l-none outline-tight" aria-label="Previous ${label} group" data-prev disabled>
+        <button type="button" class="o-slider__prev t-current l-width-5 l-height-5 l-absolute l-left-0 outline-tight" aria-label="Previous ${label} group" data-prev disabled>
           ${prev}
         </button>
-        <button type="button" class="o-slider__next t-current l-width-s l-height-s l-absolute l-right-0 l-none outline-tight" aria-label="Next ${label} group" data-next>
+        <button type="button" class="o-slider__next t-current l-width-s l-height-s l-absolute l-right-0 outline-tight" aria-label="Next ${label} group" data-next>
           ${next}
         </button>
       </div>

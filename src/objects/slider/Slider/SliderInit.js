@@ -1,5 +1,5 @@
 /**
- * Objects - slider init
+ * Objects - Slider Init
  */
 
 /* Imports */

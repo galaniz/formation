@@ -1,17 +1,18 @@
 /** @type { import('@storybook/html').Preview } */
+
 const preview = {
   parameters: {
     actions: {
-      argTypesRegex: "^on[A-Z].*"
+      argTypesRegex: '^on[A-Z].*'
     },
-    layout: "fullscreen",
+    layout: 'fullscreen',
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/,
-      },
-    },
-  },
-};
+        date: /Date$/
+      }
+    }
+  }
+}
 
-export default preview;
+export default preview

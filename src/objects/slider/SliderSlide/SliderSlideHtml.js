@@ -1,5 +1,5 @@
 /**
- * Objects - slider slide html
+ * Objects - Slider Slide Html
  */
 
 /**
@@ -34,11 +34,10 @@ const SliderSlideHtml = ({ args = {}, parents = [], children = [] }) => {
     gapLarge = '10'
   } = parents[0].args
 
-  console.log('P', type, parents[0])
-
   const {
     label = '',
     selected = false,
+    content = '',
     index = 0
   } = args
 
@@ -69,11 +68,9 @@ const SliderSlideHtml = ({ args = {}, parents = [], children = [] }) => {
     start.push(`
       <div class="o-slider__items o-slider__x o-slider__focus l-flex l-before l-relative ${gapClasses}">
         <div class="o-slider__item l-flex l-flex-shrink-0 l-flex-column">
-          <div class="outline-tight">
     `)
 
     end.push(`
-          </div>
         </div>
       </div>
     `)
@@ -92,12 +89,10 @@ const SliderSlideHtml = ({ args = {}, parents = [], children = [] }) => {
     `)
   } else { // single
     start.push(`
-      <div class="o-slider__x o-slider__focus l-flex l-before l-relative l-flex-column">
-        <div class="outline-tight">
+      <div class="o-slider__x o-slider__focus l-before l-relative l-flex l-flex-column">
     `)
 
     end.push(`
-        </div>
       </div>
     `)
   }
@@ -109,7 +104,7 @@ const SliderSlideHtml = ({ args = {}, parents = [], children = [] }) => {
   /* Output */
 
   return {
-    start: start.join(''),
+    start: start.join('') + content,
     end: end.join('')
   }
 }

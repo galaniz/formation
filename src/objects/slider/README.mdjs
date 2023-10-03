@@ -1,0 +1,17 @@
+## Import
+
+```js
+import { Slider } from '@alanizcreative/lib/objects/slider';
+```
+
+## Examples
+
+Lorem ipsum sed dolorem
+
+### Basic usage
+
+```js client
+import { SliderSingleExample } from './__examples__/SliderSingleExample.js';
+
+SliderSingleExample();
+```

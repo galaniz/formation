@@ -35,6 +35,7 @@ export { assetLoaded, assetsLoaded } from './functions/assets-loaded'
 export { isObject } from './isObject/isObject'
 export { mergeObjects } from './functions/merge-objects'
 export { recurseObject } from './functions/recurse-object'
+export { renderHtmlString } from './renderHtmlString/renderHtmlString'
 
 /* Ajax requests */
 
