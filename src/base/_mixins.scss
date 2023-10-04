@@ -67,11 +67,11 @@
       --easing: #{con.$default-easing};
       --delay: #{con.$default-delay};
     } @else if $r == "outline" {
-      $default-color: map.get(con.$outline, "color");
+      $default-color: map.get(con.$outline, "colors", "default");
 
-      --outline-width: #{map.get(con.$outline, "width")};
+      --outline-width: #{map.get(con.$outline, "widths", "default")};
       --outline-color: #{$default-color};
-      --outline-offset: #{map.get(con.$outline, "offset")};
+      --outline-offset: #{map.get(con.$outline, "offsets", "default")};
     } @else if $r == "borders" {
       $default-color: map.get(con.$borders, "colors", "default");
 

@@ -17,27 +17,30 @@ import {
 
 /* Get values from DOM */
 
-import { closest } from './functions/closest'
-import { getKey } from './functions/get-key'
-import { getDefaultFontSize } from './functions/get-default-font-size'
-import { getOuterElements } from './functions/get-outer-elements'
-import { setElements } from './functions/set-elements'
-import { setSettings } from './functions/set-settings'
+export { closest } from './functions/closest'
+export { getKey } from './functions/get-key'
+export { getDefaultFontSize } from './functions/get-default-font-size'
+export { getOuterElements } from './functions/get-outer-elements'
+export { setElements } from './functions/set-elements'
+export { setSettings } from './functions/set-settings'
+export { setItems } from './setItems/setItems'
 
 /* Check DOM */
 
-import { assetLoaded, assetsLoaded } from './functions/assets-loaded'
+export { assetLoaded, assetsLoaded } from './functions/assets-loaded'
 
 /* Object helpers */
 
-import { mergeObjects } from './functions/merge-objects'
-import { recurseObject } from './functions/recurse-object'
+export { isObject } from './isObject/isObject'
+export { mergeObjects } from './functions/merge-objects'
+export { recurseObject } from './functions/recurse-object'
+export { renderHtmlString } from './renderHtmlString/renderHtmlString'
 
 /* Ajax requests */
 
-import { urlEncode } from './functions/url-encode'
-import { objectToFormData } from './functions/object-to-form-data'
-import { request } from './functions/request'
+export { urlEncode } from './functions/url-encode'
+export { objectToFormData } from './functions/object-to-form-data'
+export { request } from './functions/request'
 
 /* Misc */
 

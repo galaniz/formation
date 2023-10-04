@@ -2,6 +2,13 @@
  * Base - focus
  */
 
+/* Imports */
+
+@use "sass:map";
+@use "../config" as con;
+
+/* Global */
+
 :focus {
   outline: var(--outline-width) solid var(--outline-color);
   outline-offset: var(--outline-offset);
@@ -18,5 +25,27 @@
   [type="reset"]:focus-visible,
   [type="submit"]:focus-visible {
     outline: var(--outline-width) solid var(--outline-color);
+  }
+}
+
+/* Offsets */
+
+$outline-offsets: map.get(con.$outline, "offsets");
+
+@each $o, $v in $outline-offsets {
+  @if $o != "default" {
+    .outline-#{$o} {
+      --outline-offset: #{$v};
+    }
+  }
+}
+
+/* None */
+
+$outline-none: map.get(con.$outline, "none");
+
+@if $outline-none != false {
+  .outline-none:focus {
+    outline: none;
   }
 }

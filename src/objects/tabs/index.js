@@ -2,8 +2,8 @@
  * Objects - tabs
  *
  * @param {object} args
- * @param {NodeList} args.tabs
- * @param {NodeList} args.panels
+ * @param {HTMLElement[]} args.tabs
+ * @param {HTMLElement[]} args.panels
  * @param {number} args.delay
  * @param {string} args.orientation
  */
@@ -25,8 +25,8 @@ class Tabs {
      */
 
     const {
-      tabs = null,
-      panels = null,
+      tabs = [],
+      panels = [],
       delay = 0,
       orientation = 'horizontal',
       init = true,
@@ -44,6 +44,7 @@ class Tabs {
     this.afterIndexesSet = afterIndexesSet
     this.onDeactivate = onDeactivate
     this.onActivate = onActivate
+    this.init = false
 
     /**
      * Internal variables
@@ -77,11 +78,7 @@ class Tabs {
      */
 
     if (init) {
-      const initialize = this._initialize()
-
-      if (!initialize) {
-        return false
-      }
+      this.init = this._initialize()
     }
   }
 
@@ -92,12 +89,9 @@ class Tabs {
   _initialize () {
     /* Check that required variables not null */
 
-    if (!this.tabs || !this.panels) {
+    if (this.tabs.length === 0 || this.panels.length === 0 || !Array.isArray(this.tabs) || !Array.isArray(this.panels)) {
       return false
     }
-
-    this.tabs = Array.from(this.tabs)
-    this.panels = Array.from(this.panels)
 
     /* Bind all event handlers for referencability */
 
