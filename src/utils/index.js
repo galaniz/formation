@@ -42,7 +42,7 @@ import { request } from './functions/request'
 /* Misc */
 
 import { cascade } from './functions/cascade'
-import { addAction, doActions } from './functions/actions'
+import { addAction, doActions } from './actions'
 import { setCookie, getCookie } from './functions/cookie'
 import { getDuration } from './functions/get-duration'
 
