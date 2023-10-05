@@ -1,0 +1,21 @@
+/**
+ * Utils - Calc Rem Styles
+ */
+
+/* Imports */
+
+@use "sass:math";
+@use "../../config" as con;
+
+/**
+ * Function - convert px to rem
+ *
+ * @param {number} $px
+ * @return {number}
+ */
+
+@function calc-rem($px) {
+  $num: math.div($px, con.$context);
+
+  @return ($num * 1rem);
+}

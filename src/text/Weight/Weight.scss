@@ -1,0 +1,15 @@
+/**
+ * Text - Font Weight Styles
+ */
+
+/* Imports */
+
+@use "../config" as con;
+
+/* Styles */
+
+@each $w, $v in con.$font-weights {
+  .t-weight-#{$w} {
+    font-weight: var(--font-weight-#{$w});
+  }
+}

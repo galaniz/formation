@@ -45,7 +45,7 @@ export { request } from './functions/request'
 /* Misc */
 
 import { cascade } from './functions/cascade'
-import { addAction, doActions } from './actions'
+import { addAction, doActions } from './actions/actions'
 import { setCookie, getCookie } from './functions/cookie'
 import { getDuration } from './functions/get-duration'
 

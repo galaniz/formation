@@ -184,7 +184,7 @@ class Slider extends Tabs {
 
       const panels = this.panels
 
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 2; i += 1) {
         const panelsArr = []
 
         panels.forEach((p, index) => {
@@ -391,10 +391,10 @@ class Slider extends Tabs {
 
     let start = 0
 
-    for (let i = 0; i < numberOfPanels; i++) {
+    for (let i = 0; i < numberOfPanels; i += 1) {
       map.push([])
 
-      for (let j = start; j < perPanel + start; j++) {
+      for (let j = start; j < perPanel + start; j += 1) {
         if (j < this._groupItemsLength) {
           map[i].push(j)
         }

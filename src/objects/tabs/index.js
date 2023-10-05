@@ -290,7 +290,7 @@ class Tabs {
           focus = false
         } else {
           e.preventDefault()
-          index++
+          index += 1
         }
         break
     }
@@ -316,7 +316,7 @@ class Tabs {
         if (this.orientation === 'vertical') {
           focus = false
         } else {
-          index++
+          index += 1
         }
         break
     }

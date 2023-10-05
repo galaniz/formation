@@ -496,7 +496,7 @@ class Form {
             (store) => {
               let stop = false
 
-              for (let i = 0; i < store.length; i++) {
+              for (let i = 0; i < store.length; i += 1) {
                 const item = store[i]
 
                 if (isItemFocusable(item)) {

@@ -152,7 +152,7 @@ class Masonry {
   _arrange () {
     let currentRange
 
-    for (let i = 0; i < this._bkRangesLength; i++) {
+    for (let i = 0; i < this._bkRangesLength; i += 1) {
       const bkRange = this._bkRanges[i]
       const low = bkRange.low
       const high = bkRange.high
@@ -183,7 +183,7 @@ class Masonry {
     const itemHeights = []
     let indexTracker = 0
 
-    for (let i = 0; i < cols; i++) {
+    for (let i = 0; i < cols; i += 1) {
       colItems[i] = []
       colHeights[i] = 0
       colKeys.push(i)
@@ -193,7 +193,7 @@ class Masonry {
       itemCols[index] = indexTracker
       colItems[indexTracker].push(item)
 
-      indexTracker++
+      indexTracker += 1
 
       if (colKeys.indexOf(indexTracker) === -1) {
         indexTracker = 0

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "lint": "npx ts-standard",
+    "lint": "npx ts-standard && npx stylelint '**/*.scss'",
     "release": "release-it",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
@@ -22,22 +22,23 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "@storybook/addon-essentials": "^7.4.5",
-    "@storybook/addon-interactions": "^7.4.5",
-    "@storybook/addon-links": "^7.4.5",
-    "@storybook/addon-storysource": "^7.4.5",
-    "@storybook/blocks": "^7.4.5",
-    "@storybook/html": "^7.4.5",
-    "@storybook/html-vite": "^7.4.5",
-    "@storybook/testing-library": "^0.2.1",
+    "@storybook/addon-essentials": "^7.4.6",
+    "@storybook/addon-interactions": "^7.4.6",
+    "@storybook/addon-links": "^7.4.6",
+    "@storybook/addon-storysource": "^7.4.6",
+    "@storybook/blocks": "^7.4.6",
+    "@storybook/html": "^7.4.6",
+    "@storybook/html-vite": "^7.4.6",
+    "@storybook/testing-library": "^0.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "release-it": "^16.2.1",
     "sass": "^1.68.0",
-    "standard": "^17.1.0",
-    "storybook": "^7.4.5",
+    "storybook": "^7.4.6",
     "stylelint": "^15.10.3",
-    "stylelint-config-standard-scss": "^11.0.0"
+    "stylelint-config-standard-scss": "^11.0.0",
+    "ts-standard": "^12.0.2",
+    "typescript": "^5.2.2"
   },
   "release-it": {
     "git": {

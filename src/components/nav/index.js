@@ -252,7 +252,7 @@ class Nav {
       if (!Object.getOwnPropertyDescriptor(this._overflowGroups, overflowGroupIndex)) {
         this._overflowGroups[overflowGroupIndex] = []
         this._listIndexes[overflowGroupIndex] = []
-        this._overflowGroupsLength++
+        this._overflowGroupsLength += 1
       }
 
       this._overflowGroups[overflowGroupIndex].push(item)
@@ -381,7 +381,7 @@ class Nav {
 
       this._currentOverflowGroups.push(overflowGroup)
 
-      overflowGroupIndex++
+      overflowGroupIndex += 1
       overflow = this._overflowing(this._listIndexes[overflowGroupIndex])
 
       if (overflow) {

@@ -1,0 +1,61 @@
+/**
+ * Utils - Fluid Size Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "../../config" as con;
+@use "../index" as util;
+
+/**
+ * Mixin - fluidly resize between breakpoints
+ *
+ * @param {string} $prop
+ * @param {list} $sizes
+ * @param {list} $widths - $breakpoint props
+ * @param {list} $other-values
+ * @param {boolean} $important
+ * @return {void}
+ */
+
+@mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {
+  $last-index: list.length($sizes);
+
+  @each $s in $sizes {
+    $i: list.index($sizes, $s);
+    $w: list.nth($widths, $i);
+    $ww: util.calc-rem(map.get(con.$breakpoints, $w));
+    $o: null;
+    $m: null;
+
+    @if meta.type-of($other-values) == "list" {
+      $o: $w;
+    }
+
+    @if $important {
+      $m: #{"!important"};
+    }
+
+    @if $i == 1 {
+      #{$prop}: $s $o $m;
+    }
+
+    @if $i == $last-index {
+      @include util.breakpoint-min($w) {
+        #{$prop}: $s $o $m;
+      }
+    } @else {
+      $n-s: util.strip-unit(list.nth($sizes, $i + 1));
+      $n-w: list.nth($widths, $i + 1);
+      $n-ww: util.strip-unit(util.calc-rem(map.get(con.$breakpoints, $n-w)));
+      $s-ww: util.strip-unit($ww);
+
+      @include util.breakpoint-min($w) {
+        #{$prop}: calc(#{$s} + ((100vw - #{$ww}) / (#{$n-ww} - #{$s-ww})) * (#{$n-s} - #{util.strip-unit($s)})) $o $m;
+      }
+    }
+  }
+}

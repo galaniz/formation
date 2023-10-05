@@ -190,7 +190,7 @@ class MarginMasonry {
     let firstOffset = 0
     let c = 0
 
-    for (let i = 0; i < this.items.length; i++) {
+    for (let i = 0; i < this.items.length; i += 1) {
       const offset = this.items[i].offsetTop
 
       if (i === 0) {
@@ -198,7 +198,7 @@ class MarginMasonry {
       }
 
       if (offset === firstOffset) {
-        c++
+        c += 1
       } else {
         break
       }

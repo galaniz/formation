@@ -1,0 +1,28 @@
+/**
+ * Borders - Side Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../config" as con;
+
+/* Styles */
+
+$sides: map.get(con.$borders, "sides");
+
+@each $s in $sides {
+  .b-#{$s} {
+    @if $s == "all" {
+      border: var(--border-width) solid var(--border-color);
+    } @else if $s == "left" {
+      border-left: var(--border-width) solid var(--border-color);
+    } @else if $s == "right" {
+      border-right: var(--border-width) solid var(--border-color);
+    } @else if $s == "top" {
+      border-top: var(--border-width) solid var(--border-color);
+    } @else if $s == "bottom" {
+      border-bottom: var(--border-width) solid var(--border-color);
+    }
+  }
+}

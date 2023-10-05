@@ -1,0 +1,24 @@
+/**
+ * Components - Skip Link Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../config" as con;
+
+/* Styles */
+
+.c-skip-link {
+  --opacity: 0;
+  --y: -100%;
+
+  z-index: map.get(con.$z-index, "skip-link");
+  transform: translateY(var(--y));
+  opacity: var(--opacity);
+
+  &:focus {
+    --opacity: 1;
+    --y: 0;
+  }
+}
