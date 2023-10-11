@@ -2,10 +2,15 @@
  * Utils - Actions
  */
 
+/* Imports */
+
+import { isString } from '../isString/isString'
+import { isObject } from '../isObject/isObject'
+
 /**
  * Store action callbacks by name
  *
- * @type {object}
+ * @type {Object<string, Function[]>}
  */
 
 let actions: { [key: string]: Function[] } = {}
@@ -19,7 +24,7 @@ let actions: { [key: string]: Function[] } = {}
  */
 
 const addAction = (name: string, action: Function): boolean => {
-  if (typeof name !== 'string' || name === '') {
+  if (!isString(name)) {
     return false
   }
 
@@ -45,7 +50,11 @@ const addAction = (name: string, action: Function): boolean => {
  */
 
 const removeAction = (name: string, action: Function): boolean => {
-  if (name === undefined || name === '' || action === undefined) {
+  if (!isString(name)) {
+    return false
+  }
+
+  if (typeof action !== 'function') {
     return false
   }
 
@@ -68,7 +77,7 @@ const removeAction = (name: string, action: Function): boolean => {
  * Function - run callback functions from actions object
  *
  * @param {string} name
- * @param {*[]} args
+ * @param {...*} args
  * @return {void}
  */
 
@@ -98,14 +107,21 @@ const resetActions = (): void => {
 }
 
 /**
+ * Store action callbacks by name
+ *
+ * @type {object}
+ * @property {Function[]}
+ */
+
+/**
  * Function - fill actions object
  *
- * @param {object} args
+ * @param {Object<string, Function>} args
  * @return {boolean}
  */
 
 const setActions = (args: { [key: string]: Function }): boolean => {
-  if (typeof args !== 'object' || args === undefined || args === null) {
+  if (!isObject(args)) {
     return false
   }
 

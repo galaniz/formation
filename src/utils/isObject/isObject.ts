@@ -9,7 +9,7 @@
  * @return {boolean}
  */
 
-const isObject = (value: any): boolean => {
+const isObject = (value: any): value is Object => {
   if (value instanceof window.Element) {
     return false
   }

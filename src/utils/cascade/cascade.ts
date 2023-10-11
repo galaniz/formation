@@ -3,21 +3,34 @@
  */
 
 /**
- * Function - sequentially and recursively call and delay functions
- *
- * @param {object[]} events
- * @param {function} events[].action - With optional callback
- * @param {number} [event[].delay]
- * @param {number} [events[].increment]
- * @param {number} [repeat=1]
+ * @method Action
+ * @param {number} index
+ * @param {function} [resume] - Hold off recursion
  * @return {void}
  */
 
+type Action = (index: number, resume?: Function) => void
+
+/**
+ * @typedef {object} Event
+ * @prop {Action} action
+ * @prop {number} [delay=0] - Value to delay action by in milliseconds
+ * @prop {number} [increment=0] - Value to increase delay by
+ */
+
 interface Event {
-  action: Function
+  action: Action
   delay?: number
   increment?: number
 }
+
+/**
+ * Function - sequentially and recursively call and delay functions
+ *
+ * @param {Event[]} events
+ * @param {number} [repeat=1]
+ * @return {void}
+ */
 
 const cascade = (events: Event[], repeat: number = 1): void => {
   const eventsLength = events.length
@@ -26,33 +39,48 @@ const cascade = (events: Event[], repeat: number = 1): void => {
   let delay = 0
 
   for (let j = 0; j < repeat; j += 1) {
-    const recursive = (i: number): void => {
+    const recurse = (i: number): void => {
       if (i < eventsLength) {
         const event = events[i]
-        const eventDelay = event.delay !== undefined ? event.delay : delay
 
-        if (event.increment !== undefined) {
+        /* Set delay and increment values */
+
+        const {
+          delay: eventDelay = 0,
+          increment: eventIncrement,
+          action
+        } = event
+
+        if (eventIncrement !== undefined) {
           if (increment === 0 && eventDelay > 0) {
             delay = eventDelay
           }
 
-          increment = event.increment
+          increment = eventIncrement
         } else {
           delay = eventDelay
         }
 
+        /* Run action */
+
         setTimeout(() => {
-          const indexArg = repeat > 1 ? j : i
+          const index = repeat > 1 ? j : i
 
-          /* Check if contains two args (second arg is done callback) */
+          /* Check action is a function */
 
-          if (event.action.length === 2) {
-            event.action(indexArg, () => {
-              recursive(i + 1)
+          if (typeof action !== 'function') {
+            return
+          }
+
+          /* Wait to recurse if resume param */
+
+          if (action.length === 2) {
+            action(index, () => {
+              recurse(i + 1)
             })
           } else {
-            event.action(indexArg)
-            recursive(i + 1)
+            action(index)
+            recurse(i + 1)
           }
         }, delay)
 
@@ -60,7 +88,7 @@ const cascade = (events: Event[], repeat: number = 1): void => {
       }
     }
 
-    recursive(0)
+    recurse(0)
   }
 }
 

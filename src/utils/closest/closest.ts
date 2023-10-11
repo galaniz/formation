@@ -2,6 +2,11 @@
  * Utils - Closest
  */
 
+/* Imports */
+
+import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
+import { isString } from '../isString/isString'
+
 /**
  * Function - check item is an HTML element and contains classes
  *
@@ -12,7 +17,7 @@
  */
 
 const _itemCheck = (item: HTMLElement | null, classes: string): boolean => {
-  if (!(item instanceof HTMLElement) || typeof classes !== 'string' || classes === '') {
+  if (!isHTMLElement(item) || !isString(classes)) {
     return false
   }
 
@@ -25,12 +30,12 @@ const _itemCheck = (item: HTMLElement | null, classes: string): boolean => {
  * @param {HTMLElement} item
  * @param {string} classes
  * @param {number} [max=10]
- * @return {HTMLElement|undefined}
+ * @return {HTMLElement|null}
  */
 
-const closest = (item: HTMLElement, classes: string, max: number = 10): HTMLElement | undefined => {
-  if (!(item instanceof HTMLElement) || typeof classes !== 'string' || classes === '') {
-    return
+const closest = (item: HTMLElement, classes: string, max: number = 10): HTMLElement | null => {
+  if (!isHTMLElement(item) || !isString(classes)) {
+    return null
   }
 
   let parent = item.parentElement
@@ -46,10 +51,6 @@ const closest = (item: HTMLElement, classes: string, max: number = 10): HTMLElem
     if (counter === max) {
       break
     }
-  }
-
-  if (parent === null) {
-    return
   }
 
   return parent

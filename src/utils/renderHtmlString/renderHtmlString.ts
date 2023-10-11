@@ -6,14 +6,6 @@
 
 import { isObject } from '../isObject/isObject'
 
-/**
- * Function - recursively output html string from array or object of data
- *
- * @param {object} [functions={}]
- * @param {object|object[]} items
- * @return {string}
- */
-
 interface Functions {
   [key: string]: Function
 }
@@ -27,12 +19,28 @@ interface Parents {
   args: Items
 }
 
+/**
+ * Function - recursively output html string from array or object of data
+ *
+ * @param {object} functions
+ * @param {object|object[]} items
+ * @return {string}
+ */
+
 const renderHtmlString = (
-  functions: Functions = {},
+  functions: Functions,
   items: Items | Items[],
   _output = { html: '' },
   _parents: Parents[] = []
 ): string => {
+  /* Functions object required */
+
+  if (!isObject(functions)) {
+    return _output.html
+  }
+
+  /* Recurse items */
+
   if (Array.isArray(items)) {
     items.forEach((item) => {
       renderHtmlString(functions, item, _output, _parents)

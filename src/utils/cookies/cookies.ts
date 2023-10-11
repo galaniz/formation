@@ -2,18 +2,22 @@
  * Utils - Cookies
  */
 
+/* Imports */
+
+import { isString } from '../isString/isString'
+
 /**
  * Function - set browser cookie
  *
  * @param {string} name
  * @param {string} value
- * @param {number} expirationDays
- * @return {void}
+ * @param {number} [expirationDays=0]
+ * @return {boolean}
  */
 
-const setCookie = (name: string, value: string, expirationDays: number): void => {
-  if (!name || !value) {
-    return
+const setCookie = (name: string, value: string, expirationDays: number = 0): boolean => {
+  if (!isString(name) || !(isString(value))) {
+    return false
   }
 
   let expires = ''
@@ -27,6 +31,8 @@ const setCookie = (name: string, value: string, expirationDays: number): void =>
   }
 
   document.cookie = `${name}=${value};${expires}path=/`
+
+  return true
 }
 
 /**
@@ -37,7 +43,7 @@ const setCookie = (name: string, value: string, expirationDays: number): void =>
  */
 
 const getCookie = (name: string): string => {
-  if (!name) {
+  if (!isString(name)) {
     return ''
   }
 
@@ -46,6 +52,10 @@ const getCookie = (name: string): string => {
   for (let i = 0; i < cookies.length; i += 1) {
     const cookie = cookies[i]
     const c = cookie.split('=')
+
+    if (c.length < 2) {
+      return ''
+    }
 
     if (c[0].trim() === name) {
       return c[1]

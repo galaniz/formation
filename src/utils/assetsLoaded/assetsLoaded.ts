@@ -1,26 +1,30 @@
 /**
  * Utils - Assets Loaded
+ * 
+ * @module assetsLoaded
  */
+
+/* Imports */
+
+import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
+import { isArray } from '../isArray/isArray'
+
+/**
+ * @typedef {HTMLImageElement|HTMLVideoElement|HTMLAudioElement|HTMLIFrameElement} Asset
+ */
+
+type Asset = HTMLImageElement | HTMLVideoElement | HTMLAudioElement | HTMLIFrameElement
 
 /**
  * Function - check if single asset is loaded
  *
- * @param {HTMLImageElement|HTMLVideoElement|HTMLIFrameElement} asset
- * @return {Promise}
+ * @param {Asset} asset
+ * @return {Promise<Asset>}
  */
-
-type Asset = HTMLImageElement | HTMLVideoElement | HTMLIFrameElement
 
 const assetLoaded = async (asset: Asset): Promise<Asset> => {
   return await new Promise((resolve, reject) => {
     let proxy = asset
-
-    const isVideo = proxy instanceof HTMLVideoElement
-
-    if (isVideo) {
-      proxy = document.createElement('video')
-      proxy.src = asset.src
-    }
 
     const result = (): void => {
       resolve(asset)
@@ -30,41 +34,51 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
       reject(message)
     }
 
-    if (proxy === null) {
-      error('Asset is null')
+    if (!isHTMLElement(proxy)) {
+      error('Asset is not an HTML element')
     }
 
     proxy.onerror = error
 
-    if (isVideo) {
-      proxy.oncanplay = () => {
-        result()
-      }
+    const isVideo = proxy instanceof HTMLVideoElement
+    const isAudio = proxy instanceof HTMLAudioElement
+
+    if (isVideo || isAudio) {
+      proxy = document.createElement(isVideo ? 'video' : 'audio')
+      proxy.src = asset.src
+      proxy.oncanplay = result
     } else {
       proxy.onload = result
     }
 
-    if (proxy instanceof HTMLImageElement) {
-      if (proxy.complete) {
-        result()
-      }
+    if (proxy instanceof HTMLImageElement && proxy.complete) {
+      result()
     }
   })
 }
 
 /**
- * Function - check if multiple assets are loaded
+ * Function - callback when done on error or success
  *
- * @param {(HTMLImageElement|HTMLVideoElement|HTMLIFrameElement)[]} assets=[]
- * @param {function} [done=() => {}] - callback when finished on error or success
+ * @function done
+ * @param {Asset[]|boolean} result
+ * @param {string|Event} [error]
  * @return {void}
  */
 
 type Done = (result: Asset[] | boolean, error?: string | Event) => void
 
-const assetsLoaded = (assets: Asset[] = [], done: Done = () => {}): void => {
-  if (assets.length === 0) {
-    done(false)
+/**
+ * Function - check if multiple assets are loaded
+ *
+ * @param {Asset[]} assets
+ * @param {function} [done=() => {}]
+ * @return {void}
+ */
+
+const assetsLoaded = (assets: Asset[], done: Done = () => {}): void => {
+  if (!isArray(assets)) {
+    done(false, 'Assets not a filled array')
     return
   }
 
