@@ -5,11 +5,11 @@
 /**
  * @method Action
  * @param {number} index
- * @param {function} [resume] - Hold off recursion
+ * @param {function} [recur] - Hold off recursion until function call
  * @return {void}
  */
 
-type Action = (index: number, resume?: Function) => void
+type Action = (index: number, recur?: Function) => void
 
 /**
  * @typedef {object} Event
@@ -37,6 +37,7 @@ const cascade = (events: Event[], repeat: number = 1): void => {
 
   let increment = 0
   let delay = 0
+  let timeoutId = 0
 
   for (let j = 0; j < repeat; j += 1) {
     const recurse = (i: number): void => {
@@ -63,7 +64,7 @@ const cascade = (events: Event[], repeat: number = 1): void => {
 
         /* Run action */
 
-        setTimeout(() => {
+        const run = (id: number): void => {
           const index = repeat > 1 ? j : i
 
           /* Check action is a function */
@@ -72,7 +73,7 @@ const cascade = (events: Event[], repeat: number = 1): void => {
             return
           }
 
-          /* Wait to recurse if resume param */
+          /* Wait to recurse if recur param */
 
           if (action.length === 2) {
             action(index, () => {
@@ -82,7 +83,17 @@ const cascade = (events: Event[], repeat: number = 1): void => {
             action(index)
             recurse(i + 1)
           }
+
+          /* Clear */
+
+          clearTimeout(id)
+        }
+
+        timeoutId = window.setTimeout(() => {
+          run(timeoutId)
         }, delay)
+
+        /* Augment delay */
 
         delay += increment
       }

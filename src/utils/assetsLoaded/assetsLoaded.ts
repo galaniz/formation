@@ -1,6 +1,6 @@
 /**
  * Utils - Assets Loaded
- * 
+ *
  * @module assetsLoaded
  */
 
@@ -13,7 +13,7 @@ import { isArray } from '../isArray/isArray'
  * @typedef {HTMLImageElement|HTMLVideoElement|HTMLAudioElement|HTMLIFrameElement} Asset
  */
 
-type Asset = HTMLImageElement | HTMLVideoElement | HTMLAudioElement | HTMLIFrameElement
+type Asset = HTMLImageElement | HTMLVideoElement | HTMLAudioElement | HTMLIFrameElement | null
 
 /**
  * Function - check if single asset is loaded
@@ -30,22 +30,26 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
       resolve(asset)
     }
 
-    const error = (message: string | Event): void => {
-      reject(message)
+    const error = (err: string | Event | Error): void => {
+      reject(err)
     }
 
     if (!isHTMLElement(proxy)) {
-      error('Asset is not an HTML element')
+      error(new Error('Asset is not an HTML element'))
+      return
     }
 
-    proxy.onerror = error
-
-    const isVideo = proxy instanceof HTMLVideoElement
-    const isAudio = proxy instanceof HTMLAudioElement
+    const isVideo = asset instanceof HTMLVideoElement
+    const isAudio = asset instanceof HTMLAudioElement
 
     if (isVideo || isAudio) {
       proxy = document.createElement(isVideo ? 'video' : 'audio')
       proxy.src = asset.src
+    }
+
+    proxy.onerror = error
+
+    if (isVideo || isAudio) {
       proxy.oncanplay = result
     } else {
       proxy.onload = result
@@ -66,7 +70,7 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
  * @return {void}
  */
 
-type Done = (result: Asset[] | boolean, error?: string | Event) => void
+type Done = (result: Asset[] | boolean, error?: string | Event | Error) => void
 
 /**
  * Function - check if multiple assets are loaded

@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "lint": "npx ts-standard && npx stylelint '**/*.scss'",
     "release": "release-it",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest --run --reporter verbose",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "jsdoc": "jsdoc -c jsdoc.json"
@@ -39,7 +39,8 @@
     "stylelint": "^15.10.3",
     "stylelint-config-standard-scss": "^11.0.0",
     "ts-standard": "^12.0.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   },
   "release-it": {
     "git": {

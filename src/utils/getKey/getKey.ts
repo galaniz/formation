@@ -1,6 +1,10 @@
 /**
- * Utils - get key
+ * Utils - Get Key
  */
+
+/* Imports */
+
+import { isString } from '../isString/isString.js'
 
 /**
  * Function - normalize event key as uppercase code
@@ -9,12 +13,20 @@
  * @return {string}
  */
 
-const getKey = (event) => {
+const getKey = (event: KeyboardEvent): string => {
   let key = ''
 
-  const k = event.keyCode || event.which || event.code || event.key
+  let k = `${event.keyCode}`
 
-  const keys = {
+  if (isString(event.code)) {
+    k = event.code
+  }
+
+  if (isString(event.key)) {
+    k = event.key
+  }
+
+  const keys: { [key: string]: string } = {
     27: 'ESC',
     Escape: 'ESC',
     9: 'TAB',
@@ -35,7 +47,7 @@ const getKey = (event) => {
     13: 'ENTER'
   }
 
-  if (Object.getOwnPropertyDescriptor(keys, k)) {
+  if (keys[k] !== undefined) {
     key = keys[k]
   }
 

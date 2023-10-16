@@ -3,7 +3,7 @@
  */
 
 /**
- * Function - check if value is not an empty array
+ * Function - check if value is an array with items
  *
  * @param {*} value
  * @return {boolean}
