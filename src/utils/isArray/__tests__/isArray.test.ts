@@ -5,7 +5,7 @@
 /* Imports */
 
 import { it, expect, describe } from 'vitest'
-import { isArray } from './isArray'
+import { isArray } from '../isArray'
 
 /* Tests */
 

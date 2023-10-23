@@ -5,7 +5,6 @@
 /* Imports */
 
 import { isString } from '../isString/isString'
-import { isObject } from '../isObject/isObject'
 
 /**
  * Store action callbacks by name
@@ -13,7 +12,7 @@ import { isObject } from '../isObject/isObject'
  * @type {Object<string, Function[]>}
  */
 
-let actions: { [key: string]: Function[] } = {}
+const actions: { [key: string]: Function[] } = {}
 
 /**
  * Function - add function to action object
@@ -96,54 +95,11 @@ const doActions = (name: string, ...args: any): void => {
   }
 }
 
-/**
- * Function - empty actions object
- *
- * @return {void}
- */
-
-const resetActions = (): void => {
-  actions = {}
-}
-
-/**
- * Store action callbacks by name
- *
- * @type {object}
- * @property {Function[]}
- */
-
-/**
- * Function - fill actions object
- *
- * @param {Object<string, Function>} args
- * @return {boolean}
- */
-
-const setActions = (args: { [key: string]: Function }): boolean => {
-  if (!isObject(args)) {
-    return false
-  }
-
-  if (Object.keys(args).length === 0) {
-    return false
-  }
-
-  resetActions()
-
-  Object.keys(args).forEach((a) => {
-    addAction(a, args[a])
-  })
-
-  return true
-}
-
 /* Exports */
 
 export {
+  actions,
   addAction,
   removeAction,
-  doActions,
-  resetActions,
-  setActions
+  doActions
 }

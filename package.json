@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "lint": "npx ts-standard && npx stylelint '**/*.scss'",
     "release": "release-it",
-    "test": "vitest --run --reporter verbose",
+    "test": "vitest --run --reporter verbose --environment happy-dom",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "jsdoc": "jsdoc -c jsdoc.json"
@@ -31,6 +31,8 @@
     "@storybook/html": "^7.4.6",
     "@storybook/html-vite": "^7.4.6",
     "@storybook/testing-library": "^0.2.2",
+    "@testing-library/dom": "^9.3.3",
+    "happy-dom": "^12.9.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "release-it": "^16.2.1",

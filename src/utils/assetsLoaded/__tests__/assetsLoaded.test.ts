@@ -5,7 +5,7 @@
 /* Imports */
 
 import { it, expect, describe } from 'vitest'
-import { assetLoaded, assetsLoaded } from './assetsLoaded'
+import { assetLoaded, assetsLoaded } from '../assetsLoaded'
 
 /* Tests */
 
