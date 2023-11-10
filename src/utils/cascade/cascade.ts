@@ -86,7 +86,7 @@ const cascade = (events: Event[], repeat: number = 1): void => {
 
           /* Clear */
 
-          clearTimeout(id)
+          clearTimeout(timeoutId)
         }
 
         timeoutId = window.setTimeout(() => {

@@ -62,38 +62,34 @@ describe('addAction()', () => {
 describe('doActions()', () => {
   it(
     'testAction should be called if name exists',
-    async () => await new Promise( // Done deprecation workaround...
-      resolve => {
-        doActions(testName, {
-          prop: (result: boolean) => { // Prop callback to check action called
-            expect(result).toBe(true)
-            resolve('')
-          }
-        })
-      }
-    )
+    () => new Promise(done => {
+      doActions(testName, {
+        prop: (result: boolean) => { // Prop callback to check action called
+          expect(result).toBe(true)
+          done('')
+        }
+      })
+    })
   )
 
   it(
     'testAction should not be called if name does not exist',
-    async () => await new Promise( // Done deprecation workaround...
-      resolve => {
-        const name = 'notName'
-        const result = 'not'
-        const action = (arg: Function) => {
-          arg(result)
-        }
-
-        addAction(name, action)
-
-        doActions(name, (res: string) => {
-          expect(res).toBe(result)
-          resolve('')
-        })
-
-        removeAction(name, action)
+    () => new Promise(done => {
+      const name = 'notName'
+      const result = 'not'
+      const action = (arg: Function) => {
+        arg(result)
       }
-    )
+
+      addAction(name, action)
+
+      doActions(name, (res: string) => {
+        expect(res).toBe(result)
+        done('')
+      })
+
+      removeAction(name, action)
+    })
   )
 })
 

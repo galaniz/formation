@@ -10,10 +10,10 @@ import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
 import { isArray } from '../isArray/isArray'
 
 /**
- * @typedef {HTMLImageElement|HTMLVideoElement|HTMLAudioElement|HTMLIFrameElement} Asset
+ * @typedef {HTMLImageElement|HTMLMediaElement|HTMLIFrameElement} Asset
  */
 
-type Asset = HTMLImageElement | HTMLVideoElement | HTMLAudioElement | HTMLIFrameElement | null
+type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
 
 /**
  * Function - check if single asset is loaded
