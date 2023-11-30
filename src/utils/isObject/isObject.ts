@@ -14,6 +14,10 @@ const isObject = (value: any): value is Object => {
     return false
   }
 
+  if (Array.isArray(value)) {
+    return false
+  }
+
   return typeof value === 'object' && value !== null && value !== undefined
 }
 

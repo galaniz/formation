@@ -44,39 +44,20 @@ export { request } from './functions/request'
 
 /* Misc */
 
-import { cascade } from './functions/cascade'
-import { addAction, doActions } from './actions/actions'
-import { setCookie, getCookie } from './functions/cookie'
-import { getDuration } from './functions/get-duration'
+export { cascade } from './functions/cascade'
+export { addAction, doActions } from './actions/actions'
+export { setCookie, getCookie } from './functions/cookie'
+export { getDuration } from './functions/get-duration'
 
 /* Exports */
 
 export {
   setLoaders,
   prefix,
-  closest,
-  getKey,
-  getDefaultFontSize,
-  getOuterElements,
-  setElements,
-  setSettings,
-  assetLoaded,
-  assetsLoaded,
-  mergeObjects,
-  recurseObject,
-  urlEncode,
-  objectToFormData,
-  request,
-  cascade,
-  addAction,
-  doActions,
   stopScroll,
   toggleFocusability,
   focusSelector,
   isItemFocusable,
   getInnerFocusableItems,
-  getOuterFocusableItems,
-  setCookie,
-  getCookie,
-  getDuration
+  getOuterFocusableItems
 }

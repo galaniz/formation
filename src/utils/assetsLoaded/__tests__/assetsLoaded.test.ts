@@ -8,9 +8,36 @@ import { it, expect, describe } from 'vitest'
 import { getQueriesForElement, fireEvent } from '@testing-library/dom'
 import { assetLoaded, assetsLoaded } from '../assetsLoaded'
 
-/* Html */
+/**
+ * @typedef {HTMLImageElement|HTMLMediaElement|HTMLIFrameElement} Asset
+ */
 
-const testHtml = () => {
+type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
+
+/**
+ * @typedef {object} LoadTypes
+ * @prop {string} img
+ * @prop {string} video
+ * @prop {string} audio
+ * @prop {string} iframe
+ * @prop {string} error
+ */
+
+interface LoadTypes {
+  img: string
+  video: string
+  audio: string
+  iframe: string
+  error: string
+}
+
+/**
+ * Function - output assets
+ *
+ * @return {HTMLDivElement}
+ */
+
+const htmlAssets = (): HTMLDivElement => {
   const container = document.createElement('div')
 
   container.innerHTML = `
@@ -31,157 +58,170 @@ const testHtml = () => {
   return container
 }
 
+/**
+ * Function - get asset(s)
+ *
+ * @param {string[]} [types=[]]
+ * @return {Asset[]}
+ */
+
+const getAssets = (types: string[] = []): Asset[] => {
+  const html = htmlAssets()
+  const { getByTestId } = getQueriesForElement(html)
+
+  return types.map((type) => {
+    return getByTestId(type) as Asset
+  })
+}
+
+/**
+ * Function - load asset(s)
+ *
+ * @param {Asset[]} [items=[]]
+ * @param {string[]} [types=[]]
+ * @return {number}
+ */
+
+const loadAssets = (items: Asset[] = [], types: string[] = []): number => {
+  const loadTypes: LoadTypes = {
+    img: 'load',
+    video: 'canplay',
+    audio: 'canplay',
+    iframe: 'load',
+    error: 'error'
+  }
+
+  return window.setTimeout(() => {
+    items.forEach((item, i) => {
+      const type = types[i] as keyof LoadTypes
+
+      fireEvent(item as Element, new Event(loadTypes[type]))
+    })
+  }, 10)
+}
+
 /* Tests */
 
 describe('assetLoaded()', () => {
-  it('should throw an error if asset is null', () => {
+  it('should throw an error if asset is null', async () => {
     const asset = null
 
-    return expect(assetLoaded(asset)).rejects.toThrowError()
+    return await expect(assetLoaded(asset)).rejects.toThrowError()
   })
 
   it(
     'should resolve to asset if asset is image',
-    async () => new Promise(async done => {
-      const html = testHtml()
-      const { getByTestId } = getQueriesForElement(html)
+    async () => {
+      const types = ['img']
+      const assets = getAssets(types)
+      const [asset] = assets
+      const timeoutId = loadAssets(assets, types)
+      const result = await assetLoaded(asset)
 
-      const asset = <HTMLImageElement>getByTestId('img')
-
-      let timeoutId = setTimeout(() => {
-        fireEvent(asset, new Event('load'))
-      }, 100)
-
-      try {
-        const result = await assetLoaded(asset)
-        expect(result).toBe(asset)
-        clearTimeout(timeoutId)
-        done('')
-      } catch (error) {
-        expect(error).toBeTypeOf('string')
-        clearTimeout(timeoutId)
-        done('')
-      }
-    })
+      expect(result).toBe(asset)
+      expect(asset).toBeInstanceOf(HTMLImageElement)
+      clearTimeout(timeoutId)
+    }
   )
 
-  /*it(
+  it(
     'should resolve to asset if asset is video',
-    async () => new Promise (done => async () => {
-      const html = testHtml()
-      const asset: HTMLVideoElement | null = <HTMLVideoElement>getByTestId(html, 'video')
+    async () => {
+      const types = ['video']
+      const assets = getAssets(types)
+      const [asset] = assets
+      const timeoutId = loadAssets(assets, types)
+      const result = await assetLoaded(asset)
 
-      console.log('ASSET', asset)
+      expect(result).toBe(asset)
+      expect(asset).toBeInstanceOf(HTMLVideoElement)
+      clearTimeout(timeoutId)
+    }
+  )
 
-      return await assetLoaded(asset)
-        .then((result) => {
-          console.log('RES', result)
-          expect(result).toBe(asset)
-          done('')
-        })
-        .catch((error) => {
-          console.log('ERR', error)
-          expect(error).toBeTypeOf('string')
-          done('')
-        })
-    })
-  )*/
+  it(
+    'should resolve to asset if asset is audio',
+    async () => {
+      const types = ['audio']
+      const assets = getAssets(types)
+      const [asset] = assets
+      const timeoutId = loadAssets(assets, types)
+      const result = await assetLoaded(asset)
 
-  /*it(
-    'should resolve to asset if asset is image',
-    async () => await new Promise(done => {
-      (async () => {
-        const html = testHtml()
-        const asset: HTMLImageElement | null = <HTMLImageElement>getByTestId(html, 'img')
+      expect(result).toBe(asset)
+      expect(asset).toBeInstanceOf(HTMLAudioElement)
+      clearTimeout(timeoutId)
+    }
+  )
 
-        assetLoaded(asset)
-          .then((result) => {
-            console.log('RES', result)
-            expect(result).toEqual(asset)
-            done('')
-          })
-          .catch((error) => {
-            console.log('ERR', error)
-            expect(error).toBeTypeOf('string')
-            done('')
-          })
-      })()
-    })
-  )*/
+  it(
+    'should resolve to asset if asset is iframe',
+    async () => {
+      const types = ['iframe']
+      const assets = getAssets(types)
+      const [asset] = assets
+      const timeoutId = loadAssets(assets, types)
+      const result = await assetLoaded(asset)
 
-  /*it('should resolve if asset is video', async () => {
-    const html = testHtml()
-    const asset: HTMLVideoElement | null = queryByTestId(html, 'video')
-
-    return await expect(assetLoaded(asset)).resolves.toEqual(asset)
-  })
-
-  it('should resolve if asset is audio', async () => {
-    const html = testHtml()
-    const asset: HTMLAudioElement | null = queryByTestId(html, 'audio')
-
-    return await expect(assetLoaded(asset)).resolves.toEqual(asset)
-  })
-
-  it('should resolve if asset is iframe', async () => {
-    const html = testHtml()
-    const asset: HTMLIFrameElement | null = queryByTestId(html, 'iframe')
-
-    return await expect(assetLoaded(asset)).resolves.toEqual(asset)
-  })*/
+      expect(result).toBe(asset)
+      expect(asset).toBeInstanceOf(HTMLIFrameElement)
+      clearTimeout(timeoutId)
+    }
+  )
 })
 
 describe('assetsLoaded()', () => {
   it(
     'should pass false with error message to callback if assets array empty',
-    () => new Promise(done => {
-      const assets = []
-
-      assetsLoaded(assets, (result, error) => {
+    async () => await new Promise(resolve => {
+      assetsLoaded([], (result, error) => {
         expect(result).toBe(false)
         expect(error).toBeTypeOf('string')
-        done('')
+        resolve('')
       })
     })
   )
 
   it(
     'should pass false with error object to callback if assets contains null elements',
-    () => new Promise(done => {
+    async () => await new Promise(resolve => {
       const assets = [null, null, null]
 
       assetsLoaded(assets, (result, error) => {
         expect(result).toBe(false)
         expect(error).toBeInstanceOf(Error)
-        done('')
+        resolve('')
+      })
+    })
+  )
+
+  it(
+    'should pass false with error object to callback if media element fires error event',
+    async () => await new Promise(resolve => {
+      const types = ['img', 'video', 'audio', 'iframe']
+      const assets = getAssets(types)
+      const timeoutId = loadAssets(assets, ['img', 'error', 'audio', 'iframe'])
+
+      assetsLoaded(assets, (result, error) => {
+        expect(result).toBe(false)
+        expect(error).toBeInstanceOf(Event)
+        clearTimeout(timeoutId)
+        resolve('')
       })
     })
   )
 
   it(
     'should pass assets to callback if assets contains media elements',
-    () => new Promise(done => {
-      const html = testHtml()
-      const { getByTestId } = getQueriesForElement(html)
+    async () => await new Promise(resolve => {
+      const types = ['img', 'video', 'audio', 'iframe']
+      const assets = getAssets(types)
+      const timeoutId = loadAssets(assets, types)
 
-      const assets = [
-        <HTMLImageElement>getByTestId('img')
-      ]
-
-      let timeoutId = setTimeout(() => {
-        fireEvent(assets[0], new Event('load'))
-      }, 100)
-
-      assetsLoaded(assets, (result, error) => {
-        if (result === false && error !== undefined) {
-          clearTimeout(timeoutId)
-          done(error)
-          return
-        }
-
+      assetsLoaded(assets, (result) => {
         expect(result).toEqual(assets)
         clearTimeout(timeoutId)
-        done('')
+        resolve('')
       })
     })
   )

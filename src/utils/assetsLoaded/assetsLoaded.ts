@@ -24,8 +24,6 @@ type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
 
 const assetLoaded = async (asset: Asset): Promise<Asset> => {
   return await new Promise((resolve, reject) => {
-    let proxy = asset
-
     const result = (): void => {
       resolve(asset)
     }
@@ -34,7 +32,7 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
       reject(err)
     }
 
-    if (!isHTMLElement(proxy)) {
+    if (!isHTMLElement(asset)) {
       error(new Error('Asset is not an HTML element'))
       return
     }
@@ -42,20 +40,15 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
     const isVideo = asset instanceof HTMLVideoElement
     const isAudio = asset instanceof HTMLAudioElement
 
-    if (isVideo || isAudio) {
-      proxy = document.createElement(isVideo ? 'video' : 'audio')
-      proxy.src = asset.src
-    }
-
-    proxy.onerror = error
+    asset.onerror = error
 
     if (isVideo || isAudio) {
-      proxy.oncanplay = result
+      asset.oncanplay = result
     } else {
-      proxy.onload = result
+      asset.onload = result
     }
 
-    if (proxy instanceof HTMLImageElement && proxy.complete) {
+    if (asset instanceof HTMLImageElement && asset.complete) {
       result()
     }
   })

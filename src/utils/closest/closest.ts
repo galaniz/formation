@@ -11,7 +11,7 @@ import { isString } from '../isString/isString'
  * Function - check item is an HTML element and contains classes
  *
  * @private
- * @param {HTMLElement} item
+ * @param {HTMLElement|null} item
  * @param {string} classes
  * @return {boolean}
  */
@@ -27,13 +27,13 @@ const _itemCheck = (item: HTMLElement | null, classes: string): boolean => {
 /**
  * Function - traverse up DOM until find element with class
  *
- * @param {HTMLElement} item
+ * @param {HTMLElement|null} item
  * @param {string} classes
  * @param {number} [max=10]
  * @return {HTMLElement|null}
  */
 
-const closest = (item: HTMLElement, classes: string, max: number = 10): HTMLElement | null => {
+const closest = (item: HTMLElement | null, classes: string, max: number = 10): HTMLElement | null => {
   if (!isHTMLElement(item) || !isString(classes)) {
     return null
   }
@@ -49,6 +49,10 @@ const closest = (item: HTMLElement, classes: string, max: number = 10): HTMLElem
     counter += 1
 
     if (counter === max) {
+      if (_itemCheck(parent, classes)) {
+        parent = null
+      }
+
       break
     }
   }

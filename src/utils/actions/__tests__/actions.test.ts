@@ -12,10 +12,23 @@ import {
   doActions
 } from '../actions'
 
-/* Test variables */
+/**
+ * Test action name
+ *
+ * @type {string}
+ */
 
-const testName = 'testName'
-const testAction = (args: { prop: Function }) => {
+const testName: string = 'testName'
+
+/**
+ * Function - test action
+ *
+ * @param {object} args
+ * @param {function} args.prop
+ * @return {void}
+ */
+
+const testAction = (args: { prop: Function }): void => {
   const { prop } = args
   prop(true)
 }
@@ -32,7 +45,7 @@ describe('addAction()', () => {
 
   it('should return false if name is null', () => {
     const name = null
-    const action = () => {}
+    const action = (): void => {}
     // @ts-expect-error
     const result = addAction(name, action)
     const expectedResult = false
@@ -62,11 +75,11 @@ describe('addAction()', () => {
 describe('doActions()', () => {
   it(
     'testAction should be called if name exists',
-    () => new Promise(done => {
+    async () => await new Promise(resolve => {
       doActions(testName, {
         prop: (result: boolean) => { // Prop callback to check action called
           expect(result).toBe(true)
-          done('')
+          resolve('')
         }
       })
     })
@@ -74,10 +87,10 @@ describe('doActions()', () => {
 
   it(
     'testAction should not be called if name does not exist',
-    () => new Promise(done => {
+    async () => await new Promise(resolve => {
       const name = 'notName'
       const result = 'not'
-      const action = (arg: Function) => {
+      const action = (arg: Function): void => {
         arg(result)
       }
 
@@ -85,7 +98,7 @@ describe('doActions()', () => {
 
       doActions(name, (res: string) => {
         expect(res).toBe(result)
-        done('')
+        resolve('')
       })
 
       removeAction(name, action)
@@ -96,7 +109,7 @@ describe('doActions()', () => {
 describe('removeAction()', () => {
   it('should return false if name is null', () => {
     const name = null
-    const action = () => {}
+    const action = (): void => {}
     // @ts-expect-error
     const result = removeAction(name, action)
     const expectedResult = false
@@ -116,7 +129,7 @@ describe('removeAction()', () => {
 
   it('should return false if action does not exist', () => {
     const name = 'name'
-    const action = () => false
+    const action = (): boolean => false
     const result = removeAction(name, action)
     const expectedResult = false
 
