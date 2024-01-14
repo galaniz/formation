@@ -94,9 +94,9 @@ const SliderHtml = ({ args = {}, children = [] }) => {
   }
 
   if (gapLarge !== '') {
-    styles['--gap-l'] = `var(--${gap})`
+    styles['--gap-l'] = `var(--${gapLarge})`
 
-    gapClasses.push(`l-gap-margin-${gap}-l`)
+    gapClasses.push(`l-gap-margin-${gapLarge}-l`)
   }
 
   let attrs = ''
