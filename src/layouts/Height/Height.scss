@@ -1,0 +1,50 @@
+/**
+ * Layouts - Height Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Class name infix */
+
+$height-infix: "height";
+$min-height-infix: "min-height";
+
+@if con.$terse {
+  $height-infix: "ht";
+  $min-height-infix: "mh";
+}
+
+/* Relative units */
+
+.l-#{$height-infix}-100-pc {
+  height: 100%;
+}
+
+.l-#{$height-infix}-100-vh {
+  height: 100vh;
+}
+
+.l-#{$min-height-infix}-100-vh {
+  min-height: 100vh;
+}
+
+/* Config heights */
+
+@each $h in con.$heights {
+  .l-#{$height-infix}-#{$h} {
+    height: var(--#{$h});
+  }
+}
+
+@each $b in con.$height-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    @each $h in con.$heights {
+      .l-#{$height-infix}-#{$h}-#{$b} {
+        height: var(--#{$h});
+      }
+    }
+  }
+}

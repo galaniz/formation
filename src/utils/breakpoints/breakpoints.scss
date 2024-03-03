@@ -5,8 +5,8 @@
 /* Imports */
 
 @use "sass:map";
-@use "../../config" as con;
-@use "../index" as util;
+@use "../../config/config" as con;
+@use "../calcRem/calcRem" as calc;
 
 /**
  * Mixin - min width media query
@@ -17,7 +17,7 @@
 
 @mixin breakpoint-min($min) {
   @if map.has-key(con.$breakpoints, $min) {
-    $bk-rem: util.calc-rem(map.get(con.$breakpoints, $min));
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
 
     @media only screen and (min-width: #{$bk-rem}) {
       @content;
@@ -36,7 +36,7 @@
 
 @mixin breakpoint-max($max) {
   @if map.has-key(con.$breakpoints, $max) {
-    $bk-rem: util.calc-rem(map.get(con.$breakpoints, $max));
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $max));
 
     @media only screen and (max-width: #{$bk-rem}) {
       @content;
@@ -56,8 +56,8 @@
 
 @mixin breakpoint-min-max($min, $max) {
   @if map.has-key(con.$breakpoints, $min) and map.has-key(con.$breakpoints, $max) {
-    $bk-min-rem: util.calc-rem(map.get(con.$breakpoints, $min));
-    $bk-max-rem: util.calc-rem(map.get(con.$breakpoints, $max));
+    $bk-min-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
+    $bk-max-rem: calc.calc-rem(map.get(con.$breakpoints, $max));
 
     @media only screen and (max-width: #{$bk-max-rem}) and (min-width: #{$bk-min-rem}) {
       @content;

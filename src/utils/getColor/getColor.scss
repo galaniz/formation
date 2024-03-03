@@ -5,7 +5,7 @@
 /* Imports */
 
 @use "sass:map";
-@use "../../config" as con;
+@use "../../config/config" as con;
 
 /**
  * Function - get hex color from name in $colors-flat map

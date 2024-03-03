@@ -11,9 +11,10 @@
   },
   "include": [
     "**/*.ts"
-  ],
+, "src/utils/index.js"  ],
   "exclude": [
     "./lib",
+    "__mocks__",
     "**/*.test.ts",
     "node_modules"
   ]

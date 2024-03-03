@@ -1,0 +1,58 @@
+/**
+ * Components - Nav Icon Eight Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:math";
+@use "../" as icon;
+@use "../../../../config/config" as con;
+@use "../../../../utils/calcRem/calcRem" as calc;
+
+/* Variables */
+
+$width: map.get(con.$nav, "icon", "width");
+$line-width: map.get(con.$nav, "icon", "line-width");
+$x: calc.calc-rem(math.div($width, 2) - math.div($line-width, 2));
+$y: (icon.$y + calc.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 to make x more precise
+
+/* Styles */
+
+[data-nav-icon="8"] {
+  --duration: 200ms;
+  --rotate: 0deg;
+  --rotate-in: 0deg;
+  --x: 0;
+  --x-r: 0;
+  --y: 0;
+  --y-r: 0;
+
+  transform: rotate(var(--rotate));
+
+  .c-nav-icon__top,
+  .c-nav-icon__bottom {
+    width: 50%;
+  }
+
+  .c-nav-icon__top {
+    transform: translate(var(--x), var(--y)) rotate(var(--rotate-in));
+    transform-origin: 0 0;
+    margin-right: 50%;
+  }
+
+  .c-nav-icon__bottom {
+    transform: translate(var(--x-r), var(--y-r)) rotate(var(--rotate-in));
+    transform-origin: 100% 100%;
+    margin-left: 50%;
+  }
+
+  [data-nav-show] & {
+    --rotate: -45deg;
+    --rotate-in: -90deg;
+    --x: #{$x};
+    --x-r: #{$x * -1};
+    --y: #{$y};
+    --y-r: #{$y * -1};
+  }
+}

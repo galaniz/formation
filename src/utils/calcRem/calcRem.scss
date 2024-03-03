@@ -5,7 +5,7 @@
 /* Imports */
 
 @use "sass:math";
-@use "../../config" as con;
+@use "../../config/config" as con;
 
 /**
  * Function - convert px to rem

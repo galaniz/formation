@@ -1,7 +1,5 @@
 /**
  * Utils - Assets Loaded
- *
- * @module assetsLoaded
  */
 
 /* Imports */

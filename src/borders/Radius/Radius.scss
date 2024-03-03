@@ -5,8 +5,8 @@
 /* Imports */
 
 @use "sass:map";
-@use "../config" as con;
-@use "../utils/mixins" as mix;
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
 
 /* Styles */
 
@@ -21,7 +21,7 @@
 }
 
 @each $b in con.$border-radius-breakpoints {
-  @include mix.breakpoint-min($b) {
+  @include breakpoints.breakpoint-min($b) {
     @each $r, $v in con.$border-radius {
       .b-radius-#{$r}-#{$b} {
         border-radius: var(--border-radius-#{$r});

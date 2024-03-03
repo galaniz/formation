@@ -1,0 +1,74 @@
+/**
+ * Layouts - Flexbox Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Styles */
+
+.l-flex-column {
+  flex-direction: column;
+}
+
+.l-flex-row {
+  flex-direction: row;
+}
+
+.l-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.l-justify-between {
+  justify-content: space-between;
+}
+
+.l-justify-center {
+  justify-content: center;
+}
+
+.l-justify-start {
+  justify-content: flex-start;
+}
+
+.l-justify-end {
+  justify-content: flex-end;
+}
+
+.l-align-center {
+  align-items: center;
+}
+
+.l-align-start {
+  align-items: flex-start;
+}
+
+.l-align-end {
+  align-items: flex-end;
+}
+
+.l-flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.l-flex-grow-1 {
+  flex-grow: 1;
+}
+
+@each $b in con.$flex-column-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    .l-flex-column-#{$b} {
+      flex-direction: column;
+    }
+  }
+}
+
+@each $b in con.$flex-row-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    .l-flex-row-#{$b} {
+      flex-direction: row;
+    }
+  }
+}

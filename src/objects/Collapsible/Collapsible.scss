@@ -4,7 +4,7 @@
 
 /* Imports */
 
-@use "../../config" as con;
+@use "../../config/config" as con;
 
 /* Styles */
 
@@ -20,9 +20,9 @@
   visibility: var(--visibility);
   overflow: var(--overflow);
 
-  [data-collapsible-expanded="true"] > & {
-    --h: var(--height);
+  [data-collapsible-expanded="true"] & {
     --delay: #{con.$collapsible-delay-expanded};
     --visibility: visible;
+    --h: var(--height);
   }
 }

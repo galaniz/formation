@@ -693,4 +693,4 @@ class Slider extends Tabs {
 
 /* Exports */
 
-export default Slider
+export { Slider }

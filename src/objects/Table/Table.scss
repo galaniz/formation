@@ -1,0 +1,8 @@
+/**
+ * Objects - Table Styles
+ */
+
+[data-table-overflow="false"] .o-table__hide,
+[data-table-overflow="true"] .o-table__show {
+  display: none;
+}

@@ -59,7 +59,7 @@ const SliderInit = (context = document) => {
         prev: s.prev,
         next: s.next,
         duration: 500
-        // reduceMotion: settings.reduceMotion
+        // reduceMotion: config.reduceMotion
       }
 
       const loop = container.getAttribute('data-slider-loop') === 'true'

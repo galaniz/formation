@@ -28,7 +28,8 @@ type ItemsReturn = Element[] | ItemsObjectReturn | ItemsObjectReturn[] | ItemsRe
 const setItems = (
   items: Items,
   context: Document | Element = document,
-  _items: ItemsReturn = {}
+  _items: ItemsReturn = {},
+  _changeContext = true
 ): ItemsReturn => {
   if (Array.isArray(items)) {
     _items = []
@@ -49,7 +50,7 @@ const setItems = (
         newContext.forEach((newContextItem) => {
           const itemCopy = { ...item }
 
-          const newItemProps = setItems(itemCopy, newContextItem, _items)
+          const newItemProps = setItems(itemCopy, newContextItem, _items, false)
 
           newItems.push(newItemProps)
         })
@@ -64,14 +65,16 @@ const setItems = (
 
     Object.entries(items).forEach(([prop, value]) => {
       if (prop === 'context') {
-        let newContext = null
+        if (_changeContext) {
+          let newContext = null
 
-        if (typeof value === 'string') {
-          newContext = context.querySelector(value)
-        }
+          if (typeof value === 'string') {
+            newContext = context.querySelector(value)
+          }
 
-        if (newContext !== null) {
-          context = newContext
+          if (newContext !== null) {
+            context = newContext
+          }
         }
 
         newItems[prop] = context
@@ -82,7 +85,7 @@ const setItems = (
       if (typeof value === 'string') {
         newItems[prop] = context.querySelector(value)
       } else if (Array.isArray(value) || isObject(value)) {
-        newItems[prop] = setItems(value, context, _items)
+        newItems[prop] = setItems(value, context, _items, true)
       }
     })
 

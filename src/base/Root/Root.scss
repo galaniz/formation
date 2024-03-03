@@ -6,22 +6,35 @@
 
 @use "sass:map";
 @use "sass:string";
-@use "../config" as con;
-@use "../utils/functions" as func;
+@use "../../config/config" as con;
+@use "../../utils/calcRem/calcRem" as calc;
 
 /**
  * Set root variables
  *
  * @return {void}
  */
-
 @mixin set-root() {
   $props: ();
 
   @each $r in con.$root {
     @if $r == "colors" {
       @each $c, $v in con.$colors-flat {
-        --#{$c}: #{$v};
+        @if con.$colors-type == "rgb" {
+          --#{$c}-rgb: #{$v};
+          --#{$c}: #{rgb(#{$v})};
+        } @else if con.$colors-type == "hsl" {
+          --#{$c}-hsl: #{$v};
+          --#{$c}: #{hsl(#{$v})};
+        } @else if con.$colors-type == "rgba" {
+          --#{$c}-rgb: #{$v};
+          --#{$c}: #{rgba(#{$v}, 1)};
+        } @else if con.$colors-type == "hsla" {
+          --#{$c}-hsl: #{$v};
+          --#{$c}: #{hsla(#{$v}, 1)};
+        } @else {
+          --#{$c}: #{$v};
+        }
       }
     } @else if $r == "font-families" {
       @each $f, $v in con.$font-families {
@@ -41,7 +54,7 @@
       }
     } @else if $r == "spacing" {
       @each $s, $v in con.$spacing {
-        --#{$s}: #{func.calc-rem($v)};
+        --#{$s}: #{calc.calc-rem($v)};
       }
     } @else if $r == "gap" {
       --gap: 0rem;
@@ -54,11 +67,11 @@
           $suffix: "-#{$c}";
         }
 
-        --container#{$suffix}: #{func.calc-rem($v)};
-        --container#{$suffix}-no-padding: #{func.calc-rem($v - (con.$container-padding * 2))};
+        --container#{$suffix}: #{calc.calc-rem($v)};
+        --container#{$suffix}-no-padding: #{calc.calc-rem($v - (con.$container-padding * 2))};
       }
     } @else if $r == "container-padding" {
-      --container-padding: #{func.calc-rem(con.$container-padding)};
+      --container-padding: #{calc.calc-rem(con.$container-padding)};
     } @else if $r == "aspect-ratio-padding" {
       --aspect-ratio-padding: 100%;
     } @else if $r == "transitions" {
@@ -79,7 +92,7 @@
       --border-width: #{map.get(con.$borders, "widths", "default")};
     } @else if $r == "border-radius" {
       @each $b, $v in con.$border-radius {
-        --border-radius-#{$b}: #{func.calc-rem($v)};
+        --border-radius-#{$b}: #{calc.calc-rem($v)};
       }
     }
   }

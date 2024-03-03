@@ -1,0 +1,46 @@
+/**
+ * Layouts - Display Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Styles */
+
+.l-none {
+  display: none;
+}
+
+.l-block {
+  display: block;
+}
+
+.l-inline-block {
+  display: inline-block;
+}
+
+.l-flex {
+  display: flex;
+}
+
+.l-inline-flex {
+  display: inline-flex;
+}
+
+@each $b in con.$block-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    .l-block-#{$b} {
+      display: block;
+    }
+  }
+}
+
+@each $b in con.$none-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    .l-none-#{$b} {
+      display: none;
+    }
+  }
+}

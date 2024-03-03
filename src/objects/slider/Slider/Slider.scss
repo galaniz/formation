@@ -4,7 +4,7 @@
 
 /* Imports */
 
-@use "../../../utils/mixins" as mix;
+@use "../../../utils/breakpoints/breakpoints";
 
 /* Containers */
 
@@ -43,22 +43,22 @@
     --width: (100% * var(--multiplier) - (var(--container-padding) * (var(--multiplier) * 2)));
   }
 
-  @include mix.breakpoint-min("s") {
+  @include breakpoints.breakpoint-min("s") {
     --items: var(--items-s);
   }
 
-  @include mix.breakpoint-min("m") {
+  @include breakpoints.breakpoint-min("m") {
     --items: var(--items-m);
   }
 
-  @include mix.breakpoint-min("l") {
+  @include breakpoints.breakpoint-min("l") {
     --items: var(--items-l);
     --gap: var(--gap-l);
   }
 }
 
 .o-slider--contain {
-  @include mix.breakpoint-min("container-no-padding") {
+  @include breakpoints.breakpoint-min("container-no-padding") {
     --track-right: var(--gap) * -1;
     --x: var(--gap) * -1;
     --offset: 0;
@@ -81,7 +81,7 @@
     }
   }
 
-  @include mix.breakpoint-min("container") {
+  @include breakpoints.breakpoint-min("container") {
     --prev-next: block;
   }
 }

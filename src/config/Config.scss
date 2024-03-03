@@ -7,7 +7,8 @@
 @use "sass:map";
 @use "sass:list";
 @use "sass:string";
-@use "../utils" as util;
+@use "../utils/maps/maps";
+@use "../utils/placeholders/placeholders";
 
 /* Root */
 
@@ -32,12 +33,21 @@ $root: (
 
 $context: 16px !default;
 
+/* Layout class names short */
+
+$terse: true !default;
+
+/* X and y in padding and margin classes */
+
+$xy: true !default;
+
 /* Store custom variables */
 
 $vars: () !default;
 
 /* Colors  */
 
+$colors-type: "hex" !default;
 $colors: (
   "primary": (
     "base": #888,
@@ -58,11 +68,11 @@ $colors: (
 
 /* Flatten colors to one level map */
 
-$colors-flat-prefix: util.map-flatten($colors, (), "color");
+$colors-flat-prefix: maps.map-flatten($colors, (), "color");
 
 /* Flatten colors to one level map without prefix */
 
-$colors-flat: util.map-flatten($colors, (), "");
+$colors-flat: maps.map-flatten($colors, (), "");
 
 /* Text colors */
 
@@ -202,10 +212,15 @@ $gap-breakpoints: () !default;
 $flex-row-breakpoints: () !default;
 $flex-column-breakpoints: () !default;
 
+/* Display */
+
+$block-breakpoints: () !default;
+$none-breakpoints: () !default;
+
 /* Aspect ratio padding */
 
 $aspect-ratio-padding: () !default;
-$aspect-ratio-padding: util.map-recursive-merge(
+$aspect-ratio-padding: maps.map-recursive-merge(
   (
     "100": 100%
   ),
@@ -215,7 +230,7 @@ $aspect-ratio-padding: util.map-recursive-merge(
 /* Transitions */
 
 $transitions: () !default;
-$transitions: util.map-recursive-merge(
+$transitions: maps.map-recursive-merge(
   (
     "default": (
       "prop": (color, background, border-color, opacity, transform),
@@ -270,7 +285,7 @@ $modal-overlay-window-delay-open: 10ms, 0ms;
 /* Z index */
 
 $z-index: () !default;
-$z-index: util.map-recursive-merge(
+$z-index: maps.map-recursive-merge(
   (
     "skip-link": 100,
     "page-transition": 100,
@@ -284,7 +299,7 @@ $z-index: util.map-recursive-merge(
 /* Outline */
 
 $outline: () !default;
-$outline: util.map-recursive-merge(
+$outline: maps.map-recursive-merge(
   (
     "widths": (
       "default": 0.25rem
@@ -305,7 +320,7 @@ $outline: util.map-recursive-merge(
 /* Borders */
 
 $borders: () !default;
-$borders: util.map-recursive-merge(
+$borders: maps.map-recursive-merge(
   (
     "sides": (
       "all",
@@ -334,10 +349,10 @@ $border-radius-breakpoints: () !default;
 $placeholders: () !default;
 
 @each $p in $placeholders {
-  @include util.placeholder-make($p);
+  @include placeholders.placeholder-make($p);
 }
 
-@include util.placeholder-set("visually-hidden") {
+@include placeholders.placeholder-set("visually-hidden") {
   position: absolute;
   overflow: hidden;
   width: 0.0625rem;
@@ -346,7 +361,7 @@ $placeholders: () !default;
   clip: rect(0, 0, 0, 0);
 }
 
-@include util.placeholder-set("touch-50") {
+@include placeholders.placeholder-set("touch-50") {
   &::before {
     content: "";
     position: absolute;
