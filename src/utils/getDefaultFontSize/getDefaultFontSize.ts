@@ -10,7 +10,6 @@
 
 const getDefaultFontSize = (): number => {
   let size = 16
-
   let element: HTMLDivElement | null = document.createElement('div')
 
   element.style.width = '1rem'

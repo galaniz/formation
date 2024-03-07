@@ -3,16 +3,25 @@
  */
 
 /**
- * Function - check if value is not an empty string
+ * Function - check if value is string
  *
  * @param {*} value
  * @return {boolean}
  */
+const isString = (value: unknown): value is string => {
+  return typeof value === 'string'
+}
 
-const isString = (value: any): value is string => {
+/**
+ * Function - check if value is string and not empty
+ *
+ * @param {*} value
+ * @return {boolean}
+ */
+const isStringStrict = (value: unknown): value is string => {
   return typeof value === 'string' && value.trim() !== ''
 }
 
 /* Exports */
 
-export { isString }
+export { isString, isStringStrict }

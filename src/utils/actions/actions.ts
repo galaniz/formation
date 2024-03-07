@@ -11,8 +11,10 @@ import { isString } from '../isString/isString'
  *
  * @type {Object<string, Function[]>}
  */
-
-const actions: { [key: string]: Function[] } = {}
+const actions: { [key: string]: Function[] } = {
+  resize: [],
+  scroll: []
+}
 
 /**
  * Function - add function to action object
@@ -21,7 +23,6 @@ const actions: { [key: string]: Function[] } = {}
  * @param {function} action
  * @return {boolean}
  */
-
 const addAction = (name: string, action: Function): boolean => {
   if (!isString(name)) {
     return false

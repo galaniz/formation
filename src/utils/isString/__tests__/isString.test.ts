@@ -18,10 +18,10 @@ describe('isString()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if value is an empty string', () => {
+  it('should return true if value is an empty string', () => {
     const value = ''
     const result = isString(value)
-    const expectedResult = false
+    const expectedResult = true
 
     expect(result).toBe(expectedResult)
   })

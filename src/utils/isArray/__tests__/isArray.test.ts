@@ -23,14 +23,14 @@ describe('isArray()', () => {
     expect(resultInstance).toBe(expectedResult)
   })
 
-  it('should return false if value is an empty array', () => {
-    const value: any[] = []
+  it('should return true if value is an empty array', () => {
+    const value: unknown[] = []
     const valueInstance = new Array() // eslint-disable-line @typescript-eslint/no-array-constructor
 
     const result = isArray(value)
     const resultInstance = isArray(valueInstance)
 
-    const expectedResult = false
+    const expectedResult = true
 
     expect(result).toBe(expectedResult)
     expect(resultInstance).toBe(expectedResult)

@@ -18,21 +18,21 @@ class Collapsible {
    *
    * @type {HTMLElement}
    */
-  container!: HTMLElement // Init false when null
+  container!: HTMLElement // Init false otherwise
 
   /**
    * Element that opens and closes
    *
    * @type {HTMLElement}
    */
-  collapsible!: HTMLElement // Init false when null
+  collapsible!: HTMLElement // Init false otherwise
 
   /**
    * Clickable element that sets open and close
    *
    * @type {HTMLElement}
    */
-  trigger!: HTMLElement // Init false when null
+  trigger!: HTMLElement // Init false otherwise
 
   /**
    * Collapsible open to start
