@@ -1,0 +1,20 @@
+/**
+ * A11y - Hide Styles
+ */
+
+/* Imports */
+
+@forward "../../config/config";
+
+/* Styles */
+
+.a-visually-hidden {
+  @extend %u-visually-hidden;
+}
+
+.a-hide-input {
+  position: absolute;
+  opacity: 0;
+  width: 1em;
+  height: 1em;
+}

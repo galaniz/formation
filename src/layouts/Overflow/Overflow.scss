@@ -1,0 +1,28 @@
+/**
+ * Layouts - Overflow Styles
+ */
+
+.l-overflow-hidden {
+  overflow: hidden;
+}
+
+.l-overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.l-overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.l-overflow-y-auto {
+  overflow-y: auto;
+}
+
+.l-overflow-x-auto {
+  overflow-x: auto;
+}
+
+.l-overscroll-none {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}

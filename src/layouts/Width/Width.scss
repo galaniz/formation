@@ -1,0 +1,78 @@
+/**
+ * Layouts - Width Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Class name infix */
+
+$width-infix: "width";
+$max-width-infix: "max-width";
+
+@if con.$terse {
+  $width-infix: "wd";
+  $max-width-infix: "mw";
+}
+
+/* Relative units */
+
+.l-#{$width-infix}-100-pc {
+  width: 100%;
+}
+
+.l-#{$width-infix}-100-vw {
+  width: 100vw;
+}
+
+/* Config widths */
+
+@each $w in con.$widths {
+  .l-#{$width-infix}-#{$w} {
+    width: var(--#{$w});
+  }
+}
+
+@each $b in con.$width-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    @each $w in con.$widths {
+      .l-#{$width-infix}-#{$w}-#{$b} {
+        width: var(--#{$w});
+      }
+    }
+  }
+}
+
+@each $w, $v in con.$width-percentages {
+  .l-#{$width-infix}-#{$w} {
+    width: $v;
+  }
+}
+
+@each $b in con.$width-percentage-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    @each $w, $v in con.$width-percentages {
+      .l-#{$width-infix}-#{$w}-#{$b} {
+        width: $v;
+      }
+    }
+  }
+}
+
+@each $w in con.$max-widths {
+  .l-#{$max-width-infix}-#{$w} {
+    max-width: var(--#{$w});
+  }
+}
+
+@each $b in con.$max-width-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    @each $w in con.$max-widths {
+      .l-#{$max-width-infix}-#{$w}-#{$b} {
+        max-width: var(--#{$w});
+      }
+    }
+  }
+}

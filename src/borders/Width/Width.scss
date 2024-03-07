@@ -1,0 +1,20 @@
+/**
+ * Borders - Width Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+
+/* Styles */
+
+$widths: map.get(con.$borders, "widths");
+
+@each $w, $v in $widths {
+  @if $w != "default" {
+    .b-width-#{$w} {
+      --border-width: #{$v};
+    }
+  }
+}

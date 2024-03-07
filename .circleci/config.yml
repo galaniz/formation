@@ -14,6 +14,18 @@ jobs:
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
       - run: npm install
       - run: npm run release
+  publish-release-beta:
+    docker:
+      - image: circleci/node:latest
+    steps: 
+      - checkout
+      - run: |
+          export GITHUB_TOKEN=$GITHUB_TOKEN
+          git config user.name "${GITHUB_USER}"
+          git config user.email "${GITHUB_EMAIL}"
+      - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+      - run: npm install
+      - run: npm run release
 
 workflows:
   version: 2.1
@@ -23,5 +35,13 @@ workflows:
           filters:
             branches:
               only: main
+            tags:
+              ignore: /.*/
+  publish_release_beta:
+    jobs:
+      - publish-release-beta:
+          filters:
+            branches:
+              only: beta
             tags:
               ignore: /.*/

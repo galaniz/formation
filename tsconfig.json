@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "outDir": "lib",
+    "declaration": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "./lib",
+    "__mocks__",
+    "**/*.test.ts",
+    "node_modules"
+  ]
+}

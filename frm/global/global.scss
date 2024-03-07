@@ -1,0 +1,35 @@
+/**
+ * Formation - Global
+ */
+
+/* Config */
+
+@forward "../config/config";
+
+/* Base */
+
+@use "../../lib/base";
+
+/* A11y */
+
+@use "../../lib/a11y";
+
+/* Layouts */
+
+@use "../../lib/layouts";
+
+/* Text */
+
+@use "../../lib/text";
+
+/* Backgrounds */
+
+@use "../../lib/backgrounds";
+
+/* Borders */
+
+@use "../../lib/borders";
+
+/* Effects */
+
+@use "../../lib/effects/Transition/Transition";

@@ -1,0 +1,15 @@
+/**
+ * Objects - Lazy Load Styles
+ */
+
+.o-lazy {
+  --duration: 200ms;
+  --opacity: 0;
+
+  opacity: var(--opacity);
+
+  &[data-loaded="true"],
+  &[data-loaded="error"] {
+    --opacity: 1;
+  }
+}
