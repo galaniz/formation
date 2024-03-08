@@ -1,0 +1,20 @@
+/**
+ * Borders - Color Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+
+/* Styles */
+
+$colors: map.get(con.$borders, "colors");
+
+@each $c, $v in $colors {
+  @if $c != "default" {
+    .b-#{$c} {
+      --border-color: #{$v};
+    }
+  }
+}

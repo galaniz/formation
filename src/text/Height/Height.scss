@@ -1,0 +1,15 @@
+/**
+ * Text - Line Height Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+
+/* Styles */
+
+@each $l, $v in con.$line-heights {
+  .t-height-#{$l} {
+    line-height: var(--line-height-#{$l});
+  }
+}

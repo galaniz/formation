@@ -1,0 +1,32 @@
+/**
+ * Layouts - Gap Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Class name infix */
+
+$gap-infix: "gap";
+
+/* Styles */
+
+@each $g in con.$gaps {
+  .l-#{$gap-infix}-#{$g} {
+    --gap: var(--#{$g});
+
+    gap: var(--gap);
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @include breakpoints.breakpoint-min($b) {
+    @each $g in con.$gaps {
+      .l-#{$gap-infix}-#{$g}-#{$b} {
+        --gap: var(--#{$g});
+      }
+    }
+  }
+}

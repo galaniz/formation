@@ -1,0 +1,17 @@
+/**
+ * Layouts - Float Styles
+ */
+
+.l-clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.l-float-right {
+  float: right;
+}
+
+.l-float-left {
+  float: left;
+}

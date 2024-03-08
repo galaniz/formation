@@ -1,0 +1,160 @@
+/**
+ * Formation - Config
+ */
+
+/* Vertical padding */
+
+$padding-vertical: (
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "8",
+  "10",
+  "12",
+  "16",
+  "20",
+  "24",
+  "28",
+  "32",
+);
+
+/* Gaps */
+
+$gaps: (
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "8",
+  "10",
+);
+
+/* Style options */
+
+@use "../../lib/config/config" with (
+
+  /* Colors */
+
+  $colors: (
+    "primary": (
+      "light": #bff8c8,
+      "dark": #077949,
+    ),
+    "accent-warm": (
+      "light": "#ffe6ce",
+      "dark": "#a85100",
+    ),
+    "accent-hot": (
+      "light": "#ffd4d4",
+      "dark": "#c92929",
+    ),
+    "accent-cool": (
+      "light": "#e7ceff",
+      "dark": "#8451b7",
+    ),
+    "accent-cold": (
+      "light": "#d4f5ff",
+      "dark": "#0c7293",
+    ),
+    "foreground": (
+      "light": #363636,
+      "dark": #202020,
+    ),
+    "background": (
+      "light": #fffdf8,
+      "dark": #f4f2ed,
+    ),
+  ),
+
+  $text-colors: (
+    "foreground-dark",
+  ),
+
+  $background-colors: (
+    "primary-light",
+    "accent-warm-light",
+    "accent-hot-light",
+    "accent-cool-light",
+    "accent-cold-light",
+    "foreground-dark",
+    "background-light",
+  ),
+
+  /* Spacing */
+
+  $spacing: (
+    "1": 4px,
+    "2": 8px,
+    "3": 12px,
+    "4": 16px,
+    "5": 20px,
+    "6": 24px,
+    "8": 32px,
+    "10": 40px,
+    "12": 48px,
+    "16": 64px,
+    "20": 80px,
+    "24": 96px,
+    "28": 112px,
+    "32": 128px,
+  ),
+
+  /* Padding */
+
+  $padding-top: $padding-vertical,
+  $padding-bottom: $padding-vertical,
+  $padding-vertical-breakpoints: (
+    "m"
+  ),
+
+  /* Aspect ratios */
+
+  $aspect-ratio-padding: (
+    "56": 56.25%,
+  ),
+
+  /* Widths */
+
+  $width-percentage-breakpoints: (
+    "s",
+    "m",
+    "l",
+  ),
+
+  $widths: (
+    "3",
+    "4",
+    "6",
+    "10",
+  ),
+
+  /* Heights */
+
+  $heights: (
+    "3",
+    "4",
+    "6",
+    "10",
+  ),
+
+  /* Gaps */
+
+  $gaps: $gaps,
+  $gap-breakpoints: (
+    "s",
+    "m",
+    "l"
+  ),
+
+  /* Outline */
+
+  $outline: (
+    "none": true
+  ),
+
+);

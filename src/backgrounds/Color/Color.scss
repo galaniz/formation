@@ -1,0 +1,15 @@
+/**
+ * Backgrounds - Color Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+
+/* Styles */
+
+@each $c in con.$background-colors {
+  .bg-#{$c} {
+    background-color: var(--#{$c});
+  }
+}

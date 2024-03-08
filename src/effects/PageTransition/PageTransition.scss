@@ -1,0 +1,35 @@
+/**
+ * Effects - Page Transition Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+
+/* Styles */
+
+.e-page-transition {
+  --visibility: hidden;
+  --opacity: 0;
+  --prop: #{con.$page-transition-prop};
+  --duration: #{con.$page-transition-duration};
+  --easing: #{con.$page-transition-easing};
+  --delay: #{con.$page-transition-delay};
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: map.get(con.$z-index, "page-transition");
+  transition: var(--prop) var(--duration) var(--easing) var(--delay);
+  visibility: var(--visibility);
+  opacity: var(--opacity);
+
+  [data-page-transition-show] & {
+    --delay: #{con.$page-transition-delay-show};
+    --visibility: visible;
+    --opacity: 1;
+  }
+}

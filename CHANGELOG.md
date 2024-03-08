@@ -356,3 +356,19 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - 900px breakpoint from `$breakpoints` map
 - window focus in `usingMouse`
+
+## [5.0.0-Beta] - 2024-03-06
+
+### Added 
+- Storybook (only for `Slider`)
+- Vitest for some utilities
+
+### Changed
+- Js to Ts (but most unchecked at the moment)
+- Refactor `Collapsible`, `VisibleHash` and most util functions to be type checked
+- File and folder names and structure (camelCase vs kebab-case)
+- Greater use of CSS variables throughout especially options in config
+- Increase data attribute name specificity
+
+### Removed
+- Use of `@extend` in all scss files

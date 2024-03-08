@@ -1,0 +1,15 @@
+/**
+ * Text - Font Family Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+
+/* Styles */
+
+@each $f, $v in con.$font-families {
+  .t-family-#{$f} {
+    font-family: var(--font-family-#{$f});
+  }
+}
