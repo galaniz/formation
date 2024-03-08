@@ -24,6 +24,7 @@ jobs:
           export GITHUB_TOKEN=$GITHUB_TOKEN
           git config user.name "${GITHUB_USER}"
           git config user.email "${GITHUB_EMAIL}"
+          git branch --set-upstream-to origin/beta
       - run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
       - run: npm install
       - run: npm run release
