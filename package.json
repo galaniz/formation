@@ -1,13 +1,16 @@
 {
   "name": "@alanizcreative/formation",
   "version": "5.0.0-beta.0",
-  "description": "A collection of front end components and utilities",
+  "description": "A collection of front end patterns and utilities",
   "main": "./lib/config/config.js",
   "type": "module",
+  "files": [
+    "./lib"
+  ],
   "scripts": {
     "build": "npx tsc && node build/copyScss.js",
     "lint": "npx ts-standard && npx stylelint 'src/**/*.scss'",
-    "release": "release-it major --preRelease=beta",
+    "release": "release-it minor --preRelease=beta",
     "test": "vitest --run --reporter verbose --environment jsdom",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -17,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/galaniz/formation.git"
   },
-  "author": "Graciela Alaniz",
+  "author": "Graciela Alaniz (https://alanizcreative.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/galaniz/formation/issues"
@@ -49,7 +52,7 @@
   "release-it": {
     "git": {
       "requireCommits": true,
-      "commitMessage": "Release ${version} [ci skip]"
+      "commitMessage": "chore: release ${version} [ci skip]"
     },
     "github": {
       "release": true
