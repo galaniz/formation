@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npx tsc && node build/copyScss.js",
     "lint": "npx ts-standard && npx stylelint 'src/**/*.scss'",
-    "release": "release-it minor --preRelease=beta",
+    "release": "release-it --preRelease=beta",
     "test": "vitest --run --reporter verbose --environment jsdom",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

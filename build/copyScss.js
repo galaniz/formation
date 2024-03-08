@@ -1,6 +1,17 @@
-import { copyFile, readdir } from 'node:fs/promises'
+/**
+ * Buid - Copy Scss
+ */
+
+/* Imports */
+
+import { cp, readdir } from 'node:fs/promises'
 import { extname } from 'node:path'
 
+/**
+ * Function - recurse src for scss files and copy over to lib
+ *
+ * @return {void}
+ */
 const init = async () => {
   try {
     const files = await readdir('src', { withFileTypes: true, recursive: true })
@@ -20,7 +31,7 @@ const init = async () => {
 
       const fullPath = `${path}/${name}`
 
-      await copyFile(fullPath, fullPath.replace('src', 'lib'))
+      await cp(fullPath, fullPath.replace('src', 'lib'), { recursive: true })
     }
   } catch (error) {
     console.error('[FRM] Error copying scss files ', error)
