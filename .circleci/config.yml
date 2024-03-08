@@ -4,7 +4,7 @@ version: 2.1
 jobs:
   publish-release:
     docker:
-      - image: cimg/node:latest
+      - image: cimg/node:21.6.2
     steps: 
       - checkout
       - run: |
@@ -17,7 +17,7 @@ jobs:
 
   publish-release-beta:
     docker:
-      - image: cimg/node:latest
+      - image: cimg/node:21.6.2
     steps: 
       - checkout
       - run: |
