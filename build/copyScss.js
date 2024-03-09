@@ -8,7 +8,7 @@ import { cp, readdir } from 'node:fs/promises'
 import { extname } from 'node:path'
 
 /**
- * Function - recurse src for scss files and copy over to lib
+ * Function - recurse src for scss files and copy to lib
  *
  * @return {void}
  */
