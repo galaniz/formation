@@ -19,4 +19,6 @@
   @if con.$terse {
     $fix: map.get(con.$names-terse, $name);
   }
+
+  @return $fix;
 }
