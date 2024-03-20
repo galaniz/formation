@@ -14,7 +14,7 @@
 
 $root: (
   "colors",
-  "font-families",
+  "fonts",
   "font-weights",
   "letter-spacing",
   "line-heights",
@@ -33,7 +33,83 @@ $root: (
 
 $context: 16px !default;
 
-/* Layout class names short */
+/* Class name customizations */
+
+$names-default: (
+  "aspect-ratio": "aspect-ratio",
+  "gap": "gap",
+  "gap-margin": "gap-margin",
+  "width": "width",
+  "max-width": "max-width",
+  "height": "height",
+  "min-height": "min-height",
+  "padding": "padding",
+  "padding-top": "padding-top",
+  "padding-bottom": "padding-bottom",
+  "padding-y": "padding-y",
+  "padding-left": "padding-left",
+  "padding-right": "padding-right",
+  "padding-x": "padding-x",
+  "margin": "margin",
+  "margin-top": "margin-top",
+  "margin-bottom": "margin-bottom",
+  "margin-y": "margin-y",
+  "margin-left": "margin-left",
+  "margin-right": "margin-right",
+  "margin-x": "margin-x",
+  "object": "object",
+  "overflow": "overflow",
+  "overscroll": "overscroll",
+  "column": "column",
+  "justify": "justify",
+  "align": "align",
+  "container": "container",
+  "transition": "transition",
+  "visually": "visually",
+  "border-radius": "radius",
+  "border-width": "width",
+  "text-height": "height",
+  "text-weight": "weight",
+  "text-align": "align",
+) !default;
+
+$names-terse: (
+  "aspect-ratio": "ar",
+  "gap": "g",
+  "gap-margin": "gm",
+  "width": "wd",
+  "max-width": "mw",
+  "height": "ht",
+  "min-height": "mh",
+  "padding": "p",
+  "padding-top": "pt",
+  "padding-bottom": "pb",
+  "padding-y": "py",
+  "padding-left": "pl",
+  "padding-right": "pr",
+  "padding-x": "px",
+  "margin": "m",
+  "margin-top": "mt",
+  "margin-bottom": "mb",
+  "margin-y": "my",
+  "margin-left": "ml",
+  "margin-right": "mr",
+  "margin-x": "mx",
+  "object": "object",
+  "overflow": "overflow",
+  "overscroll": "overscroll",
+  "column": "col",
+  "justify": "justify",
+  "align": "align",
+  "container": "container",
+  "transition": "trans",
+  "visually": "vis",
+  "border-radius": "radius",
+  "border-width": "wd",
+  "text-height": "ht",
+  "text-weight": "wt",
+  "text-align": "align",
+) !default;
 
 $terse: true !default;
 
@@ -82,9 +158,9 @@ $text-colors: () !default;
 
 $background-colors: () !default;
 
-/* Fonts families  */
+/* Fonts  */
 
-$font-families: (
+$fonts: (
   "primary": (
     helvetica,
     arial,
@@ -352,7 +428,7 @@ $placeholders: () !default;
   @include placeholders.placeholder-make($p);
 }
 
-@include placeholders.placeholder-set("visually-hidden") {
+@include placeholders.placeholder-set("hide-visually") {
   position: absolute;
   overflow: hidden;
   width: 0.0625rem;

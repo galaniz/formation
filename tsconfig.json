@@ -15,7 +15,11 @@
   "exclude": [
     "./lib",
     "__mocks__",
+    "**/*.stories.ts",
     "**/*.test.ts",
+    "**/*Html.ts",
+    "**/*Demo.ts",
+    "**/*Init.ts",
     "node_modules"
   ]
 }

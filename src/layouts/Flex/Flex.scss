@@ -5,11 +5,18 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
+
+/* Class name customization */
+
+$column-fix: fix.get-class-fix("column");
+$justify-fix: fix.get-class-fix("justify");
+$align-fix: fix.get-class-fix("align");
 
 /* Styles */
 
-.l-flex-column {
+.l-flex-#{$column-fix} {
   flex-direction: column;
 }
 
@@ -21,45 +28,45 @@
   flex-wrap: wrap;
 }
 
-.l-justify-between {
+.l-#{$justify-fix}-between {
   justify-content: space-between;
 }
 
-.l-justify-center {
+.l-#{$justify-fix}-center {
   justify-content: center;
 }
 
-.l-justify-start {
+.l-#{$justify-fix}-start {
   justify-content: flex-start;
 }
 
-.l-justify-end {
+.l-#{$justify-fix}-end {
   justify-content: flex-end;
 }
 
-.l-align-center {
+.l-#{$align-fix}-center {
   align-items: center;
 }
 
-.l-align-start {
+.l-#{$align-fix}-start {
   align-items: flex-start;
 }
 
-.l-align-end {
+.l-#{$align-fix}-end {
   align-items: flex-end;
 }
 
-.l-flex-shrink-0 {
+.l-shrink-0 {
   flex-shrink: 0;
 }
 
-.l-flex-grow-1 {
+.l-grow-1 {
   flex-grow: 1;
 }
 
 @each $b in con.$flex-column-breakpoints {
   @include breakpoints.breakpoint-min($b) {
-    .l-flex-column-#{$b} {
+    .l-flex-#{$column-fix}-#{$b} {
       flex-direction: column;
     }
   }

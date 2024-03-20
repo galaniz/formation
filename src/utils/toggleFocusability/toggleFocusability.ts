@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /**
  * Utils - Toggle Focusability
  */
@@ -7,6 +5,8 @@
 /* Imports */
 
 import { config } from '../../config/config'
+import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
+import { isString } from '../isString/isString'
 import { getOuterItems } from '../getOuterItems/getOuterItems'
 
 /**
@@ -15,12 +15,11 @@ import { getOuterItems } from '../getOuterItems/getOuterItems'
  * Source - https://bit.ly/3paRHkt
  *
  * @param {boolean} on
- * @param {HTMLElement[]} items
+ * @param {Element[]} items
  * @return {void}
  */
-
-const toggleFocusability = (on = true, items = []) => {
-  if (!items.length) {
+const toggleFocusability = (on: boolean = true, items: Element[] = []): void => {
+  if (items.length === 0) {
     return
   }
 
@@ -38,7 +37,7 @@ const toggleFocusability = (on = true, items = []) => {
         if (item.hasAttribute('data-tf-aria-hidden')) {
           const initAriaHidden = item.getAttribute('data-tf-aria-hidden')
 
-          if (initAriaHidden !== 'null') {
+          if (isString(initAriaHidden) && initAriaHidden !== 'null') {
             item.setAttribute('aria-hidden', initAriaHidden)
           } else {
             item.removeAttribute('aria-hidden')
@@ -50,7 +49,7 @@ const toggleFocusability = (on = true, items = []) => {
         if (item.hasAttribute('data-tf-tabindex')) {
           const initTabIndex = item.getAttribute('data-tf-tabindex')
 
-          if (initTabIndex !== 'null') {
+          if (isString(initTabIndex) && initTabIndex !== 'null') {
             item.setAttribute('tabindex', initTabIndex)
           } else {
             item.removeAttribute('tabindex')
@@ -60,18 +59,16 @@ const toggleFocusability = (on = true, items = []) => {
         }
       } else {
         if (!item.hasAttribute('data-tf-aria-hidden')) {
-          let ariaHiddenValue = 'null'
+          const ariaHiddenValue = item.getAttribute('aria-hidden')
 
-          if (item.hasAttribute('aria-hidden')) {
-            ariaHiddenValue = item.getAttribute('aria-hidden')
-          }
-
-          item.setAttribute('data-tf-aria-hidden', ariaHiddenValue)
-          item.setAttribute('aria-hidden', true)
+          item.setAttribute('data-tf-aria-hidden', ariaHiddenValue === null ? 'null' : ariaHiddenValue)
+          item.setAttribute('aria-hidden', 'true')
         }
 
         if (!item.hasAttribute('data-tf-tabindex')) {
-          item.setAttribute('data-tf-tabindex', item.getAttribute('tabindex'))
+          const tabIndexValue = item.getAttribute('tabindex')
+
+          item.setAttribute('data-tf-tabindex', tabIndexValue === null ? 'null' : tabIndexValue)
           item.setAttribute('tabindex', '-1')
         }
       }
@@ -84,35 +81,36 @@ const toggleFocusability = (on = true, items = []) => {
  *
  * @type {string}
  */
-
-const focusSelector = 'a, area, input, select, textarea, button, [tabindex], [data-tf-tabindex], iframe'
+const focusSelector: string = 'a, area, input, select, textarea, button, [tabindex], [data-tf-tabindex], iframe'
 
 /**
  * Function - check if element is focusable
  *
- * @param {HTMLElement} item
+ * @param {Element} item
  * @return {boolean}
  */
-
-const isItemFocusable = (item) => {
-  if (!item) {
+const isItemFocusable = (item: Element | null): boolean => {
+  if (!isHTMLElement(item)) {
     return false
   }
 
   const focusableTags = ['a', 'area', 'input', 'select', 'textarea', 'button', 'iframe']
 
-  return focusableTags.includes(item.tagName.toLowerCase()) || item.hasAttribute('tabindex') || item.hasAttribute('data-tf-tabindex')
+  return (
+    focusableTags.includes(item.tagName.toLowerCase()) ||
+    item.hasAttribute('tabindex') ||
+    item.hasAttribute('data-tf-tabindex')
+  )
 }
 
 /**
  * Function - get all focusable elements inside item
  *
- * @param {HTMLElement} item
- * @return {HTMLElement[]}
+ * @param {Element} item
+ * @return {Element[]}
  */
-
-const getInnerFocusableItems = (item) => {
-  if (!item) {
+const getInnerFocusableItems = (item: Element | null): Element[] => {
+  if (!isHTMLElement(item)) {
     return []
   }
 
@@ -122,19 +120,18 @@ const getInnerFocusableItems = (item) => {
 /**
  * Function - get all focusable elements outside item
  *
- * @param {HTMLElement} item
- * @return {HTMLElement[]}
+ * @param {Element} item
+ * @return {Element[]}
  */
-
-const getOuterFocusableItems = (item) => {
-  if (!item) {
+const getOuterFocusableItems = (item: Element | null): Element[] => {
+  if (!isHTMLElement(item)) {
     return []
   }
 
   let outerItems = getOuterItems(item)
 
   if (!config.inert) {
-    let outerFocusableItems = []
+    let outerFocusableItems: Element[] = []
 
     outerItems.forEach((o) => {
       if (isItemFocusable(o)) {

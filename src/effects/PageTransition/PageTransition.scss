@@ -6,10 +6,15 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$transition-fix: fix.get-class-fix("transition");
 
 /* Styles */
 
-.e-page-transition {
+.e-page-#{$transition-fix} {
   --visibility: hidden;
   --opacity: 0;
   --prop: #{con.$page-transition-prop};
@@ -27,7 +32,7 @@
   visibility: var(--visibility);
   opacity: var(--opacity);
 
-  [data-page-transition-show] & {
+  [data-page-#{$transition-fix}-show] & {
     --delay: #{con.$page-transition-delay-show};
     --visibility: visible;
     --opacity: 1;

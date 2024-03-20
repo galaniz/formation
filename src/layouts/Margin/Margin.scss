@@ -7,61 +7,52 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$margin-infix: "margin";
-$margin-top-infix: "margin-top";
-$margin-bottom-infix: "margin-bottom";
-$margin-y-infix: "margin-y";
-$margin-left-infix: "margin-left";
-$margin-right-infix: "margin-right";
-$margin-x-infix: "margin-x";
-
-@if con.$terse {
-  $margin-infix: "m";
-  $margin-top-infix: "mt";
-  $margin-bottom-infix: "mb";
-  $margin-y-infix: "my";
-  $margin-left-infix: "ml";
-  $margin-right-infix: "mr";
-  $margin-x-infix: "mx";
-}
+$margin-fix: fix.get-class-fix("margin");
+$margin-top-fix: fix.get-class-fix("margin-top");
+$margin-bottom-fix: fix.get-class-fix("margin-bottom");
+$margin-y-fix: fix.get-class-fix("margin-y");
+$margin-left-fix: fix.get-class-fix("margin-left");
+$margin-right-fix: fix.get-class-fix("margin-right");
+$margin-x-fix: fix.get-class-fix("margin-x");
 
 /* Defaults */
 
-.l-#{$margin-infix}-0 {
+.l-#{$margin-fix}-0 {
   margin: 0;
 }
 
-.l-#{$margin-infix}-auto {
+.l-#{$margin-fix}-auto {
   margin: auto;
 }
 
-.l-#{$margin-top-infix}-auto {
+.l-#{$margin-top-fix}-auto {
   margin-top: auto;
 }
 
-.l-#{$margin-left-infix}-auto {
+.l-#{$margin-left-fix}-auto {
   margin-left: auto;
 }
 
-.l-#{$margin-right-infix}-auto {
+.l-#{$margin-right-fix}-auto {
   margin-right: auto;
 }
 
-.l-#{$margin-bottom-infix}-auto {
+.l-#{$margin-bottom-fix}-auto {
   margin-bottom: auto;
 }
 
 /* Config margins */
 
 @each $m in con.$margin-top {
-  $selector: ".l-#{$margin-top-infix}-#{$m}";
+  $selector: ".l-#{$margin-top-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-y-infix}-#{$m}";
+    $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
@@ -70,14 +61,14 @@ $margin-x-infix: "margin-x";
 }
 
 @each $m in con.$margin-bottom {
-  $selector: ".l-#{$margin-bottom-infix}-#{$m}";
+  $selector: ".l-#{$margin-bottom-fix}-#{$m}";
 
   @if list.index(con.$margin-bottom-all, $m) {
     $selector: "#{$selector}, #{$selector}-all > :not(:last-child)";
   }
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-y-infix}-#{$m}";
+    $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}";
   }
 
   #{string.unquote($selector)} {
@@ -88,10 +79,10 @@ $margin-x-infix: "margin-x";
 @each $b in con.$margin-vertical-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $m in con.$margin-top {
-      $selector: ".l-#{$margin-top-infix}-#{$m}-#{$b}";
+      $selector: ".l-#{$margin-top-fix}-#{$m}-#{$b}";
     
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$margin-y-infix}-#{$m}-#{$b}";
+        $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}-#{$b}";
       }
     
       #{string.quote($selector)} {
@@ -100,14 +91,14 @@ $margin-x-infix: "margin-x";
     }
 
     @each $m in con.$margin-bottom {
-      $selector: ".l-#{$margin-bottom-infix}-#{$m}";
+      $selector: ".l-#{$margin-bottom-fix}-#{$m}";
     
       @if list.index(con.$margin-bottom-all, $m) {
         $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > :not(:last-child)";
       }
 
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$margin-y-infix}-#{$m}-#{$b}";
+        $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}-#{$b}";
       }
     
       #{string.unquote($selector)} {
@@ -118,10 +109,10 @@ $margin-x-infix: "margin-x";
 }
 
 @each $m in con.$margin-left {
-  $selector: ".l-#{$margin-left-infix}-#{$m}";
+  $selector: ".l-#{$margin-left-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-x-infix}-#{$m}";
+    $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
@@ -130,10 +121,10 @@ $margin-x-infix: "margin-x";
 }
 
 @each $m in con.$margin-right {
-  $selector: ".l-#{$margin-right-infix}-#{$m}";
+  $selector: ".l-#{$margin-right-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-x-infix}-#{$m}";
+    $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
@@ -144,10 +135,10 @@ $margin-x-infix: "margin-x";
 @each $b in con.$margin-horizontal-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $m in con.$margin-left {
-      $selector: ".l-#{$margin-left-infix}-#{$m}-#{$b}";
+      $selector: ".l-#{$margin-left-fix}-#{$m}-#{$b}";
     
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$margin-x-infix}-#{$m}-#{$b}";
+        $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}-#{$b}";
       }
     
       #{string.quote($selector)} {
@@ -156,10 +147,10 @@ $margin-x-infix: "margin-x";
     }
 
     @each $m in con.$margin-right {
-      $selector: ".l-#{$margin-right-infix}-#{$m}-#{$b}";
+      $selector: ".l-#{$margin-right-fix}-#{$m}-#{$b}";
     
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$margin-x-infix}-#{$m}-#{$b}";
+        $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}-#{$b}";
       }
     
       #{string.quote($selector)} {
@@ -171,6 +162,6 @@ $margin-x-infix: "margin-x";
 
 /* Defaults */
 
-.l-#{$margin-infix}-last-0 > :last-child {
+.l-#{$margin-fix}-last-0 > :last-child {
   margin: 0;
 }

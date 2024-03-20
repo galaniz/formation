@@ -8,6 +8,11 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$transition-fix: fix.get-class-fix("transition");
 
 /* Styles */
 
@@ -21,7 +26,7 @@ $transition-classes-store: ();
     $suffix: "-#{$t}";
   }
 
-  $class: ".e-transition#{$suffix}";
+  $class: ".e-#{$transition-fix}#{$suffix}";
   $transition-classes-store: map.merge($transition-classes-store, (#{$t}: $class));
   $transition-classes: list.append($transition-classes, $class, $separator: comma);
 }

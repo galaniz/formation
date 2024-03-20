@@ -5,7 +5,7 @@
 /* Imports */
 
 import type { Config } from './configTypes'
-import { getDefaultFontSize } from '../utils//utils'
+import { getDefaultFontSize } from '../utils/utils'
 
 /**
  * Store attributes and feature support
@@ -16,6 +16,7 @@ const config: Config = {
   inert: false,
   reduceMotion: false,
   intersectionObserver: false,
+  wellFormed: false,
   defaultFontSize: 16,
   fontSizeMultiplier: 1
 }
@@ -54,6 +55,14 @@ const setConfig = (): void => {
 
   if (mediaQuery.matches) {
     config.reduceMotion = true
+  }
+
+  /* Well formed */
+
+  const testStr = new String() // eslint-disable-line
+
+  if ('toWellFormed' in testStr) {
+    config.wellFormed = true
   }
 
   /* Default font size */

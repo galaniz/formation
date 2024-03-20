@@ -1,5 +1,0 @@
-export { Slider } from './Slider/Slider'
-export { SliderHtml } from './Slider/SliderHtml'
-export { SliderInit } from './Slider/SliderInit'
-export { SliderSlideHtml } from './SliderSlide/SliderSlideHtml'
-export { SliderSlideContent } from './SliderSlideContent/SliderSlideContentHtml'

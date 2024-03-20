@@ -4,15 +4,13 @@
 
 /* Imports */
 
+@use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 
-/* Class name infix */
+/* Class name customization */
 
-$aspect-ratio-infix: "aspect-ratio";
-
-@if con.$terse {
-  $aspect-ratio-infix: "ar";
-}
+$aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
 
 /* Styles */
 
@@ -25,7 +23,7 @@ $aspect-ratio-infix: "aspect-ratio";
 }
 
 @each $p, $v in con.$aspect-ratio-padding {
-  .l-#{$aspect-ratio-infix}-#{$p} {
+  .l-#{$aspect-ratio-fix}-#{$p} {
     @extend %l-aspect-ratio;
 
     --aspect-ratio-padding: #{$v};

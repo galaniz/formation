@@ -2,27 +2,38 @@
  * Layouts - Overflow Styles
  */
 
-.l-overflow-hidden {
+/* Imports */
+
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$overflow-fix: fix.get-class-fix("overflow");
+$overscroll-fix: fix.get-class-fix("overscroll");
+
+/* Styles */
+
+.l-#{$overflow-fix}-hidden {
   overflow: hidden;
 }
 
-.l-overflow-x-hidden {
+.l-#{$overflow-fix}-x-hidden {
   overflow-x: hidden;
 }
 
-.l-overflow-y-hidden {
+.l-#{$overflow-fix}-y-hidden {
   overflow-y: hidden;
 }
 
-.l-overflow-y-auto {
+.l-#{$overflow-fix}-y-auto {
   overflow-y: auto;
 }
 
-.l-overflow-x-auto {
+.l-#{$overflow-fix}-x-auto {
   overflow-x: auto;
 }
 
-.l-overscroll-none {
+.l-#{$overscroll-fix}-none {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
 }

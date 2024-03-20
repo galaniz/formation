@@ -6,6 +6,11 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$width-fix: fix.get-class-fix("border-width");
 
 /* Styles */
 
@@ -13,7 +18,7 @@ $widths: map.get(con.$borders, "widths");
 
 @each $w, $v in $widths {
   @if $w != "default" {
-    .b-width-#{$w} {
+    .b-#{$width-fix}-#{$w} {
       --border-width: #{$v};
     }
   }

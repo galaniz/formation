@@ -5,32 +5,28 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$width-infix: "width";
-$max-width-infix: "max-width";
-
-@if con.$terse {
-  $width-infix: "wd";
-  $max-width-infix: "mw";
-}
+$width-fix: fix.get-class-fix("width");
+$max-width-fix: fix.get-class-fix("max-width");
 
 /* Relative units */
 
-.l-#{$width-infix}-100-pc {
+.l-#{$width-fix}-full {
   width: 100%;
 }
 
-.l-#{$width-infix}-100-vw {
+.l-#{$width-fix}-full-vw {
   width: 100vw;
 }
 
 /* Config widths */
 
 @each $w in con.$widths {
-  .l-#{$width-infix}-#{$w} {
+  .l-#{$width-fix}-#{$w} {
     width: var(--#{$w});
   }
 }
@@ -38,7 +34,7 @@ $max-width-infix: "max-width";
 @each $b in con.$width-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $w in con.$widths {
-      .l-#{$width-infix}-#{$w}-#{$b} {
+      .l-#{$width-fix}-#{$w}-#{$b} {
         width: var(--#{$w});
       }
     }
@@ -46,7 +42,7 @@ $max-width-infix: "max-width";
 }
 
 @each $w, $v in con.$width-percentages {
-  .l-#{$width-infix}-#{$w} {
+  .l-#{$width-fix}-#{$w} {
     width: $v;
   }
 }
@@ -54,7 +50,7 @@ $max-width-infix: "max-width";
 @each $b in con.$width-percentage-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $w, $v in con.$width-percentages {
-      .l-#{$width-infix}-#{$w}-#{$b} {
+      .l-#{$width-fix}-#{$w}-#{$b} {
         width: $v;
       }
     }
@@ -62,7 +58,7 @@ $max-width-infix: "max-width";
 }
 
 @each $w in con.$max-widths {
-  .l-#{$max-width-infix}-#{$w} {
+  .l-#{$max-width-fix}-#{$w} {
     max-width: var(--#{$w});
   }
 }
@@ -70,7 +66,7 @@ $max-width-infix: "max-width";
 @each $b in con.$max-width-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $w in con.$max-widths {
-      .l-#{$max-width-infix}-#{$w}-#{$b} {
+      .l-#{$max-width-fix}-#{$w}-#{$b} {
         max-width: var(--#{$w});
       }
     }

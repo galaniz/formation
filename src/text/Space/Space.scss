@@ -1,0 +1,15 @@
+/**
+ * Text - Letter Spacing Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+
+/* Styles */
+
+@each $l, $v in con.$letter-spacing {
+  .t-space-#{$l} {
+    letter-spacing: var(--letter-spacing-#{$l});
+  }
+}

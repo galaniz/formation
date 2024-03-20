@@ -8,27 +8,27 @@
 
 /* Base */
 
-@use "../../lib/base";
+@use "../../lib/base/base";
 
 /* A11y */
 
-@use "../../lib/a11y";
+@use "../../lib/a11y/a11y";
 
 /* Layouts */
 
-@use "../../lib/layouts";
+@use "../../lib/layouts/layouts";
 
 /* Text */
 
-@use "../../lib/text";
+@use "../../lib/text/text";
 
 /* Backgrounds */
 
-@use "../../lib/backgrounds";
+@use "../../lib/backgrounds/backgrounds";
 
 /* Borders */
 
-@use "../../lib/borders";
+@use "../../lib/borders/borders";
 
 /* Effects */
 

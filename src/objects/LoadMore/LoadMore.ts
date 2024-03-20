@@ -36,7 +36,7 @@ import {
   request,
   setLoaders,
   focusSelector
-} from '../../../utils'
+} from '../../utils/utils'
 
 /* Class */
 

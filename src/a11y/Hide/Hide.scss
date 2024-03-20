@@ -5,11 +5,16 @@
 /* Imports */
 
 @forward "../../config/config";
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$visually-fix: fix.get-class-fix("visually");
 
 /* Styles */
 
-.a-visually-hidden {
-  @extend %u-visually-hidden;
+.a-hide-#{$visually-fix} {
+  @extend %u-hide-visually;
 }
 
 .a-hide-input {

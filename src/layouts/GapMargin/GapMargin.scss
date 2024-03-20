@@ -5,15 +5,12 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$gap-margin-infix: "gap-margin";
-
-@if con.$terse {
-  $gap-margin-infix: "gm";
-}
+$gap-margin-fix: fix.get-class-fix("gap-margin");
 
 /* Styles */
 
@@ -26,7 +23,7 @@ $gap-margin-infix: "gap-margin";
 }
 
 @each $g in con.$gaps {
-  .l-#{$gap-margin-infix}-#{$g} {
+  .l-#{$gap-margin-fix}-#{$g} {
     --gap-margin: var(--#{$g});
 
     @extend %l-gap-margin;
@@ -36,7 +33,7 @@ $gap-margin-infix: "gap-margin";
 @each $b in con.$gap-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $g in con.$gaps {
-      .l-#{$gap-margin-infix}-#{$g}-#{$b} {
+      .l-#{$gap-margin-fix}-#{$g}-#{$b} {
         --gap-margin: var(--#{$g});
       }
     }

@@ -5,11 +5,16 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$height-fix: fix.get-class-fix("text-height");
 
 /* Styles */
 
 @each $l, $v in con.$line-heights {
-  .t-height-#{$l} {
+  .t-#{$height-fix}-#{$l} {
     line-height: var(--line-height-#{$l});
   }
 }

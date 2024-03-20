@@ -5,6 +5,11 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$container-fix: fix.get-class-fix("container");
 
 /* Styles */
 
@@ -22,7 +27,7 @@
     $suffix: "-#{$c}";
   }
 
-  .l-container#{$suffix} {
+  .l-#{$container-fix}#{$suffix} {
     @extend %l-container;
 
     max-width: var(--container#{$suffix});

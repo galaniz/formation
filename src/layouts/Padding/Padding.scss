@@ -7,41 +7,32 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$padding-infix: "padding";
-$padding-top-infix: "padding-top";
-$padding-bottom-infix: "padding-bottom";
-$padding-y-infix: "padding-y";
-$padding-left-infix: "padding-left";
-$padding-right-infix: "padding-right";
-$padding-x-infix: "padding-x";
-
-@if con.$terse {
-  $padding-infix: "p";
-  $padding-top-infix: "pt";
-  $padding-bottom-infix: "pb";
-  $padding-y-infix: "py";
-  $padding-left-infix: "pl";
-  $padding-right-infix: "pr";
-  $padding-x-infix: "px";
-}
+$padding-fix: fix.get-class-fix("padding");
+$padding-top-fix: fix.get-class-fix("padding-top");
+$padding-bottom-fix: fix.get-class-fix("padding-bottom");
+$padding-y-fix: fix.get-class-fix("padding-y");
+$padding-left-fix: fix.get-class-fix("padding-left");
+$padding-right-fix: fix.get-class-fix("padding-right");
+$padding-x-fix: fix.get-class-fix("padding-x");
 
 /* Defaults */
 
-.l-#{$padding-infix}-0 {
+.l-#{$padding-fix}-0 {
   padding: 0;
 }
 
 /* Config padding */
 
 @each $p in con.$padding-top {
-  $selector: ".l-#{$padding-top-infix}-#{$p}";
+  $selector: ".l-#{$padding-top-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-y-infix}-#{$p}";
+    $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
@@ -50,10 +41,10 @@ $padding-x-infix: "padding-x";
 }
 
 @each $p in con.$padding-bottom {
-  $selector: ".l-#{$padding-bottom-infix}-#{$p}";
+  $selector: ".l-#{$padding-bottom-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-y-infix}-#{$p}";
+    $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
@@ -64,10 +55,10 @@ $padding-x-infix: "padding-x";
 @each $b in con.$padding-vertical-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $p in con.$padding-top {
-      $selector: ".l-#{$padding-top-infix}-#{$p}-#{$b}";
+      $selector: ".l-#{$padding-top-fix}-#{$p}-#{$b}";
 
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-y-infix}-#{$p}-#{$b}";
+        $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
       }
 
       #{string.quote($selector)} {
@@ -76,10 +67,10 @@ $padding-x-infix: "padding-x";
     }
 
     @each $p in con.$padding-bottom {
-      $selector: ".l-#{$padding-bottom-infix}-#{$p}-#{$b}";
+      $selector: ".l-#{$padding-bottom-fix}-#{$p}-#{$b}";
 
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-y-infix}-#{$p}-#{$b}";
+        $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
       }
 
       #{string.quote($selector)} {
@@ -90,10 +81,10 @@ $padding-x-infix: "padding-x";
 }
 
 @each $p in con.$padding-left {
-  $selector: ".l-#{$padding-left-infix}-#{$p}";
+  $selector: ".l-#{$padding-left-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-x-infix}-#{$p}";
+    $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
@@ -102,10 +93,10 @@ $padding-x-infix: "padding-x";
 }
 
 @each $p in con.$padding-right {
-  $selector: ".l-#{$padding-right-infix}-#{$p}";
+  $selector: ".l-#{$padding-right-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-x-infix}-#{$p}";
+    $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
@@ -116,10 +107,10 @@ $padding-x-infix: "padding-x";
 @each $b in con.$padding-horizontal-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $p in con.$padding-left {
-      $selector: ".l-#{$padding-left-infix}-#{$p}-#{$b}";
+      $selector: ".l-#{$padding-left-fix}-#{$p}-#{$b}";
 
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-x-infix}-#{$p}-#{$b}";
+        $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
       }
 
       #{string.quote($selector)} {
@@ -128,10 +119,10 @@ $padding-x-infix: "padding-x";
     }
 
     @each $p in con.$padding-right {
-      $selector: ".l-#{$padding-right-infix}-#{$p}-#{$b}";
+      $selector: ".l-#{$padding-right-fix}-#{$p}-#{$b}";
 
       @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-x-infix}-#{$p}-#{$b}";
+        $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
       }
 
       #{string.quote($selector)} {

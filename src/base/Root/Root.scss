@@ -36,9 +36,9 @@
           --#{$c}: #{$v};
         }
       }
-    } @else if $r == "font-families" {
-      @each $f, $v in con.$font-families {
-        --font-family-#{$f}: #{$v};
+    } @else if $r == "fonts" {
+      @each $f, $v in con.$fonts {
+        --font-#{$f}: #{$v};
       }
     } @else if $r == "font-weights" {
       @each $f, $v in con.$font-weights {
@@ -92,7 +92,7 @@
       --border-width: #{map.get(con.$borders, "widths", "default")};
     } @else if $r == "border-radius" {
       @each $b, $v in con.$border-radius {
-        --border-radius-#{$b}: #{calc.calc-rem($v)};
+        --border-radius-#{$b}: #{$v};
       }
     }
   }

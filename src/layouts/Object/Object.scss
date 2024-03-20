@@ -2,10 +2,20 @@
  * Layouts - Object Fit Styles
  */
 
-.l-object-contain {
+/* Imports */
+
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$object-fix: fix.get-class-fix("object");
+
+/* Styles */
+
+.l-#{$object-fix}-contain {
   object-fit: contain;
 }
 
-.l-object-cover {
+.l-#{$object-fix}-cover {
   object-fit: cover;
 }

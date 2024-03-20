@@ -12,7 +12,6 @@
  * @param {boolean} show
  * @return {void}
  */
-
 const setLoaders = (loaders = [], buttons = [], show = true) => {
   if (loaders.length) {
     loaders.forEach(l => {

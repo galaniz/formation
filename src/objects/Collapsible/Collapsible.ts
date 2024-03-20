@@ -5,9 +5,13 @@
 /* Imports */
 
 import type { CollapsibleArgs, CollapsibleAction } from './CollapsibleTypes'
-import { addAction, removeAction, doActions } from '../../utils/actions/actions'
-import { isString } from '../../utils/isString/isString'
-import { isHTMLElement } from '../../utils/isHTMLElement/isHTMLElement'
+import {
+  addAction,
+  removeAction,
+  doActions,
+  isString,
+  isHTMLElement
+} from '../../utils/utils'
 
 /**
  * Class - get and set height to open and close element

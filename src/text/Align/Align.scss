@@ -2,14 +2,24 @@
  * Text - Align Styles
  */
 
-.t-align-center {
+/* Imports */
+
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$align-fix: fix.get-class-fix("text-align");
+
+/* Styles */
+
+.t-#{$align-fix}-center {
   text-align: center;
 }
 
-.t-align-left {
+.t-#{$align-fix}-left {
   text-align: left;
 }
 
-.t-align-right {
+.t-#{$align-fix}-right {
   text-align: right;
 }

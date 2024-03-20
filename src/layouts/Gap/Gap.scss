@@ -5,16 +5,17 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$gap-infix: "gap";
+$gap-fix: fix.get-class-fix("gap");
 
 /* Styles */
 
 @each $g in con.$gaps {
-  .l-#{$gap-infix}-#{$g} {
+  .l-#{$gap-fix}-#{$g} {
     --gap: var(--#{$g});
 
     gap: var(--gap);
@@ -24,7 +25,7 @@ $gap-infix: "gap";
 @each $b in con.$gap-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $g in con.$gaps {
-      .l-#{$gap-infix}-#{$g}-#{$b} {
+      .l-#{$gap-fix}-#{$g}-#{$b} {
         --gap: var(--#{$g});
       }
     }

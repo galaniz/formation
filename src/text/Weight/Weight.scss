@@ -5,11 +5,16 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
+
+/* Class name customization */
+
+$weight-fix: fix.get-class-fix("text-weight");
 
 /* Styles */
 
 @each $w, $v in con.$font-weights {
-  .t-weight-#{$w} {
+  .t-#{$weight-fix}-#{$w} {
     font-weight: var(--font-weight-#{$w});
   }
 }

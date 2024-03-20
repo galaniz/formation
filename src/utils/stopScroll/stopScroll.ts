@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /**
  * Utils - Stop Scroll
  */
@@ -10,8 +8,7 @@
  * @param {boolean} on
  * @return {void}
  */
-
-const stopScroll = (on = true) => {
+const stopScroll = (on: boolean = true): void => {
   const html = document.documentElement
 
   if (on) {

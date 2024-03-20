@@ -5,36 +5,32 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/getClassFix/getClassFix" as fix;
 @use "../../utils/breakpoints/breakpoints";
 
-/* Class name infix */
+/* Class name customization */
 
-$height-infix: "height";
-$min-height-infix: "min-height";
-
-@if con.$terse {
-  $height-infix: "ht";
-  $min-height-infix: "mh";
-}
+$height-fix: fix.get-class-fix("height");
+$min-height-fix: fix.get-class-fix("min-height");
 
 /* Relative units */
 
-.l-#{$height-infix}-100-pc {
+.l-#{$height-fix}-full {
   height: 100%;
 }
 
-.l-#{$height-infix}-100-vh {
+.l-#{$height-fix}-full-vh {
   height: 100vh;
 }
 
-.l-#{$min-height-infix}-100-vh {
+.l-#{$min-height-fix}-full-vh {
   min-height: 100vh;
 }
 
 /* Config heights */
 
 @each $h in con.$heights {
-  .l-#{$height-infix}-#{$h} {
+  .l-#{$height-fix}-#{$h} {
     height: var(--#{$h});
   }
 }
@@ -42,7 +38,7 @@ $min-height-infix: "min-height";
 @each $b in con.$height-breakpoints {
   @include breakpoints.breakpoint-min($b) {
     @each $h in con.$heights {
-      .l-#{$height-infix}-#{$h}-#{$b} {
+      .l-#{$height-fix}-#{$h}-#{$b} {
         height: var(--#{$h});
       }
     }

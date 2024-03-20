@@ -1,40 +1,39 @@
-// @ts-nocheck
-
 /**
  * Utils - Get Outer Items
  */
 
+/* Imports */
+
+import type { GetOuterItems } from './getOuterItemsTypes'
+import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
+import { isFunction } from '../isFunction/isFunction'
+
 /**
  * Function - recursively get elements outside of specified element
  *
- * @param {HTMLElement} item
- * @param {string} type - all || prev || next
- * @param {function} filter
- * @param {HTMLElement[]} _store
- * @return {HTMLElement[]}
+ * @type {GetOuterItems}
  */
-
-const getOuterItems = (item = null, type = 'all', filter, _store = []) => {
-  if (!item) {
-    return
+const getOuterItems: GetOuterItems = (item, type = 'all', filter, _store = []) => {
+  if (!isHTMLElement(item)) {
+    return []
   }
 
   const parent = item.parentElement
 
-  if (!parent) {
-    return
+  if (parent === null) {
+    return []
   }
 
   const children = Array.from(parent.children)
 
-  if (!children.length) {
-    return
+  if (children.length === 0) {
+    return []
   }
 
   const itemIndex = children.indexOf(item)
 
   const siblings = children.filter((c, i) => {
-    let condition = c !== item && c.tagName !== 'SCRIPT' && c.tagName !== 'HEAD'
+    let condition = c !== item && c.tagName !== 'SCRIPT' && c.tagName !== 'STYLE' && c.tagName !== 'HEAD'
 
     if (type === 'next') {
       condition = condition && i > itemIndex
@@ -47,24 +46,22 @@ const getOuterItems = (item = null, type = 'all', filter, _store = []) => {
     return condition
   })
 
-  if (siblings.length) {
+  if (siblings.length > 0) {
     _store = _store.concat(type === 'prev' ? siblings.reverse() : siblings)
   }
 
-  if (typeof filter === 'function') {
+  if (isFunction(filter)) {
     const res = filter(_store)
     const { store, stop } = res
 
-    if (store) {
-      _store = store
-    }
+    _store = store
 
-    if (stop === true) {
+    if (stop) {
       return _store
     }
   }
 
-  if (parent.parentElement) {
+  if (parent.parentElement !== null) {
     return getOuterItems(parent, type, filter, _store)
   }
 

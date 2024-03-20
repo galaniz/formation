@@ -13,7 +13,6 @@
  * @param {string} $color
  * @return {string}
  */
-
 @function get-color($color: "background-light") {
   @return map.get(con.$colors-flat, $color);
 }

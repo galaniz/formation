@@ -8,7 +8,7 @@
 
 /* Imports */
 
-import { assetLoaded } from '../../../utils'
+import { assetLoaded } from '../../utils/utils'
 
 /* Class */
 

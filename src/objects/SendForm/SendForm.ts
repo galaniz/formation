@@ -30,9 +30,9 @@ import {
   mergeObjects,
   setLoaders,
   request
-} from '../../../utils'
+} from '../../utils/utils'
 
-import Form from '../index'
+import { Form } from '../Form/Form'
 
 /* Class - send and validate form */
 
