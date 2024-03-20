@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "5.1.0-beta.4",
+  "version": "5.1.0-beta.5",
   "description": "A collection of front end patterns and utilities",
   "main": "./lib/config/config.js",
   "type": "module",
