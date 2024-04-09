@@ -26,7 +26,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   padding: 0;
 }
 
-/* Config padding */
+/* Config vertical padding */
 
 @each $p in con.$padding-top {
   $selector: ".l-#{$padding-top-fix}-#{$p}";
@@ -53,32 +53,36 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 }
 
 @each $b in con.$padding-vertical-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $p in con.$padding-top {
-      $selector: ".l-#{$padding-top-fix}-#{$p}-#{$b}";
+  @each $p in con.$padding-top {
+    $selector: ".l-#{$padding-top-fix}-#{$p}-#{$b}";
 
-      @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
-      }
-
-      #{string.quote($selector)} {
-        padding-top: var(--#{$p});
-      }
+    @if con.$xy {
+      $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
     }
 
-    @each $p in con.$padding-bottom {
-      $selector: ".l-#{$padding-bottom-fix}-#{$p}-#{$b}";
+    #{string.quote($selector)} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        padding-top: var(--#{$p})
+      ));
+    }
+  }
 
-      @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
-      }
+  @each $p in con.$padding-bottom {
+    $selector: ".l-#{$padding-bottom-fix}-#{$p}-#{$b}";
 
-      #{string.quote($selector)} {
-        padding-bottom: var(--#{$p});
-      }
+    @if con.$xy {
+      $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
+    }
+
+    #{string.quote($selector)} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        padding-bottom: var(--#{$p})
+      ));
     }
   }
 }
+
+/* Config horizontal padding */
 
 @each $p in con.$padding-left {
   $selector: ".l-#{$padding-left-fix}-#{$p}";
@@ -105,29 +109,31 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 }
 
 @each $b in con.$padding-horizontal-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $p in con.$padding-left {
-      $selector: ".l-#{$padding-left-fix}-#{$p}-#{$b}";
+  @each $p in con.$padding-left {
+    $selector: ".l-#{$padding-left-fix}-#{$p}-#{$b}";
 
-      @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
-      }
-
-      #{string.quote($selector)} {
-        padding-left: var(--#{$p});
-      }
+    @if con.$xy {
+      $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
     }
 
-    @each $p in con.$padding-right {
-      $selector: ".l-#{$padding-right-fix}-#{$p}-#{$b}";
+    #{string.quote($selector)} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        padding-left: var(--#{$p})
+      ));
+    }
+  }
 
-      @if con.$xy {
-        $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
-      }
+  @each $p in con.$padding-right {
+    $selector: ".l-#{$padding-right-fix}-#{$p}-#{$b}";
 
-      #{string.quote($selector)} {
-        padding-right: var(--#{$p});
-      }
+    @if con.$xy {
+      $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
+    }
+
+    #{string.quote($selector)} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        padding-right: var(--#{$p})
+      ));
     }
   }
 }

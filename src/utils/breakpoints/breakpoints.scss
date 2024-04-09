@@ -14,7 +14,6 @@
  * @param {string|number} $min - prop in $breakpoints map
  * @return {void}
  */
-
 @mixin breakpoint-min($min) {
   @if map.has-key(con.$breakpoints, $min) {
     $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
@@ -33,7 +32,6 @@
  * @param {string|number} $max - prop in $breakpoints map
  * @return {void}
  */
-
 @mixin breakpoint-max($max) {
   @if map.has-key(con.$breakpoints, $max) {
     $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $max));
@@ -53,7 +51,6 @@
  * @param {string|number} $max - prop in $breakpoints map
  * @return {void}
  */
-
 @mixin breakpoint-min-max($min, $max) {
   @if map.has-key(con.$breakpoints, $min) and map.has-key(con.$breakpoints, $max) {
     $bk-min-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
@@ -64,5 +61,48 @@
     }
   } @else {
     @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+  }
+}
+
+/**
+ * Mixin - add to breakpoints batch
+ *
+ * @param {string|number} $b - prop in $breakpoints map
+ * @param {map} $declarations
+ * @return {void}
+ */
+@mixin breakpoint-batch-add($b, $declarations) { 
+  @if map.has-key(con.$breakpoints-batch, $b) {
+    con.$breakpoints-batch: map.deep-merge(
+      con.$breakpoints-batch,
+      (
+        $b: (
+          &: $declarations
+        )
+      )
+    );
+  } @else {
+    @warn "#{$b} does not exist in breakpoints batch map.";
+  }
+}
+
+/**
+ * Mixin - output breakpoint batches
+ *
+ * @return {void}
+ */
+@mixin breakpoint-batch {
+  @each $b, $rules in con.$breakpoints-batch {
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $b));
+ 
+    @media only screen and (min-width: #{$bk-rem}) {
+      @each $selector, $declarations in $rules {
+        #{$selector} {
+          @each $prop, $value in $declarations {
+            #{$prop}: $value;
+          }
+        }
+      }
+    }
   }
 }

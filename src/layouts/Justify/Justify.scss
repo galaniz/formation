@@ -1,0 +1,30 @@
+/**
+ * Layouts - Justify Styles
+ */
+
+/* Imports */
+
+@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Class name customization */
+
+$justify-fix: fix.get-class-fix("justify");
+
+/* Styles */
+
+.l-#{$justify-fix}-between {
+  justify-content: space-between;
+}
+
+.l-#{$justify-fix}-center {
+  justify-content: center;
+}
+
+.l-#{$justify-fix}-start {
+  justify-content: flex-start;
+}
+
+.l-#{$justify-fix}-end {
+  justify-content: flex-end;
+}

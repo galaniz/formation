@@ -32,14 +32,16 @@ $max-width-fix: fix.get-class-fix("max-width");
 }
 
 @each $b in con.$width-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $w in con.$widths {
-      .l-#{$width-fix}-#{$w}-#{$b} {
-        width: var(--#{$w});
-      }
+  @each $w in con.$widths {
+    .l-#{$width-fix}-#{$w}-#{$b} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        width: var(--#{$w})
+      ));
     }
   }
 }
+
+/* Config percentage widths */
 
 @each $w, $v in con.$width-percentages {
   .l-#{$width-fix}-#{$w} {
@@ -48,14 +50,16 @@ $max-width-fix: fix.get-class-fix("max-width");
 }
 
 @each $b in con.$width-percentage-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $w, $v in con.$width-percentages {
-      .l-#{$width-fix}-#{$w}-#{$b} {
-        width: $v;
-      }
+  @each $w, $v in con.$width-percentages {
+    .l-#{$width-fix}-#{$w}-#{$b} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        width: $v
+      ));
     }
   }
 }
+
+/* Config max widths */
 
 @each $w in con.$max-widths {
   .l-#{$max-width-fix}-#{$w} {
@@ -64,11 +68,11 @@ $max-width-fix: fix.get-class-fix("max-width");
 }
 
 @each $b in con.$max-width-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $w in con.$max-widths {
-      .l-#{$max-width-fix}-#{$w}-#{$b} {
-        max-width: var(--#{$w});
-      }
+  @each $w in con.$max-widths {
+    .l-#{$max-width-fix}-#{$w}-#{$b} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        max-width: var(--#{$w})
+      ));
     }
   }
 }

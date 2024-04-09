@@ -31,11 +31,11 @@ $gap-margin-fix: fix.get-class-fix("gap-margin");
 }
 
 @each $b in con.$gap-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $g in con.$gaps {
-      .l-#{$gap-margin-fix}-#{$g}-#{$b} {
-        --gap-margin: var(--#{$g});
-      }
+  @each $g in con.$gaps {
+    .l-#{$gap-margin-fix}-#{$g}-#{$b} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        --gap-margin: var(--#{$g})
+      ));
     }
   }
 }

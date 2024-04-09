@@ -14,20 +14,24 @@ $gap-fix: fix.get-class-fix("gap");
 
 /* Styles */
 
+%l-gap {
+  gap: var(--gap);
+}
+
 @each $g in con.$gaps {
   .l-#{$gap-fix}-#{$g} {
     --gap: var(--#{$g});
 
-    gap: var(--gap);
+    @extend %l-gap;
   }
 }
 
 @each $b in con.$gap-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    @each $g in con.$gaps {
-      .l-#{$gap-fix}-#{$g}-#{$b} {
-        --gap: var(--#{$g});
-      }
+  @each $g in con.$gaps {
+    .l-#{$gap-fix}-#{$g}-#{$b} {
+      @include breakpoints.breakpoint-batch-add($b, (
+        --gap: var(--#{$g})
+      ));
     }
   }
 }

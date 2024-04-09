@@ -11,49 +11,19 @@
 /* Class name customization */
 
 $column-fix: fix.get-class-fix("column");
-$justify-fix: fix.get-class-fix("justify");
-$align-fix: fix.get-class-fix("align");
 
 /* Styles */
 
-.l-flex-#{$column-fix} {
+.l-#{$column-fix} {
   flex-direction: column;
 }
 
-.l-flex-row {
+.l-row {
   flex-direction: row;
 }
 
-.l-flex-wrap {
+.l-wrap {
   flex-wrap: wrap;
-}
-
-.l-#{$justify-fix}-between {
-  justify-content: space-between;
-}
-
-.l-#{$justify-fix}-center {
-  justify-content: center;
-}
-
-.l-#{$justify-fix}-start {
-  justify-content: flex-start;
-}
-
-.l-#{$justify-fix}-end {
-  justify-content: flex-end;
-}
-
-.l-#{$align-fix}-center {
-  align-items: center;
-}
-
-.l-#{$align-fix}-start {
-  align-items: flex-start;
-}
-
-.l-#{$align-fix}-end {
-  align-items: flex-end;
 }
 
 .l-shrink-0 {
@@ -65,17 +35,17 @@ $align-fix: fix.get-class-fix("align");
 }
 
 @each $b in con.$flex-column-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    .l-flex-#{$column-fix}-#{$b} {
-      flex-direction: column;
-    }
+  .l-#{$column-fix}-#{$b} {
+    @include breakpoints.breakpoint-batch-add($b, (
+      flex-direction: column
+    ));
   }
 }
 
 @each $b in con.$flex-row-breakpoints {
-  @include breakpoints.breakpoint-min($b) {
-    .l-flex-row-#{$b} {
-      flex-direction: row;
-    }
+  .l-row-#{$b} {
+    @include breakpoints.breakpoint-batch-add($b, (
+      flex-direction: row
+    ));
   }
 }

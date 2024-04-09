@@ -24,8 +24,8 @@ $aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
 
 @each $p, $v in con.$aspect-ratio-padding {
   .l-#{$aspect-ratio-fix}-#{$p} {
-    @extend %l-aspect-ratio;
-
     --aspect-ratio-padding: #{$v};
+
+    @extend %l-aspect-ratio;
   }
 }

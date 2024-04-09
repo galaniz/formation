@@ -59,6 +59,8 @@
     } @else if $r == "gap" {
       --gap: 0rem;
       --gap-margin: 0rem;
+    } @else if $r == "columns" {
+      --columns: #{con.$columns};
     } @else if $r == "containers" {
       @each $c, $v in con.$containers {
         $suffix: "";
@@ -81,15 +83,18 @@
       --delay: #{con.$default-delay};
     } @else if $r == "outline" {
       $default-color: map.get(con.$outline, "colors", "default");
+      $default-width: map.get(con.$outline, "widths", "default");
+      $default-offset: map.get(con.$outline, "offsets", "default");
 
-      --outline-width: #{map.get(con.$outline, "widths", "default")};
       --outline-color: #{$default-color};
-      --outline-offset: #{map.get(con.$outline, "offsets", "default")};
+      --outline-width: #{calc.calc-rem($default-width)};
+      --outline-offset: #{calc.calc-rem($default-offset)};
     } @else if $r == "borders" {
       $default-color: map.get(con.$borders, "colors", "default");
+      $default-width: map.get(con.$borders, "widths", "default");
 
       --border-color: #{$default-color};
-      --border-width: #{map.get(con.$borders, "widths", "default")};
+      --border-width: #{calc.calc-rem($default-width)};
     } @else if $r == "border-radius" {
       @each $b, $v in con.$border-radius {
         --border-radius-#{$b}: #{$v};

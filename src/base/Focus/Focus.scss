@@ -6,6 +6,7 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/calcRem/calcRem" as calc;
 
 /* Global */
 
@@ -36,7 +37,7 @@ $outline-offsets: map.get(con.$outline, "offsets");
 @each $o, $v in $outline-offsets {
   @if $o != "default" {
     .outline-#{$o} {
-      --outline-offset: #{$v};
+      --outline-offset: #{calc.calc-rem($v)};
     }
   }
 }

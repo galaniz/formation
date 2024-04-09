@@ -16,7 +16,6 @@
  * @param {map} $overrides
  * @return {map}
  */
-
 @function map-recursive-merge($original, $overrides) {
   $result: $original;
 
@@ -45,7 +44,6 @@
  * @param {null|string} $new-prefix
  * @return {map}
  */
-
  @function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {
   @each $key, $value in $map {
     @if meta.type-of($value) == map {

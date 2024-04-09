@@ -1,0 +1,26 @@
+/**
+ * Layouts - Align Styles
+ */
+
+/* Imports */
+
+@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/breakpoints/breakpoints";
+
+/* Class name customization */
+
+$align-fix: fix.get-class-fix("align");
+
+/* Styles */
+
+.l-#{$align-fix}-center {
+  align-items: center;
+}
+
+.l-#{$align-fix}-start {
+  align-items: flex-start;
+}
+
+.l-#{$align-fix}-end {
+  align-items: flex-end;
+}

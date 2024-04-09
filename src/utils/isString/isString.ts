@@ -19,7 +19,7 @@ const isString = (value: unknown): value is string => {
  * @return {boolean}
  */
 const isStringStrict = (value: unknown): value is string => {
-  return typeof value === 'string' && value.trim() !== ''
+  return typeof value === 'string' && value !== ''
 }
 
 /* Exports */

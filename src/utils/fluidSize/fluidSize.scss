@@ -18,46 +18,52 @@
  * @param {string} $prop
  * @param {list} $sizes
  * @param {list} $widths - $breakpoint props
- * @param {list} $other-values
+ * @param {list} $other
  * @param {boolean} $important
  * @return {void}
  */
-
-@mixin fluid-size($prop, $sizes, $widths, $important: false, $other-values: null) {
+@mixin fluid-size($prop, $sizes, $widths, $important: false, $other: null) {
   $last-index: list.length($sizes);
 
-  @each $s in $sizes {
-    $i: list.index($sizes, $s);
-    $w: list.nth($widths, $i);
-    $ww: calc.calc-rem(map.get(con.$breakpoints, $w));
-    $o: null;
-    $m: null;
+  @each $size in $sizes {
+    $i: list.index($sizes, $size);
+    $width: list.nth($widths, $i);
+    $width-rem: calc.calc-rem(map.get(con.$breakpoints, $width));
+    $oth: null;
+    $imp: null;
 
-    @if meta.type-of($other-values) == "list" {
-      $o: $w;
+    @if meta.type-of($other) == "list" {
+      $oth: $width;
     }
 
     @if $important {
-      $m: #{"!important"};
+      $imp: #{"!important"};
     }
 
     @if $i == 1 {
-      #{$prop}: $s $o $m;
+      #{$prop}: $size $oth $imp;
     }
 
     @if $i == $last-index {
-      @include breakpoints.breakpoint-min($w) {
-        #{$prop}: $s $o $m;
-      }
+      @include breakpoints.breakpoint-batch-add($width, (
+        #{$prop}: $size $oth $imp
+      ));
     } @else {
-      $n-s: unit.strip-unit(list.nth($sizes, $i + 1));
-      $n-w: list.nth($widths, $i + 1);
-      $n-ww: unit.strip-unit(calc.calc-rem(map.get(con.$breakpoints, $n-w)));
-      $s-ww: unit.strip-unit($ww);
+      $new-size: unit.strip-unit(list.nth($sizes, $i + 1));
+      $new-width: list.nth($widths, $i + 1);
+      $new-width-abs: unit.strip-unit(calc.calc-rem(map.get(con.$breakpoints, $new-width)));
+      $width-abs: unit.strip-unit($width-rem);
 
-      @include breakpoints.breakpoint-min($w) {
-        #{$prop}: calc(#{$s} + ((100vw - #{$ww}) / (#{$n-ww} - #{$s-ww})) * (#{$n-s} - #{unit.strip-unit($s)})) $o $m;
-      }
+      @include breakpoints.breakpoint-batch-add($width, (
+        #{$prop}:
+          calc(
+            #{$size} +
+            ((100vw - #{$width-rem}) / (#{$new-width-abs} - #{$width-abs})) *
+            (#{$new-size} - #{unit.strip-unit($size)})
+          )
+          $oth
+          $imp
+      ));
     }
   }
 }

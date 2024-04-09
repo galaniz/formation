@@ -14,7 +14,6 @@
  * @param {string} $name
  * @return {void}
  */
-
 @mixin placeholder-set($name) {
   %u-#{$name} {
     @content;
@@ -27,7 +26,6 @@
  * @param {map} $map
  * @return {void}
  */
-
 @mixin placeholder-make($map) {
   $name: map.get($map, "name");
   $prop: map.get($map, "prop");

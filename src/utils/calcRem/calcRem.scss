@@ -13,7 +13,6 @@
  * @param {number} $px
  * @return {number}
  */
-
 @function calc-rem($px) {
   $num: math.div($px, con.$context);
 
