@@ -1,14 +1,17 @@
 /**
- * Utils - Get Default Font Size
+ * Config - Default Font Size
  */
+
+/* Imports */
+
+import { config } from './config'
 
 /**
- * Function - get browser font size in pixels
+ * Function - browser font size in pixels
  *
- * @return {number}
+ * @return {void}
  */
-
-const getDefaultFontSize = (): number => {
+const configDefaultFontSize = (): void => {
   let size = 16
   let element: HTMLDivElement | null = document.createElement('div')
 
@@ -25,9 +28,10 @@ const getDefaultFontSize = (): number => {
   element.remove()
   element = null
 
-  return size
+  config.defaultFontSize = size
+  config.fontSizeMultiplier = size / 16
 }
 
 /* Exports */
 
-export { getDefaultFontSize }
+export { configDefaultFontSize }

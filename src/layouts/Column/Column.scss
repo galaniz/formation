@@ -53,7 +53,6 @@ $columns-fix: fix.get-class-fix("columns");
       --columns: 1;
 
       @extend %l-grid-columns;
-
       @include breakpoints.breakpoint-batch-add($b, (
         --columns: #{con.$columns-grid}
       ));

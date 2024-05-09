@@ -34,7 +34,7 @@ $root: (
 
 $context: 16px !default;
 
-/* Class name customizations */
+/* Default class names */
 
 $names-default: (
   "aspect-ratio": "aspect-ratio",
@@ -75,6 +75,8 @@ $names-default: (
   "text-align": "align",
 ) !default;
 
+/* Terse class names */
+
 $names-terse: (
   "aspect-ratio": "ar",
   "gap": "gap",
@@ -113,6 +115,8 @@ $names-terse: (
   "text-weight": "wt",
   "text-align": "align",
 ) !default;
+
+/* Terse class name opt in */
 
 $terse: true !default;
 

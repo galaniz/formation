@@ -1,17 +1,17 @@
 /**
- * Utils - Get Default Font Size Test
+ * Config - Default Font Size Test
  */
 
 /* Imports */
 
-import { it, expect, describe, vi } from 'vitest'
-import { getDefaultFontSize } from '../getDefaultFontSize'
+import { it, expect, describe } from 'vitest'
+import { configDefaultFontSize } from '../configDefaultFontSize'
 
 /* Tests */
 
-describe('getDefaultFontSize()', () => {
+describe('configDefaultFontSize()', () => {
   it('should return 16', () => {
-    const result = getDefaultFontSize()
+    const result = configDefaultFontSize()
     const expectedResult = 16
 
     expect(result).toBe(expectedResult)
@@ -28,7 +28,7 @@ describe('getDefaultFontSize()', () => {
       }
     )
 
-    const result = getDefaultFontSize()
+    const result = configDefaultFontSize()
 
     expect(result).toBe(value)
   })

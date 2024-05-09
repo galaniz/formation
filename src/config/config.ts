@@ -5,7 +5,7 @@
 /* Imports */
 
 import type { Config } from './configTypes'
-import { getDefaultFontSize } from '../utils/utils'
+import { configDefaultFontSize } from './configDefaultFontSize'
 
 /**
  * Store attributes and feature support
@@ -17,6 +17,7 @@ const config: Config = {
   reduceMotion: false,
   intersectionObserver: false,
   wellFormed: false,
+  flexGap: false,
   defaultFontSize: 16,
   fontSizeMultiplier: 1
 }
@@ -67,23 +68,7 @@ const setConfig = (): void => {
 
   /* Default font size */
 
-  const defaultFontSize = getDefaultFontSize()
-
-  config.defaultFontSize = defaultFontSize
-  config.fontSizeMultiplier = defaultFontSize / 16
-
-  /* Intersection observer */
-
-  if ('IntersectionObserver' in window &&
-     'IntersectionObserverEntry' in window &&
-     'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
-    config.intersectionObserver = true
-  }
-
-  if (config.intersectionObserver) {
-    body.classList.remove('no-io')
-    body.classList.add('io')
-  }
+  configDefaultFontSize()
 }
 
 /* Exports */
