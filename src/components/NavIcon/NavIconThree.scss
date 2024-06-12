@@ -4,12 +4,13 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "./NavIcon" as icon;
 
 /* Styles */
 
 [data-nav-icon="3"] {
-  --duration: 225ms;
+  --#{con.$v}duration: 225ms;
   --rotate: 0deg;
   --rotate-in: 0deg;
   --y: 0;

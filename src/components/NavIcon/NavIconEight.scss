@@ -12,15 +12,15 @@
 
 /* Variables */
 
-$width: map.get(con.$nav, "icon", "width");
-$line-width: map.get(con.$nav, "icon", "line-width");
+$width: map.get(con.$nav-icon, "width");
+$line-width: map.get(con.$nav-icon, "line-width");
 $x: calc.calc-rem(math.div($width, 2) - math.div($line-width, 2));
 $y: (icon.$y + calc.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 to make x more precise
 
 /* Styles */
 
 [data-nav-icon="8"] {
-  --duration: 200ms;
+  --#{con.$v}duration: 200ms;
   --rotate: 0deg;
   --rotate-in: 0deg;
   --x: 0;

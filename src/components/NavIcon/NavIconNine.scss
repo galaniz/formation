@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "./NavIcon" as icon;
 
 /* Variables */
@@ -21,7 +22,7 @@ $y: icon.$y + 0.0313rem; // 0.0313 to make corner sharp
 
   .c-nav-icon__top,
   .c-nav-icon__bottom {
-    --duration: 200ms;
+    --#{con.$v}duration: 200ms;
   }
 
   .c-nav-icon__top {

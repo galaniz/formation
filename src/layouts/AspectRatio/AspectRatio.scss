@@ -18,13 +18,13 @@ $aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
   &::before {
     content: "";
     display: block;
-    padding-top: var(--aspect-ratio-padding);
+    padding-top: var(--#{con.$v}aspect-ratio-padding);
   }
 }
 
 @each $p, $v in con.$aspect-ratio-padding {
   .l-#{$aspect-ratio-fix}-#{$p} {
-    --aspect-ratio-padding: #{$v};
+    --#{con.$v}aspect-ratio-padding: #{$v};
 
     @extend %l-aspect-ratio;
   }

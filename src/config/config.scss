@@ -10,6 +10,15 @@
 @use "../utils/maps/maps";
 @use "../utils/placeholders/placeholders";
 
+/* Namespace */
+
+$var-namespace: "" !default;
+$v: "";
+
+@if $var-namespace != "" {
+  $v: "#{$var-namespace}-"
+}
+
 /* Root */
 
 $root: (
@@ -191,12 +200,10 @@ $letter-spacing: () !default;
 
 /* Nav */
 
-$nav: (
-  "icon": (
-    "width": 40px,
-    "line-width": 2px,
-    "margin": 8px,
-  )
+$nav-icon: (
+  "width": 40px,
+  "line-width": 2px,
+  "margin": 8px,
 ) !default;
 
 /* Breakpoints */

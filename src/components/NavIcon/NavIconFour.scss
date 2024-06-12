@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "./NavIcon" as icon;
 
 /* Styles */
@@ -21,8 +22,8 @@
   .c-nav-icon__top,
   .c-nav-icon__middle,
   .c-nav-icon__bottom {
-    --duration: 0ms;
-    --delay: 100ms;
+    --#{con.$v}duration: 0ms;
+    --#{con.$v}delay: 100ms;
   }
 
   .c-nav-icon__top {

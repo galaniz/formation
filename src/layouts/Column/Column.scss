@@ -16,15 +16,16 @@ $columns-fix: fix.get-class-fix("columns");
 /* Width type */
 
 %l-width-column {
-  --col-width: ((var(--column) / var(--columns)) * 100%) - var(--gap) + (var(--gap) / (var(--columns) / var(--column)));
+  --#{con.$v}col-width:
+    ((var(--#{con.$v}column) / var(--#{con.$v}columns)) * 100%) - var(--#{con.$v}gap) + (var(--#{con.$v}gap) / (var(--#{con.$v}columns) / var(--#{con.$v}column)));
 
-  width: calc(var(--col-width));
+  width: calc(var(--#{con.$v}col-width));
 }
 
 @if con.$columns-type == "width" {
   @for $i from 1 through con.$columns {
     .l-#{$column-fix}-#{$i} {
-      --column: #{$i};
+      --#{con.$v}column: #{$i};
 
       @extend %l-width-column;
     }
@@ -34,38 +35,38 @@ $columns-fix: fix.get-class-fix("columns");
 /* Grid type */
 
 %l-grid-column {
-  grid-column: var(--column-start, auto) / span var(--column);
+  grid-column: var(--#{con.$v}column-start, auto) / span var(--#{con.$v}column);
 }
 
 %l-grid-columns {
-  grid-template-columns: repeat(var(--columns), minmax(var(--columns-min, 0), 1fr));
+  grid-template-columns: repeat(var(--#{con.$v}columns), minmax(var(--#{con.$v}columns-min, 0), 1fr));
 }
 
 @if con.$columns-type == "grid" {
   .l-#{$columns-fix} {
-    --columns: #{con.$columns-grid};
+    --#{con.$v}columns: #{con.$columns-grid};
 
     @extend %l-grid-columns;
   }
 
   @each $b in con.$columns-breakpoints {
     .l-#{$columns-fix}-#{b} {
-      --columns: 1;
+      --#{con.$v}columns: 1;
 
       @extend %l-grid-columns;
       @include breakpoints.breakpoint-batch-add($b, (
-        --columns: #{con.$columns-grid}
+        --#{con.$v}columns: #{con.$columns-grid}
       ));
     }
   }
 
   @for $i from 1 through con.$columns {
     .l-#{$column-fix}-start-#{$i} {
-      --column-start: #{$i + 1};
+      --#{con.$v}column-start: #{$i + 1};
     }
 
     .l-#{$column-fix}-#{$i} {
-      --column: #{$i};
+      --#{con.$v}column: #{$i};
 
       @extend %l-grid-column;
     }
@@ -78,13 +79,13 @@ $columns-fix: fix.get-class-fix("columns");
   @for $i from 1 through con.$columns {
     @if con.$columns-type == "grid" {
       .l-#{$column-fix}-start-#{$i}-#{$b} {
-        --column-start: #{$i + 1};
+        --#{con.$v}column-start: #{$i + 1};
       }
     }
 
     .l-#{$column-fix}-#{$i}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        --column: #{$i}
+        --#{con.$v}column: #{$i}
       ));
     }
   }

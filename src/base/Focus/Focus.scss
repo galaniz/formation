@@ -11,8 +11,8 @@
 /* Global */
 
 :focus {
-  outline: var(--outline-width) solid var(--outline-color);
-  outline-offset: var(--outline-offset);
+  outline: var(--#{con.$v}outline-width) solid var(--#{con.$v}outline-color);
+  outline-offset: var(--#{con.$v}outline-offset);
 }
 
 @supports selector(:focus-visible) {
@@ -25,8 +25,8 @@
   [type="button"]:focus-visible,
   [type="reset"]:focus-visible,
   [type="submit"]:focus-visible {
-    outline: var(--outline-width) solid var(--outline-color);
-    outline-offset: var(--outline-offset);
+    outline: var(--#{con.$v}outline-width) solid var(--#{con.$v}outline-color);
+    outline-offset: var(--#{con.$v}outline-offset);
   }
 }
 
@@ -37,7 +37,7 @@ $outline-offsets: map.get(con.$outline, "offsets");
 @each $o, $v in $outline-offsets {
   @if $o != "default" {
     .outline-#{$o} {
-      --outline-offset: #{calc.calc-rem($v)};
+      --#{con.$v}outline-offset: #{calc.calc-rem($v)};
     }
   }
 }

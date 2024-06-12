@@ -9,9 +9,9 @@
 /* Styles */
 
 .o-collapsible__main {
-  --prop: #{con.$collapsible-prop};
-  --duration: #{con.$collapsible-duration};
-  --delay: #{con.$collapsible-delay};
+  --#{con.$v}prop: #{con.$collapsible-prop};
+  --#{con.$v}duration: #{con.$collapsible-duration};
+  --#{con.$v}delay: #{con.$collapsible-delay};
   --visibility: hidden;
   --overflow: hidden;
   --h: 0;
@@ -21,7 +21,7 @@
   overflow: var(--overflow);
 
   [data-collapsible-expanded="true"] & {
-    --delay: #{con.$collapsible-delay-expanded};
+    --#{con.$v}delay: #{con.$collapsible-delay-expanded};
     --visibility: visible;
     --h: var(--height);
   }

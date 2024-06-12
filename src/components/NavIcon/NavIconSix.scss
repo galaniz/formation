@@ -11,15 +11,15 @@
 /* Styles */
 
 .c-nav-icon__right {
-  height: calc.calc-rem(map.get(con.$nav, "icon", "line-width"));
+  height: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
 }
 
 .c-nav-icon__left {
-  width: calc.calc-rem(map.get(con.$nav, "icon", "line-width"));
+  width: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
 }
 
 [data-nav-icon="6"] {
-  --duration: 200ms;
+  --#{con.$v}duration: 200ms;
   --delay-top: 500ms;
   --delay-middle: 625ms;
   --delay-bottom: 750ms;
@@ -39,21 +39,21 @@
   }
 
   .c-nav-icon__top {
-    --delay: var(--delay-top);
+    --#{con.$v}delay: var(--delay-top);
   }
 
   .c-nav-icon__middle {
-    --delay: var(--delay-middle);
+    --#{con.$v}delay: var(--delay-middle);
   }
 
   .c-nav-icon__bottom {
-    --delay: var(--delay-bottom);
+    --#{con.$v}delay: var(--delay-bottom);
   }
 
   /* Cross */
 
   .c-nav-icon__cross {
-    $w: calc.calc-rem(map.get(con.$nav, "icon", "width") * 0.9);
+    $w: calc.calc-rem(map.get(con.$nav-icon, "width") * 0.9);
 
     transform: rotate(45deg);
     height: $w;
@@ -66,14 +66,14 @@
   }
 
   .c-nav-icon__left {
-    --delay: var(--delay-left);
+    --#{con.$v}delay: var(--delay-left);
 
     transform: scaleY(var(--scale-cross)) translateX(var(--t-cross));
     left: 50%;
   }
 
   .c-nav-icon__right {
-    --delay: var(--delay-right);
+    --#{con.$v}delay: var(--delay-right);
 
     transform: scaleX(var(--scale-cross)) translateY(var(--t-cross));
     top: 50%;

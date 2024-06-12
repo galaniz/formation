@@ -27,7 +27,7 @@ $max-width-fix: fix.get-class-fix("max-width");
 
 @each $w in con.$widths {
   .l-#{$width-fix}-#{$w} {
-    width: var(--#{$w});
+    width: var(--#{con.$v}#{$w});
   }
 }
 
@@ -35,7 +35,7 @@ $max-width-fix: fix.get-class-fix("max-width");
   @each $w in con.$widths {
     .l-#{$width-fix}-#{$w}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        width: var(--#{$w})
+        width: var(--#{con.$v}#{$w})
       ));
     }
   }
@@ -63,7 +63,7 @@ $max-width-fix: fix.get-class-fix("max-width");
 
 @each $w in con.$max-widths {
   .l-#{$max-width-fix}-#{$w} {
-    max-width: var(--#{$w});
+    max-width: var(--#{con.$v}#{$w});
   }
 }
 
@@ -71,7 +71,7 @@ $max-width-fix: fix.get-class-fix("max-width");
   @each $w in con.$max-widths {
     .l-#{$max-width-fix}-#{$w}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        max-width: var(--#{$w})
+        max-width: var(--#{con.$v}#{$w})
       ));
     }
   }

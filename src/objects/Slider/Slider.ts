@@ -8,6 +8,7 @@
 
 import { Tabs } from '../Tabs/Tabs'
 import { focusSelector } from '../../utils/utils'
+import { config } from '../../config/config'
 
 /**
  * Class - slider using panel and tab structure
@@ -49,7 +50,7 @@ class Slider extends Tabs {
       groupSelector = '',
       breakpoints = [],
       loop = false,
-      reduceMotion = false,
+      reduceMotion = config.reduceMotion,
       variableWidths = false,
       duration = 500
     } = args

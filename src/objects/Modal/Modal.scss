@@ -10,31 +10,31 @@
 /* Styles */
 
 .o-modal {
-  --prop: #{con.$modal-prop};
-  --duration: #{con.$modal-duration};
-  --delay: #{con.$modal-delay};
+  --#{con.$v}prop: #{con.$modal-prop};
+  --#{con.$v}duration: #{con.$modal-duration};
+  --#{con.$v}delay: #{con.$modal-delay};
   --visibility: hidden;
 
   z-index: map.get(con.$z-index, "modal");
   visibility: var(--visibility);
 
   &[data-modal-open="true"] {
-    --delay: #{con.$modal-delay-open};
+    --#{con.$v}delay: #{con.$modal-delay-open};
     --visibility: visible;
   }
 }
 
 .o-modal__overlay,
 .o-modal__window {
-  --prop: #{con.$modal-overlay-window-prop};
-  --duration: #{con.$modal-overlay-window-duration};
-  --delay: #{con.$modal-overlay-window-delay};
+  --#{con.$v}prop: #{con.$modal-overlay-window-prop};
+  --#{con.$v}duration: #{con.$modal-overlay-window-duration};
+  --#{con.$v}delay: #{con.$modal-overlay-window-delay};
   --opacity: 0;
 
   opacity: var(--opacity);
 
   [data-modal-open="true"] & {
-    --delay: #{con.$modal-overlay-window-delay-open};
+    --#{con.$v}delay: #{con.$modal-overlay-window-delay-open};
     --opacity: 1;
   }
 }

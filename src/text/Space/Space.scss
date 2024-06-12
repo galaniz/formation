@@ -10,6 +10,6 @@
 
 @each $l, $v in con.$letter-spacing {
   .t-space-#{$l} {
-    letter-spacing: var(--letter-spacing-#{$l});
+    letter-spacing: var(--#{con.$v}letter-spacing-#{$l});
   }
 }

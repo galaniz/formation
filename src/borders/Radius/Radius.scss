@@ -20,7 +20,7 @@ $radius-fix: fix.get-class-fix("border-radius");
 
 @each $r, $v in con.$border-radius {
   .b-#{$radius-fix}-#{$r} {
-    border-radius: var(--border-radius-#{$r});
+    border-radius: var(--#{con.$v}border-radius-#{$r});
   }
 }
 
@@ -28,7 +28,7 @@ $radius-fix: fix.get-class-fix("border-radius");
   @each $r, $v in con.$border-radius {
     .b-#{$radius-fix}-#{$r}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        border-radius: var(--border-radius-#{$r})
+        border-radius: var(--#{con.$v}border-radius-#{$r})
       ));
     }
   }

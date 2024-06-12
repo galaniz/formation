@@ -15,6 +15,6 @@ $height-fix: fix.get-class-fix("text-height");
 
 @each $l, $v in con.$line-heights {
   .t-#{$height-fix}-#{$l} {
-    line-height: var(--line-height-#{$l});
+    line-height: var(--#{con.$v}line-height-#{$l});
   }
 }

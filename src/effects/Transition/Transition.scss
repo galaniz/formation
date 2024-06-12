@@ -32,10 +32,10 @@ $transition-classes-store: ();
 }
 
 #{$transition-classes} {
-  transition-property: var(--prop);
-  transition-duration: var(--duration);
-  transition-timing-function: var(--easing);
-  transition-delay: var(--delay);
+  transition-property: var(--#{con.$v}prop);
+  transition-duration: var(--#{con.$v}duration);
+  transition-timing-function: var(--#{con.$v}easing);
+  transition-delay: var(--#{con.$v}delay);
 }
 
 @each $t, $v in con.$transitions {
@@ -45,13 +45,13 @@ $transition-classes-store: ();
     #{$class} {
       @each $tt, $vv in $v {
         @if $tt == "prop" {
-          --prop: #{$vv};
+          --#{con.$v}prop: #{$vv};
         } @else if $tt == "easing" {
-          --easing: #{$vv};
+          --#{con.$v}easing: #{$vv};
         } @else if $tt == "duration" {
-          --duration: #{$vv};
+          --#{con.$v}duration: #{$vv};
         } @else if $tt == "delay" {
-          --delay: #{$vv};
+          --#{con.$v}delay: #{$vv};
         }
       }
     }

@@ -19,7 +19,7 @@ $widths: map.get(con.$borders, "widths");
 @each $w, $v in $widths {
   @if $w != "default" {
     .b-#{$width-fix}-#{$w} {
-      --border-width: #{$v};
+      --#{con.$v}border-width: #{$v};
     }
   }
 }

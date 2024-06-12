@@ -1,5 +1,5 @@
 /**
- * Buid - Copy Scss
+ * Build - Copy Scss
  */
 
 /* Imports */

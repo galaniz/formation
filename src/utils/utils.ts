@@ -21,6 +21,7 @@ export { isHTMLElement, isHTMLElementArray } from './isHTMLElement/isHTMLElement
 export { isObject, isObjectStrict } from './isObject/isObject'
 export { isString, isStringStrict } from './isString/isString'
 export { isFunction } from './isFunction/isFunction'
+export { isNumber } from './isNumber/isNumber'
 export { mergeObjects } from './mergeObjects/mergeObjects'
 export { objectToFormData } from './objectToFormData/objectToFormData'
 export { prefix } from './prefix/prefix'

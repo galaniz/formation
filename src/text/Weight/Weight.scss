@@ -15,6 +15,6 @@ $weight-fix: fix.get-class-fix("text-weight");
 
 @each $w, $v in con.$font-weights {
   .t-#{$weight-fix}-#{$w} {
-    font-weight: var(--font-weight-#{$w});
+    font-weight: var(--#{con.$v}font-weight-#{$w});
   }
 }

@@ -36,7 +36,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   #{string.quote($selector)} {
-    padding-top: var(--#{$p});
+    padding-top: var(--#{con.$v}#{$p});
   }
 }
 
@@ -48,7 +48,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   #{string.quote($selector)} {
-    padding-bottom: var(--#{$p});
+    padding-bottom: var(--#{con.$v}#{$p});
   }
 }
 
@@ -62,7 +62,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 
     #{string.quote($selector)} {
       @include breakpoints.breakpoint-batch-add($b, (
-        padding-top: var(--#{$p})
+        padding-top: var(--#{con.$v}#{$p})
       ));
     }
   }
@@ -76,7 +76,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 
     #{string.quote($selector)} {
       @include breakpoints.breakpoint-batch-add($b, (
-        padding-bottom: var(--#{$p})
+        padding-bottom: var(--#{con.$v}#{$p})
       ));
     }
   }
@@ -92,7 +92,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   #{string.quote($selector)} {
-    padding-left: var(--#{$p});
+    padding-left: var(--#{con.$v}#{$p});
   }
 }
 
@@ -104,7 +104,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   #{string.quote($selector)} {
-    padding-right: var(--#{$p});
+    padding-right: var(--#{con.$v}#{$p});
   }
 }
 
@@ -118,7 +118,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 
     #{string.quote($selector)} {
       @include breakpoints.breakpoint-batch-add($b, (
-        padding-left: var(--#{$p})
+        padding-left: var(--#{con.$v}#{$p})
       ));
     }
   }
@@ -132,7 +132,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 
     #{string.quote($selector)} {
       @include breakpoints.breakpoint-batch-add($b, (
-        padding-right: var(--#{$p})
+        padding-right: var(--#{con.$v}#{$p})
       ));
     }
   }

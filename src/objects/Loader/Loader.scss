@@ -10,9 +10,9 @@
 /* Styles */
 
 .o-loader {
-  --prop: #{con.$loader-prop};
-  --duration: #{con.$loader-duration};
-  --delay: #{con.$loader-delay};
+  --#{con.$v}prop: #{con.$loader-prop};
+  --#{con.$v}duration: #{con.$loader-duration};
+  --#{con.$v}delay: #{con.$loader-delay};
   --visibility: hidden;
   --opacity: 0;
 
@@ -22,7 +22,7 @@
   opacity: var(--opacity);
 
   &[data-loader-show] {
-    --delay: #{con.$loader-delay-show};
+    --#{con.$v}delay: #{con.$loader-delay-show};
     --visibility: visible;
     --opacity: 1;
   }

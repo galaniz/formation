@@ -16,7 +16,7 @@ $gap-fix: fix.get-class-fix("gap");
 
 @each $g in con.$gaps {
   .no-flex-gap .l-#{$gap-fix}-#{$g} > * {
-    margin: calc(var(--gap) / 4);
+    margin: calc(var(--#{con.$v}gap) / 4);
   }
 }
 
@@ -24,7 +24,7 @@ $gap-fix: fix.get-class-fix("gap");
   @each $g in con.$gaps {
     .no-flex-gap .l-#{$gap-fix}-#{$g}-#{$b} > * {
       @include breakpoints.breakpoint-batch-add($b, (
-        margin: calc(var(--gap) / 4),
+        margin: calc(var(--#{con.$v}gap) / 4),
       ));
     }
   }

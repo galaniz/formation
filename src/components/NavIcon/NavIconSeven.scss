@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "./NavIcon" as icon;
 
 /* Styles */
@@ -37,7 +38,7 @@
 }
 
 [data-nav-icon="7"] {
-  --duration: 200ms;
+  --#{con.$v}duration: 200ms;
   --scale-0: 1;
   --scale-50: 0.2;
   --scale-100: 1;
@@ -52,8 +53,8 @@
   .c-nav-icon__top,
   .c-nav-icon__bottom,
   .c-nav-icon__middle {
-    --duration: 0ms;
-    --delay: 150ms;
+    --#{con.$v}duration: 0ms;
+    --#{con.$v}delay: 150ms;
   }
 
   .c-nav-icon__top,

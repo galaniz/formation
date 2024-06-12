@@ -31,7 +31,7 @@ $min-height-fix: fix.get-class-fix("min-height");
 
 @each $h in con.$heights {
   .l-#{$height-fix}-#{$h} {
-    height: var(--#{$h});
+    height: var(--#{con.$v}#{$h});
   }
 }
 
@@ -39,7 +39,7 @@ $min-height-fix: fix.get-class-fix("min-height");
   @each $h in con.$heights {
     .l-#{$height-fix}-#{$h}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        height: var(--#{$h})
+        height: var(--#{con.$v}#{$h})
       ));
     }
   }

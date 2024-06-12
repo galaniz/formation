@@ -10,6 +10,6 @@
 
 @each $c in con.$text-colors {
   .t-#{$c} {
-    color: var(--#{$c});
+    color: var(--#{con.$v}#{$c});
   }
 }

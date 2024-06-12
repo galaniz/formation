@@ -14,7 +14,7 @@ $colors: map.get(con.$borders, "colors");
 @each $c, $v in $colors {
   @if $c != "default" {
     .b-#{$c} {
-      --border-color: #{$v};
+      --#{con.$v}border-color: #{$v};
     }
   }
 }

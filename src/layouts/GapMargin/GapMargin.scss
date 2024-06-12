@@ -15,16 +15,16 @@ $gap-margin-fix: fix.get-class-fix("gap-margin");
 /* Styles */
 
 %l-gap-margin {
-  margin: calc(var(--gap-margin) * -1) 0 0 calc(var(--gap-margin) * -1);
+  margin: calc(var(--#{con.$v}gap-margin) * -1) 0 0 calc(var(--#{con.$v}gap-margin) * -1);
 
   & > * {
-    padding: var(--gap-margin) 0 0 var(--gap-margin);
+    padding: var(--#{con.$v}gap-margin) 0 0 var(--#{con.$v}gap-margin);
   }
 }
 
 @each $g in con.$gaps {
   .l-#{$gap-margin-fix}-#{$g} {
-    --gap-margin: var(--#{$g});
+    --#{con.$v}gap-margin: var(--#{con.$v}#{$g});
 
     @extend %l-gap-margin;
   }
@@ -34,7 +34,7 @@ $gap-margin-fix: fix.get-class-fix("gap-margin");
   @each $g in con.$gaps {
     .l-#{$gap-margin-fix}-#{$g}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        --gap-margin: var(--#{$g})
+        --#{con.$v}gap-margin: var(--#{con.$v}#{$g})
       ));
     }
   }

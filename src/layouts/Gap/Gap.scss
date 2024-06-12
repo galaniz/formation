@@ -15,12 +15,12 @@ $gap-fix: fix.get-class-fix("gap");
 /* Styles */
 
 %l-gap {
-  gap: var(--gap);
+  gap: var(--#{con.$v}gap);
 }
 
 @each $g in con.$gaps {
   .l-#{$gap-fix}-#{$g} {
-    --gap: var(--#{$g});
+    --#{con.$v}gap: var(--#{con.$v}#{$g});
 
     @extend %l-gap;
   }
@@ -30,7 +30,7 @@ $gap-fix: fix.get-class-fix("gap");
   @each $g in con.$gaps {
     .l-#{$gap-fix}-#{$g}-#{$b} {
       @include breakpoints.breakpoint-batch-add($b, (
-        --gap: var(--#{$g})
+        --#{con.$v}gap: var(--#{con.$v}#{$g})
       ));
     }
   }

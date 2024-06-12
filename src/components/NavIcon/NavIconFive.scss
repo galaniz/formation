@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "./NavIcon" as icon;
 
 /* Styles */
@@ -45,8 +46,8 @@
   }
 
   .c-nav-icon__middle {
-    --duration: 150ms;
-    --delay: 100ms;
+    --#{con.$v}duration: 150ms;
+    --#{con.$v}delay: 100ms;
     --opacity: 1;
 
     opacity: var(--opacity);
@@ -54,7 +55,7 @@
 
   [data-nav-show] & {
     .c-nav-icon__middle {
-      --delay: 0ms;
+      --#{con.$v}delay: 0ms;
       --opacity: 0;
     }
 

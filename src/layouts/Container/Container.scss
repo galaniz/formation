@@ -14,8 +14,8 @@ $container-fix: fix.get-class-fix("container");
 /* Styles */
 
 %l-container {
-  padding-left: var(--container-padding);
-  padding-right: var(--container-padding);
+  padding-left: var(--#{con.$v}container-padding);
+  padding-right: var(--#{con.$v}container-padding);
   margin-left: auto;
   margin-right: auto;
 }
@@ -30,6 +30,6 @@ $container-fix: fix.get-class-fix("container");
   .l-#{$container-fix}#{$suffix} {
     @extend %l-container;
 
-    max-width: var(--container#{$suffix});
+    max-width: var(--#{con.$v}container#{$suffix});
   }
 }
