@@ -30,7 +30,6 @@
   ],
   "exclude": [
     "./lib",
-    "**/*.stories.ts",
     "**/*.test.ts",
     "**/*Html.ts",
     "**/*Demo.ts",
