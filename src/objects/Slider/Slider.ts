@@ -11,7 +11,7 @@ import { focusSelector } from '../../utils/utils'
 import { config } from '../../config/config'
 
 /**
- * Class - slider using panel and tab structure
+ * Slider using panel and tab structure
  */
 
 class Slider extends Tabs {
@@ -500,7 +500,7 @@ class Slider extends Tabs {
       this.track.style.setProperty('--snap-type', 'none')
 
       /*
-      Source: https://spicyyoghurt.com/tools/easing-functions
+      @see {@link https://spicyyoghurt.com/tools/easing-functions/|Source}
       t = time
       b = beginning value
       c = change in value

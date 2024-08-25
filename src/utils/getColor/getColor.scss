@@ -8,7 +8,7 @@
 @use "../../config/config" as con;
 
 /**
- * Function - get hex color from name in $colors-flat map
+ * Get color value from name in $colors-flat map
  *
  * @param {string} $color
  * @return {string}

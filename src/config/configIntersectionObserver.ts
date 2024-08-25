@@ -7,7 +7,7 @@
 import { config } from './config'
 
 /**
- * Function - check browser intersection observer support
+ * Check browser intersection observer support
  *
  * @return {void}
  */

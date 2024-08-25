@@ -16,7 +16,7 @@ import {
 } from '../../utils/utils'
 
 /**
- * Class - set current link from corresponding item visibility
+ * Set current link from corresponding item visibility
  */
 class VisibleHash {
   /**
@@ -140,7 +140,13 @@ class VisibleHash {
    * @return {void}
    */
   _setItemRect (): void {
-    const r = this.item[0].getBoundingClientRect()
+    const itemOne = this.item[0]
+
+    if (itemOne === undefined) {
+      return
+    }
+
+    const r = itemOne.getBoundingClientRect()
     const y = window.scrollY
 
     const top = r.top + y

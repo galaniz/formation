@@ -9,14 +9,26 @@ import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
 import { isFunction } from '../isFunction/isFunction'
 
 /**
- * Function - recursively get elements outside of specified element
+ * Tags to exclude from item siblings
  *
- * @type {GetOuterItems}
+ * @private
+ * @type {Set<string>}
+ */
+const _excludedTags: Set<string> = new Set(['SCRIPT', 'STYLE', 'HEAD'])
+
+/**
+ * Recursively get elements outside of specified element
+ *
+ * @type {import.('./getOuterItemsTypes').GetOuterItems}
  */
 const getOuterItems: GetOuterItems = (item, type = 'all', filter, _store = []) => {
+  /* Item must be html element */
+
   if (!isHTMLElement(item)) {
     return []
   }
+
+  /* Parent and children must exist */
 
   const parent = item.parentElement
 
@@ -30,10 +42,14 @@ const getOuterItems: GetOuterItems = (item, type = 'all', filter, _store = []) =
     return []
   }
 
+  /* Index to compare with siblings */
+
   const itemIndex = children.indexOf(item)
 
+  /* Exclude script, style and head elements */
+
   const siblings = children.filter((c, i) => {
-    let condition = c !== item && c.tagName !== 'SCRIPT' && c.tagName !== 'STYLE' && c.tagName !== 'HEAD'
+    let condition = c !== item && !_excludedTags.has(c.tagName)
 
     if (type === 'next') {
       condition = condition && i > itemIndex
@@ -46,9 +62,13 @@ const getOuterItems: GetOuterItems = (item, type = 'all', filter, _store = []) =
     return condition
   })
 
+  /* Append filtered siblings */
+
   if (siblings.length > 0) {
     _store = _store.concat(type === 'prev' ? siblings.reverse() : siblings)
   }
+
+  /* Customize output */
 
   if (isFunction(filter)) {
     const res = filter(_store)
@@ -61,9 +81,13 @@ const getOuterItems: GetOuterItems = (item, type = 'all', filter, _store = []) =
     }
   }
 
+  /* Recurse if parent exists */
+
   if (parent.parentElement !== null) {
     return getOuterItems(parent, type, filter, _store)
   }
+
+  /* Output */
 
   return _store
 }

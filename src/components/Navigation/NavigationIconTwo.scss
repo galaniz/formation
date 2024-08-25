@@ -1,0 +1,35 @@
+/**
+ * Components - Navigation Icon Two Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "./NavigationIcon" as icon;
+
+/* Styles */
+
+[data-nav-icon="2"] {
+  --#{con.$v}duration: 175ms;
+  --y: 0;
+  --y-r: 0;
+  --opacity: 1;
+
+  .c-nav-icon-top {
+    transform: translateY(var(--y));
+  }
+
+  .c-nav-icon-bottom {
+    transform: translateY(var(--y-r));
+  }
+
+  .c-nav-icon-middle {
+    opacity: var(--opacity);
+  }
+
+  [data-nav-show] & {
+    --y: #{icon.$y};
+    --y-r: #{icon.$y * -1};
+    --opacity: 0;
+  }
+}

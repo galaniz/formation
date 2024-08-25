@@ -7,7 +7,7 @@
 import { config } from './config'
 
 /**
- * Function - browser font size in pixels
+ * Browser font size in pixels
  *
  * @return {void}
  */

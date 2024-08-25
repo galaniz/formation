@@ -1,0 +1,49 @@
+/**
+ * Components - Navigation Icon Four Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "./NavigationIcon" as icon;
+
+/* Styles */
+
+[data-nav-icon="4"] {
+  --rotate: 0deg;
+  --rotate-in: 0deg;
+  --rotate-in-r: 0deg;
+  --y: 0;
+  --y-r: 0;
+  --opacity: 1;
+
+  transform: rotateY(var(--rotate));
+
+  .c-nav-icon-top,
+  .c-nav-icon-middle,
+  .c-nav-icon-bottom {
+    --#{con.$v}duration: 0ms;
+    --#{con.$v}delay: 100ms;
+  }
+
+  .c-nav-icon-top {
+    transform: translateY(var(--y)) rotate(var(--rotate-in));
+  }
+
+  .c-nav-icon-bottom {
+    transform: translateY(var(--y-r)) rotate(var(--rotate-in-r));
+  }
+
+  .c-nav-icon-middle {
+    opacity: var(--opacity);
+  }
+
+  [data-nav-show] & {
+    --rotate: 180deg;
+    --rotate-in: 45deg;
+    --rotate-in-r: -45deg;
+    --y: #{icon.$y};
+    --y-r: #{icon.$y * -1};
+    --opacity: 0;
+  }
+}

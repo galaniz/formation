@@ -1,20 +1,35 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
     "outDir": "lib",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ]
   },
   "include": [
     "**/*.ts"
   ],
   "exclude": [
     "./lib",
-    "__mocks__",
     "**/*.stories.ts",
     "**/*.test.ts",
     "**/*Html.ts",

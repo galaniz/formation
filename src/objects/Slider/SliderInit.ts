@@ -6,11 +6,11 @@
 
 /* Imports */
 
-import { setItems } from '../../utils/utils'
+import { getItems } from '../../utils/utils'
 import { Slider } from './Slider'
 
 /**
- * Function - initialize Slider class
+ * Initialize Slider class
  *
  * @param {HTMLElement} context
  * @return {void}
@@ -21,7 +21,7 @@ const SliderInit = (context = document) => {
    * Store DOM elements
    */
 
-  const sliders = setItems([
+  const sliders = getItems([
     {
       context: '.o-slider',
       main: '.o-slider__main',

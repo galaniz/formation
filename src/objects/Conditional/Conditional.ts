@@ -6,7 +6,7 @@
  * @param {HTMLElement} item
  */
 
-/* Class - show/enable fields */
+/* Show/enable fields */
 
 class Conditional {
   /**

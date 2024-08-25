@@ -8,9 +8,7 @@
 @use "sass:meta";
 
 /**
- * Function - recursively merge two maps
- *
- * Source - https://github.com/pentzzsolt/sass-recursive-map.merge
+ * Recursively merge two maps
  *
  * @param {map} $original
  * @param {map} $overrides
@@ -36,7 +34,7 @@
 }
 
 /**
- * Function - convert map to one level map
+ * Convert map to one level map
  *
  * @param {map} $map
  * @param {map} $new-map

@@ -6,15 +6,17 @@
 
 import { it, expect, describe } from 'vitest'
 import { configDefaultFontSize } from '../configDefaultFontSize'
+import { config } from '../config'
 
 /* Tests */
 
 describe('configDefaultFontSize()', () => {
   it('should return 16', () => {
-    const result = configDefaultFontSize()
+    configDefaultFontSize()
+
     const expectedResult = 16
 
-    expect(result).toBe(expectedResult)
+    expect(config.defaultFontSize).toBe(expectedResult)
   })
 
   it('should return 18', () => {
@@ -28,8 +30,8 @@ describe('configDefaultFontSize()', () => {
       }
     )
 
-    const result = configDefaultFontSize()
+    configDefaultFontSize()
 
-    expect(result).toBe(value)
+    expect(config.defaultFontSize).toBe(value)
   })
 })

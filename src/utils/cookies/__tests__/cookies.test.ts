@@ -12,7 +12,6 @@ import { setCookie, getCookie } from '../cookies'
  *
  * @type {string}
  */
-
 const testName: string = 'test_cookie_name'
 
 /**
@@ -20,10 +19,35 @@ const testName: string = 'test_cookie_name'
  *
  * @type {string}
  */
-
 const testValue: string = 'test_cookie_value'
 
-/* Tests */
+/**
+ * Clear document cookies
+ *
+ * @return {void}
+ */
+const testClearCookies = (): void => {
+  const cookies = document.cookie.split(';')
+
+  for (let i = 0; i < cookies.length; i += 1) {
+    const cookie = cookies[i]
+
+    if (cookie === undefined) {
+      continue
+    }
+
+    const cookieArr = cookie.split('=')
+    const n = cookieArr[0]
+
+    if (n === undefined) {
+      continue
+    }
+
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/`
+  }
+}
+
+/* Test setCookie */
 
 describe('setCookie()', () => {
   beforeEach(() => {
@@ -32,6 +56,7 @@ describe('setCookie()', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    testClearCookies()
   })
 
   it('should return false if name is empty', () => {
@@ -100,7 +125,13 @@ describe('setCookie()', () => {
   })
 })
 
+/* Test getCookie */
+
 describe('getCookie()', () => {
+  afterEach(() => {
+    testClearCookies()
+  })
+
   it('should return empty string if name is empty', () => {
     const name = ''
     const result = getCookie(name)
@@ -127,6 +158,8 @@ describe('getCookie()', () => {
   })
 
   it('should return testValue', () => {
+    setCookie(testName, testValue)
+
     const result = getCookie(testName)
 
     expect(result).toBe(testValue)

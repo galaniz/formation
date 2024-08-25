@@ -7,7 +7,6 @@
 /* Imports */
 
 import {
-  prefix,
   setLoaders,
   getKey,
   getDuration,
@@ -16,9 +15,8 @@ import {
 } from '../../utils/utils'
 
 /**
- * Class - play, pause and progress audio tracks
+ * Play, pause and progress audio tracks
  */
-
 class Audio {
   /**
    * Set public properties and initialize
@@ -430,7 +428,7 @@ class Audio {
 
   _setProgressBar (n) {
     if (this.progress.bar) {
-      prefix('transform', this.progress.bar, `scaleX(${n})`)
+      this.progress.bar.style.transform = `scaleX(${n})`
     }
   }
 
@@ -465,7 +463,7 @@ class Audio {
       transform = this._progress.width
     }
 
-    prefix('transform', this.progress.scrub, `translateX(${transform}px)`)
+    this.progress.scrub.style.transform = `translateX(${transform}px)`
 
     /* Save x position */
 

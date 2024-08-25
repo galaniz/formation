@@ -5,7 +5,7 @@
  */
 
 /**
- * Class - create masonry layout with negative margins
+ * Create masonry layout with negative margins
  */
 
 class MarginMasonry {

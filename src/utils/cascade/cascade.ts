@@ -2,43 +2,72 @@
  * Utils - Cascade
  */
 
+/* Imports */
+
+import type { CascadeEvent } from './cascadeTypes'
+import { isObjectStrict } from '../isObject/isObject'
+import { isFunction } from '../isFunction/isFunction'
+import { isNumber } from '../isNumber/isNumber'
+
 /**
- * @method Action
- * @param {number} index
- * @param {number} repeatIndex
- * @param {function} [recur] - Hold off recursion until function call
+ * More precise set timeout with requestAnimationFrame
+ *
+ * @private
+ * @param {function} action
+ * @param {number} delay
  * @return {void}
  */
+const _requestTimeout = (action: Function, delay: number): void => {
+  /* Starting values */
 
-type Action = (index: number, repeatIndex: number, recur: Function) => void
+  const start = performance.now()
+  let requestId = 0
 
-/**
- * @typedef {object} Event
- * @prop {Action} action
- * @prop {number} [delay=0] - Value to delay action by in milliseconds
- * @prop {number} [increment=0] - Value to increase delay by
- */
+  /* Callback  */
 
-interface Event {
-  action: Action
-  delay?: number
-  increment?: number
+  const loop = (timestamp: DOMHighResTimeStamp): void => {
+    /* Clear previous request */
+
+    cancelAnimationFrame(requestId)
+
+    /* Check time passed */
+
+    const elapsed = timestamp - start
+
+    /* Run action when delay is up */
+
+    if (elapsed >= delay) {
+      action()
+      return
+    }
+
+    /* Continue loop */
+
+    requestId = requestAnimationFrame(loop)
+  }
+
+  /* Init */
+
+  requestId = requestAnimationFrame(loop)
 }
 
 /**
- * Function - sequentially and recursively call and delay functions
+ * Sequentially and recursively call and delay functions
  *
- * @param {Event[]} events
+ * @param {import('./cascadeTypes').CascadeEvent[]} events
  * @param {number} [repeat=0]
  * @return {void}
  */
+const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
+  /* Store number of events */
 
-const cascade = (events: Event[], repeat: number = 0): void => {
   const eventsLength = events.length - 1
 
+  /* Store increment */
+
   let increment = 0
-  let delay = 0
-  let timeoutId = 0
+
+  /* Loop through events */
 
   const recurse = (i: number, j: number): void => {
     /* Repeat */
@@ -54,61 +83,54 @@ const cascade = (events: Event[], repeat: number = 0): void => {
       return
     }
 
+    /* Default delay */
+
+    let delay = 0
+
     /* Event object */
 
     const event = events[i]
 
-    /* Set delay and increment values */
+    if (!isObjectStrict(event)) {
+      recurse(i + 1, j) // Continue
+      return
+    }
 
     const {
-      delay: eventDelay = delay,
+      delay: eventDelay,
       increment: eventIncrement,
       action
     } = event
 
-    if (eventIncrement !== undefined) {
-      if (increment === 0 && eventDelay > 0) {
-        delay = eventDelay
-      }
+    /* Action required */
 
+    if (!isFunction(action)) {
+      recurse(i + 1, j) // Continue
+      return
+    }
+
+    /* Set delay and increment values */
+
+    if (isNumber(eventIncrement)) {
       increment = eventIncrement
-    } else {
+    }
+
+    if (isNumber(eventDelay)) {
       delay = eventDelay
     }
 
     /* Run action */
 
-    const run = (tId: number): void => {
-      /* Check action is a function */
-
-      if (typeof action !== 'function') {
-        return
-      }
-
-      /* Wait to recurse if recur param */
-
-      if (action.length === 3) {
+    _requestTimeout(() => {
+      if (action.length === 3) { // Hold off on recursion if doRecurse param exists
         action(i, j, () => {
           recurse(i + 1, j)
         })
       } else {
         action(i, j, () => {})
-
         recurse(i + 1, j)
       }
-
-      /* Clear */
-
-      clearTimeout(tId)
-    }
-
-    timeoutId = window.setTimeout(() => {
-      run(timeoutId)
-    }, delay)
-
-    /* Augment delay */
-
-    delay += increment
+    }, delay + increment)
   }
 
   /* Init */

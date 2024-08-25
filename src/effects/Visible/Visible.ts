@@ -6,12 +6,11 @@
 
 /* Imports */
 
-import { addAction, prefix } from '../../utils/utils'
+import { addAction } from '../../utils/utils'
 
 /**
- * Class - check if item visible in viewport
+ * Check if item visible in viewport
  */
-
 class Visible {
   /**
    * Set public properties and initialize
@@ -226,7 +225,7 @@ class Visible {
     /* Make sure item doesn't have transition */
 
     if (this.parallax) {
-      prefix('transition', this.item, 'none')
+      this.item.style.transition = 'none'
     }
 
     /* Event listeners and */
@@ -378,7 +377,7 @@ class Visible {
     }
 
     if (this.parallax) {
-      prefix('transform', this.item, '')
+      this.item.style.transform = ''
     }
   }
 
@@ -396,7 +395,7 @@ class Visible {
 
     this.parallax.y = transformY
 
-    prefix('transform', this.item, `translate3d(${this.parallax.x}, ${transformY}px, ${this.parallax.z})`)
+    this.item.style.transform = `translate3d(${this.parallax.x}, ${transformY}px, ${this.parallax.z})`
   }
 
   /**

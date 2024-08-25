@@ -3,7 +3,7 @@
  */
 
 /**
- * Function - check if value is string
+ * Check if value is string
  *
  * @param {*} value
  * @return {boolean}
@@ -13,13 +13,13 @@ const isString = (value: unknown): value is string => {
 }
 
 /**
- * Function - check if value is string and not empty
+ * Check if value is string and not empty
  *
  * @param {*} value
  * @return {boolean}
  */
 const isStringStrict = (value: unknown): value is string => {
-  return typeof value === 'string' && value !== ''
+  return isString(value) && value !== ''
 }
 
 /* Exports */

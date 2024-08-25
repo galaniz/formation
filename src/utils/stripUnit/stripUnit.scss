@@ -8,9 +8,7 @@
 @use "sass:meta";
 
 /**
- * Function - remove unit from number
- *
- * Source - https://css-tricks.com/snippets/css/fluid-typography
+ * Remove unit from number
  *
  * @param {number} $number
  * @return {number}

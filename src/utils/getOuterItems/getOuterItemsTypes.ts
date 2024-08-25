@@ -27,4 +27,4 @@ export type GetOuterItemsFilter = (store: Element[]) => GetOuterItemsFilterRetur
  * @param {Element[]} [_store]
  * @return {Element[]}
  */
-export type GetOuterItems = (item: HTMLElement | null, type?: string, filter?: GetOuterItemsFilter, _store?: Element[]) => Element[]
+export type GetOuterItems = (item: HTMLElement | null, type?: 'all' | 'prev' | 'next', filter?: GetOuterItemsFilter, _store?: Element[]) => Element[]

@@ -3,10 +3,7 @@
  */
 
 /**
- * Function - get object keys cast as keyof object
- *
- * Note: Workaround for index signature
- * Check if object with isObject or isObjectStrict beforehand
+ * Get object keys cast as keyof object (workaround for index signature)
  *
  * @param {object} obj
  * @return {string[]}

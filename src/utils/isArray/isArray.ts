@@ -3,7 +3,7 @@
  */
 
 /**
- * Function - check if value is an array
+ * Check if value is an array
  *
  * @param {*} value
  * @return {boolean}
@@ -13,13 +13,13 @@ const isArray = (value: unknown): value is unknown[] => {
 }
 
 /**
- * Function - check if value is an array with items
+ * Check if value is an array with items
  *
  * @param {*} value
  * @return {boolean}
  */
 const isArrayStrict = (value: unknown): value is unknown[] => {
-  return Array.isArray(value) && value.length > 0
+  return isArray(value) && value.length > 0
 }
 
 /* Exports */

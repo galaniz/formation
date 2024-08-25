@@ -1,0 +1,29 @@
+/**
+ * Components - Navigation Styles
+ */
+
+c-nav {
+  display: block;
+}
+
+.c-nav {
+  --hide: block;
+  --visibility: hidden;
+
+  &[data-nav-open="true"] {
+    --visibility: visible;
+  }
+
+  &[data-nav-overflow="false"] {
+    --hide: none;
+  }
+}
+
+.c-nav-hide {
+  display: var(--hide);
+}
+
+.c-nav-modal,
+.c-nav-overlay {
+  visibility: var(--visibility);
+}

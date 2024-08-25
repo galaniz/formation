@@ -14,9 +14,9 @@
 
 /* Imports */
 
-import { closest, focusSelector, getOuterItems, isItemFocusable } from '../../utils/utils'
+import { focusSelector, getOuterItems, isItemFocusable } from '../../utils/utils'
 
-/* Class - form validation and get values */
+/* Form validation and get values */
 
 class Form {
   /**
@@ -53,9 +53,10 @@ class Form {
 
     /**
      * Internal variables
+     *
+     * @see {@link https://emailregex.com/|Source}
+     * @see {@link https://urlregex.com/|Source}
      */
-
-    /* Regex source: https://emailregex.com && https://urlregex.com */
 
     this._exp = {
       url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/,
@@ -145,7 +146,7 @@ class Form {
 
         /* Legend */
 
-        const fieldset = closest(input, this.groupClass)
+        const fieldset = input.closest(this.groupClass)
         let legend = null
         let excludeLabel = false
 
@@ -163,7 +164,7 @@ class Form {
 
         /* Field */
 
-        const field = closest(input, this.fieldClass)
+        const field = input.closest(this.fieldClass)
 
         /* Label */
 

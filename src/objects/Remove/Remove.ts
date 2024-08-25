@@ -20,7 +20,7 @@ import {
   getCookie
 } from '../../utils/utils'
 
-/* Class - remove elements (if cookie or other condition + trigger click) */
+/* Remove elements (if cookie or other condition + trigger click) */
 
 class Remove {
   /**

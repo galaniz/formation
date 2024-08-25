@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import { it, expect, describe } from 'vitest'
+import { it, expect, describe, beforeEach, vi } from 'vitest'
 import {
   actions,
   addAction,
@@ -13,31 +13,46 @@ import {
 } from '../actions'
 
 /**
- * Test action name
+ * First test action name
  *
  * @type {string}
  */
-
-const testName: string = 'testName'
+const testNameOne: string = 'testName'
 
 /**
- * Function - test action
+ * Second test action name
  *
- * @param {object} args
- * @param {function} args.prop
- * @return {void}
+ * @type {string}
  */
+const testNameTwo: string = 'testNameTwo'
 
-const testAction = (args: { prop: Function }): void => {
-  const { prop } = args
-  prop(true)
-}
+/* Test actions */
 
-/* Tests */
+describe('actions', () => {
+  it('should be map containing three empty sets', () => {
+    const resize = actions.get('resize')
+    const escape = actions.get('escape')
+    const scroll = actions.get('scroll')
+
+    const expectResize = new Set()
+    const expectEscape = new Set()
+    const expectScroll = new Set()
+
+    expect(resize).toEqual(expectResize)
+    expect(escape).toEqual(expectEscape)
+    expect(scroll).toEqual(expectScroll)
+  })
+})
+
+/* Test addAction */
 
 describe('addAction()', () => {
+  beforeEach(() => {
+    actions.get(testNameOne)?.clear()
+  })
+
   it('should return true if name is a string and action is a function', () => {
-    const result = addAction(testName, testAction)
+    const result = addAction(testNameOne, () => {})
     const expectedResult = true
 
     expect(result).toBe(expectedResult)
@@ -53,7 +68,7 @@ describe('addAction()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if action null', () => {
+  it('should return false if action is null', () => {
     const name = 'name'
     const action = null
     // @ts-expect-error
@@ -62,51 +77,70 @@ describe('addAction()', () => {
 
     expect(result).toBe(expectedResult)
   })
-
-  it('actions object should equal testActions object', () => {
-    const testActions: { [key: string]: Function[] } = {
-      [testName]: [testAction]
-    }
-
-    expect(actions).toEqual(testActions)
-  })
 })
+
+/* Test doActions */
 
 describe('doActions()', () => {
+  beforeEach(() => {
+    actions.get(testNameOne)?.clear()
+    actions.delete(testNameTwo)
+  })
+
   it(
-    'testAction should be called if name exists',
-    async () => await new Promise(resolve => {
-      doActions(testName, {
-        prop: (result: boolean) => { // Prop callback to check action called
-          expect(result).toBe(true)
-          resolve('')
-        }
+    'test action should be called and return true',
+    async () => {
+      const testAction = vi.fn((arg: boolean): boolean => {
+        return arg
       })
-    })
+
+      addAction(testNameOne, testAction)
+      await doActions(testNameOne, true)
+
+      expect(testAction).toHaveBeenCalledTimes(1)
+      expect(testAction).toHaveReturnedWith(true)
+    }
   )
 
   it(
-    'testAction should not be called if name does not exist',
-    async () => await new Promise(resolve => {
-      const name = 'notName'
-      const result = 'not'
-      const action = (arg: Function): void => {
-        arg(result)
-      }
+    'test action one should be called and test action two should not run',
+    async () => {
+      const testActionOne = vi.fn()
+      const testActionTwo = vi.fn()
 
-      addAction(name, action)
+      addAction(testNameOne, testActionOne)
+      addAction(testNameTwo, testActionTwo)
+      await doActions(testNameTwo)
+      removeAction(testNameTwo, testActionTwo)
 
-      doActions(name, (res: string) => {
-        expect(res).toBe(result)
-        resolve('')
-      })
+      expect(testActionTwo).toHaveBeenCalledTimes(1)
+      expect(testActionOne).not.toHaveBeenCalled()
+    }
+  )
 
-      removeAction(name, action)
-    })
+  it('test action should not be called if run test name two',
+    async () => {
+      const testAction = vi.fn()
+      const name = 'testNameTwo'
+      const exists = actions.has(name)
+      const expectExists = false
+
+      addAction(testNameOne, testAction)
+      await doActions(testNameTwo)
+
+      expect(exists).toBe(expectExists)
+      expect(testAction).not.toHaveBeenCalled()
+    }
   )
 })
 
+/* Test removeAction */
+
 describe('removeAction()', () => {
+  beforeEach(() => {
+    actions.get(testNameOne)?.clear()
+  })
+
   it('should return false if name is null', () => {
     const name = null
     const action = (): void => {}
@@ -117,7 +151,7 @@ describe('removeAction()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if action null', () => {
+  it('should return false if action is null', () => {
     const name = 'name'
     const action = null
     // @ts-expect-error
@@ -137,16 +171,13 @@ describe('removeAction()', () => {
   })
 
   it('should return true if name and action exists', () => {
-    const result = removeAction(testName, testAction)
+    const testAction = vi.fn()
+
+    addAction(testNameOne, testAction)
+
+    const result = removeAction(testNameOne, testAction)
     const expectedResult = true
 
     expect(result).toBe(expectedResult)
-  })
-
-  it('testName array should be empty', () => {
-    const result = actions[testName]
-    const expectedResult = 0
-
-    expect(result).toHaveLength(expectedResult)
   })
 })

@@ -14,7 +14,7 @@ import {
 } from '../../utils/utils'
 
 /**
- * Class - get and set height to open and close element
+ * Get and set height to open/close element
  */
 class Collapsible {
   /**

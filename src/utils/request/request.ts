@@ -1,100 +1,115 @@
-// @ts-nocheck
-
 /**
  * Utils - Request
  */
 
 /* Imports */
 
+import type { RequestArgs } from './requestTypes'
 import { urlEncode } from '../urlEncode/urlEncode'
 import { objectToFormData } from '../objectToFormData/objectToFormData'
+import { isObjectStrict } from '../isObject/isObject'
+import { isFunction } from '../isFunction/isFunction'
 
 /**
- * Function - handle ajax requests with fetch method and encode data
- *
- * @param {object} args
- * @param {string} args.method
- * @param {string} args.url
- * @param {object} args.headers
- * @param {string} args.body
- * @param {string} args.encode
- * @return {Promise}
+ * Custom exception to include fetch response
  */
+class ResponseError extends Error {
+  /**
+   * Store response data
+   *
+   * @type {Response}
+   */
+  response: Response
 
-const request = (args) => {
-  const {
+  /**
+   * Set properties
+   *
+   * @param {string} message
+   * @param {Response} res
+   */
+  constructor (message: string, res: Response) {
+    super(message)
+    this.message = message
+    this.response = res
+  }
+}
+
+/**
+ * Handle requests with fetch method
+ *
+ * @param {import('./requestTypes').RequestArgs} args
+ * @return {Promise<void>}
+ */
+const request = async (args: RequestArgs): Promise<void> => {
+  /* Defaults */
+
+  let {
     method = 'GET',
     url = '',
-    headers,
-    body,
-    encode = 'url'
-  } = args
+    headers = {},
+    body = '',
+    encode = 'json',
+    expect = 'json',
+    onError = undefined,
+    onSuccess = undefined
+  } = isObjectStrict(args) ? args : {}
 
-  /* Method */
+  /* Error and success must be functions */
 
-  const reqArgs = {
-    method
+  if (!isFunction(onError)) {
+    onError = () => {}
+  }
+
+  if (!isFunction(onSuccess)) {
+    onSuccess = () => {}
   }
 
   /* Headers */
 
-  if (headers) {
-    reqArgs.headers = headers
-  }
+  const reqHeaders = new Headers(isObjectStrict(headers) ? headers : {})
 
   /* Body */
 
-  if (body) {
-    reqArgs.body = body
-  }
+  let reqBody: string | FormData = body instanceof FormData ? body : ''
 
-  /* Encode */
+  /* Encode and make request */
 
-  if (encode === 'url' || encode === 'json') {
-    if (!Object.getOwnPropertyDescriptor(reqArgs, 'headers')) {
-      reqArgs.headers = {}
+  try {
+    /* Encode and body */
+
+    if (encode === 'url') {
+      reqHeaders.set('Content-Type', 'application/x-www-form-urlencoded')
+      reqBody = urlEncode(body)
     }
+
+    if (encode === 'json') {
+      reqHeaders.set('Content-Type', 'application/json')
+      reqBody = JSON.stringify(body)
+    }
+
+    if (encode === 'formData') {
+      reqHeaders.set('Content-Type', 'multipart/form-data')
+      reqBody = objectToFormData(body)
+    }
+
+    /* Request */
+
+    const res = await fetch(url, {
+      method,
+      headers: reqHeaders,
+      body: reqBody
+    })
+
+    if (!res.ok) {
+      throw new ResponseError('Bad fetch response', res)
+    }
+
+    onSuccess(expect === 'json' ? await res.json() : await res.text())
+  } catch (error) {
+    onError(error)
   }
-
-  if (encode === 'url') {
-    reqArgs.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    reqArgs.body = urlEncode(body)
-  }
-
-  if (encode === 'json') {
-    reqArgs.headers['Content-Type'] = 'application/json'
-    reqArgs.body = JSON.stringify(body)
-  }
-
-  if (encode === 'form-data') {
-    const formData = new FormData() // eslint-disable-line no-undef
-
-    objectToFormData(body, formData)
-
-    reqArgs.body = formData
-  }
-
-  /* Make request */
-
-  return new Promise((resolve, reject) => {
-    fetch(url, reqArgs)
-      .then(res => {
-        if (res.status >= 200 && res.status < 300) {
-          try {
-            resolve(res.text())
-          } catch (err) {
-            reject(err.message)
-          }
-        } else {
-          reject(res)
-        }
-      })
-      .catch((err) => {
-        reject(err.message)
-      })
-  })
 }
 
 /* Exports */
 
-export { request }
+export { request, ResponseError }

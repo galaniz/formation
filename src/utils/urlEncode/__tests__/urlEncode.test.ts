@@ -4,12 +4,17 @@
 
 /* Imports */
 
-import { it, expect, describe } from 'vitest'
+import { it, expect, describe, afterEach } from 'vitest'
 import { urlEncode } from '../urlEncode'
+import { config } from '../../../config/config'
 
 /* Tests */
 
 describe('urlEncode()', () => {
+  afterEach(() => {
+    config.wellFormed = false
+  })
+
   it('should return empty string if value is empty string', () => {
     const value = ''
     const result = urlEncode(value)
@@ -67,12 +72,14 @@ describe('urlEncode()', () => {
   })
 
   it('should return well formed string when value contains malformed characters', () => {
+    config.wellFormed = true
+
     const value = {
       key1: 'ab\uD800'
     }
 
     const result = urlEncode(value)
-    const expectedResult = 'ab�'
+    const expectedResult = 'key1=ab%EF%BF%BD'
 
     expect(result).toBe(expectedResult)
   })

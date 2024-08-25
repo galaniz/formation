@@ -4,22 +4,16 @@
 
 /* Imports */
 
+import type { Asset, AssetDone } from './assetsLoadedTypes'
 import { isHTMLElement } from '../isHTMLElement/isHTMLElement'
-import { isArray } from '../isArray/isArray'
+import { isArrayStrict } from '../isArray/isArray'
 
 /**
- * @typedef {HTMLImageElement|HTMLMediaElement|HTMLIFrameElement} Asset
- */
-
-type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
-
-/**
- * Function - check if single asset is loaded
+ * Check if single asset is loaded
  *
- * @param {Asset} asset
- * @return {Promise<Asset>}
+ * @param {import('./assetsLoadedTypes').Asset} asset
+ * @return {Promise<import('./assetsLoadedTypes').Asset>}
  */
-
 const assetLoaded = async (asset: Asset): Promise<Asset> => {
   return await new Promise((resolve, reject) => {
     const result = (): void => {
@@ -35,6 +29,10 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
       return
     }
 
+    if (asset instanceof HTMLImageElement && asset.complete) {
+      result()
+    }
+
     const isVideo = asset instanceof HTMLVideoElement
     const isAudio = asset instanceof HTMLAudioElement
 
@@ -45,35 +43,19 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
     } else {
       asset.onload = result
     }
-
-    if (asset instanceof HTMLImageElement && asset.complete) {
-      result()
-    }
   })
 }
 
 /**
- * Function - callback when done on error or success
+ * Check if multiple assets are loaded
  *
- * @function done
- * @param {Asset[]|boolean} result
- * @param {string|Event} [error]
+ * @param {import('./assetsLoadedTypes').Asset[]} assets
+ * @param {import('./assetsLoadedTypes').AssetDone} [done]
  * @return {void}
  */
-
-type Done = (result: Asset[] | boolean, error?: string | Event | Error) => void
-
-/**
- * Function - check if multiple assets are loaded
- *
- * @param {Asset[]} assets
- * @param {function} [done=() => {}]
- * @return {void}
- */
-
-const assetsLoaded = (assets: Asset[], done: Done = () => {}): void => {
-  if (!isArray(assets)) {
-    done(false, 'Assets not a filled array')
+const assetsLoaded = (assets: Asset[], done: AssetDone = () => {}): void => {
+  if (!isArrayStrict(assets)) {
+    done(false, 'Assets empty')
     return
   }
 

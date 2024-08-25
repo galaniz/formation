@@ -1,0 +1,39 @@
+/**
+ * Utils - Request Types
+ */
+
+/**
+ * @typedef {function} RequestErrorCallback
+ * @param {*} error
+ * @return {void}
+ */
+export type RequestErrorCallback = (error: unknown) => void
+
+/**
+ * @typedef {function} RequestSuccessCallback
+ * @param {string|*} res
+ * @return {void}
+ */
+export type RequestSuccessCallback = (res: string | unknown) => void
+
+/**
+ * @typedef {object} RequestArgs
+ * @prop {string} [method=GET]
+ * @prop {string} [url]
+ * @prop {Object<string, string>} [headers]
+ * @prop {object|FormData} body
+ * @prop {string} [encode=json] - url || json || formData
+ * @prop {string} [expect=json] - json || text
+ * @prop {RequestErrorCallback} onError
+ * @prop {RequestSuccessCallback} onSuccess
+ */
+export interface RequestArgs {
+  method?: string
+  url: string
+  headers?: Record<string, string>
+  body: object | FormData
+  encode?: 'url' | 'json' | 'formData'
+  expect?: 'json' | 'text'
+  onError: RequestErrorCallback
+  onSuccess: RequestSuccessCallback
+}

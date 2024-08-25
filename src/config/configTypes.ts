@@ -11,6 +11,8 @@
  * @prop {boolean} flexGap
  * @prop {number} defaultFontSize
  * @prop {number} fontSizeMultiplier
+ * @prop {number} resizeDelay
+ * @prop {number} scrollDelay
  */
 export interface Config {
   inert: boolean
@@ -20,4 +22,16 @@ export interface Config {
   flexGap: boolean
   defaultFontSize: number
   fontSizeMultiplier: number
+  resizeDelay: number
+  scrollDelay: number
+}
+
+/**
+ * @typedef {object} ConfigFallback
+ * @prop {function} [toggleFocusability]
+ * @prop {function} [getOuterFocusableItems]
+ */
+export interface ConfigFallback {
+  toggleFocusability?: Function
+  getOuterFocusableItems?: Function
 }

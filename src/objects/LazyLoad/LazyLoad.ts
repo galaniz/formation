@@ -63,9 +63,9 @@ class LazyLoad {
 
   /**
    * Set src and show asset
+   *
+   * @see {@link https://web.dev/lazy-loading-images/|Source}
    */
-
-  /* Source: https://web.dev/lazy-loading-images/ */
 
   _show (item) {
     const observer = new window.IntersectionObserver((entries, obs) => {

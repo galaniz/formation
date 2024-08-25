@@ -9,7 +9,7 @@
 @use "sass:string";
 
 /**
- * Mixin - set placeholder
+ * Set placeholder
  *
  * @param {string} $name
  * @return {void}
@@ -21,7 +21,7 @@
 }
 
 /**
- * Mixin - make placeholder
+ * Make placeholder
  *
  * @param {map} $map
  * @return {void}

@@ -4,94 +4,84 @@
 
 /* Imports */
 
-import { isString } from '../isString/isString'
+import { isStringStrict } from '../isString/isString'
+import { isFunction } from '../isFunction/isFunction'
+import { isSet } from '../isSet/isSet'
 
 /**
  * Store action callbacks by name
  *
- * @type {Object<string, Function[]>}
+ * @type {Map<string, Set<Function>>}
  */
-const actions: { [key: string]: Function[] } = {
-  resize: [],
-  scroll: []
-}
+const actions: Map<string, Set<Function>> = new Map([
+  ['resize', new Set()],
+  ['escape', new Set()],
+  ['scroll', new Set()]
+])
 
 /**
- * Function - add function to action object
+ * Add function to actions map
  *
  * @param {string} name
  * @param {function} action
  * @return {boolean}
  */
 const addAction = (name: string, action: Function): boolean => {
-  if (!isString(name)) {
+  if (!isStringStrict(name) || !isFunction(action)) {
     return false
   }
 
-  if (typeof action !== 'function') {
-    return false
+  if (actions.get(name) === undefined) {
+    actions.set(name, new Set())
   }
 
-  if (actions?.[name] === undefined) {
-    actions[name] = []
-  }
+  const actionSet = actions.get(name)
 
-  actions[name].push(action)
+  if (isSet(actionSet)) {
+    actionSet.add(action)
+  }
 
   return true
 }
 
 /**
- * Function - remove action from actions object
+ * Remove action from actions map
  *
  * @param {string} name
  * @param {function} action
  * @return {boolean}
  */
-
 const removeAction = (name: string, action: Function): boolean => {
-  if (!isString(name)) {
+  if (!isStringStrict(name) || !isFunction(action)) {
     return false
   }
 
-  if (typeof action !== 'function') {
+  const actionSet = actions.get(name)
+
+  if (!isSet(actionSet)) {
     return false
   }
 
-  const callbacks = actions[name]
-
-  if (Array.isArray(callbacks)) {
-    const index = callbacks.indexOf(action)
-
-    if (index > -1) {
-      actions[name].splice(index, 1)
-
-      return true
-    }
-  }
-
-  return false
+  return actionSet.delete(action)
 }
 
 /**
- * Function - run callback functions from actions object
+ * Run callback functions from actions map
  *
  * @param {string} name
- * @param {...*} args
- * @return {void}
+ * @param {*} [args]
+ * @return {Promise<void>}
  */
+const doActions = async <T>(name: string, args?: T): Promise<void> => {
+  const actionSet = actions.get(name)
 
-const doActions = (name: string, ...args: any): void => {
-  const callbacks = actions[name]
+  if (!isSet(actionSet)) {
+    return
+  }
 
-  if (Array.isArray(callbacks)) {
-    for (let i = 0; i < callbacks.length; i += 1) {
-      const callback = callbacks[i]
-
-      if (typeof callback === 'function') {
-        // eslint-disable-next-line n/no-callback-literal
-        callback(...args)
-      }
+  for (const callback of actionSet.values()) {
+    if (isFunction(callback)) {
+      await callback(args)
     }
   }
 }

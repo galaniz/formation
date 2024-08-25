@@ -4,26 +4,20 @@
 
 /* Imports */
 
+import type { Asset } from '../assetsLoadedTypes'
 import { it, expect, describe } from 'vitest'
 import { getQueriesForElement, fireEvent } from '@testing-library/dom'
 import { assetLoaded, assetsLoaded } from '../assetsLoaded'
 
 /**
- * @typedef {HTMLImageElement|HTMLMediaElement|HTMLIFrameElement} Asset
- */
-
-type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
-
-/**
- * @typedef {object} LoadTypes
+ * @typedef {object} TestLoadTypes
  * @prop {string} img
  * @prop {string} video
  * @prop {string} audio
  * @prop {string} iframe
  * @prop {string} error
  */
-
-interface LoadTypes {
+interface TestLoadTypes {
   img: string
   video: string
   audio: string
@@ -32,12 +26,19 @@ interface LoadTypes {
 }
 
 /**
- * Function - output assets
+ * Test image element
+ */
+class TestHTMLImageElement extends HTMLImageElement {
+  complete = true
+  constructor () { super() } // eslint-disable-line
+}
+
+/**
+ * Output assets
  *
  * @return {HTMLDivElement}
  */
-
-const htmlAssets = (): HTMLDivElement => {
+const testGetHtmlAssets = (): HTMLDivElement => {
   const container = document.createElement('div')
 
   container.innerHTML = `
@@ -59,14 +60,13 @@ const htmlAssets = (): HTMLDivElement => {
 }
 
 /**
- * Function - get asset(s)
+ * Get asset(s)
  *
  * @param {string[]} [types=[]]
- * @return {Asset[]}
+ * @return {import('../assetsLoadedTypes').Asset[]}
  */
-
-const getAssets = (types: string[] = []): Asset[] => {
-  const html = htmlAssets()
+const testGetAssets = (types: string[] = []): Asset[] => {
+  const html = testGetHtmlAssets()
   const { getByTestId } = getQueriesForElement(html)
 
   return types.map((type) => {
@@ -75,15 +75,14 @@ const getAssets = (types: string[] = []): Asset[] => {
 }
 
 /**
- * Function - load asset(s)
+ * Load asset(s)
  *
- * @param {Asset[]} [items=[]]
+ * @param {import('../assetsLoadedTypes').Asset[]} [items=[]]
  * @param {string[]} [types=[]]
  * @return {number}
  */
-
-const loadAssets = (items: Asset[] = [], types: string[] = []): number => {
-  const loadTypes: LoadTypes = {
+const testLoadAssets = (items: Asset[] = [], types: string[] = []): number => {
+  const TestLoadTypes: TestLoadTypes = {
     img: 'load',
     video: 'canplay',
     audio: 'canplay',
@@ -93,14 +92,14 @@ const loadAssets = (items: Asset[] = [], types: string[] = []): number => {
 
   return window.setTimeout(() => {
     items.forEach((item, i) => {
-      const type = types[i] as keyof LoadTypes
+      const type = types[i] as keyof TestLoadTypes
 
-      fireEvent(item as Element, new Event(loadTypes[type]))
+      fireEvent(item as Element, new Event(TestLoadTypes[type]))
     })
   }, 10)
 }
 
-/* Tests */
+/* Test assetLoaded */
 
 describe('assetLoaded()', () => {
   it('should throw an error if asset is null', async () => {
@@ -113,9 +112,9 @@ describe('assetLoaded()', () => {
     'should resolve to asset if asset is image',
     async () => {
       const types = ['img']
-      const assets = getAssets(types)
+      const assets = testGetAssets(types)
       const [asset] = assets
-      const timeoutId = loadAssets(assets, types)
+      const timeoutId = testLoadAssets(assets, types)
       const result = await assetLoaded(asset)
 
       expect(result).toBe(asset)
@@ -125,12 +124,25 @@ describe('assetLoaded()', () => {
   )
 
   it(
+    'should resolve to complete image',
+    async () => {
+      const image = new TestHTMLImageElement()
+
+      image.complete = true
+
+      const result = await assetLoaded(image)
+
+      expect(result).toBe(image)
+    }
+  )
+
+  it(
     'should resolve to asset if asset is video',
     async () => {
       const types = ['video']
-      const assets = getAssets(types)
+      const assets = testGetAssets(types)
       const [asset] = assets
-      const timeoutId = loadAssets(assets, types)
+      const timeoutId = testLoadAssets(assets, types)
       const result = await assetLoaded(asset)
 
       expect(result).toBe(asset)
@@ -143,9 +155,9 @@ describe('assetLoaded()', () => {
     'should resolve to asset if asset is audio',
     async () => {
       const types = ['audio']
-      const assets = getAssets(types)
+      const assets = testGetAssets(types)
       const [asset] = assets
-      const timeoutId = loadAssets(assets, types)
+      const timeoutId = testLoadAssets(assets, types)
       const result = await assetLoaded(asset)
 
       expect(result).toBe(asset)
@@ -158,9 +170,9 @@ describe('assetLoaded()', () => {
     'should resolve to asset if asset is iframe',
     async () => {
       const types = ['iframe']
-      const assets = getAssets(types)
+      const assets = testGetAssets(types)
       const [asset] = assets
-      const timeoutId = loadAssets(assets, types)
+      const timeoutId = testLoadAssets(assets, types)
       const result = await assetLoaded(asset)
 
       expect(result).toBe(asset)
@@ -170,12 +182,16 @@ describe('assetLoaded()', () => {
   )
 })
 
+/* Test assetsLoaded */
+
 describe('assetsLoaded()', () => {
   it(
     'should pass false with error message to callback if assets array empty',
     async () => await new Promise(resolve => {
       assetsLoaded([], (result, error) => {
-        expect(result).toBe(false)
+        const expectedResult = false
+
+        expect(result).toBe(expectedResult)
         expect(error).toBeTypeOf('string')
         resolve('')
       })
@@ -188,7 +204,9 @@ describe('assetsLoaded()', () => {
       const assets = [null, null, null]
 
       assetsLoaded(assets, (result, error) => {
-        expect(result).toBe(false)
+        const expectedResult = false
+
+        expect(result).toBe(expectedResult)
         expect(error).toBeInstanceOf(Error)
         resolve('')
       })
@@ -199,11 +217,13 @@ describe('assetsLoaded()', () => {
     'should pass false with error object to callback if media element fires error event',
     async () => await new Promise(resolve => {
       const types = ['img', 'video', 'audio', 'iframe']
-      const assets = getAssets(types)
-      const timeoutId = loadAssets(assets, ['img', 'error', 'audio', 'iframe'])
+      const assets = testGetAssets(types)
+      const timeoutId = testLoadAssets(assets, ['img', 'error', 'audio', 'iframe'])
 
       assetsLoaded(assets, (result, error) => {
-        expect(result).toBe(false)
+        const expectedResult = false
+
+        expect(result).toBe(expectedResult)
         expect(error).toBeInstanceOf(Event)
         clearTimeout(timeoutId)
         resolve('')
@@ -215,8 +235,8 @@ describe('assetsLoaded()', () => {
     'should pass assets to callback if assets contains media elements',
     async () => await new Promise(resolve => {
       const types = ['img', 'video', 'audio', 'iframe']
-      const assets = getAssets(types)
-      const timeoutId = loadAssets(assets, types)
+      const assets = testGetAssets(types)
+      const timeoutId = testLoadAssets(assets, types)
 
       assetsLoaded(assets, (result) => {
         expect(result).toEqual(assets)

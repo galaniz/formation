@@ -1,0 +1,86 @@
+/**
+ * Components - Navigation Icon Seven Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "./NavigationIcon" as icon;
+
+/* Styles */
+
+@keyframes e-nav-icon-fluctuate-out {
+  0% {
+    transform: scale(var(--scale-0));
+  }
+
+  50% {
+    transform: scale(var(--scale-50));
+  }
+
+  100% {
+    transform: scale(var(--scale-100));
+  }
+}
+
+@keyframes e-nav-icon-fluctuate-in {
+  0% {
+    transform: scale(var(--scale-0));
+  }
+
+  50% {
+    transform: scale(var(--scale-50));
+  }
+
+  100% {
+    transform: scale(var(--scale-100));
+  }
+}
+
+[data-nav-icon="7"] {
+  --#{con.$v}duration: 200ms;
+  --scale-0: 1;
+  --scale-50: 0.2;
+  --scale-100: 1;
+  --opacity: 1;
+  --rotate: 0deg;
+  --rotate-r: 0deg;
+  --y: 0;
+  --y-r: 0;
+
+  animation: e-nav-icon-fluctuate-in 300ms;
+
+  .c-nav-icon-top,
+  .c-nav-icon-bottom,
+  .c-nav-icon-middle {
+    --#{con.$v}duration: 0ms;
+    --#{con.$v}delay: 150ms;
+  }
+
+  .c-nav-icon-top,
+  .c-nav-icon-bottom {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  .c-nav-icon-top {
+    transform: translateY(var(--y)) rotate(var(--rotate));
+  }
+
+  .c-nav-icon-bottom {
+    transform: translateY(var(--y-r)) rotate(var(--rotate-r));
+  }
+
+  .c-nav-icon-middle {
+    opacity: var(--opacity);
+  }
+
+  [data-nav-show] & {
+    --opacity: 0;
+    --rotate: 45deg;
+    --rotate-r: -45deg;
+    --y: #{icon.$y};
+    --y-r: #{icon.$y * -1};
+
+    animation: e-nav-icon-fluctuate-out 300ms;
+  }
+}

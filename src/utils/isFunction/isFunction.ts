@@ -3,7 +3,7 @@
  */
 
 /**
- * Function - check if value is a function
+ * Check if value is a function
  *
  * @param {*} value
  * @return {boolean}

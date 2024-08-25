@@ -9,7 +9,7 @@
 import { setLoaders, getKey } from '../../utils/utils'
 
 /**
- * Class - play and pause video
+ * Play and pause video
  */
 
 class Video {

@@ -7,9 +7,9 @@
 import { config } from './config'
 
 /**
- * Function - check browser flex box support
+ * Check browser flex box support
  *
- * Source: https://ishadeed.com/article/flexbox-gap/
+ * @see {@link https://ishadeed.com/article/flexbox-gap/|Source}
  *
  * @return {void}
  */

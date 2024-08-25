@@ -3,19 +3,23 @@
  */
 
 /**
- * Function - prevent body scroll
+ * Prevent body scroll
  *
  * @param {boolean} on
- * @return {void}
+ * @return {boolean}
  */
-const stopScroll = (on: boolean = true): void => {
+const stopScroll = (on: boolean = true): boolean => {
   const html = document.documentElement
 
   if (on) {
     html.setAttribute('data-stop-scroll', '')
-  } else {
-    html.removeAttribute('data-stop-scroll')
+
+    return true
   }
+
+  html.removeAttribute('data-stop-scroll')
+
+  return false
 }
 
 /* Exports */

@@ -34,7 +34,7 @@ import {
 
 import { Form } from '../Form/Form'
 
-/* Class - send and validate form */
+/* Send and validate form */
 
 class SendForm {
   /**
@@ -86,7 +86,7 @@ class SendForm {
     this.clearOnSuccess = clearOnSuccess
     this.jsonResponse = jsonResponse
 
-    this.result = mergeObjects(
+    this.result = Object.assign(
       {
         error: {
           summary: {

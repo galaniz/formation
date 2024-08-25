@@ -1,0 +1,34 @@
+/**
+ * Components - Navigation Icon Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/calcRem/calcRem" as calc;
+
+/* Styles */
+
+$y: calc.calc-rem(map.get(con.$nav-icon, "margin") + map.get(con.$nav-icon, "line-width"));
+
+.c-nav-icon {
+  --#{con.$v}easing: ease;
+
+  width: calc.calc-rem(map.get(con.$nav-icon, "width"));
+}
+
+.c-nav-icon-top,
+.c-nav-icon-middle,
+.c-nav-icon-bottom {
+  height: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
+  margin: calc.calc-rem(map.get(con.$nav-icon, "margin")) auto;
+}
+
+.c-nav-icon-top {
+  margin-top: 0;
+}
+
+.c-nav-icon-bottom {
+  margin-bottom: 0;
+}

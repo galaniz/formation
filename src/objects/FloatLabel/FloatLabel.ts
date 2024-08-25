@@ -8,7 +8,7 @@
  * @param {HTMLElement} args.label
  */
 
-/* Class - move labels above inputs */
+/* Move labels above inputs */
 
 class FloatLabel {
   /**

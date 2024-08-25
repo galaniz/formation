@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import type { Config } from './configTypes'
+import type { Config, ConfigFallback } from './configTypes'
 import { configDefaultFontSize } from './configDefaultFontSize'
 
 /**
@@ -19,13 +19,20 @@ const config: Config = {
   wellFormed: false,
   flexGap: false,
   defaultFontSize: 16,
-  fontSizeMultiplier: 1
+  fontSizeMultiplier: 1,
+  resizeDelay: 100,
+  scrollDelay: 10
 }
 
 /**
- * Function - check attribute/feature support
+ * Store feature fallback functions
  *
- * Source - https://css-tricks.com/snippets/javascript/test-if-element-supports-attribute/
+ * @type {import('./configTypes').ConfigFallback}
+ */
+const configFallback: ConfigFallback = {}
+
+/**
+ * Check attribute/feature support
  *
  * @return {void}
  */
@@ -73,4 +80,8 @@ const setConfig = (): void => {
 
 /* Exports */
 
-export { config, setConfig }
+export {
+  config,
+  configFallback,
+  setConfig
+}

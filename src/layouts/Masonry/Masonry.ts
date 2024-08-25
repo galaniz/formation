@@ -5,7 +5,7 @@
  */
 
 /**
- * Class - create masonry layout by placing items into columns
+ * Create masonry layout by placing items into columns
  */
 
 class Masonry {

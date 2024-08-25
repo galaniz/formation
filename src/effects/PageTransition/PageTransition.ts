@@ -41,7 +41,7 @@ let _run = true
 let _b = () => {}
 
 /**
- * Function - link click prevent url change until delay done
+ * Link click prevent url change until delay done
  *
  * @private
  * @param {object} e
@@ -67,7 +67,7 @@ const _clickHandler = (e) => {
 }
 
 /**
- * Function - page transition on link click
+ * Page transition on link click
  *
  * @param {object} args
  * @param {HTMLElement[]} args.links
@@ -110,7 +110,7 @@ const pageTransition = (args) => {
 }
 
 /**
- * Function - set run variable to allow/disallow transition
+ * Set run variable to allow/disallow transition
  *
  * @param {boolean} r
  * @return {void}
