@@ -5,35 +5,40 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
 @use "./NavigationIcon" as icon;
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
 [data-nav-icon="1"] {
-  --#{con.$v}duration: 200ms;
-  --y: 0;
-  --y-r: 0;
-  --rotate: 0deg;
-  --rotate-r: 0deg;
-  --scale: 1;
+  --#{con.$n}duration: 200ms;
+  --ico-y: 0;
+  --ico-y-1: 0;
+  --ico-rotate: 0deg;
+  --ico-rotate-1: 0deg;
+  --ico-scale: 1;
 
-  .c-nav-icon-top {
-    transform: translateY(var(--y)) rotate(var(--rotate));
+  .#{$component-fix}nav-icon-top {
+    transform: translateY(var(--ico-y)) rotate(var(--ico-rotate));
   }
 
-  .c-nav-icon-middle {
-    transform: scaleX(var(--scale));
+  .#{$component-fix}nav-icon-middle {
+    transform: scaleX(var(--ico-scale));
   }
 
-  .c-nav-icon-bottom {
-    transform: translateY(var(--y-r)) rotate(var(--rotate-r));
+  .#{$component-fix}nav-icon-bottom {
+    transform: translateY(var(--ico-y-1)) rotate(var(--ico-rotate-1));
   }
 
   [data-nav-show] & {
-    --y: #{icon.$y};
-    --y-r: #{icon.$y * -1};
-    --rotate: 45deg;
-    --rotate-r: -45deg;
-    --scale: 0;
+    --ico-y: #{icon.$y};
+    --ico-y-1: #{icon.$y * -1};
+    --ico-rotate: 45deg;
+    --ico-rotate-1: -45deg;
+    --ico-scale: 0;
   }
 }

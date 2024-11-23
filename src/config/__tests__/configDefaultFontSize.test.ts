@@ -5,8 +5,8 @@
 /* Imports */
 
 import { it, expect, describe } from 'vitest'
-import { configDefaultFontSize } from '../configDefaultFontSize'
-import { config } from '../config'
+import { configDefaultFontSize } from '../configDefaultFontSize.js'
+import { config } from '../config.js'
 
 /* Tests */
 

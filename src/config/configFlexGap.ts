@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import { config } from './config'
+import { config } from './config.js'
 
 /**
  * Check browser flex box support
@@ -20,10 +20,10 @@ const configFlexGap = (): void => {
   flex.style.flexDirection = 'column'
   flex.style.rowGap = '1px'
 
-  flex.appendChild(document.createElement('div'))
-  flex.appendChild(document.createElement('div'))
+  flex.append(document.createElement('div'))
+  flex.append(document.createElement('div'))
 
-  document.body.appendChild(flex)
+  document.body.append(flex)
 
   if (flex.scrollHeight === 1) {
     config.flexGap = true

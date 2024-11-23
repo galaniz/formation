@@ -5,31 +5,36 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
 @use "./NavigationIcon" as icon;
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
 [data-nav-icon="2"] {
-  --#{con.$v}duration: 175ms;
-  --y: 0;
-  --y-r: 0;
-  --opacity: 1;
+  --#{con.$n}duration: 175ms;
+  --ico-y: 0;
+  --ico-y-1: 0;
+  --ico-op: 1;
 
-  .c-nav-icon-top {
-    transform: translateY(var(--y));
+  .#{$component-fix}nav-icon-top {
+    transform: translateY(var(--ico-y));
   }
 
-  .c-nav-icon-bottom {
-    transform: translateY(var(--y-r));
+  .#{$component-fix}nav-icon-bottom {
+    transform: translateY(var(--ico-y-1));
   }
 
-  .c-nav-icon-middle {
-    opacity: var(--opacity);
+  .#{$component-fix}nav-icon-middle {
+    opacity: var(--ico-op);
   }
 
   [data-nav-show] & {
-    --y: #{icon.$y};
-    --y-r: #{icon.$y * -1};
-    --opacity: 0;
+    --ico-y: #{icon.$y};
+    --ico-y-1: #{icon.$y * -1};
+    --ico-op: 0;
   }
 }

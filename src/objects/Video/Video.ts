@@ -6,7 +6,7 @@
 
 /* Imports */
 
-import { setLoaders, getKey } from '../../utils/utils'
+import { setLoaders, getKey } from '../../utils/utils.js'
 
 /**
  * Play and pause video

@@ -5,45 +5,50 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/breakpoint/breakpoint";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
 
 /* Styles */
 
-.l-none {
+.#{$layout-fix}none {
   display: none;
 }
 
-.l-block {
+.#{$layout-fix}block {
   display: block;
 }
 
-.l-inline-block {
+.#{$layout-fix}inline-block {
   display: inline-block;
 }
 
-.l-flex {
+.#{$layout-fix}flex {
   display: flex;
 }
 
-.l-inline-flex {
+.#{$layout-fix}inline-flex {
   display: inline-flex;
 }
 
-.l-grid {
+.#{$layout-fix}grid {
   display: grid;
 }
 
 @each $b in con.$block-breakpoints {
-  .l-block-#{$b} {
-    @include breakpoints.breakpoint-batch-add($b, (
+  .#{$layout-fix}block-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
       display: block
     ));
   }
 }
 
 @each $b in con.$none-breakpoints {
-  .l-none-#{$b} {
-    @include breakpoints.breakpoint-batch-add($b, (
+  .#{$layout-fix}none-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
       display: none
     ));
   }

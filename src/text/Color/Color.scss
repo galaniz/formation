@@ -5,11 +5,16 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
 
 /* Styles */
 
 @each $c in con.$text-colors {
-  .t-#{$c} {
-    color: var(--#{con.$v}#{$c});
+  .#{$text-fix}#{$c} {
+    color: var(--#{con.$n}#{$c});
   }
 }

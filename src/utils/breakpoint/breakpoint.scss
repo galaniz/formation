@@ -1,0 +1,108 @@
+/**
+ * Utils - Breakpoint Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../calc/calc";
+
+/**
+ * Min width media query
+ *
+ * @param {string|number} $min - Prop in $breakpoints map
+ * @return {void}
+ */
+@mixin breakpoint-min($min) {
+  @if map.has-key(con.$breakpoints, $min) {
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
+
+    @media only screen and (min-width: #{$bk-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$min} does not exist in breakpoints map.";
+  }
+}
+
+/**
+ * Max width media query
+ *
+ * @param {string|number} $max - Prop in $breakpoints map
+ * @return {void}
+ */
+@mixin breakpoint-max($max) {
+  @if map.has-key(con.$breakpoints, $max) {
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $max));
+
+    @media only screen and (max-width: #{$bk-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$max} does not exist in breakpoints map.";
+  }
+}
+
+/**
+ * Min/max width media query
+ *
+ * @param {string|number} $min - Prop in $breakpoints map
+ * @param {string|number} $max - Prop in $breakpoints map
+ * @return {void}
+ */
+@mixin breakpoint-min-max($min, $max) {
+  @if map.has-key(con.$breakpoints, $min) and map.has-key(con.$breakpoints, $max) {
+    $bk-min-rem: calc.calc-rem(map.get(con.$breakpoints, $min));
+    $bk-max-rem: calc.calc-rem(map.get(con.$breakpoints, $max));
+
+    @media only screen and (max-width: #{$bk-max-rem}) and (min-width: #{$bk-min-rem}) {
+      @content;
+    }
+  } @else {
+    @warn "#{$min} and/or #{$max} does not exist in breakpoints map.";
+  }
+}
+
+/**
+ * Add to breakpoints batch
+ *
+ * @param {string|number} $b - Prop in $breakpoints map
+ * @param {map} $declarations
+ * @return {void}
+ */
+@mixin breakpoint-batch-add($b, $declarations) { 
+  @if map.has-key(con.$breakpoints-batch, $b) {
+    con.$breakpoints-batch: map.deep-merge(
+      con.$breakpoints-batch,
+      (
+        $b: (
+          &: $declarations
+        )
+      )
+    );
+  } @else {
+    @warn "#{$b} does not exist in breakpoints batch map.";
+  }
+}
+
+/**
+ * Output breakpoint batches
+ *
+ * @return {void}
+ */
+@mixin breakpoint-batch {
+  @each $b, $rules in con.$breakpoints-batch {
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $b));
+ 
+    @media only screen and (min-width: #{$bk-rem}) {
+      @each $selector, $declarations in $rules {
+        #{$selector} {
+          @each $prop, $value in $declarations {
+            #{$prop}: $value;
+          }
+        }
+      }
+    }
+  }
+}

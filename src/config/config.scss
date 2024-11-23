@@ -7,16 +7,16 @@
 @use "sass:map";
 @use "sass:list";
 @use "sass:string";
-@use "../utils/maps/maps";
-@use "../utils/placeholders/placeholders";
+@use "../utils/map/map" as maps;
+@use "../utils/placeholder/placeholder";
 
 /* Namespace */
 
-$var-namespace: "" !default;
-$v: "";
+$namespace: "" !default;
+$n: "";
 
-@if $var-namespace != "" {
-  $v: "#{$var-namespace}-"
+@if $namespace != "" {
+  $n: "#{$namespace}-";
 }
 
 /* Root */
@@ -24,10 +24,11 @@ $v: "";
 $root: (
   "colors",
   "fonts",
+  "font-sizes",
   "font-weights",
   "letter-spacing",
   "line-heights",
-  "spacing",
+  "sizes",
   "gap",
   "columns",
   "containers",
@@ -133,6 +134,19 @@ $terse: true !default;
 
 $xy: true !default;
 
+/* Prefixes */
+
+$prefixes: (
+  "a11y": "a",
+  "background": "bg",
+  "border": "b",
+  "component": "",
+  "effect": "e",
+  "layout": "",
+  "object": "",
+  "text": "t",
+) !default;
+
 /* Store custom variables */
 
 $vars: () !default;
@@ -190,6 +204,11 @@ $font-weights: (
   "normal": 400,
 ) !default;
 
+/* Font sizes and breakpoints */
+
+$font-sizes: () !default;
+$font-breakpoints: () !default;
+
 /* Line heights */
 
 $line-heights: () !default;
@@ -244,9 +263,9 @@ $container-padding: 20px !default;
   $breakpoints: map.merge($breakpoints, ( "container#{$suffix}-no-padding": $width - ($container-padding * 2) ));
 }
 
-/* Spacing */
+/* Sizes */
 
-$spacing: (
+$sizes: (
   "s": 8px,
   "m": 16px,
   "l": 24px,
@@ -401,7 +420,7 @@ $outline: maps.map-recursive-merge(
       "default": 4px
     ),
     "colors": (
-      "default": "var(--primary-dark)"
+      "default": currentcolor
     ),
     "offsets": (
       "default": 4px,
@@ -445,10 +464,10 @@ $border-radius-breakpoints: () !default;
 $placeholders: () !default;
 
 @each $p in $placeholders {
-  @include placeholders.placeholder-make($p);
+  @include placeholder.placeholder-make($p);
 }
 
-@include placeholders.placeholder-set("hide-visually") {
+@include placeholder.placeholder-set("hide-visually") {
   position: absolute;
   overflow: hidden;
   width: 0.0625rem;
@@ -457,7 +476,7 @@ $placeholders: () !default;
   clip: rect(0, 0, 0, 0);
 }
 
-@include placeholders.placeholder-set("touch-50") {
+@include placeholder.placeholder-set("touch-50") {
   &::before {
     content: "";
     position: absolute;

@@ -7,11 +7,12 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $padding-fix: fix.get-class-fix("padding");
 $padding-top-fix: fix.get-class-fix("padding-top");
 $padding-bottom-fix: fix.get-class-fix("padding-bottom");
@@ -22,61 +23,61 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 
 /* Defaults */
 
-.l-#{$padding-fix}-0 {
+.#{$layout-fix}#{$padding-fix}-0 {
   padding: 0;
 }
 
 /* Config vertical padding */
 
 @each $p in con.$padding-top {
-  $selector: ".l-#{$padding-top-fix}-#{$p}";
+  $selector: ".#{$layout-fix}#{$padding-top-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
-    padding-top: var(--#{con.$v}#{$p});
+    padding-top: var(--#{con.$n}#{$p});
   }
 }
 
 @each $p in con.$padding-bottom {
-  $selector: ".l-#{$padding-bottom-fix}-#{$p}";
+  $selector: ".#{$layout-fix}#{$padding-bottom-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
-    padding-bottom: var(--#{con.$v}#{$p});
+    padding-bottom: var(--#{con.$n}#{$p});
   }
 }
 
 @each $b in con.$padding-vertical-breakpoints {
   @each $p in con.$padding-top {
-    $selector: ".l-#{$padding-top-fix}-#{$p}-#{$b}";
+    $selector: ".#{$layout-fix}#{$padding-top-fix}-#{$p}-#{$b}";
 
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b}";
     }
 
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        padding-top: var(--#{con.$v}#{$p})
+      @include breakpoint.breakpoint-batch-add($b, (
+        padding-top: var(--#{con.$n}#{$p})
       ));
     }
   }
 
   @each $p in con.$padding-bottom {
-    $selector: ".l-#{$padding-bottom-fix}-#{$p}-#{$b}";
+    $selector: ".#{$layout-fix}#{$padding-bottom-fix}-#{$p}-#{$b}";
 
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$padding-y-fix}-#{$p}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b}";
     }
 
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        padding-bottom: var(--#{con.$v}#{$p})
+      @include breakpoint.breakpoint-batch-add($b, (
+        padding-bottom: var(--#{con.$n}#{$p})
       ));
     }
   }
@@ -85,54 +86,54 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 /* Config horizontal padding */
 
 @each $p in con.$padding-left {
-  $selector: ".l-#{$padding-left-fix}-#{$p}";
+  $selector: ".#{$layout-fix}#{$padding-left-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
-    padding-left: var(--#{con.$v}#{$p});
+    padding-left: var(--#{con.$n}#{$p});
   }
 }
 
 @each $p in con.$padding-right {
-  $selector: ".l-#{$padding-right-fix}-#{$p}";
+  $selector: ".#{$layout-fix}#{$padding-right-fix}-#{$p}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}";
   }
 
   #{string.quote($selector)} {
-    padding-right: var(--#{con.$v}#{$p});
+    padding-right: var(--#{con.$n}#{$p});
   }
 }
 
 @each $b in con.$padding-horizontal-breakpoints {
   @each $p in con.$padding-left {
-    $selector: ".l-#{$padding-left-fix}-#{$p}-#{$b}";
+    $selector: ".#{$layout-fix}#{$padding-left-fix}-#{$p}-#{$b}";
 
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b}";
     }
 
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        padding-left: var(--#{con.$v}#{$p})
+      @include breakpoint.breakpoint-batch-add($b, (
+        padding-left: var(--#{con.$n}#{$p})
       ));
     }
   }
 
   @each $p in con.$padding-right {
-    $selector: ".l-#{$padding-right-fix}-#{$p}-#{$b}";
+    $selector: ".#{$layout-fix}#{$padding-right-fix}-#{$p}-#{$b}";
 
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$padding-x-fix}-#{$p}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b}";
     }
 
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        padding-right: var(--#{con.$v}#{$p})
+      @include breakpoint.breakpoint-batch-add($b, (
+        padding-right: var(--#{con.$n}#{$p})
       ));
     }
   }

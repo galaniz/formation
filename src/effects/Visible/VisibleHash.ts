@@ -6,14 +6,11 @@
 
 import type { VisibleHashArgs, VisibleHashRect } from './VisibleTypes'
 import { config } from '../../config/config'
-import {
-  isArray,
-  isObjectStrict,
-  isHTMLElement,
-  isHTMLElementArray,
-  onResize,
-  onScroll
-} from '../../utils/utils'
+import { isArray } from '../../utils/array/array'
+import { isObjectStrict } from '../../utils/object/object'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html'
+import { onResize } from '../../utils/resize/resize'
+import { onScroll } from '../../utils/scroll/scroll'
 
 /**
  * Set current link from corresponding item visibility
@@ -51,7 +48,7 @@ class VisibleHash {
    * Store top and bottom offsets
    *
    * @private
-   * @type {import('./VisibleTypes').VisibleHashRect}
+   * @type {VisibleHashRect}
    */
   _rect: VisibleHashRect = {
     top: 0,
@@ -68,7 +65,7 @@ class VisibleHash {
   /**
    * Set properties and initialize
    *
-   * @param {import('./VisibleTypes').VisibleHashArgs} args
+   * @param {VisibleHashArgs} args
    */
   constructor (args: VisibleHashArgs) {
     this.init = this._initialize(args)
@@ -78,7 +75,7 @@ class VisibleHash {
    * Initialize - check required props and set props
    *
    * @private
-   * @param {import('./VisibleTypes').VisibleHashArgs} args
+   * @param {VisibleHashArgs} args
    * @return {boolean}
    */
   _initialize (args: VisibleHashArgs): boolean {
@@ -98,13 +95,13 @@ class VisibleHash {
 
     /* Check that required items exist */
 
-    if (!isHTMLElement(link)) {
+    if (!isHtmlElement(link)) {
       return false
     }
 
     const itemArr = isArray(item) ? item : [item]
 
-    if (!isHTMLElementArray(itemArr)) {
+    if (!isHtmlElementArray(itemArr)) {
       return false
     }
 

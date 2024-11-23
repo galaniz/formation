@@ -2,11 +2,11 @@
  * Utils - Styles
  */
 
-@forward "breakpoints/breakpoints";
-@forward "calcRem/calcRem";
+@forward "breakpoint/breakpoint";
+@forward "calc/calc";
 @forward "capitalize/capitalize";
-@forward "fluidSize/fluidSize";
-@forward "getColor/getColor";
-@forward "maps/maps";
-@forward "placeholders/placeholders";
-@forward "stripUnit/stripUnit";
+@forward "fluid/fluid";
+@forward "color/color";
+@forward "map/map";
+@forward "placeholder/placeholder";
+@forward "unit/unit";

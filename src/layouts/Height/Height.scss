@@ -5,41 +5,42 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $height-fix: fix.get-class-fix("height");
 $min-height-fix: fix.get-class-fix("min-height");
 
 /* Relative units */
 
-.l-#{$height-fix}-full {
+.#{$layout-fix}#{$height-fix}-full {
   height: 100%;
 }
 
-.l-#{$height-fix}-full-vh {
+.#{$layout-fix}#{$height-fix}-full-vh {
   height: 100vh;
 }
 
-.l-#{$min-height-fix}-full-vh {
+.#{$layout-fix}#{$min-height-fix}-full-vh {
   min-height: 100vh;
 }
 
 /* Config heights */
 
 @each $h in con.$heights {
-  .l-#{$height-fix}-#{$h} {
-    height: var(--#{con.$v}#{$h});
+  .#{$layout-fix}#{$height-fix}-#{$h} {
+    height: var(--#{con.$n}#{$h});
   }
 }
 
 @each $b in con.$height-breakpoints {
   @each $h in con.$heights {
-    .l-#{$height-fix}-#{$h}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        height: var(--#{con.$v}#{$h})
+    .#{$layout-fix}#{$height-fix}-#{$h}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        height: var(--#{con.$n}#{$h})
       ));
     }
   }

@@ -6,19 +6,24 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
-.c-skip-link {
-  --opacity: 0;
-  --y: -100%;
+.#{$component-fix}skip-link {
+  --sk-op: 0;
+  --sk-y: -100%;
 
   z-index: map.get(con.$z-index, "skip-link");
-  transform: translateY(var(--y));
-  opacity: var(--opacity);
+  transform: translateY(var(--sk-y));
+  opacity: var(--sk-op);
 
   &:focus {
-    --opacity: 1;
-    --y: 0;
+    --sk-op: 1;
+    --sk-y: 0;
   }
 }

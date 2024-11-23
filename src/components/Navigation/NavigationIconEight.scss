@@ -6,9 +6,14 @@
 
 @use "sass:map";
 @use "sass:math";
-@use "./NavigationIcon" as icon;
 @use "../../config/config" as con;
-@use "../../utils/calcRem/calcRem" as calc;
+@use "../../utils/calc/calc";
+@use "../../utils/fix/fix";
+@use "./NavigationIcon" as icon;
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Variables */
 
@@ -20,39 +25,39 @@ $y: (icon.$y + calc.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 t
 /* Styles */
 
 [data-nav-icon="8"] {
-  --#{con.$v}duration: 200ms;
-  --rotate: 0deg;
-  --rotate-in: 0deg;
-  --x: 0;
-  --x-r: 0;
-  --y: 0;
-  --y-r: 0;
+  --#{con.$n}duration: 200ms;
+  --ico-rotate: 0deg;
+  --ico-rotate-1: 0deg;
+  --ico-x: 0;
+  --ico-x-1: 0;
+  --ico-y: 0;
+  --ico-y-1: 0;
 
-  transform: rotate(var(--rotate));
+  transform: rotate(var(--ico-rotate));
 
-  .c-nav-icon-top,
-  .c-nav-icon-bottom {
+  .#{$component-fix}nav-icon-top,
+  .#{$component-fix}nav-icon-bottom {
     width: 50%;
   }
 
-  .c-nav-icon-top {
-    transform: translate(var(--x), var(--y)) rotate(var(--rotate-in));
+  .#{$component-fix}nav-icon-top {
+    transform: translate(var(--ico-x), var(--ico-y)) rotate(var(--ico-rotate-1));
     transform-origin: 0 0;
     margin-right: 50%;
   }
 
-  .c-nav-icon-bottom {
-    transform: translate(var(--x-r), var(--y-r)) rotate(var(--rotate-in));
+  .#{$component-fix}nav-icon-bottom {
+    transform: translate(var(--ico-x-1), var(--ico-y-1)) rotate(var(--ico-rotate-1));
     transform-origin: 100% 100%;
     margin-left: 50%;
   }
 
   [data-nav-show] & {
-    --rotate: -45deg;
-    --rotate-in: -90deg;
-    --x: #{$x};
-    --x-r: #{$x * -1};
-    --y: #{$y};
-    --y-r: #{$y * -1};
+    --ico-rotate: -45deg;
+    --ico-rotate-1: -90deg;
+    --ico-x: #{$x};
+    --ico-x-1: #{$x * -1};
+    --ico-y: #{$y};
+    --ico-y-1: #{$y * -1};
   }
 }

@@ -2,7 +2,17 @@
  * Objects - Table Styles
  */
 
-[data-table-overflow="false"] .o-table__hide,
-[data-table-overflow="true"] .o-table__show {
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
+
+/* Styles */
+
+[data-table-overflow="false"] .#{$object-fix}table-hide,
+[data-table-overflow="true"] .#{$object-fix}table-show {
   display: none;
 }

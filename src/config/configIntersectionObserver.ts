@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import { config } from './config'
+import { config } from './config.js'
 
 /**
  * Check browser intersection observer support

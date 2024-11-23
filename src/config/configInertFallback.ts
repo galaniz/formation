@@ -4,11 +4,11 @@
 
 /* Imports */
 
-import { config, configFallback } from './config'
+import { config, configFallback } from './config.js'
 import {
   toggleFocusabilityFallback,
   getOuterFocusableItemsFallback
-} from '../utils/toggleFocusability/toggleFocusabilityFallback'
+} from '../utils/focusability/focusabilityFallback.js'
 
 /**
  * Add fallbacks for toggle focusability and get outer focusable items if inert not supported

@@ -5,22 +5,23 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $gap-fix: fix.get-class-fix("gap");
 
 /* Styles */
 
 %l-gap {
-  gap: var(--#{con.$v}gap);
+  gap: var(--#{con.$n}gap);
 }
 
 @each $g in con.$gaps {
-  .l-#{$gap-fix}-#{$g} {
-    --#{con.$v}gap: var(--#{con.$v}#{$g});
+  .#{$layout-fix}#{$gap-fix}-#{$g} {
+    --#{con.$n}gap: var(--#{con.$n}#{$g});
 
     @extend %l-gap;
   }
@@ -28,9 +29,9 @@ $gap-fix: fix.get-class-fix("gap");
 
 @each $b in con.$gap-breakpoints {
   @each $g in con.$gaps {
-    .l-#{$gap-fix}-#{$g}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        --#{con.$v}gap: var(--#{con.$v}#{$g})
+    .#{$layout-fix}#{$gap-fix}-#{$g}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}gap: var(--#{con.$n}#{$g})
       ));
     }
   }

@@ -1,0 +1,120 @@
+/**
+ * Utils - Focusability
+ */
+
+/* Imports */
+
+import { config, configFallback } from '../../config/config.js'
+import { isHtmlElement, isHtmlElementArray } from '../html/html.js'
+import { isFunction } from '../function/function.js'
+import { getOuterItems } from '../item/itemOuter.js'
+
+/**
+ * Manage focusability of specified elements
+ *
+ * @param {boolean} on
+ * @param {Element[]} items
+ * @return {boolean|undefined}
+ */
+const toggleFocusability = (on: boolean, items: Element[] = []): boolean | undefined => {
+  if (!isHtmlElementArray(items)) {
+    return
+  }
+
+  if (config.inert) {
+    items.forEach(item => {
+      item.inert = !on
+    })
+
+    return on
+  }
+
+  if (isFunction(configFallback.toggleFocusability)) {
+    return configFallback.toggleFocusability(on, items)
+  }
+}
+
+/**
+ * Selector string to get focusable items
+ *
+ * @type {string}
+ */
+const focusSelector: string =
+  'a, area, input, select, textarea, button, details, iframe, audio, video, [contenteditable], [tabindex]'
+
+/**
+ * Check if element is focusable
+ *
+ * @param {Element} item
+ * @return {boolean}
+ */
+const isItemFocusable = (item: Element | null): boolean => {
+  if (!isHtmlElement(item)) {
+    return false
+  }
+
+  const focusableTags = new Set([
+    'a',
+    'area',
+    'input',
+    'select',
+    'textarea',
+    'button',
+    'details',
+    'iframe',
+    'audio',
+    'video'
+  ])
+
+  return (
+    focusableTags.has(item.tagName.toLowerCase()) ||
+    item.hasAttribute('contenteditable') ||
+    item.hasAttribute('tabindex')
+  )
+}
+
+/**
+ * Get all focusable elements inside item
+ *
+ * @param {Element} item
+ * @return {Element[]}
+ */
+const getInnerFocusableItems = (item: Element | null): Element[] => {
+  if (!isHtmlElement(item)) {
+    return []
+  }
+
+  return Array.from(item.querySelectorAll(focusSelector))
+}
+
+/**
+ * Get all focusable elements outside item
+ *
+ * @param {Element} item
+ * @return {Element[]}
+ */
+const getOuterFocusableItems = (item: Element | null): Element[] => {
+  if (!isHtmlElement(item)) {
+    return []
+  }
+
+  if (config.inert) {
+    return getOuterItems(item)
+  }
+
+  if (isFunction(configFallback.getOuterFocusableItems)) {
+    return configFallback.getOuterFocusableItems(item)
+  }
+
+  return []
+}
+
+/* Exports */
+
+export {
+  toggleFocusability,
+  focusSelector,
+  isItemFocusable,
+  getInnerFocusableItems,
+  getOuterFocusableItems
+}

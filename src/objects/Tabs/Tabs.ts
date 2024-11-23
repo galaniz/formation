@@ -1,331 +1,523 @@
-// @ts-nocheck
-
 /**
  * Objects - Tabs
- *
- * @param {object} args
- * @param {HTMLElement[]} args.tabs
- * @param {HTMLElement[]} args.panels
- * @param {number} args.delay
- * @param {string} args.orientation
  */
 
 /* Imports */
 
-import { getKey } from '../../utils/utils'
+import type { TabsActivateArgs, TabsIndexArgs, TabsEventDetail } from './TabsTypes.js'
+import { getItem } from '../../utils/item/item.js'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { isNumber } from '../../utils/number/number.js'
+import { getKey } from '../../utils/key/key.js'
 
-/* Class */
-
-class Tabs {
+/**
+ * Display tabs and corresponding panels with click and keyboard navigation
+ */
+class Tabs extends HTMLElement {
   /**
-   * Constructor
+   * Tab elements
+   *
+   * @type {HTMLElement[]}
    */
+  tabs: HTMLElement[] = []
 
-  constructor (args) {
-    /**
-     * Public variables
-     */
+  /**
+   * Panel elements
+   *
+   * @type {HTMLElement[]}
+   */
+  panels: HTMLElement[] = []
 
-    const {
-      tabs = [],
-      panels = [],
-      delay = 0,
-      orientation = 'horizontal',
-      init = true,
-      beforeInitActivate = () => {},
-      afterIndexesSet = () => {},
-      onDeactivate = () => {},
-      onActivate = () => {}
-    } = args
+  /**
+   * Delay before displaying panel
+   *
+   * @type {number}
+   */
+  delay: number = 0
 
-    this.tabs = tabs
-    this.panels = panels
-    this.delay = delay
-    this.orientation = orientation
-    this.beforeInitActivate = beforeInitActivate
-    this.afterIndexesSet = afterIndexesSet
-    this.onDeactivate = onDeactivate
-    this.onActivate = onActivate
-    this.init = false
+  /**
+   * Delay before focusing panels
+   *
+   * @type {number}
+   */
+  focusDelay: number = 0
 
-    /**
-     * Internal variables
-     */
+  /**
+   * Layout for keyboard navigation
+   *
+   * @type {string}
+   */
+  direction: 'horizontal' | 'vertical' = 'horizontal'
 
-    /* Track current and previously current */
+  /**
+   * Store initialize success
+   *
+   * @type {boolean}
+   */
+  init: boolean = false
 
-    this._currentIndex = 0
-    this._lastIndex = 0
+  /**
+   * Current tab index
+   *
+   * @type {number}
+   */
+  currentIndex: number = 0
 
-    /* Last tab/panel index */
+  /**
+   * Base or derived class name
+   *
+   * @type {string}
+   */
+  #className: string = 'tabs'
 
-    this._lastTabIndex = 0
+  /**
+   * Store tab elements indexes
+   *
+   * @type {Map<HTMLElement, number>}
+   */
+  #indexes: Map<HTMLElement, number> = new Map()
 
-    /* Equal to currentIndex - for filtering purposes */
+  /**
+   * Final tab/panel element index
+   *
+   * @private
+   * @type {number}
+   */
+  #endIndex: number = 0
 
-    this._panelIndex = 0
-    this._lastPanelIndex = 0
-    this._tabIndex = 0
+  /**
+   * Id for delay timeout
+   *
+   * @private
+   * @type {number}
+   */
+  #delayId: number = 0
 
-    /* For instances when delay before focusing panels required */
+  /**
+   * Id for focus delay timeout
+   *
+   * @private
+   * @type {number}
+   */
+  #focusDelayId: number = 0
 
-    this._focusDelay = 0
+  /**
+   * Bind this to event callbacks
+   *
+   * @private
+   */
+  #clickHandler = this.#click.bind(this)
+  #keyDownHandler = this.#keyDown.bind(this)
+  #keyUpHandler = this.#keyUp.bind(this)
 
-    /* Store panel to focus */
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line
 
-    this._focusItem = null
-
-    /**
-     * Initialize
-     */
-
-    if (init) {
-      this.init = this._initialize()
-    }
+  /**
+   * Init - each time added to DOM
+   */
+  connectedCallback (): void {
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize
+   * Clean up - each time removed from DOM
    */
+  disconnectedCallback (): void {
+    /* Remove event listeners */
 
-  _initialize () {
-    /* Check that required variables not null */
+    this.tabs.forEach((tab) => {
+      tab.removeEventListener('click', this.#clickHandler)
+      tab.removeEventListener('keydown', this.#keyDownHandler)
+      tab.removeEventListener('keyup', this.#keyUpHandler)
+    })
 
-    if (this.tabs.length === 0 || this.panels.length === 0 || !Array.isArray(this.tabs) || !Array.isArray(this.panels)) {
+    /* Empty/nullify props */
+
+    this.tabs = []
+    this.panels = []
+    this.init = false
+    this.#indexes.clear()
+
+    /* Clear timeouts */
+
+    clearTimeout(this.#delayId)
+    clearTimeout(this.#focusDelayId)
+  }
+
+  /**
+   * Initialize - check required items exist and activate
+   *
+   * @private
+   * @return {boolean}
+   */
+  #initialize (): boolean {
+    /* Get items */
+
+    const tabs = getItem(['[role="tab"]'], this)
+    const panels = getItem(['[role="tabpanel"]'], this)
+
+    /* Check required items exist */
+
+    if (!isHtmlElementArray(tabs) || !isHtmlElementArray(panels)) {
       return false
     }
 
-    /* Bind all event handlers for referencability */
+    /* Set item props */
 
-    const events = ['click', 'keyDown', 'keyUp']
+    this.tabs = tabs
+    this.panels = panels
 
-    events.forEach(method => {
-      this[`_${method}Event`] = this[`_${method}`].bind(this)
-    })
+    /* Get end index */
 
-    /* Get last tab/panel index */
+    this.#endIndex = tabs.length - 1
 
-    this._lastTabIndex = this.tabs.length - 1
+    /* Class name */
 
-    /* Add event listeners */
+    this.#className = this.constructor.name.toLowerCase()
 
-    let currentIndex = this._currentIndex
+    /* Set delay if it exists */
 
-    this.tabs.forEach((tab, index) => {
-      tab.setAttribute('data-index', index)
+    const delay = this.getAttribute('delay')
 
-      tab.addEventListener('click', this._clickEvent)
-      tab.addEventListener('keydown', this._keyDownEvent)
-      tab.addEventListener('keyup', this._keyUpEvent)
+    if (isStringStrict(delay)) {
+      const delayValue = parseInt(delay, 10)
 
-      const selected = tab.getAttribute('aria-selected')
-
-      if (selected === 'true') {
-        currentIndex = index
-      }
-    })
-
-    /* Set current based on location hash */
-
-    const hash = window.location.hash
-
-    if (hash) {
-      let hashIndex = null
-
-      this.tabs.forEach((tab, index) => {
-        if (!tab.hasAttribute('href')) {
-          return
-        }
-
-        const href = tab.href.split('#')
-
-        if (href.length < 2) {
-          return
-        }
-
-        if ('#' + href[1] === hash) {
-          hashIndex = index
-        }
-      })
-
-      if (hashIndex !== null) {
-        currentIndex = hashIndex
+      if (isNumber(delayValue)) {
+        this.delay = delayValue
       }
     }
 
-    /* Activate current */
+    /* Set direction if it exists */
 
-    this.beforeInitActivate()
+    const direction = this.getAttribute('direction')
 
-    this._activate({
-      currentIndex,
-      focus: false,
-      source: 'init'
+    if (direction === 'horizontal' || direction === 'vertical') {
+      this.direction = direction
+    }
+
+    /* Window hash to set current */
+
+    const hash = window.location.hash
+
+    /* Set current and add event listeners */
+
+    let current = 0
+
+    this.tabs.forEach((tab, i) => {
+      tab.addEventListener('click', this.#clickHandler)
+      tab.addEventListener('keydown', this.#keyDownHandler)
+      tab.addEventListener('keyup', this.#keyUpHandler)
+
+      this.#indexes.set(tab, i)
+
+      const selected = tab.ariaSelected
+
+      if (selected === 'true') {
+        current = i
+      }
+
+      if (isHtmlElement(tab, HTMLAnchorElement) && tab.hash === hash) {
+        current = i
+      }
     })
 
+    this.currentIndex = current
+
+    /* Go to current */
+
+    if (this.#className === 'tabs') {
+      return this.activate({
+        current,
+        focus: false,
+        source: 'init'
+      })
+    }
     /* Init successful */
 
     return true
   }
 
   /**
-   * Hide, show and focus panels and tabs
+   * Filter indexes on activation
+   *
+   * @param {TabsIndexArgs} args
+   * @return {TabsIndexArgs}
    */
+  getIndexes (args: TabsIndexArgs): TabsIndexArgs {
+    return args
+  }
 
-  _activate (args) {
+  /**
+   * Hide, show and focus panels and tabs
+   *
+   * @param {TabsActivateArgs} args
+   * @return {boolean}
+   */
+  activate (args: TabsActivateArgs): boolean {
+    /* Clear timeouts */
+
+    clearTimeout(this.#delayId)
+    clearTimeout(this.#focusDelayId)
+
+    /* Set args */
+
     const {
-      currentIndex = 0,
-      focus = true
+      current = 0,
+      focus = true,
+      source = ''
     } = args
 
-    this._lastIndex = this._currentIndex
-    this._currentIndex = currentIndex
+    const lastIdx = this.currentIndex
+    const endIdx = this.#endIndex
+    const currentIdx = current > endIdx ? endIdx : current
 
-    if (this._currentIndex > this._lastTabIndex) {
-      this._currentIndex = this._lastTabIndex
+    this.currentIndex = currentIdx
+
+    const {
+      currentIndex = currentIdx,
+      lastIndex = lastIdx,
+      panelIndex = currentIdx,
+      lastPanelIndex = lastIdx,
+      endIndex = endIdx
+    } = this.getIndexes({
+      currentIndex: current,
+      lastIndex: lastIdx,
+      panelIndex: current,
+      lastPanelIndex: lastIdx,
+      endIndex: endIdx,
+      focus,
+      source
+    })
+
+    this.currentIndex = currentIndex
+    this.#endIndex = endIndex
+
+    /* Elements */
+
+    const lastTab = this.tabs[lastIndex]
+    const lastPanel = this.panels[lastPanelIndex]
+    const tab = this.tabs[currentIndex]
+    const panel = this.panels[panelIndex]
+
+    if (
+      !isHtmlElement(lastTab) ||
+      !isHtmlElement(lastPanel) ||
+      !isHtmlElement(tab) ||
+      !isHtmlElement(panel)
+    ) {
+      return false
     }
 
-    this._panelIndex = this._currentIndex
-    this._lastPanelIndex = this._lastIndex
-    this._tabIndex = this._currentIndex
+    /* Type */
 
-    this.afterIndexesSet(args)
+    const type = this.#className
+    const displayType = type === 'tabs' ? 'hidden' : 'aria-hidden'
 
-    const tab = this.tabs[this._tabIndex]
-    const lastTab = this.tabs[this._lastIndex]
+    /* Args to pass to events */
+
+    const detail: TabsEventDetail = {
+      currentIndex,
+      lastIndex,
+      panelIndex,
+      lastPanelIndex,
+      endIndex,
+      panel,
+      lastPanel,
+      tab,
+      lastTab,
+      focus,
+      source
+    }
+
+    const details = { detail }
+
+    /* Events */
+
+    const onDeactivate = new CustomEvent('tabs:deactivate', details)
+    const onActivate = new CustomEvent('tabs:activate', details)
+    const onActivated = new CustomEvent('tabs:activated', details)
 
     /* Deactivate last tab */
 
-    lastTab.setAttribute('tabindex', '-1')
-    lastTab.setAttribute('aria-selected', 'false')
+    lastTab.tabIndex = -1
+    lastTab.ariaSelected = 'false'
 
     /* Deactivate last panel */
 
-    this.panels[this._lastPanelIndex].setAttribute('data-selected', 'false')
-    this.onDeactivate(args)
+    lastPanel.dataset[`${type}Selected`] = 'false'
+    this.dispatchEvent(onDeactivate)
 
     /* Activate current tab */
 
-    tab.setAttribute('tabindex', '0')
-    tab.setAttribute('aria-selected', 'true')
+    tab.tabIndex = 0
+    tab.ariaSelected = 'true'
 
     /* Activate current panel */
 
-    this.panels[this._panelIndex].setAttribute('data-selected', 'true')
-    this.onActivate(args)
+    panel.dataset[`${type}Selected`] = 'true'
+    this.dispatchEvent(onActivate)
 
-    this._focusItem = this.panels[this._panelIndex]
-
-    setTimeout(() => {
-      this._displayPanels()
+    this.#delayId = window.setTimeout(() => {
+      if (displayType === 'hidden') {
+        lastPanel.hidden = true
+        panel.hidden = false
+      } else {
+        lastPanel.ariaHidden = 'true'
+        panel.ariaHidden = 'false'
+      }
 
       if (focus) {
-        setTimeout(() => {
-          this._focusItem.focus()
-        }, this._focusDelay)
+        this.#focusDelayId = window.setTimeout(() => {
+          panel.focus()
+          this.dispatchEvent(onActivated)
+        }, this.focusDelay)
+      } else {
+        this.dispatchEvent(onActivated)
       }
     }, this.delay)
-  }
 
-  _displayPanels () {
-    this.panels[this._lastPanelIndex].setAttribute('hidden', '')
-    this.panels[this._panelIndex].removeAttribute('hidden')
+    return true
   }
 
   /**
-   * Other helpers
+   * Index from tab attribute
+   *
+   * @private
+   * @param {Event} e
+   * @return {number}
    */
+  #getIndex (e: Event): number {
+    const target = e.currentTarget
+    const fallback = this.currentIndex
 
-  _getIndex (tab) {
-    return parseInt(tab.getAttribute('data-index'))
-  }
-
-  _focus (index) {
-    if (index < 0) {
-      index = this._lastTabIndex
+    if (!isHtmlElement(target)) {
+      return fallback
     }
 
-    if (index > this._lastTabIndex) {
+    const index = this.#indexes.get(target)
+
+    if (!isNumber(index)) {
+      return fallback
+    }
+
+    return index
+  }
+
+  /**
+   * Focus tab at specified index
+   *
+   * @private
+   * @param {number} index
+   * @return {void}
+   */
+  #focusTab (index: number): void {
+    if (index < 0) {
+      index = this.#endIndex
+    }
+
+    if (index > this.#endIndex) {
       index = 0
     }
 
-    this.tabs[index].focus()
+    const tab = this.tabs[index]
+
+    if (!isHtmlElement(tab)) {
+      return
+    }
+
+    tab.focus()
   }
 
   /**
-   * Event handlers
+   * Click handler on tab to display panel
+   *
+   * @private
+   * @param {Event} e
+   * @return {void}
    */
-
-  _click (e) {
-    this._activate({
-      currentIndex: this._getIndex(e.currentTarget),
+  #click (e: Event): void {
+    this.activate({
+      current: this.#getIndex(e),
       source: 'click'
     })
   }
 
-  _keyDown (e) {
-    let index = this._getIndex(e.currentTarget)
-    let focus = true
+  /**
+   * Key down handler on tab to change focus depending on key
+   *
+   * @private
+   * @param {KeyboardEvent} e
+   * @return {void}
+   */
+  #keyDown (e: KeyboardEvent): void {
+    let index = this.#getIndex(e)
 
     switch (getKey(e)) {
       case 'END': // Last tab
         e.preventDefault()
-        index = this._lastTabIndex
+        index = this.#endIndex
         break
       case 'HOME': // First tab
         e.preventDefault()
         index = 0
         break
-
-        /* Up and down here to prevent page scroll */
-
-      case 'UP': // Prev tab
-        if (this.orientation === 'horizontal') {
-          focus = false
-        } else {
-          e.preventDefault()
-          index--
+      case 'UP': // Previous vertical tab
+        if (this.direction === 'horizontal') {
+          return
         }
+
+        e.preventDefault()
+        index -= 1
         break
-      case 'DOWN': // Next tab
-        if (this.orientation === 'horizontal') {
-          focus = false
-        } else {
-          e.preventDefault()
-          index += 1
+      case 'DOWN': // Next vertical tab
+        if (this.direction === 'horizontal') {
+          return
         }
+
+        e.preventDefault()
+        index += 1
         break
+      default:
+        return
     }
 
-    if (focus) {
-      this._focus(index)
-    }
+    this.#focusTab(index)
   }
 
-  _keyUp (e) {
-    let index = this._getIndex(e.currentTarget)
-    let focus = true
+  /**
+   * Key up handler on tab to change focus depending on key
+   *
+   * @private
+   * @param {KeyboardEvent} e
+   * @return {void}
+   */
+  #keyUp (e: KeyboardEvent): void {
+    let index = this.#getIndex(e)
 
     switch (getKey(e)) {
-      case 'LEFT': // Previous tab
-        if (this.orientation === 'vertical') {
-          focus = false
-        } else {
-          index--
+      case 'LEFT': // Previous horizontal tab
+        if (this.direction === 'vertical') {
+          return
         }
+
+        index -= 1
         break
-      case 'RIGHT': // Next tab
-        if (this.orientation === 'vertical') {
-          focus = false
-        } else {
-          index += 1
+      case 'RIGHT': // Next horizontal tab
+        if (this.direction === 'vertical') {
+          return
         }
+
+        index += 1
         break
+      default:
+        return
     }
 
-    if (focus) {
-      this._focus(index)
-    }
+    this.#focusTab(index)
   }
 }
 

@@ -5,37 +5,38 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $width-fix: fix.get-class-fix("width");
 $max-width-fix: fix.get-class-fix("max-width");
 
 /* Relative units */
 
-.l-#{$width-fix}-full {
+.#{$layout-fix}#{$width-fix}-full {
   width: 100%;
 }
 
-.l-#{$width-fix}-full-vw {
+.#{$layout-fix}#{$width-fix}-full-vw {
   width: 100vw;
 }
 
 /* Config widths */
 
 @each $w in con.$widths {
-  .l-#{$width-fix}-#{$w} {
-    width: var(--#{con.$v}#{$w});
+  .#{$layout-fix}#{$width-fix}-#{$w} {
+    width: var(--#{con.$n}#{$w});
   }
 }
 
 @each $b in con.$width-breakpoints {
   @each $w in con.$widths {
-    .l-#{$width-fix}-#{$w}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        width: var(--#{con.$v}#{$w})
+    .#{$layout-fix}#{$width-fix}-#{$w}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        width: var(--#{con.$n}#{$w})
       ));
     }
   }
@@ -44,15 +45,15 @@ $max-width-fix: fix.get-class-fix("max-width");
 /* Config percentage widths */
 
 @each $w, $v in con.$width-percentages {
-  .l-#{$width-fix}-#{$w} {
+  .#{$layout-fix}#{$width-fix}-#{$w} {
     width: $v;
   }
 }
 
 @each $b in con.$width-percentage-breakpoints {
   @each $w, $v in con.$width-percentages {
-    .l-#{$width-fix}-#{$w}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
+    .#{$layout-fix}#{$width-fix}-#{$w}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
         width: $v
       ));
     }
@@ -62,16 +63,16 @@ $max-width-fix: fix.get-class-fix("max-width");
 /* Config max widths */
 
 @each $w in con.$max-widths {
-  .l-#{$max-width-fix}-#{$w} {
-    max-width: var(--#{con.$v}#{$w});
+  .#{$layout-fix}#{$max-width-fix}-#{$w} {
+    max-width: var(--#{con.$n}#{$w});
   }
 }
 
 @each $b in con.$max-width-breakpoints {
   @each $w in con.$max-widths {
-    .l-#{$max-width-fix}-#{$w}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        max-width: var(--#{con.$v}#{$w})
+    .#{$layout-fix}#{$max-width-fix}-#{$w}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        max-width: var(--#{con.$n}#{$w})
       ));
     }
   }

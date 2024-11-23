@@ -5,13 +5,9 @@
 /* Imports */
 
 import type { CollapsibleArgs, CollapsibleAction } from './CollapsibleTypes'
-import {
-  addAction,
-  removeAction,
-  doActions,
-  isString,
-  isHTMLElement
-} from '../../utils/utils'
+import { addAction, removeAction, doActions } from '../../utils/action/action'
+import { isString } from '../../utils/string/string'
+import { isHtmlElement } from '../../utils/html/html'
 
 /**
  * Get and set height to open/close element
@@ -55,14 +51,14 @@ class Collapsible {
   /**
    * Control accordion with function or breakpoint
    *
-   * @type {import('./CollapsibleTypes').CollapsibleAction}
+   * @type {CollapsibleAction}
    */
   doAccordion: CollapsibleAction = false
 
   /**
    * Control hover with function or breakpoint
    *
-   * @type {import('./CollapsibleTypes').CollapsibleAction}
+   * @type {CollapsibleAction}
    */
   doHover: CollapsibleAction = false
 
@@ -126,7 +122,7 @@ class Collapsible {
   /**
    * Set properties and initialize
    *
-   * @param {import('./CollapsibleTypes').CollapsibleArgs} args
+   * @param {CollapsibleArgs} args
    */
   constructor (args: CollapsibleArgs) {
     this.init = this._initialize(args)
@@ -136,7 +132,7 @@ class Collapsible {
    * Initialize - check required props and set props
    *
    * @private
-   * @param {import('./CollapsibleTypes').CollapsibleArgs} args
+   * @param {CollapsibleArgs} args
    * @return {boolean}
    */
   _initialize (args: CollapsibleArgs): boolean {
@@ -152,7 +148,7 @@ class Collapsible {
 
     /* Check that required items exist */
 
-    if (!isHTMLElement(container) || !isHTMLElement(collapsible) || !isHTMLElement(trigger)) {
+    if (!isHtmlElement(container) || !isHtmlElement(collapsible) || !isHtmlElement(trigger)) {
       return false
     }
 
@@ -281,10 +277,10 @@ class Collapsible {
     const height = this.collapsible.clientHeight
 
     this.collapsible.style.height = ''
-    this.collapsible.style.setProperty('--height', `${height}px`)
+    this.collapsible.style.setProperty('--clp-height', `${height}px`)
 
     setTimeout(() => {
-      this.collapsible.style.setProperty('--height', 'auto')
+      this.collapsible.style.setProperty('--clp-height', 'auto')
     }, this.duration + 10)
   }
 
@@ -385,9 +381,9 @@ class Collapsible {
     if (set) {
       this._toggle(this._open)
     } else {
-      this.collapsible.style.setProperty('--height', '')
-      this.collapsible.style.setProperty('--visibility', '')
-      this.collapsible.style.setProperty('--overflow', '')
+      this.collapsible.style.setProperty('--clp-height', '')
+      this.collapsible.style.setProperty('--clp-vis', '')
+      this.collapsible.style.setProperty('--clp-overflow', '')
     }
   }
 

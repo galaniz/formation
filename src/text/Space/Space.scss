@@ -5,11 +5,16 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
 
 /* Styles */
 
 @each $l, $v in con.$letter-spacing {
-  .t-space-#{$l} {
-    letter-spacing: var(--#{con.$v}letter-spacing-#{$l});
+  .#{$text-fix}space-#{$l} {
+    letter-spacing: var(--#{con.$n}letter-spacing-#{$l});
   }
 }

@@ -5,46 +5,47 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $column-fix: fix.get-class-fix("column");
 
 /* Styles */
 
-.l-#{$column-fix} {
+.#{$layout-fix}#{$column-fix} {
   flex-direction: column;
 }
 
-.l-row {
+.#{$layout-fix}row {
   flex-direction: row;
 }
 
-.l-wrap {
+.#{$layout-fix}wrap {
   flex-wrap: wrap;
 }
 
-.l-shrink-0 {
+.#{$layout-fix}shrink-0 {
   flex-shrink: 0;
 }
 
-.l-grow-1 {
+.#{$layout-fix}grow-1 {
   flex-grow: 1;
 }
 
 @each $b in con.$flex-column-breakpoints {
-  .l-#{$column-fix}-#{$b} {
-    @include breakpoints.breakpoint-batch-add($b, (
+  .#{$layout-fix}#{$column-fix}-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
       flex-direction: column
     ));
   }
 }
 
 @each $b in con.$flex-row-breakpoints {
-  .l-row-#{$b} {
-    @include breakpoints.breakpoint-batch-add($b, (
+  .#{$layout-fix}row-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
       flex-direction: row
     ));
   }

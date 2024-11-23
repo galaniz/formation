@@ -1,694 +1,1114 @@
-// @ts-nocheck
-
 /**
  * Objects - Slider
  */
 
 /* Imports */
 
-import { Tabs } from '../Tabs/Tabs'
-import { focusSelector } from '../../utils/utils'
-import { config } from '../../config/config'
+import type { SliderTypes } from './SliderTypes.js'
+import type { TabsEventDetail, TabsIndexArgs } from '../Tabs/TabsTypes.js'
+import { Tabs } from '../Tabs/Tabs.js'
+import { getItem } from '../../utils/item/item.js'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { focusSelector } from '../../utils/focusability/focusability.js'
+import { onResize, removeResize } from '../../utils/resize/resize.js'
+import { config } from '../../config/config.js'
+import { isNumber } from '../../utils/number/number.js'
 
 /**
- * Slider using panel and tab structure
+ * Scroll based slider using panel and tab structure with layout and loop options
  */
-
 class Slider extends Tabs {
   /**
-   * Set properties and initialize
+   * Scrollable container element
    *
-   * @param {object} args
-   * @param {HTMLElement} args.container
-   * @param {HTMLElement} args.slider
-   * @param {HTMLElement} args.track
-   * @param {HTMLElement} args.targetHeight
-   * @param {HTMLElement} args.prev
-   * @param {HTMLElement} args.next
-   * @param {object[]} args.breakpoints
-   * @param {HTMLElement[]} args.groupItems
-   * @param {string} args.groupSelector
-   * @param {boolean} args.loop
-   * @param {boolean} args.reduceMotion
-   * @param {boolean} args.variableWidths
-   * @param {number} args.duration
+   * @type {HTMLElement|null}
    */
+  track: HTMLElement | null = null
 
-  constructor (args) {
-    /**
-     * Base variables + init
-     */
+  /**
+   * Elements within multi-item panels
+   *
+   * @type {HTMLElement[]}
+   */
+  items: HTMLElement[] = []
 
-    const {
-      container = null,
-      slider = null,
-      track = null,
-      targetHeight = null,
-      prev = null,
-      next = null,
-      groupItems = [],
-      groupSelector = '',
-      breakpoints = [],
-      loop = false,
-      reduceMotion = config.reduceMotion,
-      variableWidths = false,
-      duration = 500
-    } = args
+  /**
+   * Target height element
+   *
+   * @type {HTMLElement|null}
+   */
+  heightItem: HTMLElement | null = null
 
-    if (!slider || !track) {
-      return false
-    }
+  /**
+   * Previous navigation button element
+   *
+   * @type {HTMLButtonElement|null}
+   */
+  prev: HTMLButtonElement | null = null
 
-    args.init = false
+  /**
+   * Next navigation button element
+   *
+   * @type {HTMLButtonElement|null}
+   */
+  next: HTMLButtonElement | null = null
 
-    super(args)
+  /**
+   * Transition duration on scroll (tab or button click)
+   *
+   * @type {number}
+   */
+  duration: number = 500
 
-    this.container = container
-    this.slider = slider
-    this.track = track
-    this.targetHeight = targetHeight
-    this.prev = prev
-    this.next = next
-    this.groupItems = groupItems
-    this.groupSelector = groupSelector
-    this.breakpoints = breakpoints
-    this.loop = loop
-    this.reduceMotion = reduceMotion
-    this.variableWidths = variableWidths
-    this.duration = duration
-    this.init = false
+  /**
+   * Repeat panels to the left and right
+   *
+   * @type {boolean}
+   */
+  loop: boolean = false
 
-    this.beforeInitActivate = () => {
-      this._beforeInitActivate()
-    }
+  /**
+   * Layout type
+   *
+   * single - single item panels
+   * group - multi-item panels
+   * flex - multi-item panels different widths
+   *
+   * @type {SliderTypes}
+   */
+  type: SliderTypes = 'single'
 
-    this.afterIndexesSet = (args) => {
-      this._afterIndexesSet(args)
-    }
+  /**
+   * Number of visible items and panels by breakpoint for mult-item
+   *
+   * @type {Set<Record<string, number>>}
+   */
+  breakpoints: Set<Record<'low' | 'high' | 'items' | 'panels', number>> = new Set()
 
-    this.onDeactivate = (args) => {
-      this._onDeactivate(args)
-    }
+  /**
+   * Panels parent element
+   *
+   * @private
+   * @type {HTMLElement|null}
+   */
+  #insert: HTMLElement | null = null
 
-    this.onActivate = (args) => {
-      this._onActivate(args)
-    }
+  /**
+   * Last panels index for groups (updated on resize)
+   *
+   * @private
+   * @type {number}
+   */
+  #endGroupIndex: number = 0
 
-    this.delay = this.duration + 100
+  /**
+   * Rearrange multi-item elements across breakpoints
+   *
+   * @private
+   * @type {boolean}
+   */
+  #movable: boolean = false
 
-    this._focusDelay = this.loop ? this.delay : 0
+  /**
+   * Track focusable elements in current panel
+   *
+   * @private
+   * @type {Element[]}
+   */
+  #focusableItems: Element[] = []
 
-    /**
-     * Internal variables
-     */
+  /**
+   * Scroll listener timeout id
+   *
+   * @private
+   * @type {number}
+   */
+  #scrollId: number = 0
 
-    /* Track current and previously current */
+  /**
+   * Timeout id to add scroll listener
+   *
+   * @private
+   * @type {number}
+   */
+  #scrollEventId: number = 0
 
-    this._lastIndexFocusableItems = []
+  /**
+   * Scroll to animation id
+   *
+   * @private
+   * @type {number}
+   */
+  #scrollAnimId: number = 0
 
-    /* For scroll event and setting */
+  /**
+   * Left panel offsets to scroll to
+   *
+   * @private
+   * @type {number[]}
+   */
+  #scrollLeftOffsets: number[] = []
 
-    this._scrollTimer = null
-    this._scrollLeftOffsets = []
-    this._scrollRightOffsets = []
+  /**
+   * Right panel offsets to scroll to for flex type
+   *
+   * @private
+   * @type {number[]}
+   */
+  #scrollRightOffsets: number[] = []
 
-    /* For scroll with grouped panels */
+  /**
+   * Account for track scroll padding
+   *
+   * @private
+   * @type {number}
+   */
+  #offset: number = 0
 
-    this._resizeTimer = null
-    this._viewportWidth = window.innerWidth
+  /**
+   * Viewport width to check breakpoint(s)
+   *
+   * @private
+   * @type {number}
+   */
+  #viewportWidth: number = window.innerWidth
 
-    this._groupItemsLength = this.groupItems.length
-    this._rearrange = this._groupItemsLength && this.groupSelector && this.breakpoints.length
+  /**
+   * Visible current tab index in loop
+   *
+   * @private
+   * @type {number}
+   */
+  #loopCurrentIndex: number = 0
 
-    /* For loop */
+  /**
+   * Track element width
+   *
+   * @private
+   * @type {number}
+   */
+  #loopTrackWidth: number = 0
 
-    this._currentInnerIndex = 0
-    this._trackWidth = 0
-    this._panelsParent = null
-    this._panelsGroups = []
-    this._ogLength = 0
-    this._length = 0
-    this._lastPanel = null
-    this._firstPanel = null
-    this._lastVisible = false
-    this._firstVisible = false
+  /**
+   * Initial number of panels in loop
+   *
+   * @private
+   * @type {number}
+   */
+  #loopInitLength: number = 0
 
-    /**
-     * Initialize
-     */
+  /**
+   * Number of panels in loop including cloned panels
+   *
+   * @private
+   * @type {number}
+   */
+  #loopLength: number = 0
 
-    if (!this.container || !this.slider || !this.track) {
-      return
-    }
+  /**
+   * Bind this to event callbacks
+   *
+   * @private
+   */
+  #deactivateHandler = this.#deactivate.bind(this)
+  #activateHandler = this.#activate.bind(this)
+  #activatedHandler = this.#activated.bind(this)
+  #prevHandler = this.#prev.bind(this)
+  #nextHandler = this.#next.bind(this)
+  #scrollHandler = this.#scroll.bind(this)
+  #resizeHandler = this.#resize.bind(this)
 
-    this.init = this._initialize()
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line
+
+  /**
+   * Init - each time added to DOM
+   */
+  override connectedCallback (): void {
+    super.connectedCallback()
+
+    /* Add event listeners */
+
+    this.addEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
+    this.addEventListener('tabs:activate', this.#activateHandler as EventListener)
+    this.addEventListener('tabs:activated', this.#activatedHandler as EventListener)
+
+    /* Initialize */
+
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize
+   * Clean up - each time removed from DOM
    */
+  override disconnectedCallback (): void {
+    super.disconnectedCallback()
 
-  _beforeInitActivate () {
-    /* Set height to hide scrollbar */
+    /* Remove event listeners */
 
-    this._setHeight()
+    this.removeEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
+    this.removeEventListener('tabs:activate', this.#activateHandler as EventListener)
+    this.removeEventListener('tabs:activated', this.#activatedHandler as EventListener)
 
-    /* Listen for slider scroll + resize */
+    this.track?.removeEventListener('scroll', this.#scrollHandler)
+    this.prev?.removeEventListener('click', this.#prevHandler)
+    this.next?.removeEventListener('click', this.#nextHandler)
 
-    this._scrollEvent = this._scroll.bind(this)
-    this._resizeEvent = this._resize.bind(this)
+    removeResize(this.#resizeHandler)
 
-    this.track.addEventListener('scroll', this._scrollEvent)
-    window.addEventListener('resize', this._resizeEvent)
+    /* Empty/nullify props */
 
-    /* Prev next listeners */
+    this.track = null
+    this.items = []
+    this.heightItem = null
+    this.prev = null
+    this.next = null
+    this.breakpoints = new Set()
+    this.#insert = null
+    this.#focusableItems = []
 
-    if (this.prev && this.next) {
-      this._prevEvent = this._prev.bind(this)
-      this._nextEvent = this._next.bind(this)
+    /* Clear timeout and animation */
 
-      this.prev.addEventListener('click', this._prevEvent)
-      this.next.addEventListener('click', this._nextEvent)
+    clearTimeout(this.#scrollId)
+    clearTimeout(this.#scrollEventId)
+    cancelAnimationFrame(this.#scrollAnimId)
+  }
+
+  /**
+   * Initialize - check required items, set variables and activate
+   *
+   * @private
+   * @return {boolean}
+   */
+  #initialize (): boolean {
+    /* Get items */
+
+    const track = getItem('[data-slider-track]', this)
+    const items = getItem(['[data-slider-item]'], this)
+    const heightItem = getItem('[data-slider-height]', this)
+    const prev = getItem('[data-slider-prev]', this)
+    const next = getItem('[data-slider-next]', this)
+    const [firstPanel] = this.panels
+    const insert = firstPanel?.parentElement
+
+    /* Check required items exist */
+
+    if (!isHtmlElement(track) || !isHtmlElement(insert)) {
+      return false
     }
 
-    /* Clone panels for loop slider */
+    /* Set element props */
 
-    if (this.loop) {
-      this._trackWidth = this.track.clientWidth
-      this._ogLength = this.panels.length
-      this._panelsGroups = [this.panels]
-      this._panelsParent = this.panels[0].parentElement
+    this.track = track
+    this.#insert = insert
 
-      const panelsFrag = new window.DocumentFragment()
-
-      panelsFrag.appendChild(this._panelsParent)
-
-      const panels = this.panels
-
-      for (let i = 0; i < 2; i += 1) {
-        const panelsArr = []
-
-        panels.forEach((p, index) => {
-          const clone = p.cloneNode(true)
-
-          clone.id = p.id + '-clone-' + i
-          clone.setAttribute('data-selected', false)
-
-          panelsArr.push(clone)
-
-          this._panelsParent.appendChild(clone)
-        })
-
-        this._panelsGroups.push(panelsArr)
-
-        this.panels = this.panels.concat(panelsArr)
-      }
-
-      this._length = this.panels.length
-      this._lastPanel = this.panels[this._length - 1]
-      this._firstPanel = this.panels[0]
-
-      this.track.appendChild(panelsFrag)
-
-      this._panelWidth = this._firstPanel.clientWidth
-      this._panelInnerOffset = this._firstPanel.firstElementChild.offsetLeft
+    if (isHtmlElementArray(items)) {
+      this.items = items
     }
 
-    /* Set slider panel ranges */
+    if (isHtmlElement(heightItem)) {
+      this.heightItem = heightItem
+    }
 
-    if (this._rearrange) {
-      const breakpointsLength = this.breakpoints.length
+    if (this.hasAttribute('loop')) {
+      this.loop = true
+    }
 
-      this.breakpoints.forEach((s, i) => {
-        const low = s.breakpoint
-        let high = 99999
+    /* Delays */
 
-        if (breakpointsLength > 1 && i < breakpointsLength - 1) {
-          high = this.breakpoints[i + 1].breakpoint
+    this.delay = this.duration + 100
+    this.focusDelay = this.loop ? 50 : 0
+
+    /* Type */
+
+    const type = this.getAttribute('type')
+    const isGroup = type === 'group'
+
+    if (isStringStrict(type)) {
+      this.type = type as SliderTypes
+    }
+
+    if (isGroup) {
+      this.loop = false
+    }
+
+    /* Add event listeners */
+
+    onResize(this.#resizeHandler)
+
+    if (isHtmlElement(next, HTMLButtonElement) && isHtmlElement(prev, HTMLButtonElement)) {
+      this.next = next
+      this.prev = prev
+      this.prev.addEventListener('click', this.#prevHandler)
+      this.next.addEventListener('click', this.#nextHandler)
+    }
+
+    /* Set breakpoints */
+
+    const breakpoints = this.getAttribute('breakpoints')
+    const visible = this.getAttribute('visible')
+
+    if (isStringStrict(breakpoints) && isStringStrict(visible)) {
+      const breakpointsArr = breakpoints.split(',')
+      const visibleArr = visible.split(',')
+      const panelsLen = this.panels.length
+
+      breakpointsArr.forEach((b, i) => {
+        const v = visibleArr[i]
+
+        if (!isStringStrict(v)) {
+          return
         }
 
-        s.low = low
-        s.high = high
-        s.panels = Math.ceil(this._groupItemsLength / s.items)
-      })
+        const low = parseInt(b, 10)
+        const items = parseInt(v, 10)
 
-      this._arrangeItems()
+        if (!isNumber(low) || !isNumber(items)) {
+          return
+        }
+
+        const next = breakpointsArr[i + 1]
+        const high = !isStringStrict(next) ? 99999 : parseInt(next, 10)
+
+        if (!isNumber(high)) {
+          return
+        }
+
+        this.breakpoints.add({
+          low,
+          high,
+          items,
+          panels: Math.ceil(panelsLen / items)
+        })
+      })
+    }
+
+    /* Group variables */
+
+    this.#movable = this.breakpoints.size > 0 && this.items.length > 0 && isGroup
+    this.#endGroupIndex = this.panels.length - 1
+
+    /* Current */
+
+    let current = this.currentIndex
+
+    /* Clone panels for loop */
+
+    if (this.loop) {
+      this.#loopInitLength = this.panels.length
+
+      const panelsFrag = new DocumentFragment()
+      panelsFrag.append(...this.panels)
+
+      for (let i = 1; i < 3; i += 1) {
+        this.panels.map((panel) => {
+          const clone = panel.cloneNode(true) as HTMLElement
+
+          clone.id = `${panel.id}-clone-${i}`
+          clone.dataset.sliderSelected = 'false'
+
+          panelsFrag.append(clone)
+
+          return clone
+        })
+      }
+
+      this.#insert.append(panelsFrag)
+      this.panels = [...this.#insert.children] as HTMLElement[]
+      this.#loopLength = this.panels.length
+
+      current = this.currentIndex + this.#loopInitLength
+    }
+
+    /* Set dimension properties */
+
+    this.#setDimensions()
+
+    /* Cap current */
+
+    if (isGroup && current > this.#endGroupIndex) {
+      current = this.#endGroupIndex
     }
 
     /* Activate current */
 
-    this.panels.forEach((panel, index) => {
-      if (this._currentIndex !== index) {
-        const focusableItems = Array.from(panel.querySelectorAll(focusSelector))
-        focusableItems.unshift(panel)
-        this._toggleFocusability(false, focusableItems)
-      }
+    const init = this.activate({
+      current,
+      focus: false,
+      source: 'init'
+    })
 
-      if (!this.loop && index > this._lastTabIndex) {
+    /* Init successful */
+
+    return init
+  }
+
+  /**
+   * Set offsets, loop width and optional height
+   *
+   * @private
+   * @return {void}
+   */
+  #setDimensions (): void {
+    /* Update height */
+
+    if (isHtmlElement(this.heightItem)) {
+      const height = Math.ceil(this.heightItem.clientHeight)
+
+      this.style.setProperty('--sld-height', `${height}px`)
+    }
+
+    /* Track width and offset */
+
+    if (isHtmlElement(this.track)) {
+      this.#loopTrackWidth = this.loop ? this.track.clientWidth : 0
+
+      const style = getComputedStyle(this.track)
+      const left = style.getPropertyValue('scroll-padding-left')
+      const leftNum = parseInt(left)
+      this.#offset = isNumber(leftNum) ? leftNum : 0
+    }
+
+    /* Shift multi-item to different panels */
+
+    this.#moveGroups()
+
+    /* Reset offsets */
+
+    this.#scrollLeftOffsets = []
+    this.#scrollRightOffsets = []
+
+    this.panels.forEach((panel, i) => {
+      if (!this.loop && i > this.#endGroupIndex) {
         return
       }
 
-      const offset = panel.offsetLeft
+      const offset = panel.offsetLeft - this.#offset
 
-      this._scrollLeftOffsets.push(offset)
+      this.#scrollLeftOffsets.push(offset)
 
-      if (this.variableWidths) {
-        this._scrollRightOffsets.push(offset + panel.clientWidth)
+      if (this.type === 'flex') {
+        this.#scrollRightOffsets.push(offset + panel.clientWidth)
       }
     })
   }
 
   /**
-   * Hide, show and focus panels and tabs
+   * Filter indexes for loop
+   *
+   * @private
+   * @param {TabsIndexArgs} args
+   * @param {boolean} moved
+   * @return {TabsIndexArgs}
    */
-
-  _afterIndexesSet (args) {
+  #getLoopIndexes (args: TabsIndexArgs, moved: boolean = false): TabsIndexArgs {
     let {
-      currentIndex = 0,
-      source = ''
+      currentIndex,
+      lastIndex,
+      panelIndex,
+      lastPanelIndex,
+      focus,
+      source
     } = args
 
-    if (this.loop) {
-      if (source === 'click') {
-        currentIndex = currentIndex + (this._ogLength * this._currentInnerIndex)
-      }
-
-      this._lastPanelIndex = this._lastIndex + (this._ogLength * this._currentInnerIndex)
-
-      if (this._lastIndex === 0) {
-        this._lastPanelIndex = 0
-      }
-
-      this._currentInnerIndex = Math.floor(currentIndex / this._ogLength)
-
-      this._currentIndex = currentIndex - (this._ogLength * this._currentInnerIndex)
-
-      if (source === 'init') {
-        this._currentInnerIndex = 1
-      }
-
-      this._panelIndex = this._currentIndex + (this._ogLength * this._currentInnerIndex)
-      this._tabIndex = this._currentIndex
+    if (source === 'click') {
+      currentIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
     }
 
-    if (this.prev && this.next) {
+    lastPanelIndex = lastIndex + (this.#loopInitLength * this.#loopCurrentIndex)
+
+    if (lastIndex === 0) {
+      lastPanelIndex = 0
+    }
+
+    this.#loopCurrentIndex = Math.floor(currentIndex / this.#loopInitLength)
+    currentIndex = currentIndex - (this.#loopInitLength * this.#loopCurrentIndex)
+
+    if (source === 'init' || moved) {
+      this.#loopCurrentIndex = 1
+    }
+
+    panelIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
+
+    return {
+      currentIndex,
+      lastIndex,
+      panelIndex,
+      lastPanelIndex,
+      focus,
+      source
+    }
+  }
+
+  /**
+   * Filter indexes, update track scroll listener and button states
+   *
+   * @param {TabsIndexArgs} args
+   * @return {TabsIndexArgs}
+   */
+  override getIndexes (args: TabsIndexArgs): TabsIndexArgs {
+    const {
+      currentIndex,
+      lastIndex,
+      source
+    } = args
+
+    /* Remove scroll listener */
+
+    if (source !== 'scroll') {
+      this.track?.removeEventListener('scroll', this.#scrollHandler)
+    }
+
+    /* Update prev and next state */
+
+    if (isHtmlElement(this.prev) && isHtmlElement(this.next) && !this.loop) {
       let prevDisabled = false
       let nextDisabled = false
 
-      if (this._tabIndex === 0) {
+      if (currentIndex === 0) {
         prevDisabled = true
       }
 
-      if (this._tabIndex === this._lastTabIndex) {
+      if (currentIndex === lastIndex) {
         nextDisabled = true
       }
 
       this.prev.disabled = prevDisabled
       this.next.disabled = nextDisabled
     }
-  }
 
-  _onDeactivate (args) {
-    const {
-      source = ''
-    } = args
+    /* Update end index */
 
-    if (source !== 'init') {
-      if (!this._lastIndexFocusableItems.length) {
-        this._lastIndexFocusableItems = Array.from(this.panels[this._lastPanelIndex].querySelectorAll(focusSelector))
-        this._lastIndexFocusableItems.unshift(this.panels[this._lastPanelIndex])
-      }
-
-      this._toggleFocusability(false, this._lastIndexFocusableItems)
-
-      const currentFocusableItems = Array.from(this.panels[this._panelIndex].querySelectorAll(focusSelector))
-      currentFocusableItems.unshift(this.panels[this._panelIndex])
-      this._toggleFocusability(true, currentFocusableItems)
-
-      this._lastIndexFocusableItems = currentFocusableItems
+    if (this.type === 'group') {
+      args.endIndex = this.#endGroupIndex
     }
+
+    /* Not loop exit */
+
+    if (!this.loop) {
+      return args
+    }
+
+    /* Loop args */
+
+    args = this.#getLoopIndexes(args)
+
+    const newCurrentIndex = this.#moveLoopEnd(args)
+
+    if (isNumber(newCurrentIndex)) {
+      return this.#getLoopIndexes({
+        ...args,
+        currentIndex: newCurrentIndex
+      }, true)
+    }
+
+    /* End args */
+
+    return args
   }
 
-  _onActivate (args) {
+  /**
+   * Tabs deactivate handler - manage panel and descendent focus
+   *
+   * @private
+   * @param {CustomEvent} e
+   * @return {void}
+   */
+  #deactivate (e: CustomEvent): void {
     const {
-      source = ''
-    } = args
+      source,
+      panel,
+      lastPanel
+    } = e.detail as TabsEventDetail
+
+    const isInit = source === 'init'
+
+    if (isInit) {
+      this.panels.forEach((p) => {
+        if (panel === p) {
+          return
+        }
+
+        const focusableItems = [
+          p,
+          ...p.querySelectorAll(focusSelector)
+        ]
+
+        this.#toggleFocusability(false, focusableItems)
+      })
+    }
+
+    if (this.#focusableItems.length === 0 && !isInit) {
+      this.#focusableItems = [
+        lastPanel,
+        ...lastPanel.querySelectorAll(focusSelector)
+      ]
+    }
+
+    const currentFocusableItems = [
+      panel,
+      ...panel.querySelectorAll(focusSelector)
+    ]
+
+    this.#toggleFocusability(false, this.#focusableItems)
+    this.#toggleFocusability(true, currentFocusableItems)
+
+    this.#focusableItems = currentFocusableItems
+  }
+
+  /**
+   * Tabs activate handler - move panels (click, init or resize)
+   *
+   * @private
+   * @param {CustomEvent} e
+   * @return {void}
+   */
+  #activate (e: CustomEvent): void {
+    const { source, panelIndex } = e.detail as TabsEventDetail
+
+    console.log('ACTIVATE', this.type, e.detail)
+
+    const offsets = this.#scrollLeftOffsets
+    const target = offsets[panelIndex]
+
+    if (!isNumber(target)) {
+      return
+    }
 
     if (source !== 'scroll') {
-      this._scrollTo(this._scrollLeftOffsets[this._panelIndex])
+      requestAnimationFrame(() => {
+        this.#scrollTo(target, source)
+      })
     }
   }
 
-  _displayPanels () {
-    this.panels[this._lastPanelIndex].setAttribute('aria-hidden', 'true')
-    this.panels[this._panelIndex].setAttribute('aria-hidden', 'false')
+  /**
+   * Tabs activated handler - add scroll listener after panel activation
+   *
+   * @private
+   * @param {CustomEvent} e
+   * @return {void}
+   */
+  #activated (e: CustomEvent): void {
+    const { source } = e.detail as TabsEventDetail
+
+    clearTimeout(this.#scrollEventId)
+
+    if (!isHtmlElement(this.track) || source === 'scroll') {
+      return
+    }
+
+    this.#scrollEventId = window.setTimeout(() => {
+      this.track?.addEventListener('scroll', this.#scrollHandler)
+    }, 0)
   }
 
-  _toggleFocusability (on = true, items = []) {
-    if (!items.length) {
-      return
+  /**
+   * Manage focus with tab index and aria hidden
+   *
+   * @private
+   * @param {boolean} on
+   * @param {Element[]} items
+   * @return {boolean}
+   */
+  #toggleFocusability (on: boolean, items: Element[]): boolean {
+    if (items.length === 0) {
+      return false
     }
 
     items.forEach(item => {
-      if (on) {
-        item.setAttribute('tabindex', 0)
-        item.setAttribute('aria-hidden', false)
-      } else {
-        item.setAttribute('tabindex', -1)
-        item.setAttribute('aria-hidden', true)
-      }
+      (item as HTMLElement).tabIndex = on ? 0 : -1
+      item.ariaHidden = on ? 'false' : 'true'
     })
+
+    return true
   }
 
   /**
-   * Internal helpers
+   * Move items to corresponding panels by breakpoint
+   *
+   * @private
+   * @return {void}
    */
+  #moveGroups (): void {
+    /* Check required */
 
-  _setHeight () {
-    if (!this.targetHeight) {
+    if (!this.#movable || !isHtmlElement(this.#insert)) {
       return
     }
 
-    const height = this.targetHeight.clientHeight
-
-    this.container.style.setProperty('--height', `${height}px`)
-  }
-
-  _arrangeItems (resize = false) {
-    if (!this._rearrange) {
-      return
-    }
+    /* Number of panels and visible items */
 
     let numberOfPanels = 1
     let perPanel = 1
-    const map = []
 
-    this.breakpoints.forEach(s => {
-      if (this._viewportWidth >= s.low && this._viewportWidth < s.high) {
-        numberOfPanels = s.panels
-        perPanel = s.items
-      }
-    })
+    for (const b of this.breakpoints.values()) {
+      const { low, high, items, panels } = b
 
-    let start = 0
-
-    for (let i = 0; i < numberOfPanels; i += 1) {
-      map.push([])
-
-      for (let j = start; j < perPanel + start; j += 1) {
-        if (j < this._groupItemsLength) {
-          map[i].push(j)
-        }
+      if (!isNumber(low) || !isNumber(high) || !isNumber(items) || !isNumber(panels)) {
+        continue
       }
 
-      start += perPanel
+      if (this.#viewportWidth >= low && this.#viewportWidth < high) {
+        numberOfPanels = panels
+        perPanel = items
+      }
     }
+
+    this.#endGroupIndex = numberOfPanels - 1
 
     /* Update tabs */
 
-    this.tabs.forEach((t, index) => {
-      if (index >= numberOfPanels) {
-        t.style.display = 'none'
-        this.panels[index].style.display = 'none'
-      } else {
-        t.style.display = ''
-        this.panels[index].style.display = ''
+    this.tabs.forEach((tab, i) => {
+      const hide = i >= numberOfPanels
+      const panel = this.panels[i]
+
+      tab.style.display = hide ? 'none' : ''
+
+      if (isHtmlElement(panel)) {
+        panel.style.display = hide ? 'none' : ''
       }
     })
 
-    this._lastTabIndex = numberOfPanels - 1
+    /* Create fragment and map for new groups */
 
-    /* Put changes in slider in fragment then append */
+    const panelsFrag = new DocumentFragment()
+    panelsFrag.append(...this.panels)
 
-    const frag = new window.DocumentFragment()
+    const panelsLen = this.panels.length
+    const panelsMap: number[][] = Array.from({ length: numberOfPanels }).map((_, i) => {
+      const start = i * perPanel
+      const panel = []
 
-    frag.appendChild(this.track)
+      for (let j = start; j < start + perPanel; j += 1) {
+        if (j < panelsLen) {
+          panel.push(j)
+        }
+      }
 
-    const groups = Array.from(frag.querySelectorAll(this.groupSelector))
+      return panel
+    })
 
-    groups.forEach((g, index) => {
-      if (index >= numberOfPanels) {
+    /* Insert panels into new map formation */
+
+    panelsMap.forEach((indices, i) => {
+      const panel = panelsFrag.children[i]
+
+      if (!isHtmlElement(panel)) {
         return
       }
 
-      const m = map[index]
+      indices.forEach(j => {
+        const item = this.items[j]
 
-      m.forEach(n => {
-        g.appendChild(this.groupItems[n])
+        if (!isHtmlElement(item)) {
+          return
+        }
+
+        panel.append(item)
       })
     })
 
-    this.slider.appendChild(frag)
-  }
-
-  _moveGroup (end = false) {
-    this._panelsGroups = [
-      this._panelsGroups[2],
-      this._panelsGroups[0],
-      this._panelsGroups[1]
-    ]
-
-    const panelsFrag = new window.DocumentFragment()
-
-    panelsFrag.appendChild(this._panelsParent)
-
-    const newPanels = []
-
-    this._panelsGroups.forEach((pg, index) => {
-      pg.forEach(p => {
-        newPanels.push(p)
-        this._panelsParent.appendChild(p)
-      })
-    })
-
-    this.panels = newPanels
-    this._length = this.panels.length
-    this._lastPanel = this.panels[this._length - 1]
-    this._firstPanel = this.panels[0]
-
-    this.track.appendChild(panelsFrag)
-
-    let newIndex = -1
-
-    if (end) {
-      newIndex = this._currentIndex
-    } else {
-      newIndex = this._currentIndex + this._ogLength
-    }
-
-    if (newIndex !== -1) {
-      this.track.scrollLeft = this._scrollLeftOffsets[newIndex]
-    }
-
-    if (end) {
-      this._lastVisible = false
-    } else {
-      this._firstVisible = false
-    }
-  }
-
-  _scrollTo (to) {
-    if (this.reduceMotion) {
-      this.track.scrollLeft = to
-    } else {
-      let start = null
-      let done = false
-
-      const from = this.track.scrollLeft
-      const dir = to > from ? 'right' : 'left'
-
-      this.track.style.setProperty('--snap-type', 'none')
-
-      /*
-      @see {@link https://spicyyoghurt.com/tools/easing-functions/|Source}
-      t = time
-      b = beginning value
-      c = change in value
-      d = duration
-      */
-
-      const ease = (t, b, c, d) => { // Sine ease in out
-        return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b
-      }
-
-      const change = to - from
-
-      const animate = (timestamp) => {
-        if (start === null) {
-          start = timestamp
-        }
-
-        const elapsed = timestamp - start
-
-        if (elapsed < this.duration) {
-          const v = ease(elapsed, from, change, this.duration)
-
-          this.track.scrollLeft = v
-
-          if (dir === 'right') {
-            if (v >= to) {
-              done = true
-            }
-          } else {
-            if (v <= to) {
-              done = true
-            }
-          }
-
-          if (!done) {
-            window.requestAnimationFrame(animate)
-          } else {
-            this.track.style.setProperty('--snap-type', '')
-          }
-        } else {
-          this.track.style.setProperty('--snap-type', '')
-        }
-      }
-
-      window.requestAnimationFrame(animate)
-    }
+    this.#insert.prepend(panelsFrag)
   }
 
   /**
-   * Event handlers
+   * Move panels if first or last panel visible
+   *
+   * @private
+   * @param {TabsIndexArgs} args
+   * @return {number|undefined}
    */
+  #moveLoopEnd (args: TabsIndexArgs): number | undefined {
+    /* Check required elements */
 
-  _prev () {
-    this._activate({
-      currentIndex: this._currentIndex - 1,
+    if (!isHtmlElement(this.track) || !isHtmlElement(this.#insert)) {
+      return
+    }
+
+    /* Args */
+
+    const {
+      currentIndex,
+      panelIndex,
+      lastIndex,
+      source
+    } = args
+
+    const offsets = this.#scrollLeftOffsets
+    const target = offsets[panelIndex]
+
+    /* Target required */
+
+    if (!isNumber(target)) {
+      return
+    }
+
+    /* First and last offsets */
+
+    const startBuffer = offsets[1]
+    const endBuffer = offsets[this.#loopLength - 1]
+
+    /* Move elements from end to start */
+
+    let move = false
+    let newIndex: number | undefined
+    let diff = 0
+
+    if (isNumber(startBuffer) && target <= startBuffer) {
+      move = true
+    }
+
+    if (isNumber(endBuffer) && target + this.#loopTrackWidth >= endBuffer) {
+      move = true
+    }
+
+    if (move) {
+      const panelsFrag = new DocumentFragment()
+      const start = this.#loopLength - this.#loopInitLength
+
+      for (let i = start; i < this.#loopLength; i += 1) {
+        const panel = this.panels[i]
+
+        if (!isHtmlElement(panel)) {
+          continue
+        }
+
+        panelsFrag.append(panel)
+      }
+
+      this.#insert.prepend(panelsFrag)
+      this.panels = [...this.#insert.children] as HTMLElement[]
+
+      newIndex = currentIndex + this.#loopInitLength
+      diff = source === 'click' ? lastIndex - currentIndex : 0
+    }
+
+    /* Move track to new index offset */
+
+    if (isNumber(newIndex)) {
+      const left = this.#scrollLeftOffsets[newIndex + diff]
+
+      if (isNumber(left)) {
+        this.track.scrollLeft = left
+      }
+    }
+
+    /* New index */
+
+    return newIndex
+  }
+
+  /**
+   * Sine ease in out
+   *
+   * @private
+   * @param {number} elapsed
+   * @param {number} from
+   * @param {number} change
+   * @return {number}
+   */
+  #ease (elapsed: number, from: number, change: number): number {
+    return -change / 2 * (Math.cos(Math.PI * elapsed / this.duration) - 1) + from
+  }
+
+  /**
+   * Move track immediately or smoothly
+   *
+   * @private
+   * @param {number} to
+   * @param {string} source
+   * @return {void}
+   */
+  #scrollTo (to: number, source: string): void {
+    /* Cancel any ongoing animation */
+
+    cancelAnimationFrame(this.#scrollAnimId)
+
+    /* Track required */
+
+    if (!isHtmlElement(this.track)) {
+      return
+    }
+
+    /* Move immediately if reduce motion, init or resize */
+
+    if (config.reduceMotion || source !== 'click') {
+      this.track.scrollLeft = to
+      return
+    }
+
+    /* Initial animation values */
+
+    let start: DOMHighResTimeStamp | undefined
+    let done = false
+
+    this.track.style.scrollSnapType = 'none'
+    this.track.style.overscrollBehavior = 'none'
+
+    const from = this.track.scrollLeft
+    const dir = to > from ? 'right' : 'left'
+    const change = to - from
+
+    /* Move smoothly to new position */
+
+    const animate = (timestamp: DOMHighResTimeStamp): void => {
+      if (!isHtmlElement(this.track)) {
+        cancelAnimationFrame(this.#scrollAnimId)
+        return
+      }
+
+      if (!isNumber(start)) {
+        start = timestamp
+      }
+
+      const elapsed = timestamp - start
+
+      if (elapsed < this.duration) {
+        const v = this.#ease(elapsed, from, change)
+
+        this.track.scrollLeft = v
+
+        if ((dir === 'right' && v >= to) || (dir === 'left' && v <= to)) {
+          done = true
+        }
+      } else {
+        done = true
+      }
+
+      if (done) {
+        this.track.style.scrollSnapType = ''
+        this.track.style.overscrollBehavior = ''
+      } else {
+        this.#scrollAnimId = requestAnimationFrame(animate)
+      }
+    }
+
+    this.#scrollAnimId = requestAnimationFrame(animate)
+  }
+
+  /**
+   * Click handler on prev button to display previous panel
+   *
+   * @private
+   * @return {void}
+   */
+  #prev (): void {
+    this.activate({
+      current: this.currentIndex - 1,
       source: 'click'
     })
   }
 
-  _next () {
-    this._activate({
-      currentIndex: this._currentIndex + 1,
+  /**
+   * Click handler on next button to display next panel
+   *
+   * @private
+   * @return {void}
+   */
+  #next (): void {
+    this.activate({
+      current: this.currentIndex + 1,
       source: 'click'
     })
   }
 
-  _scroll () {
-    clearTimeout(this._scrollTimer)
+  /**
+   * Scroll handler on track element
+   *
+   * @private
+   * @return {void}
+   */
+  #scroll (): void {
+    /* Clear timeout */
 
-    this._scrollTimer = setTimeout(() => {
-      let newIndex = this._currentIndex
+    clearTimeout(this.#scrollId)
+
+    /* Debounce */
+
+    this.#scrollId = window.setTimeout(() => {
+      /* Track required and leave if already scrolling */
+
+      if (!isHtmlElement(this.track)) {
+        return
+      }
+
+      /* Target and offset */
 
       const target = this.track.scrollLeft
-      const offsets = this._scrollLeftOffsets
+      const offsets = this.#scrollLeftOffsets
 
-      if (this.variableWidths) {
+      /* Set new index to activate */
+
+      let newIndex = this.currentIndex
+
+      if (this.type === 'flex') {
         const lastIndex = this.panels.length - 1
         const secondLastIndex = this.panels.length - 2
+        const lastOffset = offsets[lastIndex]
+        const secondLastOffset = offsets[secondLastIndex]
 
-        this._scrollLeftOffsets.forEach((leftOffset, index) => {
-          if (target >= leftOffset && target <= this._scrollRightOffsets[index]) {
-            newIndex = index
+        offsets.forEach((offset, i) => {
+          const rightOffset = this.#scrollRightOffsets[i]
+
+          if (!isNumber(rightOffset)) {
+            return
+          }
+
+          if (target >= offset && target <= rightOffset) {
+            newIndex = i
           }
         })
 
-        if (newIndex === secondLastIndex) {
-          const l = Math.abs(this._scrollLeftOffsets[secondLastIndex] - target)
-          const c = Math.abs(this._scrollLeftOffsets[lastIndex] - target)
+        if (newIndex === secondLastIndex && isNumber(lastOffset) && isNumber(secondLastOffset)) {
+          const secondLastDistance = Math.abs(secondLastOffset - target)
+          const lastDistance = Math.abs(lastOffset - target)
 
-          newIndex = l < c ? newIndex : lastIndex
+          newIndex = secondLastDistance < lastDistance ? newIndex : lastIndex
         }
       } else {
-        const closestOffset = this._scrollLeftOffsets.reduce((prev, curr) => {
+        const closestOffset = offsets.reduce((prev, curr) => {
           return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
         })
 
         newIndex = offsets.indexOf(closestOffset)
       }
 
-      if (newIndex !== -1) {
-        this._activate({
-          currentIndex: newIndex,
+      /* Move to new panel */
+
+      if (newIndex > -1) {
+        this.activate({
+          current: newIndex,
           focus: false,
           source: 'scroll'
         })
       }
-
-      /* Check if first and last item visible */
-
-      if (this.loop) {
-        if (!this._lastVisible) {
-          const targetX = target + this._trackWidth
-          const lastX = this._scrollLeftOffsets[this._length - 1] + this._panelInnerOffset
-
-          if (targetX > lastX) {
-            this._lastVisible = true
-            this._moveGroup(true)
-          }
-        }
-
-        if (!this._firstVisible) {
-          const firstX = this._scrollLeftOffsets[0] + this._panelInnerOffset
-
-          if (Math.floor(target) <= firstX + this._panelWidth) {
-            this._firstVisible = true
-            this._moveGroup(false)
-          }
-        }
-      }
-    }, 200)
+    }, 100)
   }
 
-  _resize () {
-    clearTimeout(this._resizeTimer)
+  /**
+   * Resize hook callback
+   *
+   * @private
+   * @return {void}
+   */
+  #resize (): void {
+    const viewportWidth = window.innerWidth
 
-    this._resizeTimer = setTimeout(() => {
-      const viewportWidth = window.innerWidth
+    if (viewportWidth === this.#viewportWidth) {
+      return
+    }
 
-      if (viewportWidth !== this._viewportWidth) {
-        this._viewportWidth = viewportWidth
-      } else {
-        return
-      }
-
-      /* Update height (to hide scrollbar) */
-
-      this._setHeight()
-
-      /* Set dimensions needed for loop */
-
-      if (this.loop) {
-        this._trackWidth = this.track.clientWidth
-        this._panelWidth = this._firstPanel.clientWidth
-        this._panelInnerOffset = this._firstPanel.firstElementChild.offsetLeft
-      }
-
-      /* Shift items to different panels */
-
-      if (this._rearrange) {
-        this._arrangeItems(true)
-      }
-
-      /* Reset offsets */
-
-      this._scrollLeftOffsets = []
-
-      this.panels.forEach((panel, index) => {
-        if (!this.loop && index > this._lastTabIndex) {
-          return
-        }
-
-        const offset = panel.offsetLeft
-
-        this._scrollLeftOffsets.push(offset)
-
-        if (this.variableWidths) {
-          this._scrollRightOffsets.push(offset + panel.clientWidth)
-        }
-      })
-
-      /* Activate */
-
-      this._activate({
-        currentIndex: this._currentIndex,
-        focus: false,
-        source: 'resize'
-      })
-    }, 100)
+    this.#viewportWidth = viewportWidth
+    this.#setDimensions()
+    this.activate({
+      current: this.currentIndex,
+      focus: false,
+      source: 'resize'
+    })
   }
 }
 

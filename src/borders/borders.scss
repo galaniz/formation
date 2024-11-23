@@ -2,7 +2,7 @@
  * Borders - Styles
  */
 
-@forward "Side/Side";
-@forward "Color/Color";
-@forward "Width/Width";
-@forward "Radius/Radius";
+@use "Side/Side";
+@use "Color/Color";
+@use "Width/Width";
+@use "Radius/Radius";

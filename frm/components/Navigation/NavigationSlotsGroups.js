@@ -1,0 +1,40 @@
+export default /* html */`
+  <frm-navigation
+    id="nav-slots-groups"
+    class="nav nav-scrollable"
+    role="navigation"
+  >
+    <ul data-nav-slot="one">
+      <li data-nav-item="one" data-nav-group="one-1">Item One 1.1</li>
+      <li data-nav-item="one" data-nav-group="one-1">Item Two 1.1</li>
+      <li data-nav-item="one" data-nav-group="one-1">Item Three 1.1</li>
+      <li data-nav-item="one" data-nav-group="one-2">Item Four 1.2</li>
+      <li data-nav-item="one" data-nav-group="one-2">Item Five 1.2</li>
+      <li data-nav-item="one" data-nav-group="one-2">Item Six 1.2</li>
+    </ul>
+    <ul data-nav-slot="two">
+      <li data-nav-item="two" data-nav-group="two-1">Item One 2.1</li>
+      <li data-nav-item="two" data-nav-group="two-1">Item Two 2.1</li>
+      <li data-nav-item="two" data-nav-group="two-1">Item Three 2.1</li>
+      <li data-nav-item="two" data-nav-group="two-2">Item Four 2.2</li>
+    </ul>
+    <button
+      class="nav-hide"
+      aria-haspopup="true"
+      data-nav-open-button
+    >
+      Open
+    </button>
+    <div
+      class="nav-modal"
+      role="dialog"
+      aria-modal="true"
+      data-nav-modal
+    >
+      <ul data-nav-modal-slot="one"></ul>
+      <ul data-nav-modal-slot="two"></ul>
+      <button data-nav-close-button>Close</button>
+      <div class="nav-overlay" data-nav-overlay></div>
+    </div>
+  </frm-navigation>
+`

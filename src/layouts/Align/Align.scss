@@ -4,23 +4,24 @@
 
 /* Imports */
 
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $align-fix: fix.get-class-fix("align");
 
 /* Styles */
 
-.l-#{$align-fix}-center {
+.#{$layout-fix}#{$align-fix}-center {
   align-items: center;
 }
 
-.l-#{$align-fix}-start {
+.#{$layout-fix}#{$align-fix}-start {
   align-items: flex-start;
 }
 
-.l-#{$align-fix}-end {
+.#{$layout-fix}#{$align-fix}-end {
   align-items: flex-end;
 }

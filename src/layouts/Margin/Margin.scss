@@ -7,11 +7,12 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $margin-fix: fix.get-class-fix("margin");
 $margin-top-fix: fix.get-class-fix("margin-top");
 $margin-bottom-fix: fix.get-class-fix("margin-bottom");
@@ -22,89 +23,89 @@ $margin-x-fix: fix.get-class-fix("margin-x");
 
 /* Defaults */
 
-.l-#{$margin-fix}-0 {
+.#{$layout-fix}#{$margin-fix}-0 {
   margin: 0;
 }
 
-.l-#{$margin-fix}-auto {
+.#{$layout-fix}#{$margin-fix}-auto {
   margin: auto;
 }
 
-.l-#{$margin-top-fix}-auto {
+.#{$layout-fix}#{$margin-top-fix}-auto {
   margin-top: auto;
 }
 
-.l-#{$margin-left-fix}-auto {
+.#{$layout-fix}#{$margin-left-fix}-auto {
   margin-left: auto;
 }
 
-.l-#{$margin-right-fix}-auto {
+.#{$layout-fix}#{$margin-right-fix}-auto {
   margin-right: auto;
 }
 
-.l-#{$margin-bottom-fix}-auto {
+.#{$layout-fix}#{$margin-bottom-fix}-auto {
   margin-bottom: auto;
 }
 
 /* Config vertical margins */
 
 @each $m in con.$margin-top {
-  $selector: ".l-#{$margin-top-fix}-#{$m}";
+  $selector: ".#{$layout-fix}#{$margin-top-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
-    margin-top: var(--#{con.$v}#{$m});
+    margin-top: var(--#{con.$n}#{$m});
   }
 }
 
 @each $m in con.$margin-bottom {
-  $selector: ".l-#{$margin-bottom-fix}-#{$m}";
+  $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
 
   @if list.index(con.$margin-bottom-all, $m) {
     $selector: "#{$selector}, #{$selector}-all > :not(:last-child)";
   }
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}";
   }
 
   #{string.unquote($selector)} {
-    margin-bottom: var(--#{con.$v}#{$m});
+    margin-bottom: var(--#{con.$n}#{$m});
   }
 }
 
 @each $b in con.$margin-vertical-breakpoints {
   @each $m in con.$margin-top {
-    $selector: ".l-#{$margin-top-fix}-#{$m}-#{$b}";
+    $selector: ".#{$layout-fix}#{$margin-top-fix}-#{$m}-#{$b}";
   
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b}";
     }
   
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        margin-top: var(--#{con.$v}#{$m})
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-top: var(--#{con.$n}#{$m})
       ));
     }
   }
 
   @each $m in con.$margin-bottom {
-    $selector: ".l-#{$margin-bottom-fix}-#{$m}";
+    $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
   
     @if list.index(con.$margin-bottom-all, $m) {
       $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > :not(:last-child)";
     }
 
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$margin-y-fix}-#{$m}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b}";
     }
   
     #{string.unquote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        margin-bottom: var(--#{con.$v}#{$m})
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-bottom: var(--#{con.$n}#{$m})
       ));
     }
   }
@@ -113,54 +114,54 @@ $margin-x-fix: fix.get-class-fix("margin-x");
 /* Config horizontal margins */
 
 @each $m in con.$margin-left {
-  $selector: ".l-#{$margin-left-fix}-#{$m}";
+  $selector: ".#{$layout-fix}#{$margin-left-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-x-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
-    margin-left: var(--#{con.$v}#{$m});
+    margin-left: var(--#{con.$n}#{$m});
   }
 }
 
 @each $m in con.$margin-right {
-  $selector: ".l-#{$margin-right-fix}-#{$m}";
+  $selector: ".#{$layout-fix}#{$margin-right-fix}-#{$m}";
 
   @if con.$xy {
-    $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}";
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-x-fix}-#{$m}";
   }
 
   #{string.quote($selector)} {
-    margin-right: var(--#{con.$v}#{$m});
+    margin-right: var(--#{con.$n}#{$m});
   }
 }
 
 @each $b in con.$margin-horizontal-breakpoints {
   @each $m in con.$margin-left {
-    $selector: ".l-#{$margin-left-fix}-#{$m}-#{$b}";
+    $selector: ".#{$layout-fix}#{$margin-left-fix}-#{$m}-#{$b}";
   
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$margin-x-fix}-#{$m}-#{$b}";
     }
   
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        margin-left: var(--#{con.$v}#{$m})
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-left: var(--#{con.$n}#{$m})
       ));
     }
   }
 
   @each $m in con.$margin-right {
-    $selector: ".l-#{$margin-right-fix}-#{$m}-#{$b}";
+    $selector: ".#{$layout-fix}#{$margin-right-fix}-#{$m}-#{$b}";
   
     @if con.$xy {
-      $selector: "#{$selector}, .l-#{$margin-x-fix}-#{$m}-#{$b}";
+      $selector: "#{$selector}, .#{$layout-fix}#{$margin-x-fix}-#{$m}-#{$b}";
     }
   
     #{string.quote($selector)} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        margin-right: var(--#{con.$v}#{$m})
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-right: var(--#{con.$n}#{$m})
       ));
     }
   }

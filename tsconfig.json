@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "target": "esnext",
+    "target": "es2015",
     "module": "esnext",
     "moduleResolution": "bundler",
     "allowJs": true,
@@ -20,20 +20,26 @@
     "outDir": "lib",
     "declaration": true,
     "lib": [
-      "esnext",
+      "es2015",
       "dom",
       "dom.iterable"
     ]
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts",
+    "src/test/*.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.config.ts",
+    "**/*.config.js"
   ],
   "exclude": [
-    "./lib",
+    "lib",
+    "node_modules",
+    "src/test/*.ts",
     "**/*.test.ts",
-    "**/*Html.ts",
-    "**/*Demo.ts",
-    "**/*Init.ts",
-    "node_modules"
+    "**/*.spec.ts",
+    "**/*.config.ts",
+    "**/*.config.js"
   ]
 }

@@ -12,11 +12,19 @@ export default defineConfig({
   test: {
     cache: false,
     globals: true,
-    environment: 'happy-dom',
-    setupFiles: 'src/tests/testSetup.ts',
+    environment: 'jsdom',
+    include: [
+      'src/**/*.test.ts'
+    ],
     coverage: {
       include: [
-        'src/**/*.ts'
+        'src/config/**/*.ts',
+        'src/utils/**/*.ts'
+      ],
+      exclude: [
+        '**/*.test.ts',
+        'src/**/*Types.ts',
+        'src/test/*.ts'
       ]
     }
   }

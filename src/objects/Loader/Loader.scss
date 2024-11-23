@@ -6,24 +6,29 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.o-loader {
-  --#{con.$v}prop: #{con.$loader-prop};
-  --#{con.$v}duration: #{con.$loader-duration};
-  --#{con.$v}delay: #{con.$loader-delay};
-  --visibility: hidden;
-  --opacity: 0;
+.#{$object-fix}loader {
+  --#{con.$n}prop: #{con.$loader-prop};
+  --#{con.$n}duration: #{con.$loader-duration};
+  --#{con.$n}delay: #{con.$loader-delay};
+  --ld-vis: hidden;
+  --ld-op: 0;
 
   background-color: inherit;
   z-index: #{map.get(con.$z-index, "loader")};
-  visibility: var(--visibility);
-  opacity: var(--opacity);
+  visibility: var(--ld-vis);
+  opacity: var(--ld-op);
 
   &[data-loader-show] {
-    --#{con.$v}delay: #{con.$loader-delay-show};
-    --visibility: visible;
-    --opacity: 1;
+    --#{con.$n}delay: #{con.$loader-delay-show};
+    --ld-vis: visible;
+    --ld-op: 1;
   }
 }

@@ -1,0 +1,28 @@
+/**
+ * Base - Base Styles
+ */
+
+html {
+  scroll-behavior: smooth;
+  background: var(--frm-background-light);
+  font-weight: var(--frm-font-weight-normal);
+  line-height: var(--frm-line-height-snug);
+  font-family: var(--frm-font-primary);
+  color: var(--frm-text-color);
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--frm-link-color);
+}
+
+p {
+  color: var(--frm-text-color);
+}
+
+main :target {
+  scroll-margin-top: var(--frm-scroll-margin);
+}

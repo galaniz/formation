@@ -1,0 +1,41 @@
+export default /* html */`
+  <frm-navigation
+    id="nav-slots-breakpoint"
+    class="nav"
+    breakpoints="900"
+    role="navigation"
+  >
+    <ul data-nav-slot="one">
+      <li data-nav-item="one">Item One 1.0</li>
+      <li data-nav-item="one">Item Two 1.0</li>
+      <li data-nav-item="one">Item Three 1.0</li>
+      <li data-nav-item="one">Item Four 1.0</li>
+      <li data-nav-item="one">Item Five 1.0</li>
+      <li data-nav-item="one">Item Six 1.0</li>
+    </ul>
+    <ul data-nav-slot="two">
+      <li data-nav-item="two">Item One 2.0</li>
+      <li data-nav-item="two">Item Two 2.0</li>
+      <li data-nav-item="two">Item Three 2.0</li>
+      <li data-nav-item="two">Item Four 2.0</li>
+    </ul>
+    <button
+      class="nav-hide"
+      aria-haspopup="true"
+      data-nav-open-button
+    >
+      Open
+    </button>
+    <div
+      class="nav-modal"
+      role="dialog"
+      aria-modal="true"
+      data-nav-modal
+    >
+      <ul data-nav-modal-slot="one"></ul>
+      <ul data-nav-modal-slot="two"></ul>
+      <button data-nav-close-button>Close</button>
+      <div class="nav-overlay" data-nav-overlay></div>
+    </div>
+  </frm-navigation>
+`

@@ -122,4 +122,7 @@ const setPageTransitionRun = (r) => {
 
 /* Exports */
 
-export { pageTransition, setPageTransitionRun }
+export {
+  pageTransition,
+  setPageTransitionRun
+}

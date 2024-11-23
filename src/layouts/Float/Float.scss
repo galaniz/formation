@@ -2,16 +2,26 @@
  * Layouts - Float Styles
  */
 
-.l-clearfix::after {
+ /* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+
+/* Styles */
+
+.#{$layout-fix}clearfix::after {
   content: "";
   display: table;
   clear: both;
 }
 
-.l-float-right {
+.#{$layout-fix}float-right {
   float: right;
 }
 
-.l-float-left {
+.#{$layout-fix}float-left {
   float: left;
 }

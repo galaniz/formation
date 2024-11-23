@@ -5,17 +5,18 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $container-fix: fix.get-class-fix("container");
 
 /* Styles */
 
 %l-container {
-  padding-left: var(--#{con.$v}container-padding);
-  padding-right: var(--#{con.$v}container-padding);
+  padding-left: var(--#{con.$n}container-padding);
+  padding-right: var(--#{con.$n}container-padding);
   margin-left: auto;
   margin-right: auto;
 }
@@ -27,9 +28,9 @@ $container-fix: fix.get-class-fix("container");
     $suffix: "-#{$c}";
   }
 
-  .l-#{$container-fix}#{$suffix} {
+  .#{$layout-fix}#{$container-fix}#{$suffix} {
     @extend %l-container;
 
-    max-width: var(--#{con.$v}container#{$suffix});
+    max-width: var(--#{con.$n}container#{$suffix});
   }
 }

@@ -5,24 +5,29 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.o-collapsible__main {
-  --#{con.$v}prop: #{con.$collapsible-prop};
-  --#{con.$v}duration: #{con.$collapsible-duration};
-  --#{con.$v}delay: #{con.$collapsible-delay};
-  --visibility: hidden;
-  --overflow: hidden;
-  --h: 0;
+.#{$object-fix}collapsible-main {
+  --#{con.$n}prop: #{con.$collapsible-prop};
+  --#{con.$n}duration: #{con.$collapsible-duration};
+  --#{con.$n}delay: #{con.$collapsible-delay};
+  --clp-vis: hidden;
+  --clp-overflow: hidden;
+  --clp-ht: 0;
 
-  height: var(--h);
-  visibility: var(--visibility);
-  overflow: var(--overflow);
+  height: var(--clp-ht);
+  visibility: var(--clp-vis);
+  overflow: var(--clp-overflow);
 
   [data-collapsible-expanded="true"] & {
-    --#{con.$v}delay: #{con.$collapsible-delay-expanded};
-    --visibility: visible;
-    --h: var(--height);
+    --#{con.$n}delay: #{con.$collapsible-delay-expanded};
+    --clp-vis: visible;
+    --clp-ht: var(--clp-height);
   }
 }

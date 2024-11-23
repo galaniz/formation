@@ -2,22 +2,22 @@
  * Layouts - Styles
  */
 
-@forward "AspectRatio/AspectRatio";
-@forward "Breakout/Breakout";
-@forward "Container/Container";
-@forward "Display/Display";
-@forward "Flex/Flex";
-@forward "Align/Align";
-@forward "Justify/Justify";
-@forward "Float/Float";
-@forward "Gap/Gap";
-@forward "GapMargin/GapMargin";
-@forward "Height/Height";
-@forward "Margin/Margin";
-@forward "Object/Object";
-@forward "ObjectPosition/ObjectPosition";
-@forward "Overflow/Overflow";
-@forward "Padding/Padding";
-@forward "Position/Position";
-@forward "Table/Table";
-@forward "Width/Width";
+@use "AspectRatio/AspectRatio";
+@use "Breakout/Breakout";
+@use "Container/Container";
+@use "Display/Display";
+@use "Flex/Flex";
+@use "Align/Align";
+@use "Justify/Justify";
+@use "Float/Float";
+@use "Gap/Gap";
+@use "GapMargin/GapMargin";
+@use "Height/Height";
+@use "Margin/Margin";
+@use "Object/Object";
+@use "ObjectPosition/ObjectPosition";
+@use "Overflow/Overflow";
+@use "Padding/Padding";
+@use "Position/Position";
+@use "Table/Table";
+@use "Width/Width";

@@ -4,10 +4,11 @@
 
 /* Imports */
 
-import type { RequestErrorCallback, RequestSuccessCallback } from '../requestTypes'
+import type { RequestErrorCallback, RequestSuccessCallback } from '../requestTypes.js'
 import { it, expect, describe, vi, beforeAll, afterAll, beforeEach } from 'vitest'
-import { request, ResponseError } from '../request'
-import { testFetch, testFetchRequestArgs } from '../../../tests/testFetch'
+import { testFetch, testFetchRequestArgs } from '../../../test/testFetch.js'
+import { ResponseError } from '../../ResponseError/ResponseError.js'
+import { request } from '../request.js'
 
 /**
  * Fake url
@@ -136,7 +137,7 @@ describe('request()', () => {
   )
 
   it(
-    'should still do fetch if error or success callbacks not functions',
+    'should do fetch if error or success callbacks not functions',
     async () => {
       const testRun = vi.fn()
 
@@ -169,6 +170,39 @@ describe('request()', () => {
         // @ts-expect-error
         onSuccess: false
       })
+
+      expect(testRun).toHaveBeenCalledTimes(1)
+    }
+  )
+
+  it(
+    'should do fetch if args are null',
+    async () => {
+      const testRun = vi.fn()
+
+      testFetch.mockImplementationOnce(async (_url, _options) => {
+        return await new Promise((resolve) => {
+          testRun()
+          resolve({
+            ok: false,
+            status: 400,
+            body: '',
+            text: async () => {
+              return await new Promise((resolve) => {
+                resolve('')
+              })
+            },
+            json: async () => {
+              return await new Promise((resolve) => {
+                resolve('')
+              })
+            }
+          })
+        })
+      })
+
+      // @ts-expect-error
+      await request(null)
 
       expect(testRun).toHaveBeenCalledTimes(1)
     }
@@ -291,6 +325,69 @@ describe('request()', () => {
 
       expect(testError).toHaveBeenCalledTimes(1)
       expect(testSuccess).not.toHaveBeenCalled()
+    }
+  )
+
+  it(
+    'should pass form data and run success callback with json result',
+    async () => {
+      const reqBody = new FormData()
+
+      reqBody.append('one', 'value')
+      reqBody.append('two', new Blob(['content'], { type: 'text/plain' }))
+
+      const data = {
+        result: 1
+      }
+
+      testFetch.mockImplementationOnce(async (_url, options) => {
+        return await new Promise((resolve) => {
+          const { body } = options
+
+          expect(body).toEqual(reqBody)
+
+          const res = JSON.stringify(data)
+
+          resolve({
+            ok: true,
+            status: 200,
+            body: res,
+            text: async () => {
+              return await new Promise((resolve) => {
+                resolve(res)
+              })
+            },
+            json: async () => {
+              return await new Promise((resolve) => {
+                resolve(data)
+              })
+            }
+          })
+        })
+      })
+
+      const testSuccess: RequestSuccessCallback = vi.fn()
+      const testError: RequestErrorCallback = vi.fn()
+
+      testFetchRequestArgs.data = data
+      testFetchRequestArgs.encode = 'formData'
+
+      await request({
+        url: testUrl,
+        expect: 'json',
+        encode: 'formData',
+        body: reqBody,
+        onError (error) {
+          testError(error)
+        },
+        onSuccess (res) {
+          testSuccess(res)
+          expect(res).toEqual(data)
+        }
+      })
+
+      expect(testSuccess).toHaveBeenCalledTimes(1)
+      expect(testError).not.toHaveBeenCalled()
     }
   )
 

@@ -2,5 +2,14 @@ node_modules/
 coverage/
 package-lock.json
 lib/
-jsdocs/
+spec/
 .DS_Store
+.nyc_output/
+instrumented/
+test-results/
+playwright-report/
+playwright/.cache/
+coverage-report/
+coverage.json
+coverage-tmp.json
+istanbul.json

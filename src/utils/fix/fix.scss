@@ -1,0 +1,48 @@
+/**
+ * Utils - Fix Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+
+/**
+ * Get default or terse infix for class name
+ *
+ * @param {string} $name
+ * @return {string}
+ */
+ @function get-class-fix($name: "container") {
+  $fix: "";
+
+  @if map.has-key(con.$names-default, $name) {
+    $fix: map.get(con.$names-default, $name);
+  }
+
+  @if con.$terse and map.has-key(con.$names-terse, $name) {
+    $fix: map.get(con.$names-terse, $name);
+  }
+
+  @return $fix;
+}
+
+/**
+ * Get prefix for class name
+ *
+ * @param {string} $type
+ * @return {string}
+ */
+ @function get-class-prefix($type: "layout") {
+  @if not map.has-key(con.$prefixes, $type) {
+    @return "";
+  }
+
+  $fix: map.get(con.$prefixes, $type);
+
+  @if $fix != "" {
+    $fix: "#{$fix}-";
+  }
+
+  @return $fix;
+}

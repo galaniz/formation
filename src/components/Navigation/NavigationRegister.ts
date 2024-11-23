@@ -1,4 +1,11 @@
-import { Navigation } from './Navigation'
+/**
+ * Components - Navigation Register
+ */
+
+/* Imports */
+
+import { Navigation } from './Navigation.js'
+
 /* Define */
 
-customElements.define('c-navigation', Navigation)
+customElements.define('frm-navigation', Navigation)

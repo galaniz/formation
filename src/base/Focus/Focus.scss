@@ -6,13 +6,13 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
-@use "../../utils/calcRem/calcRem" as calc;
+@use "../../utils/calc/calc";
 
 /* Global */
 
 :focus {
-  outline: var(--#{con.$v}outline-width) solid var(--#{con.$v}outline-color);
-  outline-offset: var(--#{con.$v}outline-offset);
+  outline: var(--#{con.$n}outline-width) solid var(--#{con.$n}outline-color);
+  outline-offset: var(--#{con.$n}outline-offset);
 }
 
 @supports selector(:focus-visible) {
@@ -25,8 +25,8 @@
   [type="button"]:focus-visible,
   [type="reset"]:focus-visible,
   [type="submit"]:focus-visible {
-    outline: var(--#{con.$v}outline-width) solid var(--#{con.$v}outline-color);
-    outline-offset: var(--#{con.$v}outline-offset);
+    outline: var(--#{con.$n}outline-width) solid var(--#{con.$n}outline-color);
+    outline-offset: var(--#{con.$n}outline-offset);
   }
 }
 
@@ -37,7 +37,7 @@ $outline-offsets: map.get(con.$outline, "offsets");
 @each $o, $v in $outline-offsets {
   @if $o != "default" {
     .outline-#{$o} {
-      --#{con.$v}outline-offset: #{calc.calc-rem($v)};
+      --#{con.$n}outline-offset: #{calc.calc-rem($v)};
     }
   }
 }

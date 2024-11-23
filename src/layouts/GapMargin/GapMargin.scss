@@ -5,26 +5,27 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $gap-margin-fix: fix.get-class-fix("gap-margin");
 
 /* Styles */
 
 %l-gap-margin {
-  margin: calc(var(--#{con.$v}gap-margin) * -1) 0 0 calc(var(--#{con.$v}gap-margin) * -1);
+  margin: calc(var(--#{con.$n}gap-margin) * -1) 0 0 calc(var(--#{con.$n}gap-margin) * -1);
 
   & > * {
-    padding: var(--#{con.$v}gap-margin) 0 0 var(--#{con.$v}gap-margin);
+    padding: var(--#{con.$n}gap-margin) 0 0 var(--#{con.$n}gap-margin);
   }
 }
 
 @each $g in con.$gaps {
-  .l-#{$gap-margin-fix}-#{$g} {
-    --#{con.$v}gap-margin: var(--#{con.$v}#{$g});
+  .#{$layout-fix}#{$gap-margin-fix}-#{$g} {
+    --#{con.$n}gap-margin: var(--#{con.$n}#{$g});
 
     @extend %l-gap-margin;
   }
@@ -32,9 +33,9 @@ $gap-margin-fix: fix.get-class-fix("gap-margin");
 
 @each $b in con.$gap-breakpoints {
   @each $g in con.$gaps {
-    .l-#{$gap-margin-fix}-#{$g}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        --#{con.$v}gap-margin: var(--#{con.$v}#{$g})
+    .#{$layout-fix}#{$gap-margin-fix}-#{$g}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}gap-margin: var(--#{con.$n}#{$g})
       ));
     }
   }

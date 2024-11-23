@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "es2015",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "spec",
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "lib": [
+      "es2015",
+      "dom",
+      "dom.iterable"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "**/*.test.ts",
+    "**/*.config.ts",
+    "**/*.config.js"
+  ],
+  "exclude": [
+    "lib",
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.config.ts",
+    "**/*.config.js"
+  ]
+}

@@ -2,15 +2,25 @@
  * Layouts - Table Styles
  */
 
-.l-table {
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+
+/* Styles */
+
+.#{$layout-fix}table {
   display: table;
 }
 
-.l-table-row {
+.#{$layout-fix}table-row {
   display: table-row;
 }
 
-.l-table-cell {
+.#{$layout-fix}table-cell {
   display: table-cell;
   vertical-align: middle;
 }

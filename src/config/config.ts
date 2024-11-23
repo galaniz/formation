@@ -4,13 +4,13 @@
 
 /* Imports */
 
-import type { Config, ConfigFallback } from './configTypes'
-import { configDefaultFontSize } from './configDefaultFontSize'
+import type { Config, ConfigFallback } from './configTypes.js'
+import { configDefaultFontSize } from './configDefaultFontSize.js'
 
 /**
  * Store attributes and feature support
  *
- * @type {import('./configTypes').Config}
+ * @type {Config}
  */
 const config: Config = {
   inert: false,
@@ -27,7 +27,7 @@ const config: Config = {
 /**
  * Store feature fallback functions
  *
- * @type {import('./configTypes').ConfigFallback}
+ * @type {ConfigFallback}
  */
 const configFallback: ConfigFallback = {}
 

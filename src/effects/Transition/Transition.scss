@@ -8,10 +8,11 @@
 @use "sass:list";
 @use "sass:string";
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$effect-fix: fix.get-class-prefix("effect");
 $transition-fix: fix.get-class-fix("transition");
 
 /* Styles */
@@ -26,16 +27,16 @@ $transition-classes-store: ();
     $suffix: "-#{$t}";
   }
 
-  $class: ".e-#{$transition-fix}#{$suffix}";
+  $class: ".#{$effect-fix}#{$transition-fix}#{$suffix}";
   $transition-classes-store: map.merge($transition-classes-store, (#{$t}: $class));
   $transition-classes: list.append($transition-classes, $class, $separator: comma);
 }
 
 #{$transition-classes} {
-  transition-property: var(--#{con.$v}prop);
-  transition-duration: var(--#{con.$v}duration);
-  transition-timing-function: var(--#{con.$v}easing);
-  transition-delay: var(--#{con.$v}delay);
+  transition-property: var(--#{con.$n}prop);
+  transition-duration: var(--#{con.$n}duration);
+  transition-timing-function: var(--#{con.$n}easing);
+  transition-delay: var(--#{con.$n}delay);
 }
 
 @each $t, $v in con.$transitions {
@@ -45,13 +46,13 @@ $transition-classes-store: ();
     #{$class} {
       @each $tt, $vv in $v {
         @if $tt == "prop" {
-          --#{con.$v}prop: #{$vv};
+          --#{con.$n}prop: #{$vv};
         } @else if $tt == "easing" {
-          --#{con.$v}easing: #{$vv};
+          --#{con.$n}easing: #{$vv};
         } @else if $tt == "duration" {
-          --#{con.$v}duration: #{$vv};
+          --#{con.$n}duration: #{$vv};
         } @else if $tt == "delay" {
-          --#{con.$v}delay: #{$vv};
+          --#{con.$n}delay: #{$vv};
         }
       }
     }

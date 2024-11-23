@@ -74,8 +74,8 @@ class Table {
     const overflow = currentWidth > targetWidth
 
     this.table.style.maxWidth = ''
-    this.table.style.setProperty('--target-width', `${targetWidth}px`)
-    this.table.style.setProperty('--current-width', `${currentWidth}px`)
+    this.table.style.setProperty('--tb-target-width', `${targetWidth}px`)
+    this.table.style.setProperty('--tb-current-width', `${currentWidth}px`)
     this.table.setAttribute('data-table-overflow', overflow)
   }
 

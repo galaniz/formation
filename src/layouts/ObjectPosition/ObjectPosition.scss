@@ -4,46 +4,47 @@
 
 /* Imports */
 
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $object-fix: fix.get-class-fix("object");
 
 /* Styles */
 
-.l-#{$object-fix}-left-top {
+.#{$layout-fix}#{$object-fix}-left-top {
   object-position: left top;
 }
 
-.l-#{$object-fix}-left-center {
+.#{$layout-fix}#{$object-fix}-left-center {
   object-position: left center;
 }
 
-.l-#{$object-fix}-left-bottom {
+.#{$layout-fix}#{$object-fix}-left-bottom {
   object-position: left bottom;
 }
 
-.l-#{$object-fix}-center-top {
+.#{$layout-fix}#{$object-fix}-center-top {
   object-position: center top;
 }
 
-.l-#{$object-fix}-center-center {
+.#{$layout-fix}#{$object-fix}-center-center {
   object-position: center center;
 }
 
-.l-#{$object-fix}-center-bottom {
+.#{$layout-fix}#{$object-fix}-center-bottom {
   object-position: center bottom;
 }
 
-.l-#{$object-fix}-right-top {
+.#{$layout-fix}#{$object-fix}-right-top {
   object-position: right top;
 }
 
-.l-#{$object-fix}-right-center {
+.#{$layout-fix}#{$object-fix}-right-center {
   object-position: right center;
 }
 
-.l-#{$object-fix}-right-bottom {
+.#{$layout-fix}#{$object-fix}-right-bottom {
   object-position: right bottom;
 }

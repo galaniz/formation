@@ -1,0 +1,24 @@
+/**
+ * Objects - Slider Styles
+ */
+
+/* Imports */
+
+@forward "../../config/config";
+@use "../../../lib/objects/Slider/Slider";
+
+/* Styles */
+
+frm-slider {
+  --sld-nav-fill: hsla(var(--frm-foreground-dark-hsl), 0.6);
+}
+
+.slider-item {
+  box-shadow:
+    inset 0 0 0 var(--frm-1) hsla(var(--frm-foreground-dark-hsl), 0.08);
+}
+
+/* TEMP */
+h2 > div {
+  background: orange;
+}

@@ -6,35 +6,40 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.o-modal {
-  --#{con.$v}prop: #{con.$modal-prop};
-  --#{con.$v}duration: #{con.$modal-duration};
-  --#{con.$v}delay: #{con.$modal-delay};
-  --visibility: hidden;
+.#{$object-fix}modal {
+  --#{con.$n}prop: #{con.$modal-prop};
+  --#{con.$n}duration: #{con.$modal-duration};
+  --#{con.$n}delay: #{con.$modal-delay};
+  --mod-vis: hidden;
 
   z-index: map.get(con.$z-index, "modal");
-  visibility: var(--visibility);
+  visibility: var(--mod-vis);
 
   &[data-modal-open="true"] {
-    --#{con.$v}delay: #{con.$modal-delay-open};
-    --visibility: visible;
+    --#{con.$n}delay: #{con.$modal-delay-open};
+    --mod-vis: visible;
   }
 }
 
-.o-modal__overlay,
-.o-modal__window {
-  --#{con.$v}prop: #{con.$modal-overlay-window-prop};
-  --#{con.$v}duration: #{con.$modal-overlay-window-duration};
-  --#{con.$v}delay: #{con.$modal-overlay-window-delay};
-  --opacity: 0;
+.#{$object-fix}modal-overlay,
+.#{$object-fix}modal-window {
+  --#{con.$n}prop: #{con.$modal-overlay-window-prop};
+  --#{con.$n}duration: #{con.$modal-overlay-window-duration};
+  --#{con.$n}delay: #{con.$modal-overlay-window-delay};
+  --mod-op: 0;
 
-  opacity: var(--opacity);
+  opacity: var(--mod-op);
 
   [data-modal-open="true"] & {
-    --#{con.$v}delay: #{con.$modal-overlay-window-delay-open};
-    --opacity: 1;
+    --#{con.$n}delay: #{con.$modal-overlay-window-delay-open};
+    --mod-op: 1;
   }
 }

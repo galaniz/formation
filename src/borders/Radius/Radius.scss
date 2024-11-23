@@ -5,30 +5,31 @@
 /* Imports */
 
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
-@use "../../utils/breakpoints/breakpoints";
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
 
 /* Class name customization */
 
+$border-fix: fix.get-class-prefix("border");
 $radius-fix: fix.get-class-fix("border-radius");
 
 /* Styles */
 
-.b-#{$radius-fix}-full {
+.#{$border-fix}#{$radius-fix}-full {
   border-radius: 100%;
 }
 
 @each $r, $v in con.$border-radius {
-  .b-#{$radius-fix}-#{$r} {
-    border-radius: var(--#{con.$v}border-radius-#{$r});
+  .#{$border-fix}#{$radius-fix}-#{$r} {
+    border-radius: var(--#{con.$n}border-radius-#{$r});
   }
 }
 
 @each $b in con.$border-radius-breakpoints {
   @each $r, $v in con.$border-radius {
-    .b-#{$radius-fix}-#{$r}-#{$b} {
-      @include breakpoints.breakpoint-batch-add($b, (
-        border-radius: var(--#{con.$v}border-radius-#{$r})
+    .#{$border-fix}#{$radius-fix}-#{$r}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        border-radius: var(--#{con.$n}border-radius-#{$r})
       ));
     }
   }

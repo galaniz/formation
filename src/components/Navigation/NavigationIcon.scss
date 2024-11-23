@@ -6,29 +6,34 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
-@use "../../utils/calcRem/calcRem" as calc;
+@use "../../utils/calc/calc";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
 $y: calc.calc-rem(map.get(con.$nav-icon, "margin") + map.get(con.$nav-icon, "line-width"));
 
-.c-nav-icon {
-  --#{con.$v}easing: ease;
+.#{$component-fix}nav-icon {
+  --#{con.$n}easing: ease;
 
   width: calc.calc-rem(map.get(con.$nav-icon, "width"));
 }
 
-.c-nav-icon-top,
-.c-nav-icon-middle,
-.c-nav-icon-bottom {
+.#{$component-fix}nav-icon-top,
+.#{$component-fix}nav-icon-middle,
+.#{$component-fix}nav-icon-bottom {
   height: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
   margin: calc.calc-rem(map.get(con.$nav-icon, "margin")) auto;
 }
 
-.c-nav-icon-top {
+.#{$component-fix}nav-icon-top {
   margin-top: 0;
 }
 
-.c-nav-icon-bottom {
+.#{$component-fix}nav-icon-bottom {
   margin-bottom: 0;
 }

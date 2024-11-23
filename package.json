@@ -8,11 +8,16 @@
     "./lib"
   ],
   "scripts": {
-    "build": "npx tsc && node build/copyScss.js",
-    "lint": "npx ts-standard && npx stylelint 'src/**/*.scss'",
+    "build": "npx tsc && node scripts/lib.js",
+    "build:spec": "npx tsc --project tsconfig.spec.json && node scripts/spec.js",
+    "lint:scss": "npx stylelint 'src/**/*.scss'",
+    "lint:ts": "npx ts-standard 'src/**/*.ts",
+    "lint": "npm run lint:ts && npm run lint:scss",
     "release": "release-it --preRelease=beta",
-    "test": "vitest --run --reporter verbose --environment happy-dom --coverage",
-    "jsdoc": "jsdoc -c jsdoc.json"
+    "test:unit": "vitest --run --reporter verbose --environment happy-dom --coverage",
+    "test:comp": "npm run build:spec && npx playwright test && node scripts/report.js",
+    "test": "npm run test:unit && npm run test:comp",
+    "serve": "npx serve --cors"
   },
   "repository": {
     "type": "git",
@@ -25,18 +30,25 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "@testing-library/dom": "^10.3.1",
-    "@vitest/coverage-v8": "^2.0.2",
-    "happy-dom": "^14.12.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "release-it": "^17.5.0",
-    "sass": "^1.77.8",
-    "stylelint": "^16.7.0",
+    "@playwright/test": "^1.48.2",
+    "@testing-library/dom": "^10.4.0",
+    "@types/istanbul-lib-report": "^3.0.3",
+    "@types/istanbul-reports": "^3.0.4",
+    "@types/node": "^22.9.0",
+    "glob": "^11.0.0",
+    "happy-dom": "^15.11.0",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-report": "^3.0.1",
+    "istanbul-reports": "^3.1.7",
+    "release-it": "^17.10.0",
+    "sass": "^1.80.6",
+    "serve": "^14.2.4",
+    "stylelint": "^16.10.0",
     "stylelint-config-standard-scss": "^13.1.0",
     "ts-standard": "^12.0.2",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.2"
+    "typescript": "^5.6.3",
+    "v8-to-istanbul": "^9.3.0",
+    "vitest": "^2.1.4"
   },
   "release-it": {
     "git": {

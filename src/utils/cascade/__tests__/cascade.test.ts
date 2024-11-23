@@ -5,14 +5,18 @@
 /* Imports */
 
 import { it, expect, describe, beforeEach, vi } from 'vitest'
-import { cascade } from '../cascade'
+import { cascade } from '../cascade.js'
 
 /**
  * Millisecond timestamps
  *
  * @type {Array<number[]>}
  */
-let testMs: number[][] = [
+let testMs: [
+  [number, number],
+  [number, number],
+  [number, number]
+] = [
   [0, 0],
   [0, 0],
   [0, 0]
@@ -137,7 +141,7 @@ const testHasIncrement = (target: number = 10): boolean => {
  * @param {number} target
  * @return {number}
  */
-const testGetDelay = (initMs: number, target: number): number => {
+const testDelay = (initMs: number, target: number): number => {
   return testRoundRange(testRoundDiff(initMs, testMs[0][0], target), target)
 }
 
@@ -271,7 +275,7 @@ describe('cascade()', () => {
             const result = testHasIncrement(increment)
             const expectedResult = true
 
-            const resultDelay = testGetDelay(initMs, delay + increment)
+            const resultDelay = testDelay(initMs, delay + increment)
             const expectedResultDelay = delay + increment
 
             expect(result).toBe(expectedResult)
@@ -311,7 +315,7 @@ describe('cascade()', () => {
             const result = testHasIncrement(increment)
             const expectedResult = true
 
-            const resultDelay = testGetDelay(initMs, increment)
+            const resultDelay = testDelay(initMs, increment)
             const expectedResultDelay = increment
 
             expect(result).toBe(expectedResult)

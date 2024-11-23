@@ -4,40 +4,17 @@
 
 /* Imports */
 
-import type { RequestArgs } from './requestTypes'
-import { urlEncode } from '../urlEncode/urlEncode'
-import { objectToFormData } from '../objectToFormData/objectToFormData'
-import { isObjectStrict } from '../isObject/isObject'
-import { isFunction } from '../isFunction/isFunction'
-
-/**
- * Custom exception to include fetch response
- */
-class ResponseError extends Error {
-  /**
-   * Store response data
-   *
-   * @type {Response}
-   */
-  response: Response
-
-  /**
-   * Set properties
-   *
-   * @param {string} message
-   * @param {Response} res
-   */
-  constructor (message: string, res: Response) {
-    super(message)
-    this.message = message
-    this.response = res
-  }
-}
+import type { RequestArgs } from './requestTypes.js'
+import { urlEncode } from '../url/url.js'
+import { objectToFormData } from '../object/objectToFormData.js'
+import { isObjectStrict } from '../object/object.js'
+import { isFunction } from '../function/function.js'
+import { ResponseError } from '../ResponseError/ResponseError.js'
 
 /**
  * Handle requests with fetch method
  *
- * @param {import('./requestTypes').RequestArgs} args
+ * @param {RequestArgs} args
  * @return {Promise<void>}
  */
 const request = async (args: RequestArgs): Promise<void> => {
@@ -70,7 +47,9 @@ const request = async (args: RequestArgs): Promise<void> => {
 
   /* Body */
 
-  let reqBody: string | FormData = body instanceof FormData ? body : ''
+  const isFormData = body instanceof FormData
+
+  let reqBody: string | FormData = isFormData ? body : ''
 
   /* Encode and make request */
 
@@ -87,8 +66,7 @@ const request = async (args: RequestArgs): Promise<void> => {
       reqBody = JSON.stringify(body)
     }
 
-    if (encode === 'formData') {
-      reqHeaders.set('Content-Type', 'multipart/form-data')
+    if (encode === 'formData' && !isFormData) {
       reqBody = objectToFormData(body)
     }
 
@@ -112,4 +90,4 @@ const request = async (args: RequestArgs): Promise<void> => {
 
 /* Exports */
 
-export { request, ResponseError }
+export { request }

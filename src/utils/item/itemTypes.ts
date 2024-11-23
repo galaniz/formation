@@ -1,0 +1,62 @@
+/**
+ * Utils - Item Types
+ */
+
+/**
+ * @typedef {Element|null|Element[]} Item
+ */
+export type Item<T> = T extends string[] ? Element[] : T extends string ? Element | null : null
+
+/**
+ * @typedef {Object<string, string>} ItemsStr
+ */
+
+/**
+ * @typedef {Object<string|number|symbol, ItemElem|ItemsObj>} ItemsObj
+ */
+export type ItemsObj = Record<string | number | symbol, Element | null | object>
+
+/**
+ * @typedef {ItemsObj|ItemsObj[]} Items
+ */
+export type Items<T> =
+  T extends object ? {
+    [K in keyof T]: T extends string[] ? Element : T[K] extends object ? Items<T[K]> : Element | null
+  } : object
+
+/**
+ * @typedef {string|object} Items0
+ */
+export type Items0<T> = string | T & { context?: string }
+
+/**
+ * @typedef {object} ItemsOuterFilterReturn
+ * @prop {Element[]} store
+ * @prop {boolean} stop
+ */
+export interface ItemsOuterFilterReturn {
+  store: Element[]
+  stop: boolean
+}
+
+/**
+ * @typedef {function} ItemsOuterFilter
+ * @param {Element[]} store
+ * @return {ItemsOuterFilterReturn}
+ */
+export type ItemsOuterFilter = (store: Element[]) => ItemsOuterFilterReturn
+
+/**
+ * @typedef {function} ItemsOuter
+ * @param {HTMLElement} item
+ * @param {string} [type] - all | prev | next
+ * @param {ItemsOuterFilter} [filter]
+ * @param {Element[]} [_store]
+ * @return {Element[]}
+ */
+export type ItemsOuter = (
+  item: HTMLElement | null,
+  type?: 'all' | 'prev' | 'next',
+  filter?: ItemsOuterFilter,
+  _store?: Element[]
+) => Element[]

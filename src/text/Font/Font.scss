@@ -5,11 +5,16 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
 
 /* Styles */
 
 @each $f, $v in con.$fonts {
-  .t-#{$f} {
-    font-family: var(--#{con.$v}font-#{$f});
+  .#{$text-fix}#{$f} {
+    font-family: var(--#{con.$n}font-#{$f});
   }
 }

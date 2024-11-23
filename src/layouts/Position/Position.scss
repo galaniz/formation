@@ -2,65 +2,75 @@
  * Layouts - Position Styles
  */
 
-.l-relative {
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+
+/* Styles */
+
+.#{$layout-fix}relative {
   position: relative;
 }
 
-.l-absolute,
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}absolute,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   position: absolute;
 }
 
-.l-fixed {
+.#{$layout-fix}fixed {
   position: fixed;
 }
 
-.l-sticky {
+.#{$layout-fix}sticky {
   position: sticky;
 }
 
-.l-top-0,
-.l-all-0,
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}top-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   top: 0;
 }
 
-.l-left-0,
-.l-all-0,
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}left-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   left: 0;
 }
 
-.l-right-0,
-.l-all-0,
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}right-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   right: 0;
 }
 
-.l-bottom-0,
-.l-all-0,
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}bottom-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   bottom: 0;
 }
 
-.l-before::before,
-.l-after::after {
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   content: "";
 }
 
-.l-z-index-1 {
+.#{$layout-fix}z-index-1 {
   z-index: 1;
 }
 
-.l-z-index--1 {
+.#{$layout-fix}z-index--1 {
   z-index: -1;
 }
 
-.l-isolate {
+.#{$layout-fix}isolate {
   isolation: isolate;
 }

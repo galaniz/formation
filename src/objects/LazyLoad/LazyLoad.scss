@@ -5,17 +5,22 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.o-lazy {
-  --#{con.$v}duration: 200ms;
-  --opacity: 0;
+.#{$object-fix}lazy {
+  --#{con.$n}duration: 200ms;
+  --lz-op: 0;
 
-  opacity: var(--opacity);
+  opacity: var(--lz-op);
 
   &[data-loaded="true"],
   &[data-loaded="error"] {
-    --opacity: 1;
+    --lz-op: 1;
   }
 }

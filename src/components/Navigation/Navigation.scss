@@ -2,28 +2,34 @@
  * Components - Navigation Styles
  */
 
-c-nav {
-  display: block;
-}
+/* Imports */
 
-.c-nav {
-  --hide: block;
-  --visibility: hidden;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
+
+/* Styles */
+
+.#{$component-fix}nav {
+  --nav-hide: block;
+  --nav-vis: hidden;
 
   &[data-nav-open="true"] {
-    --visibility: visible;
+    --nav-vis: visible;
   }
 
   &[data-nav-overflow="false"] {
-    --hide: none;
+    --nav-hide: none;
   }
 }
 
-.c-nav-hide {
-  display: var(--hide);
+.#{$component-fix}nav-hide {
+  display: var(--nav-hide);
 }
 
-.c-nav-modal,
-.c-nav-overlay {
-  visibility: var(--visibility);
+.#{$component-fix}nav-modal,
+.#{$component-fix}nav-overlay {
+  visibility: var(--nav-vis);
 }

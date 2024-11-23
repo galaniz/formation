@@ -2,6 +2,6 @@
  * Base - Styles
  */
 
-@forward "Reset/Reset";
-@forward "Root/Root";
-@forward "Focus/Focus";
+@use "Reset/Reset";
+@use "Root/Root";
+@use "Focus/Focus";

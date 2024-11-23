@@ -6,10 +6,11 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
 
 /* Styles */
@@ -18,13 +19,13 @@ $aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
   &::before {
     content: "";
     display: block;
-    padding-top: var(--#{con.$v}aspect-ratio-padding);
+    padding-top: var(--#{con.$n}aspect-ratio-padding);
   }
 }
 
 @each $p, $v in con.$aspect-ratio-padding {
-  .l-#{$aspect-ratio-fix}-#{$p} {
-    --#{con.$v}aspect-ratio-padding: #{$v};
+  .#{$layout-fix}#{$aspect-ratio-fix}-#{$p} {
+    --#{con.$n}aspect-ratio-padding: #{$v};
 
     @extend %l-aspect-ratio;
   }

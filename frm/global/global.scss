@@ -2,13 +2,17 @@
  * Formation - Global
  */
 
+/* Imports */
+
+@use "../../lib/utils/utils" as util;
+
 /* Config */
 
 @forward "../config/config";
 
 /* Base */
 
-@use "../../lib/base/base";
+@use "../base/base";
 
 /* A11y */
 
@@ -33,3 +37,7 @@
 /* Effects */
 
 @use "../../lib/effects/Transition/Transition";
+
+/* Breakpoints */
+
+@include util.breakpoint-batch;

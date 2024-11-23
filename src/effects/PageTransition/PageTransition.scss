@@ -6,21 +6,22 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$effect-fix: fix.get-class-prefix("effect");
 $transition-fix: fix.get-class-fix("transition");
 
 /* Styles */
 
-.e-page-#{$transition-fix} {
-  --visibility: hidden;
-  --opacity: 0;
-  --prop: #{con.$page-transition-prop};
-  --duration: #{con.$page-transition-duration};
-  --easing: #{con.$page-transition-easing};
-  --delay: #{con.$page-transition-delay};
+.#{$effect-fix}page-#{$transition-fix} {
+  --pg-vis: hidden;
+  --pg-op: 0;
+  --pg-prop: #{con.$page-transition-prop};
+  --pg-duration: #{con.$page-transition-duration};
+  --pg-easing: #{con.$page-transition-easing};
+  --pg-delay: #{con.$page-transition-delay};
 
   position: fixed;
   top: 0;
@@ -28,13 +29,13 @@ $transition-fix: fix.get-class-fix("transition");
   width: 100%;
   height: 100%;
   z-index: map.get(con.$z-index, "page-transition");
-  transition: var(--prop) var(--duration) var(--easing) var(--delay);
-  visibility: var(--visibility);
-  opacity: var(--opacity);
+  transition: var(--pg-prop) var(--pg-duration) var(--pg-easing) var(--pg-delay);
+  visibility: var(--pg-vis);
+  opacity: var(--pg-op);
 
   [data-page-#{$transition-fix}-show] & {
-    --delay: #{con.$page-transition-delay-show};
-    --visibility: visible;
-    --opacity: 1;
+    --pg-delay: #{con.$page-transition-delay-show};
+    --pg-vis: visible;
+    --pg-op: 1;
   }
 }

@@ -4,36 +4,37 @@
 
 /* Imports */
 
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$layout-fix: fix.get-class-prefix("layout");
 $overflow-fix: fix.get-class-fix("overflow");
 $overscroll-fix: fix.get-class-fix("overscroll");
 
 /* Styles */
 
-.l-#{$overflow-fix}-hidden {
+.#{$layout-fix}#{$overflow-fix}-hidden {
   overflow: hidden;
 }
 
-.l-#{$overflow-fix}-x-hidden {
+.#{$layout-fix}#{$overflow-fix}-x-hidden {
   overflow-x: hidden;
 }
 
-.l-#{$overflow-fix}-y-hidden {
+.#{$layout-fix}#{$overflow-fix}-y-hidden {
   overflow-y: hidden;
 }
 
-.l-#{$overflow-fix}-y-auto {
+.#{$layout-fix}#{$overflow-fix}-y-auto {
   overflow-y: auto;
 }
 
-.l-#{$overflow-fix}-x-auto {
+.#{$layout-fix}#{$overflow-fix}-x-auto {
   overflow-x: auto;
 }
 
-.l-#{$overscroll-fix}-none {
+.#{$layout-fix}#{$overscroll-fix}-none {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
 }

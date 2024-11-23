@@ -4,22 +4,23 @@
 
 /* Imports */
 
-@use "../../utils/getClassFix/getClassFix" as fix;
+@use "../../utils/fix/fix";
 
 /* Class name customization */
 
+$text-fix: fix.get-class-prefix("text");
 $align-fix: fix.get-class-fix("text-align");
 
 /* Styles */
 
-.t-#{$align-fix}-center {
+.#{$text-fix}#{$align-fix}-center {
   text-align: center;
 }
 
-.t-#{$align-fix}-left {
+.#{$text-fix}#{$align-fix}-left {
   text-align: left;
 }
 
-.t-#{$align-fix}-right {
+.#{$text-fix}#{$align-fix}-right {
   text-align: right;
 }

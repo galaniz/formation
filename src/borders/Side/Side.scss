@@ -6,23 +6,28 @@
 
 @use "sass:map";
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$border-fix: fix.get-class-prefix("border");
 
 /* Styles */
 
 $sides: map.get(con.$borders, "sides");
 
 @each $s in $sides {
-  .b-#{$s} {
+  .#{$border-fix}#{$s} {
     @if $s == "all" {
-      border: var(--#{con.$v}border-width) solid var(--#{con.$v}border-color);
+      border: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
     } @else if $s == "left" {
-      border-left: var(--#{con.$v}border-width) solid var(--#{con.$v}border-color);
+      border-left: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
     } @else if $s == "right" {
-      border-right: var(--#{con.$v}border-width) solid var(--#{con.$v}border-color);
+      border-right: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
     } @else if $s == "top" {
-      border-top: var(--#{con.$v}border-width) solid var(--#{con.$v}border-color);
+      border-top: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
     } @else if $s == "bottom" {
-      border-bottom: var(--#{con.$v}border-width) solid var(--#{con.$v}border-color);
+      border-bottom: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
     }
   }
 }

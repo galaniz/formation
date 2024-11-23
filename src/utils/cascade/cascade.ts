@@ -4,10 +4,10 @@
 
 /* Imports */
 
-import type { CascadeEvent } from './cascadeTypes'
-import { isObjectStrict } from '../isObject/isObject'
-import { isFunction } from '../isFunction/isFunction'
-import { isNumber } from '../isNumber/isNumber'
+import type { CascadeEvent } from './cascadeTypes.js'
+import { isObjectStrict } from '../object/object.js'
+import { isFunction } from '../function/function.js'
+import { isNumber } from '../number/number.js'
 
 /**
  * More precise set timeout with requestAnimationFrame
@@ -17,7 +17,7 @@ import { isNumber } from '../isNumber/isNumber'
  * @param {number} delay
  * @return {void}
  */
-const _requestTimeout = (action: Function, delay: number): void => {
+const requestTimeout = (action: Function, delay: number): void => {
   /* Starting values */
 
   const start = performance.now()
@@ -54,7 +54,7 @@ const _requestTimeout = (action: Function, delay: number): void => {
 /**
  * Sequentially and recursively call and delay functions
  *
- * @param {import('./cascadeTypes').CascadeEvent[]} events
+ * @param {CascadeEvent[]} events
  * @param {number} [repeat=0]
  * @return {void}
  */
@@ -121,7 +121,7 @@ const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
 
     /* Run action */
 
-    _requestTimeout(() => {
+    requestTimeout(() => {
       if (action.length === 3) { // Hold off on recursion if doRecurse param exists
         action(i, j, () => {
           recurse(i + 1, j)

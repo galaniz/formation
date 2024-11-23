@@ -5,45 +5,50 @@
 /* Imports */
 
 @use "../../config/config" as con;
+@use "../../utils/fix/fix";
 @use "./NavigationIcon" as icon;
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
 [data-nav-icon="4"] {
-  --rotate: 0deg;
-  --rotate-in: 0deg;
-  --rotate-in-r: 0deg;
-  --y: 0;
-  --y-r: 0;
-  --opacity: 1;
+  --ico-rotate-0: 0deg;
+  --ico-rotate: 0deg;
+  --ico-rotate-1: 0deg;
+  --ico-y: 0;
+  --ico-y-1: 0;
+  --ico-op: 1;
 
-  transform: rotateY(var(--rotate));
+  transform: rotateY(var(--ico-rotate-0));
 
-  .c-nav-icon-top,
-  .c-nav-icon-middle,
-  .c-nav-icon-bottom {
-    --#{con.$v}duration: 0ms;
-    --#{con.$v}delay: 100ms;
+  .#{$component-fix}nav-icon-top,
+  .#{$component-fix}nav-icon-middle,
+  .#{$component-fix}nav-icon-bottom {
+    --#{con.$n}duration: 0ms;
+    --#{con.$n}delay: 100ms;
   }
 
-  .c-nav-icon-top {
-    transform: translateY(var(--y)) rotate(var(--rotate-in));
+  .#{$component-fix}nav-icon-top {
+    transform: translateY(var(--ico-y)) rotate(var(--ico-rotate));
   }
 
-  .c-nav-icon-bottom {
-    transform: translateY(var(--y-r)) rotate(var(--rotate-in-r));
+  .#{$component-fix}nav-icon-bottom {
+    transform: translateY(var(--ico-y-1)) rotate(var(--ico-rotate-1));
   }
 
-  .c-nav-icon-middle {
-    opacity: var(--opacity);
+  .#{$component-fix}nav-icon-middle {
+    opacity: var(--ico-op);
   }
 
   [data-nav-show] & {
-    --rotate: 180deg;
-    --rotate-in: 45deg;
-    --rotate-in-r: -45deg;
-    --y: #{icon.$y};
-    --y-r: #{icon.$y * -1};
-    --opacity: 0;
+    --ico-rotate-0: 180deg;
+    --ico-rotate: 45deg;
+    --ico-rotate-1: -45deg;
+    --ico-y: #{icon.$y};
+    --ico-y-1: #{icon.$y * -1};
+    --ico-op: 0;
   }
 }
