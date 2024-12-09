@@ -3,7 +3,7 @@
  */
 
 /**
- * Check if value is string
+ * Check if value is a string
  *
  * @param {*} value
  * @return {boolean}
@@ -13,7 +13,7 @@ const isString = (value: unknown): value is string => {
 }
 
 /**
- * Check if value is string and not empty
+ * Check if value is a string and not empty
  *
  * @param {*} value
  * @return {boolean}

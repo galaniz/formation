@@ -8,11 +8,11 @@
 @use "../../config/config" as con;
 
 /**
- * Get color value from name in $colors-flat map
+ * Get color value from name in $colors-map map
  *
  * @param {string} $color
  * @return {string}
  */
 @function get-color($color: "background-light") {
-  @return map.get(con.$colors-flat, $color);
+  @return map.get(con.$colors-map, $color);
 }

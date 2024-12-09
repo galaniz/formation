@@ -6,7 +6,7 @@
 
 import type { Navigation } from '../Navigation.js'
 import { test, expect } from '@playwright/test'
-import { testDoCoverage } from '../../../test/testSpecCoverage.js'
+import { doCoverage } from '../../../tests/coverage/coverage.js'
 
 /* Tests */
 
@@ -14,12 +14,12 @@ test.describe('Navigation', () => {
   /* Html and coverage */
 
   test.beforeEach(async ({ browserName, page }) => {
-    testDoCoverage(browserName, page, true)
+    doCoverage(browserName, page, true)
     await page.goto('/spec/components/Navigation/__tests__/Navigation.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
-    testDoCoverage(browserName, page, false)
+    doCoverage(browserName, page, false)
   })
 
   /* Test init */

@@ -8,7 +8,6 @@
 @use "sass:list";
 @use "sass:string";
 @use "../utils/map/map" as maps;
-@use "../utils/placeholder/placeholder";
 
 /* Namespace */
 
@@ -174,11 +173,11 @@ $colors: (
 
 /* Flatten colors to one level map */
 
-$colors-flat-prefix: maps.map-flatten($colors, (), "color");
+$colors-map-prefix: maps.map-flatten($colors, (), "color");
 
 /* Flatten colors to one level map without prefix */
 
-$colors-flat: maps.map-flatten($colors, (), "");
+$colors-map: maps.map-flatten($colors, (), "");
 
 /* Text colors */
 
@@ -458,32 +457,3 @@ $borders: maps.map-recursive-merge(
 
 $border-radius: () !default;
 $border-radius-breakpoints: () !default;
-
-/* Placeholders */
-
-$placeholders: () !default;
-
-@each $p in $placeholders {
-  @include placeholder.placeholder-make($p);
-}
-
-@include placeholder.placeholder-set("hide-visually") {
-  position: absolute;
-  overflow: hidden;
-  width: 0.0625rem;
-  height: 0.0625rem;
-  margin: -0.0625rem;
-  clip: rect(0, 0, 0, 0);
-}
-
-@include placeholder.placeholder-set("touch-50") {
-  &::before {
-    content: "";
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 3.125rem;
-    height: 3.125rem;
-    top: 50%;
-    left: 50%;
-  }
-}

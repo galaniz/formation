@@ -23,8 +23,8 @@ export default defineConfig({
       ],
       exclude: [
         '**/*.test.ts',
+        'src/tests/*.ts',
         'src/**/*Types.ts',
-        'src/test/*.ts'
       ]
     }
   }

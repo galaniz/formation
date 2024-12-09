@@ -5,6 +5,7 @@
 /* Imports */
 
 @use "sass:map";
+@use "sass:meta";
 @use "sass:string";
 @use "../../config/config" as con;
 @use "../../utils/calc/calc";
@@ -20,7 +21,7 @@
 
   @each $r in con.$root {
     @if $r == "colors" {
-      @each $c, $v in con.$colors-flat {
+      @each $c, $v in con.$colors-map {
         @if con.$colors-type == "rgb" {
           --#{con.$n}#{$c}-rgb: #{$v};
           --#{con.$n}#{$c}: #{rgb(var(--#{con.$n}#{$c}-rgb))};
@@ -45,7 +46,7 @@
       @each $f, $v in con.$font-sizes {
         $font-size: $v;
 
-        @if type-of($v) == "list" {
+        @if meta.type-of($v) == "list" {
           $font-size: fluid.fluid-size-clamp($v, con.$font-breakpoints, "font-size");
         }
 

@@ -11,7 +11,7 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './spec',
   testMatch: '**/*.spec.js',
-  globalTeardown: './spec/test/testSpecTeardown',
+  globalTeardown: './spec/tests/setup/setupTeardown',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -29,9 +29,9 @@ export default defineConfig({
     trace: 'on-first-retry'
   },
   webServer: {
-    command: 'npm run serve',
-    url: 'http://localhost:3000'
-    /* reuseExistingServer: !process.env.CI, */
+    command: 'pnpm serve',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI
   },
   projects: [
     {

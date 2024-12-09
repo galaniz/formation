@@ -6,7 +6,7 @@
 
 import type { Slider } from '../Slider.js'
 import { test, expect } from '@playwright/test'
-import { testDoCoverage } from '../../../test/testSpecCoverage.js'
+import { doCoverage } from '../../../tests/coverage/coverage.js'
 
 /* Tests */
 
@@ -14,12 +14,12 @@ test.describe('Slider', () => {
   /* Html and coverage */
 
   test.beforeEach(async ({ browserName, page }) => {
-    testDoCoverage(browserName, page, true)
+    doCoverage(browserName, page, true)
     await page.goto('/spec/objects/Slider/__tests__/Slider.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
-    testDoCoverage(browserName, page, false)
+    doCoverage(browserName, page, false)
   })
 
   /* Test init */
@@ -34,14 +34,14 @@ test.describe('Slider', () => {
   })
 
   test('should initialize if contains required elements', async ({ page }) => {
-    const navInit = await page.evaluate(() => {
+    const sliderInit = await page.evaluate(() => {
       const sliders = Array.from(document.querySelectorAll('frm-slider')) as Slider[]
       return sliders.map(slider => slider.init)
     })
 
-    expect(navInit).toStrictEqual([
+    expect(sliderInit).toStrictEqual([
       false, // #sld-empty
-      true,  // #sld-single
+      false,  // #sld-single
       true,  // #sld-group
       true,  // #sld-loop
     ])

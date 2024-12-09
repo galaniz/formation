@@ -15,7 +15,12 @@ $visually-fix: fix.get-class-fix("visually");
 /* Styles */
 
 .#{$a11y-fix}hide-#{$visually-fix} {
-  @extend %u-hide-visually;
+  position: absolute;
+  overflow: hidden;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  margin: -0.0625rem;
+  clip: rect(0, 0, 0, 0);
 }
 
 .#{$a11y-fix}hide-input {

@@ -5,12 +5,12 @@
 /**
  * @typedef {object} VisibleHashArgs
  * @prop {Element|null} link
- * @prop {Element|Element[]|null|null[]} item
+ * @prop {Element|null|Element[]} item
  * @prop {number} [offset]
  */
 export interface VisibleHashArgs {
   link: Element | null
-  item: Element | Element[] | null | null[]
+  item: Element | null | Element[]
   offset?: number
 }
 

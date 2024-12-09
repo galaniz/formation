@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "target": "es2015",
-    "module": "esnext",
+    "target": "es2022",
+    "module": "es2022",
     "moduleResolution": "bundler",
     "allowJs": true,
     "resolveJsonModule": true,
@@ -22,22 +22,18 @@
     "inlineSourceMap": false,
     "inlineSources": true,
     "lib": [
-      "es2015",
+      "es2022",
       "dom",
       "dom.iterable"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "**/*.test.ts",
-    "**/*.config.ts",
-    "**/*.config.js"
+    "src/**/*.ts"
   ],
   "exclude": [
     "lib",
     "node_modules",
     "**/*.test.ts",
-    "**/*.config.ts",
-    "**/*.config.js"
+    "**/*.config.ts"
   ]
 }

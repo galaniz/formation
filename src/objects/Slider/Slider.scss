@@ -143,6 +143,8 @@ $object-fix: fix.get-class-prefix("object");
 
 /* Navigation */
 
+// MAXXXXXXXX
+
 .#{$object-fix}slider-tab {
   &[aria-selected="true"] {
     --sld-dot-bg: var(--sld-tab-fill);

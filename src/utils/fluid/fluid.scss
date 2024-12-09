@@ -9,9 +9,8 @@
 @use "sass:list";
 @use "sass:math";
 @use "../../config/config" as con;
-@use "../calc/calc";
-@use "../unit/unit";
 @use "../breakpoint/breakpoint";
+@use "../calc/calc";
 
 /**
  * Fluidly resize between breakpoints
@@ -50,14 +49,14 @@
         #{$prop}: $size $oth $imp
       ));
     } @else {
-      $new-size: unit.strip-unit(list.nth($sizes, $i + 1));
+      $new-size: math.unitless(list.nth($sizes, $i + 1));
       $new-bk: list.nth($breakpoints, $i + 1);
-      $new-bk-abs: unit.strip-unit(calc.calc-rem(map.get(con.$breakpoints, $new-bk)));
-      $bk-abs: unit.strip-unit($bk-rem);
+      $new-bk-abs: math.unitless(calc.calc-rem(map.get(con.$breakpoints, $new-bk)));
+      $bk-abs: math.unitless($bk-rem);
 
       @include breakpoint.breakpoint-batch-add($bk, (
         #{$prop}:
-          calc(#{$size} + ((100vw - #{$bk-rem}) / (#{$new-bk-abs} - #{$bk-abs})) * (#{$new-size} - #{unit.strip-unit($size)}))
+          calc(#{$size} + ((100vw - #{$bk-rem}) / (#{$new-bk-abs} - #{$bk-abs})) * (#{$new-size} - #{math.unitless($size)}))
           $oth
           $imp
       ));
@@ -75,19 +74,19 @@
  * @return {string}
  */
 @function fluid-size-clamp($sizes, $breakpoints, $type: "size") {
-  $min-px: nth($sizes, 1);
-  $max-px: nth($sizes, 2);
-  $min-bk: nth($breakpoints, 1);
-  $max-bk: nth($breakpoints, 2);
+  $min-px: list.nth($sizes, 1);
+  $max-px: list.nth($sizes, 2);
+  $min-bk: list.nth($breakpoints, 1);
+  $max-bk: list.nth($breakpoints, 2);
 
-  @if type-of($min-px) == "string" {
-    $min-px: if($type == "font-size", map.get(con.$font-sizes, $min-size), map.get(con.$sizes, $min-size));
-    $max-px: if($type == "font-size", map.get(con.$font-sizes, $max-size), map.get(con.$sizes, $max-size));
+  @if meta.type-of($min-px) == "string" {
+    $min-px: if($type == "font-size", map.get(con.$font-sizes, $min-px), map.get(con.$sizes, $min-px));
+    $max-px: if($type == "font-size", map.get(con.$font-sizes, $max-px), map.get(con.$sizes, $max-px));
   }
 
-  @if type-of($min-bk) == "string" {
-    $min-bk: map.get(con.$breakpoints, $min-breakpoint);
-    $max-bk: map.get(con.$breakpoints, $max-breakpoint);
+  @if meta.type-of($min-bk) == "string" {
+    $min-bk: map.get(con.$breakpoints, $min-bk);
+    $max-bk: map.get(con.$breakpoints, $max-bk);
   }
 
   $slope: math.div($max-px - $min-px, $max-bk - $min-bk);
