@@ -6,7 +6,7 @@
 
 import type { Slider } from '../Slider.js'
 import { test, expect } from '@playwright/test'
-import { doCoverage } from '../../../tests/coverage/coverage.js'
+import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
@@ -41,7 +41,7 @@ test.describe('Slider', () => {
 
     expect(sliderInit).toStrictEqual([
       false, // #sld-empty
-      false,  // #sld-single
+      false, // #sld-single
       true,  // #sld-group
       true,  // #sld-loop
     ])

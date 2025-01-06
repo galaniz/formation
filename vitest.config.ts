@@ -12,6 +12,7 @@ export default defineConfig({
   test: {
     cache: false,
     globals: true,
+    clearMocks: true,
     environment: 'jsdom',
     include: [
       'src/**/*.test.ts'
@@ -25,6 +26,7 @@ export default defineConfig({
         '**/*.test.ts',
         'src/tests/*.ts',
         'src/**/*Types.ts',
+        'src/**/*Mock.ts'
       ]
     }
   }

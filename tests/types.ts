@@ -1,30 +1,32 @@
 /**
- * Mocks - Types
+ * Tests - Types
  */
 
 /**
- * @typedef {object} MockFetchOpts
+ * @typedef {object} MockFetchOptions
  * @prop {string} method
  * @prop {Headers} headers
  * @prop {string|FormData} body
  */
-export interface MockFetchOpts {
+export interface MockFetchOptions {
   method: string
   headers: Headers
   body: string | FormData
 }
 
 /**
- * @typedef {object} MockFetchRes
+ * @typedef {object} MockFetchResult
  * @prop {boolean} ok
  * @prop {number} status
+ * @prop {headers} [headers]
  * @prop {string} body
  * @prop {function} text
  * @prop {function} json
  */
-export interface MockFetchRes {
+export interface MockFetchResult {
   ok: boolean
   status: number
+  headers?: Headers
   body: string
   text: Function
   json: Function
@@ -50,30 +52,4 @@ export const mockFetchErrorMessage: {
   bodyFormData: 'Body not Form Data',
   data: 'Data is undefined',
   contentType: 'Incorrect content type'
-}
-
-/**
- * @typedef {object} MockFetchRequestArgs
- * @prop {string} [encode=json]
- * @prop {string} [expect]
- * @prop {number} [status=200]
- * @prop {string|object} [data]
- */
-export const mockFetchRequestArgs: {
-  encode: 'url' | 'json' | 'formData'
-  expect: string
-  status: number
-  data?: string | object
-  reset: Function
-} = {
-  encode: 'json',
-  expect: 'json',
-  status: 200,
-  data: undefined,
-  reset () {
-    this.encode = 'json'
-    this.expect = 'json'
-    this.status = 200
-    this.data = undefined
-  }
 }

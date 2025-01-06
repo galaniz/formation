@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import { setupCoverage } from '../coverage/coverage.js'
+import { setupCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /**
  * Create coverage file for playwright

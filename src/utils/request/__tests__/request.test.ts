@@ -5,8 +5,8 @@
 /* Imports */
 
 import type { RequestErrorCallback, RequestSuccessCallback } from '../requestTypes.js'
-import { it, expect, describe, vi, beforeAll, afterAll, beforeEach } from 'vitest'
-import { mockFetch, mockFetchRequestArgs } from '../../../tests/mocks/mockFetch.js'
+import { it, expect, describe, vi, beforeAll, beforeEach } from 'vitest'
+import { mockRequestFetch, mockRequestFetchArgs } from './requestMock.js'
 import { ResponseError } from '../../ResponseError/ResponseError.js'
 import { request } from '../request.js'
 
@@ -32,21 +32,17 @@ const testBody: Record<string, string> = {
 
 describe('request()', () => {
   beforeAll(() => {
-    vi.stubGlobal('fetch', mockFetch)
-  })
-
-  afterAll(() => {
-    vi.unstubAllGlobals()
+    vi.stubGlobal('fetch', mockRequestFetch)
   })
 
   beforeEach(() => {
-    mockFetchRequestArgs.reset()
+    mockRequestFetchArgs.reset()
   })
 
   it(
     'should pass only pass content type header',
     async () => {
-      mockFetch.mockImplementationOnce(async (_url, options) => {
+      mockRequestFetch.mockImplementationOnce(async (_url, options) => {
         return await new Promise((resolve) => {
           const { headers } = options
 
@@ -98,7 +94,7 @@ describe('request()', () => {
     async () => {
       const authToken = 'Bearer token123'
 
-      mockFetch.mockImplementationOnce(async (_url, options) => {
+      mockRequestFetch.mockImplementationOnce(async (_url, options) => {
         return await new Promise((resolve) => {
           const { headers } = options
 
@@ -141,7 +137,7 @@ describe('request()', () => {
     async () => {
       const testRun = vi.fn()
 
-      mockFetch.mockImplementationOnce(async (_url, _options) => {
+      mockRequestFetch.mockImplementationOnce(async (_url, _options) => {
         return await new Promise((resolve) => {
           testRun()
           resolve({
@@ -180,7 +176,7 @@ describe('request()', () => {
     async () => {
       const testRun = vi.fn()
 
-      mockFetch.mockImplementationOnce(async (_url, _options) => {
+      mockRequestFetch.mockImplementationOnce(async (_url, _options) => {
         return await new Promise((resolve) => {
           testRun()
           resolve({
@@ -237,7 +233,7 @@ describe('request()', () => {
       const testSuccess: RequestSuccessCallback = vi.fn()
       const testError: RequestErrorCallback = vi.fn()
 
-      mockFetchRequestArgs.status = 400
+      mockRequestFetchArgs.status = 400
 
       await request({
         url: testUrl,
@@ -340,7 +336,7 @@ describe('request()', () => {
         result: 1
       }
 
-      mockFetch.mockImplementationOnce(async (_url, options) => {
+      mockRequestFetch.mockImplementationOnce(async (_url, options) => {
         return await new Promise((resolve) => {
           const { body } = options
 
@@ -369,8 +365,8 @@ describe('request()', () => {
       const testSuccess: RequestSuccessCallback = vi.fn()
       const testError: RequestErrorCallback = vi.fn()
 
-      mockFetchRequestArgs.data = data
-      mockFetchRequestArgs.encode = 'formData'
+      mockRequestFetchArgs.data = data
+      mockRequestFetchArgs.encode = 'formData'
 
       await request({
         url: testUrl,
@@ -399,8 +395,8 @@ describe('request()', () => {
 
       const data = 'Success'
 
-      mockFetchRequestArgs.data = data
-      mockFetchRequestArgs.encode = 'formData'
+      mockRequestFetchArgs.data = data
+      mockRequestFetchArgs.encode = 'formData'
 
       await request({
         url: testUrl,
@@ -431,8 +427,8 @@ describe('request()', () => {
         success: true
       }
 
-      mockFetchRequestArgs.data = data
-      mockFetchRequestArgs.encode = 'url'
+      mockRequestFetchArgs.data = data
+      mockRequestFetchArgs.encode = 'url'
 
       await request({
         url: testUrl,
@@ -462,7 +458,7 @@ describe('request()', () => {
         success: true
       }
 
-      mockFetchRequestArgs.data = data
+      mockRequestFetchArgs.data = data
 
       await request({
         url: testUrl,

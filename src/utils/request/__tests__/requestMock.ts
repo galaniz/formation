@@ -1,28 +1,55 @@
 /**
- * Mocks - Fetch
+ * Utils - Request Mock Fetch
  */
 
 /* Imports */
 
-import type { MockFetchRes, MockFetchOpts } from './mockTypes.js'
-import { mockFetchRequestArgs, mockFetchErrorMessage } from './mockTypes.js'
+import type { MockFetchResult, MockFetchOptions } from '../../../../tests/types.js'
+import { mockFetchErrorMessage } from '../../../../tests/types.js'
+import { isString, isStringStrict } from '../../string/string.js'
 import { vi } from 'vitest'
+
+/**
+ * @typedef {object} MockRequestFetchArgs
+ * @prop {string} [encode=json]
+ * @prop {string} [expect]
+ * @prop {number} [status=200]
+ * @prop {string|object} [data]
+ */
+const mockRequestFetchArgs: {
+  encode: 'url' | 'json' | 'formData'
+  expect: string
+  status: number
+  data?: string | object
+  reset: Function
+} = {
+  encode: 'json',
+  expect: 'json',
+  status: 200,
+  data: undefined,
+  reset () {
+    this.encode = 'json'
+    this.expect = 'json'
+    this.status = 200
+    this.data = undefined
+  }
+}
 
 /**
  * Mock fetch function
  *
  * @param {string} url
- * @param {MockFetchOpts} options
- * @return {Promise<MockFetchRes>}
+ * @param {MockFetchOptions} options
+ * @return {Promise<MockFetchResult>}
  */
-const mockFetch = vi.fn(async (
+const mockRequestFetch = vi.fn(async (
   url: string,
-  options: MockFetchOpts
-): Promise<MockFetchRes> => {
+  options: MockFetchOptions
+): Promise<MockFetchResult> => {
   return await new Promise((resolve, reject) => {
     /* Url check */
 
-    if (typeof url !== 'string' || url === '') {
+    if (!isStringStrict(url)) {
       reject(new TypeError(mockFetchErrorMessage.url))
     }
 
@@ -40,7 +67,7 @@ const mockFetch = vi.fn(async (
       expect = 'json',
       status = 200,
       data = undefined
-    } = mockFetchRequestArgs
+    } = mockRequestFetchArgs
 
     /* Error message */
 
@@ -52,7 +79,7 @@ const mockFetch = vi.fn(async (
 
     /* Encode check */
 
-    if ((encode === 'json' || encode === 'url') && typeof body !== 'string') {
+    if ((encode === 'json' || encode === 'url') && !isString(body)) {
       ok = false
       err = new Error(mockFetchErrorMessage.bodyString)
       status = 400
@@ -124,7 +151,6 @@ const mockFetch = vi.fn(async (
 /* Exports */
 
 export {
-  mockFetch,
-  mockFetchRequestArgs,
-  mockFetchErrorMessage
+  mockRequestFetch,
+  mockRequestFetchArgs
 }

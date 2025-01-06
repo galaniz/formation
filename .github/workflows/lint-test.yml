@@ -1,0 +1,43 @@
+name: Lint and Test
+
+on:
+  push:
+    branches:
+      - beta
+      - main
+  pull_request:
+    branches:
+      - beta
+      - main
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      # Set up node.js for pnpm
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      # Install pnpm dependencies
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Lint ts and scss files
+      - name: Run lint (ts and scss)
+        run: pnpm lint:scss
+
+      # Test ts files
+      - name: Run tests (ts)
+        run: pnpm test:util

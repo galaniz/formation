@@ -3,15 +3,16 @@
   "version": "5.1.0-beta.8",
   "description": "A collection of front end patterns and utilities",
   "main": "./lib/config/config.js",
+  "packageManager": "pnpm@9.14.4",
   "type": "module",
   "files": [
     "./lib"
   ],
   "scripts": {
-    "build": "npx tsc && node scripts/lib.js",
-    "build:spec": "npx tsc --project tsconfig.spec.json && node scripts/spec.js",
+    "build": "tsc --project tsconfig.build.json && node scripts/lib.js",
+    "build:spec": "tsc --project tsconfig.spec.json && node scripts/spec.js",
     "lint:scss": "npx stylelint 'src/**/*.scss'",
-    "lint:ts": "npx ts-standard 'src/**/*.ts",
+    "lint:ts": "npx eslint 'src/**/*.ts'",
     "lint": "pnpm lint:ts && pnpm lint:scss",
     "release": "release-it",
     "release:beta": "release-it --preRelease=beta",
@@ -31,26 +32,28 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.49.1",
     "@testing-library/dom": "^10.4.0",
     "@types/istanbul-lib-coverage": "2.0.6",
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/istanbul-reports": "^3.0.4",
-    "@types/node": "^22.9.3",
-    "happy-dom": "^15.11.6",
+    "@types/node": "^22.10.5",
+    "@vitest/coverage-v8": "2.1.8",
+    "eslint": "9.15.0",
+    "eslint-config-love": "114.0.0",
+    "happy-dom": "^16.3.0",
     "istanbul-lib-coverage": "^3.2.2",
     "istanbul-lib-report": "^3.0.1",
     "istanbul-reports": "^3.1.7",
     "jsdoc-api": "^9.3.4",
-    "release-it": "^17.10.0",
-    "sass": "^1.81.0",
+    "release-it": "^18.0.0",
+    "sass": "^1.83.1",
     "serve": "^14.2.4",
-    "stylelint": "^16.10.0",
-    "stylelint-config-standard-scss": "^13.1.0",
-    "ts-standard": "^12.0.2",
+    "stylelint": "^16.12.0",
+    "stylelint-config-standard-scss": "^14.0.0",
     "typescript": "^5.7.2",
     "v8-to-istanbul": "^9.3.0",
-    "vitest": "^2.1.5"
+    "vitest": "^2.1.8"
   },
   "release-it": {
     "git": {
@@ -60,9 +63,6 @@
     "github": {
       "release": true
     }
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "browserslist": [
     "> 0.5%"

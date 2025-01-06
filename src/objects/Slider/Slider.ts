@@ -669,8 +669,6 @@ class Slider extends Tabs {
   #activate (e: CustomEvent): void {
     const { source, panelIndex } = e.detail as TabsEventDetail
 
-    console.log('ACTIVATE', this.type, e.detail)
-
     const offsets = this.#scrollLeftOffsets
     const target = offsets[panelIndex]
 

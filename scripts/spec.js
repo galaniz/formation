@@ -8,14 +8,11 @@
 
 import { basename } from 'node:path'
 import { readFile, writeFile, glob } from 'node:fs/promises'
-import { clearCoverage } from '../coverage/coverage.js'
 import * as sass from 'sass'
 
 /* Recurse src json files to generate spec test files and clear coverage */
 
 try {
-  await clearCoverage()
-
   const globalStyles = sass.compile('frm/global/global.scss', {
     style: 'compressed'
   })

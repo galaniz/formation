@@ -6,7 +6,7 @@
 
 import type { Navigation } from '../Navigation.js'
 import { test, expect } from '@playwright/test'
-import { doCoverage } from '../../../tests/coverage/coverage.js'
+import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 

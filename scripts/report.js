@@ -6,7 +6,7 @@
 
 /* Imports */
 
-import { createCoverageReport } from '../coverage/coverage.js'
+import { createCoverageReport } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Coverage report for spec tests */
 

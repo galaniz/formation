@@ -26,18 +26,10 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/tests/**/*.ts",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.config.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "lib",
-    "node_modules",
-    "src/tests/**/*.ts",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.config.ts"
+    "node_modules"
   ]
 }

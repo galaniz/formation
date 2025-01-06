@@ -33,10 +33,10 @@ $transition-classes-store: ();
 }
 
 #{$transition-classes} {
-  transition-property: var(--#{con.$n}prop);
-  transition-duration: var(--#{con.$n}duration);
-  transition-timing-function: var(--#{con.$n}easing);
-  transition-delay: var(--#{con.$n}delay);
+  transition-property: var(--#{con.$n}prop); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-duration: var(--#{con.$n}duration); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-timing-function: var(--#{con.$n}easing); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-delay: var(--#{con.$n}delay); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
 }
 
 @each $t, $v in con.$transitions {
