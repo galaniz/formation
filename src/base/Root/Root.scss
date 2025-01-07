@@ -46,11 +46,15 @@
       @each $f, $v in con.$font-sizes {
         $font-size: $v;
 
+        @if meta.type-of($v) == "number" {
+          $font-size: #{calc.calc-rem($v)};
+        }
+
         @if meta.type-of($v) == "list" {
           $font-size: fluid.fluid-size-clamp($v, con.$font-breakpoints, "font-size");
         }
 
-        --#{con.$n}font-#{$f}: #{font-size};
+        --#{con.$n}font-#{$f}: #{$font-size};
       }
     } @else if $r == "font-weights" {
       @each $f, $v in con.$font-weights {

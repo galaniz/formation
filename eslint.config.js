@@ -21,15 +21,5 @@ export default tseslint.config(
       'semi': ['error', 'never'], // No trailing semicolons
       'comma-dangle': ['error', 'never'] // No trailing commas
     }
-  },
-  {
-    files: [
-      '*.js',
-      '**/*.js',
-      '**/*.d.ts'
-    ],
-    extends: [
-      tseslint.configs.disableTypeChecked
-    ]
   }
 )
