@@ -104,7 +104,7 @@ describe('assetLoaded()', () => {
       const image = document.createElement('img') as HTMLImageElement
 
       Object.defineProperty(image, 'complete', { // Override complete property to return true
-        get: () => true,
+        get: () => true
       })
 
       const result = await assetLoaded(image)

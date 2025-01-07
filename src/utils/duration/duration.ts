@@ -9,7 +9,7 @@
  * @param {boolean} words
  * @return {string}
  */
-const getDuration = (seconds: number = 0, words: boolean = false): string => {
+const getDuration = (seconds = 0, words = false): string => {
   /* Hours and min for formatting */
 
   const hours = Math.floor(seconds / 3600)

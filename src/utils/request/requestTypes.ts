@@ -4,17 +4,17 @@
 
 /**
  * @typedef {function} RequestErrorCallback
- * @param {*} error
+ * @param {Error} error
  * @return {void}
  */
-export type RequestErrorCallback = (error: unknown) => void
+export type RequestErrorCallback = (error: Error) => void
 
 /**
  * @typedef {function} RequestSuccessCallback
- * @param {string|*} res
+ * @param {string|object} res
  * @return {void}
  */
-export type RequestSuccessCallback = (res: string | unknown) => void
+export type RequestSuccessCallback = (res: unknown) => void
 
 /**
  * @typedef {object} RequestArgs
@@ -22,8 +22,8 @@ export type RequestSuccessCallback = (res: string | unknown) => void
  * @prop {string} [url]
  * @prop {Object<string, string>} [headers]
  * @prop {object|FormData} body
- * @prop {string} [encode=json] - url || json || formData
- * @prop {string} [expect=json] - json || text
+ * @prop {string} [encode=json] - url | json | formData
+ * @prop {string} [expect=json] - json | text
  * @prop {RequestErrorCallback} onError
  * @prop {RequestSuccessCallback} onSuccess
  */

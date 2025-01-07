@@ -74,7 +74,7 @@ const testActionFour = (): void => {
  * @param {number} nth
  * @return {number}
  */
-const testRoundDiff = (first: number, second: number, nth: number = 10): number => {
+const testRoundDiff = (first: number, second: number, nth = 10): number => {
   return Math.round((second - first) / nth) * nth
 }
 
@@ -86,7 +86,7 @@ const testRoundDiff = (first: number, second: number, nth: number = 10): number 
  * @param {number} [buffer]
  * @return {number}
  */
-const testRoundRange = (num: number, target: number, buffer: number = 100): number => {
+const testRoundRange = (num: number, target: number, buffer = 100): number => {
   if (num >= target - buffer && num <= target + buffer) {
     return target
   }
@@ -100,7 +100,7 @@ const testRoundRange = (num: number, target: number, buffer: number = 100): numb
  * @param {number} [target=10]
  * @return {boolean}
  */
-const testHasIncrement = (target: number = 10): boolean => {
+const testHasIncrement = (target = 10): boolean => {
   /* Convert ms to increments */
 
   const increments: number[] = testMs.map((m) => {
@@ -166,10 +166,10 @@ describe('cascade()', () => {
         {
           action: testOne
         },
-        // @ts-expect-error
+        // @ts-expect-error - test invalid action
         testTwo,
         {
-          action () {
+          action (): void {
             expect(testOne).toHaveBeenCalledTimes(1)
             expect(testTwo).not.toHaveBeenCalled()
             resolve('')
@@ -187,24 +187,24 @@ describe('cascade()', () => {
 
       cascade([
         {
-          action () {
+          action (): void {
             oneMs = performance.now()
           },
           delay: 10
         },
         {
-          // @ts-expect-error
+          // @ts-expect-error - test invalid action
           action: false,
           delay: 100
         },
         {
-          action () {
+          action (): void {
             twoMs = performance.now()
           },
           delay: 20
         },
         {
-          action () {
+          action (): void {
             const result = testRoundDiff(oneMs, twoMs)
             const expectedResult = 20
 
@@ -236,7 +236,7 @@ describe('cascade()', () => {
           action: testActionFour
         },
         {
-          action () {
+          action (): void {
             const result = testHasIncrement(increment)
             const expectedResult = true
 
@@ -271,7 +271,7 @@ describe('cascade()', () => {
           action: testActionFour
         },
         {
-          action () {
+          action (): void {
             const result = testHasIncrement(increment)
             const expectedResult = true
 
@@ -311,7 +311,7 @@ describe('cascade()', () => {
           delay: 80
         },
         {
-          action () {
+          action (): void  {
             const result = testHasIncrement(increment)
             const expectedResult = true
 
@@ -336,17 +336,17 @@ describe('cascade()', () => {
 
       cascade([
         {
-          action () {}
+          action (): void {}
         },
         {
-          action (_index, _repeatIndex, doRecurse) {
+          action (_index, _repeatIndex, doRecurse): void {
             testDone(() => {
               doRecurse()
             })
           }
         },
         {
-          action () {
+          action (): void {
             expect(testDone).toHaveBeenCalledTimes(1)
             resolve('')
           }
@@ -370,7 +370,7 @@ describe('cascade()', () => {
           action: testTwo
         },
         {
-          action (_i, j) {
+          action (_i, j): void {
             if (j === repeat) {
               expect(testOne).toHaveBeenCalledTimes(repeat + 1)
               expect(testTwo).toHaveBeenCalledTimes(repeat + 1)

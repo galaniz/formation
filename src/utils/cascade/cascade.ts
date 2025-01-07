@@ -58,7 +58,7 @@ const requestTimeout = (action: Function, delay: number): void => {
  * @param {number} [repeat=0]
  * @return {void}
  */
-const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
+const cascade = (events: CascadeEvent[], repeat = 0): void => {
   /* Store number of events */
 
   const eventsLength = events.length - 1

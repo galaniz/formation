@@ -43,7 +43,7 @@ test.describe('Slider', () => {
       false, // #sld-empty
       false, // #sld-single
       true,  // #sld-group
-      true,  // #sld-loop
+      true   // #sld-loop
     ])
   })
 })

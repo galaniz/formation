@@ -12,14 +12,14 @@ import { setCookie, getCookie } from '../cookie.js'
  *
  * @type {string}
  */
-const testName: string = 'test_cookie_name'
+const testName = 'test_cookie_name'
 
 /**
  * Test cookie value
  *
  * @type {string}
  */
-const testValue: string = 'test_cookie_value'
+const testValue = 'test_cookie_value'
 
 /**
  * Clear document cookies
@@ -65,7 +65,7 @@ describe('setCookie()', () => {
   it('should return false if name is not a string', () => {
     const name = 1
     const value = 'test'
-    // @ts-expect-error
+    // @ts-expect-error - test invalid name
     const result = setCookie(name, value)
     const expectedResult = false
 
@@ -84,7 +84,7 @@ describe('setCookie()', () => {
   it('should return false if value is not a string', () => {
     const name = 'test'
     const value = false
-    // @ts-expect-error
+    // @ts-expect-error - test invalid value
     const result = setCookie(name, value)
     const expectedResult = false
 
@@ -136,7 +136,7 @@ describe('getCookie()', () => {
 
   it('should return empty string if name is not a string', () => {
     const name = 1
-    // @ts-expect-error
+    // @ts-expect-error - test invalid name
     const result = getCookie(name)
     const expectedResult = ''
 

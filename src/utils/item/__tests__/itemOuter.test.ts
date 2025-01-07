@@ -29,7 +29,7 @@ interface TestItemsObj {
  * @param {boolean} [single]
  * @return {TestItemsObj}
  */
-const testItems = (single: boolean = false): TestItemsObj => {
+const testItems = (single = false): TestItemsObj => {
   const container = document.createElement('div')
   const head = document.createElement('head')
   const style = document.createElement('style')

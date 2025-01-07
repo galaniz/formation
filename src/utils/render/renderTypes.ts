@@ -55,32 +55,25 @@ export interface RenderParents {
  * @prop {RenderItems[]} children
  * @prop {RenderParents[]} parents
  */
-export interface RenderFunctionArgs<T = any> {
-  args: 0 extends (1 & T) ? RenderItems : T extends object ? T & RenderItems : {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface RenderFunctionArgs<T = any> { 
+  args: 0 extends (1 & T) ? RenderItems : T extends object ? T & RenderItems : object
   children: RenderItems[]
   parents: RenderParents[]
 }
 
 /**
- * @typedef {object} RenderStringReturn
- * @prop {string} start
- * @prop {string} end
- */
-export interface RenderStringReturn {
-  start: string
-  end: string
-}
-
-/**
  * @typedef {function} RenderStringFunction
  * @param {RenderFunctionArgs} obj
- * @return {string|RenderStringReturn}
+ * @return {string|string[]}
  */
-export type RenderStringFunction<T = any> = (obj: RenderFunctionArgs<T>) => string | RenderStringReturn
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RenderStringFunction<T = any> = (obj: RenderFunctionArgs<T>) => string | string[]
 
 /**
  * @typedef {Object<string, RenderStringFunction>} RenderStringFunctions
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RenderStringFunctions<T = any> = Record<string, RenderStringFunction<T>>
 
 /**
@@ -88,9 +81,11 @@ export type RenderStringFunctions<T = any> = Record<string, RenderStringFunction
  * @param {RenderFunctionArgs} obj
  * @return {RenderElementArgs}
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RenderFunction<T = any> = (obj: RenderFunctionArgs<T>) => RenderElementArgs
 
 /**
  * @typedef {Object<string, RenderFunction>} RenderFunctions
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RenderFunctions<T = any> = Record<string, RenderFunction<T>>

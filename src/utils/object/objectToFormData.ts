@@ -19,7 +19,7 @@ import { isArray } from '../array/array.js'
  */
 const objectToFormData = <T>(
   value: T,
-  objToStr: boolean = false,
+  objToStr = false,
   _key?: string, // Store key to reflect nested properties
   _data: FormData = new FormData()
 ): FormData => {

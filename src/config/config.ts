@@ -67,7 +67,7 @@ const setConfig = (): void => {
 
   /* Well formed */
 
-  const testStr = new String() // eslint-disable-line
+  const testStr = new String()
 
   if ('toWellFormed' in testStr) {
     config.wellFormed = true

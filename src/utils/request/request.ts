@@ -7,7 +7,7 @@
 import type { RequestArgs } from './requestTypes.js'
 import { urlEncode } from '../url/url.js'
 import { objectToFormData } from '../object/objectToFormData.js'
-import { isObjectStrict } from '../object/object.js'
+import { isObject, isObjectStrict } from '../object/object.js'
 import { isFunction } from '../function/function.js'
 import { ResponseError } from '../ResponseError/ResponseError.js'
 
@@ -20,25 +20,30 @@ import { ResponseError } from '../ResponseError/ResponseError.js'
 const request = async (args: RequestArgs): Promise<void> => {
   /* Defaults */
 
-  let {
+  const argsObj = isObjectStrict(args) ? args : {} as RequestArgs
+
+  const {
     method = 'GET',
     url = '',
     headers = {},
     body = '',
     encode = 'json',
-    expect = 'json',
+    expect = 'json'
+  } = argsObj
+
+  let {
     onError = undefined,
     onSuccess = undefined
-  } = isObjectStrict(args) ? args : {}
+  } = argsObj
 
   /* Error and success must be functions */
 
   if (!isFunction(onError)) {
-    onError = () => {}
+    onError = (): void => {}
   }
 
   if (!isFunction(onSuccess)) {
-    onSuccess = () => {}
+    onSuccess = (): void => {}
   }
 
   /* Headers */
@@ -56,7 +61,7 @@ const request = async (args: RequestArgs): Promise<void> => {
   try {
     /* Encode and body */
 
-    if (encode === 'url') {
+    if (encode === 'url' && isObject(body)) {
       reqHeaders.set('Content-Type', 'application/x-www-form-urlencoded')
       reqBody = urlEncode(body)
     }
@@ -84,7 +89,7 @@ const request = async (args: RequestArgs): Promise<void> => {
 
     onSuccess(expect === 'json' ? await res.json() : await res.text())
   } catch (error) {
-    onError(error)
+    onError(error as Error)
   }
 }
 

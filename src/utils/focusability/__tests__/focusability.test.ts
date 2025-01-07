@@ -159,7 +159,7 @@ describe('toggleFocusability()', () => {
   })
 
   it('should return undefined if items are null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid items
     const result = toggleFocusability(true, null)
     const expectedResult = undefined
 
@@ -240,7 +240,7 @@ describe('toggleFocusability()', () => {
 
 describe('toggleFocusabilityFallback()', () => {
   it('should return undefined if items are null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid items
     const result = toggleFocusabilityFallback(true, null)
     const expectedResult = undefined
 

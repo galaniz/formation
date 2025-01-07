@@ -27,7 +27,7 @@ describe('isFunction()', () => {
   })
 
   it('should return true if value is a class method', () => {
-    class TestClass { static func (): void {} } // eslint-disable-line
+    class TestClass { static func (): void {} }
     const result = isFunction(TestClass.func)
     const expectedResult = true
 

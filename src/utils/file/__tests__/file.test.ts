@@ -45,7 +45,7 @@ describe('isFile()', () => {
   it('should return false if value is a blob', () => {
     const value = new Blob(['<html></html>'], {
       type: 'text/html'
-    });
+    })
 
     const result = isFile(value)
     const expectedResult = false
@@ -55,7 +55,7 @@ describe('isFile()', () => {
 
   it('should return true if value is a file', () => {
     const value = new File(['test'], 'test.txt', {
-      type: 'text/plain',
+      type: 'text/plain'
     })
 
     const result = isFile(value)
@@ -103,7 +103,7 @@ describe('isBlob()', () => {
   it('should return true if value is a blob', () => {
     const value = new Blob(['<html></html>'], {
       type: 'text/html'
-    });
+    })
 
     const result = isBlob(value)
     const expectedResult = true
@@ -113,7 +113,7 @@ describe('isBlob()', () => {
 
   it('should return true if value is a file', () => {
     const value = new File(['test'], 'test.txt', {
-      type: 'text/plain',
+      type: 'text/plain'
     })
 
     const result = isBlob(value)

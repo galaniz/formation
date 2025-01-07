@@ -18,7 +18,7 @@ describe('recurseObject()', () => {
   })
 
   it('should return undefined if condition is null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid condition
     const result = recurseObject({ key: 'value' }, null)
     const expectedResult = undefined
 

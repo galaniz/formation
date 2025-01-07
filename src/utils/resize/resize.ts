@@ -14,7 +14,7 @@ import { config } from '../../config/config.js'
  * @private
  * @type {number}
  */
-let resizeId: number = 0
+let resizeId = 0
 
 /**
  * Resize event callback

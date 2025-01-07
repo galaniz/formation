@@ -17,6 +17,7 @@ describe('urlEncode()', () => {
 
   it('should return empty string if value is empty string', () => {
     const value = ''
+    // @ts-expect-error - test invaid value
     const result = urlEncode(value)
     const expectedResult = ''
 
@@ -25,6 +26,7 @@ describe('urlEncode()', () => {
 
   it('should return empty string if value is number', () => {
     const value = 9384932
+    // @ts-expect-error - test invaid value
     const result = urlEncode(value)
     const expectedResult = ''
 
@@ -33,6 +35,7 @@ describe('urlEncode()', () => {
 
   it('should return empty string if value is boolean', () => {
     const value = false
+    // @ts-expect-error - test invaid value
     const result = urlEncode(value)
     const expectedResult = ''
 
@@ -41,6 +44,7 @@ describe('urlEncode()', () => {
 
   it('should return empty string if value is null', () => {
     const value = null
+    // @ts-expect-error - test invaid value
     const result = urlEncode(value)
     const expectedResult = ''
 
@@ -49,6 +53,7 @@ describe('urlEncode()', () => {
 
   it('should return empty string if value is undefined', () => {
     const value = undefined
+    // @ts-expect-error - test invaid value
     const result = urlEncode(value)
     const expectedResult = ''
 

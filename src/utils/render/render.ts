@@ -43,7 +43,7 @@ const renderElement = (args: RenderElementArgs): HTMLElement | null => {
 
   if (isObjectStrict(props)) {
     getObjectKeys(props).forEach((prop) => {
-      // @ts-expect-error
+      // @ts-expect-error - flexible property setting
       el[prop] = props[prop]
     })
   }
@@ -199,10 +199,8 @@ const renderString = (
       args.content = undefined
     }
 
-    let renderObj = {
-      start: '',
-      end: ''
-    }
+    let start = ''
+    let end  = ''
 
     const renderOutput = renderFunction({
       args,
@@ -211,20 +209,17 @@ const renderString = (
     })
 
     if (isString(renderOutput)) {
-      renderObj.start = renderOutput
+      start = renderOutput
     }
 
-    if (isObjectStrict(renderOutput)) {
-      const { start, end } = renderOutput
+    if (isArrayStrict(renderOutput)) {
+      const [arrStart, arrEnd] = renderOutput
 
-      if (isStringStrict(start) && isStringStrict(end)) {
-        renderObj.start = start
-        renderObj.end = end
+      if (isStringStrict(arrStart) && isStringStrict(arrEnd)) {
+        start = arrStart
+        end = arrEnd
       }
     }
-
-    const start = renderObj.start
-    const end = renderObj.end
 
     _output.html += start
 

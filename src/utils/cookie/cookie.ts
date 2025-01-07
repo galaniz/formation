@@ -14,7 +14,7 @@ import { isString, isStringStrict } from '../string/string.js'
  * @param {number} [expirationDays=0]
  * @return {boolean}
  */
-const setCookie = (name: string, value: string, expirationDays: number = 0): boolean => {
+const setCookie = (name: string, value: string, expirationDays = 0): boolean => {
   if (!isStringStrict(name) || !isStringStrict(value)) {
     return false
   }

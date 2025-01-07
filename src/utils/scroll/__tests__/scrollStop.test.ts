@@ -12,7 +12,7 @@ import { stopScroll } from '../scrollStop.js'
  *
  * @type {string}
  */
-const testAttribute: string = 'data-stop-scroll'
+const testAttribute = 'data-stop-scroll'
 
 /**
  * Check if html element has attribute

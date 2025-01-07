@@ -4,13 +4,32 @@
 
 /* Imports */
 
-import love from 'eslint-config-love'
+import tseslint, { parser } from 'typescript-eslint'
 
 /* Config */
 
-export default [
+export default tseslint.config(
+  tseslint.configs.strictTypeChecked,
   {
-    ...love,
-    files: ['**/*.ts']
+    languageOptions: {
+      parser: parser,
+      parserOptions: {
+        project: './tsconfig.json'
+      }
+    },
+    rules: {
+      'semi': ['error', 'never'], // No trailing semicolons
+      'comma-dangle': ['error', 'never'] // No trailing commas
+    }
+  },
+  {
+    files: [
+      '*.js',
+      '**/*.js',
+      '**/*.d.ts'
+    ],
+    extends: [
+      tseslint.configs.disableTypeChecked
+    ]
   }
-]
+)

@@ -14,7 +14,7 @@ import { getKey } from '../key.js'
  * @param {string} key
  * @return {KeyboardEvent}
  */
-const testMakeEvent = (key: string = ''): KeyboardEvent => {
+const testMakeEvent = (key = ''): KeyboardEvent => {
   const div = document.createElement('div')
 
   return createEvent.keyDown(div, { key }) as KeyboardEvent

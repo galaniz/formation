@@ -124,7 +124,7 @@ describe('getItem()', () => {
   })
 
   it('should return null if item is undefined', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid item
     const result = getItem(undefined)
     const expectedResult = null
 
@@ -141,15 +141,15 @@ describe('getItem()', () => {
 
   it('should return empty array if array of empty string', () => {
     const result = getItem([''])
-    const expectedResult = []
+    const expectedResult: string[] = []
 
     expect(result).toEqual(expectedResult)
   })
 
   it('should return empty array of array of null element', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid item
     const result = getItem([null])
-    const expectedResult = []
+    const expectedResult: string[] = []
 
     expect(result).toEqual(expectedResult)
   })

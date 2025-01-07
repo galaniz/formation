@@ -12,7 +12,7 @@ import { setLoader } from '../loader.js'
  *
  * @type {string}
  */
-const testAttribute: string = 'data-loader-show'
+const testAttribute = 'data-loader-show'
 
 /**
  * Create div loader
@@ -56,7 +56,7 @@ const testCheckFocus = (loader: HTMLElement): boolean => {
 
 describe('setLoader()', () => {
   it('should return undefined if loader is null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid loader
     const result = setLoader(null)
     const expectedResult = undefined
 

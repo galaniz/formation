@@ -15,7 +15,7 @@ import { request } from '../request.js'
  *
  * @type {string}
  */
-const testUrl: string = 'https://testapi.com'
+const testUrl = 'https://testapi.com'
 
 /**
  * Fake body data
@@ -284,7 +284,7 @@ describe('request()', () => {
 
       await request({
         url: testUrl,
-        // @ts-expect-error
+        // @ts-expect-error - test invalid body
         body: undefined,
         onError (error) {
           testError(error)

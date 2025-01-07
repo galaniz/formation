@@ -14,7 +14,7 @@ import { config } from '../../config/config.js'
  * @private
  * @type {number}
  */
-let scrollId: number = 0
+let scrollId = 0
 
 /**
  * Scroll event callback

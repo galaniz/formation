@@ -39,7 +39,7 @@ const toggleFocusability = (on: boolean, items: Element[] = []): boolean | undef
  *
  * @type {string}
  */
-const focusSelector: string =
+const focusSelector =
   'a, area, input, select, textarea, button, details, iframe, audio, video, [contenteditable], [tabindex]'
 
 /**

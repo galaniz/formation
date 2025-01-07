@@ -16,8 +16,8 @@ import { isHtmlElement } from '../html/html.js'
  */
 const setLoader = (
   loader: HTMLElement,
-  show: boolean = true,
-  focus: boolean = true
+  show = true,
+  focus = true
 ): boolean | undefined => {
   if (!isHtmlElement(loader)) {
     return

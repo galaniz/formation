@@ -130,11 +130,7 @@ const testMinify = (str?: string): string => {
  */
 const testListItemString: RenderStringFunction<{ text: string }> = ({ args }) => {
   const { text } = args
-
-  return {
-    start: `<li>${text}`,
-    end: '</li>'
-  }
+  return [`<li>${text}`, '</li>']
 }
 
 /**
@@ -157,7 +153,7 @@ const testListItemElement: RenderFunction<{ text: string }> = ({ args }) => {
 
 describe('renderString()', () => {
   it('should return empty string if functions are null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid functions
     const result = renderString(null)
     const expectedResult = ''
 
@@ -171,7 +167,7 @@ describe('renderString()', () => {
           return '<div></div>'
         }
       },
-      // @ts-expect-error
+      // @ts-expect-error - test invalid function
       null
     )
     const expectedResult = ''
@@ -183,10 +179,7 @@ describe('renderString()', () => {
     const html = renderString(
       {
         ul () {
-          return {
-            start: '<ul>',
-            end: '</ul>'
-          }
+          return ['<ul>', '</ul>']
         },
         li: testListItemString
       },
@@ -218,10 +211,7 @@ describe('renderString()', () => {
     const html = renderString(
       {
         ul () {
-          return {
-            start: '<ul>',
-            end: '</ul>'
-          }
+          return ['<ul>', '</ul>']
         },
         li: testListItemString
       },
@@ -246,16 +236,13 @@ describe('renderString()', () => {
     const html = renderString(
       {
         ul () {
-          return {
-            start: '<ul>',
-            end: '</ul>'
-          }
+          return ['<ul>', '</ul>']
         },
         li (props) {
           const { args } = props
           const { text } = args
 
-          return `<li class="test">${text}</li>`
+          return `<li class="test">${text as string}</li>`
         }
       },
       testItemsDataTwo
@@ -280,7 +267,7 @@ describe('renderString()', () => {
 
 describe('renderElement()', () => {
   it('should return null if args are null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid args
     const result = renderElement(null)
     const expectedResult = null
 
@@ -289,7 +276,7 @@ describe('renderElement()', () => {
 
   it('should return null if tag is undefined', () => {
     const result = renderElement({
-      // @ts-expect-error
+      // @ts-expect-error - test invalid tag
       tag: undefined
     })
 
@@ -302,7 +289,7 @@ describe('renderElement()', () => {
     const result = renderElement({
       tag: 'div',
       attrs: {
-        // @ts-expect-error
+        // @ts-expect-error - test invalid attribute value
         'data-attr': false
       }
     })
@@ -336,7 +323,7 @@ describe('renderElement()', () => {
 
 describe('render()', () => {
   it('should return null if functions are null', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test invalid functions
     const result = render(null)
     const expectedResult = null
 
@@ -352,7 +339,7 @@ describe('render()', () => {
           }
         }
       },
-      // @ts-expect-error
+      // @ts-expect-error - test invalid function
       null
     )
 
@@ -364,7 +351,7 @@ describe('render()', () => {
   it('should return null if render function returns invalid object', () => {
     const result = render(
       {
-        // @ts-expect-error
+        // @ts-expect-error - test invalid return
         ul () {
           return {
             tag: null

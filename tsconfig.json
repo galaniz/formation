@@ -4,7 +4,6 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
-    "allowJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
@@ -26,10 +25,11 @@
     ]
   },
   "include": [
-    "**/*.ts"
+    "src/**/*.ts",
+    "tests/**/*.ts"
   ],
   "exclude": [
-    "lib",
-    "node_modules"
+    "*.config.ts",
+    "*.config.js"
   ]
 }

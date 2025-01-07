@@ -17,14 +17,14 @@ import {
  *
  * @type {string}
  */
-const testNameOne: string = 'testName'
+const testNameOne = 'testName'
 
 /**
  * Second test action name
  *
  * @type {string}
  */
-const testNameTwo: string = 'testNameTwo'
+const testNameTwo = 'testNameTwo'
 
 /* Test actions */
 
@@ -61,7 +61,7 @@ describe('addAction()', () => {
   it('should return false if name is null', () => {
     const name = null
     const action = (): void => {}
-    // @ts-expect-error
+    // @ts-expect-error - test invalid name
     const result = addAction(name, action)
     const expectedResult = false
 
@@ -71,7 +71,7 @@ describe('addAction()', () => {
   it('should return false if action is null', () => {
     const name = 'name'
     const action = null
-    // @ts-expect-error
+    // @ts-expect-error - test invalid action
     const result = addAction(name, action)
     const expectedResult = false
 
@@ -136,7 +136,7 @@ describe('removeAction()', () => {
   it('should return false if name is null', () => {
     const name = null
     const action = (): void => {}
-    // @ts-expect-error
+    // @ts-expect-error - test invalid name
     const result = removeAction(name, action)
     const expectedResult = false
 
@@ -146,7 +146,7 @@ describe('removeAction()', () => {
   it('should return false if action is null', () => {
     const name = 'name'
     const action = null
-    // @ts-expect-error
+    // @ts-expect-error - test invalid action
     const result = removeAction(name, action)
     const expectedResult = false
 
