@@ -10,11 +10,12 @@
 /* Class name customization */
 
 $text-fix: fix.get-class-prefix("text");
+$space-fix: fix.get-class-fix("letter-spacing");
 
 /* Styles */
 
 @each $l, $v in con.$letter-spacing {
-  .#{$text-fix}space-#{$l} {
+  .#{$text-fix}#{$space-fix}-#{$l} {
     letter-spacing: var(--#{con.$n}letter-spacing-#{$l});
   }
 }

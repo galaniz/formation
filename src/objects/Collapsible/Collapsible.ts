@@ -4,42 +4,56 @@
 
 /* Imports */
 
-import type { CollapsibleArgs, CollapsibleAction } from './CollapsibleTypes'
-import { addAction, removeAction, doActions } from '../../utils/action/action'
-import { isString } from '../../utils/string/string'
-import { isHtmlElement } from '../../utils/html/html'
+import type {
+  CollapsibleAccordionArgs,
+  CollapsibleActiveArgs,
+  CollapsibleToggleDetail,
+  CollapsibleTypes
+} from './CollapsibleTypes.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { isHtmlElement } from '../../utils/html/html.js'
+import { isNumber } from '../../utils/number/number.js'
+import { addAction, doActions } from '../../utils/action/action.js'
+import { getItem } from '../../utils/item/item.js'
 
 /**
  * Get and set height to open/close element
  */
-class Collapsible {
-  /**
-   * Element that contains collapsible
-   *
-   * @type {HTMLElement}
-   */
-  container!: HTMLElement // Init false otherwise
-
+class Collapsible extends HTMLElement {
   /**
    * Element that opens and closes
    *
-   * @type {HTMLElement}
+   * @type {HTMLElement|null}
    */
-  collapsible!: HTMLElement // Init false otherwise
+  panel: HTMLElement | null = null
 
   /**
-   * Clickable element that sets open and close
+   * Element that triggers open and close
    *
-   * @type {HTMLElement}
+   * @type {HTMLButtonElement|null}
    */
-  trigger!: HTMLElement // Init false otherwise
+  trigger: HTMLButtonElement | null = null
 
   /**
-   * Collapsible open to start
+   * Open state
    *
    * @type {boolean}
    */
-  startOpen: boolean = false
+  expanded: boolean = false
+
+  /**
+   * Respond to hover events
+   *
+   * @type {boolean}
+   */
+  hoverable: boolean = false
+
+  /**
+   * Accordion group name
+   *
+   * @type {string}
+   */
+  accordion: string = ''
 
   /**
    * Transition duration on open or close
@@ -49,157 +63,188 @@ class Collapsible {
   duration: number = 300
 
   /**
-   * Control accordion with function or breakpoint
-   *
-   * @type {CollapsibleAction}
-   */
-  doAccordion: CollapsibleAction = false
-
-  /**
-   * Control hover with function or breakpoint
-   *
-   * @type {CollapsibleAction}
-   */
-  doHover: CollapsibleAction = false
-
-  /**
-   * Store initialize success
+   * Initialize success
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Action name for accordion functionality
+   * Type of collapsible
+   *
+   * @private
+   * @type {CollapsibleTypes}
+   */
+  #type: CollapsibleTypes = 'single'
+
+  /**
+   * Source of trigger
    *
    * @private
    * @type {string}
    */
-  _doAccordionName: string = ''
+  #source: string = ''
 
   /**
-   * Id to compare for accordion
+   * Id for blur timeout
    *
    * @private
-   * @type {string}
+   * @type {number}
    */
-  _accordionId: string = ''
+  #blurDelayId: number = 0
 
   /**
-   * Set value from public method
+   * Id for transition timeout
    *
    * @private
-   * @type {boolean}
+   * @type {number}
    */
-  _set: boolean = true
+  #delayId: number = 0
 
   /**
-   * Keep track of state
+   * Id for attribute timeout
    *
    * @private
-   * @type {boolean}
+   * @type {number}
    */
-  _open: boolean = false
-
-  /**
-   * Keep track of source
-   *
-   * @private
-   * @type {string}
-   */
-  _source: string = ''
+  #attrDelayId: number = 0
 
   /**
    * Bind this to event callbacks
    *
    * @private
    */
-  _clickHandler = this._click.bind(this)
-  _hoverHandler = this._hover.bind(this)
-  _blurHandler = this._blur.bind(this)
-  _keyHandler = this._key.bind(this)
+  #clickHandler = this.#click.bind(this)
+  #hoverHandler = this.#hover.bind(this)
+  #blurHandler = this.#blur.bind(this)
+  #keyHandler = this.#key.bind(this)
 
   /**
-   * Set properties and initialize
-   *
-   * @param {CollapsibleArgs} args
+   * Constructor object
    */
-  constructor (args: CollapsibleArgs) {
-    this.init = this._initialize(args)
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
+
+  /**
+   * Init - each time added to DOM
+   */
+  connectedCallback (): void {
+    if (this.init) {
+      return
+    }
+
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize - check required props and set props
+   * Clean up - each time removed from DOM
+   */
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
+
+    await Promise.resolve()
+
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
+    /* Remove event listeners */
+
+    this.trigger?.removeEventListener('click', this.#clickHandler)
+    this.removeEventListener('keydown', this.#keyHandler)
+    this.#setHover(false)
+
+    /* Empty/nullify props */
+
+    this.trigger = null
+    this.panel = null
+    this.init = false
+
+    /* Clear timeouts */
+
+    clearTimeout(this.#blurDelayId)
+    clearTimeout(this.#delayId)
+    clearTimeout(this.#attrDelayId)
+  }
+
+  /**
+   * Initialize - check required items and set properties
    *
    * @private
-   * @param {CollapsibleArgs} args
    * @return {boolean}
    */
-  _initialize (args: CollapsibleArgs): boolean {
-    const {
-      container = null,
-      collapsible = null,
-      trigger = null,
-      startOpen = false,
-      duration = 300,
-      doAccordion = false,
-      doHover = false
-    } = args
+  #initialize (): boolean {
+    /* Get items */
+
+    const trigger = getItem('[data-collapsible-trigger]', this)
+    const panel = getItem('[data-collapsible-panel]', this)
 
     /* Check that required items exist */
 
-    if (!isHtmlElement(container) || !isHtmlElement(collapsible) || !isHtmlElement(trigger)) {
+    if (!isHtmlElement(trigger, HTMLButtonElement) || !isHtmlElement(panel)) {
       return false
     }
 
-    /* Set variables */
+    /* Set props */
 
-    this.container = container
-    this.collapsible = collapsible
     this.trigger = trigger
-    this.startOpen = startOpen
-    this.duration = duration
-    this.doAccordion = doAccordion
-    this.doHover = doHover
+    this.panel = panel
 
-    /* Accordion functionality */
+    /* Set duration */
 
-    if (isString(this.doAccordion) || this.doAccordion === true) {
-      this._accordionId =
-        this.collapsible.id !== '' ? this.collapsible.id : performance.now().toString(36) + Math.random().toString(36).substr(2)
+    const duration = this.getAttribute('duration')
+
+    if (isStringStrict(duration)) {
+      const durationValue = parseInt(duration, 10)
+
+      if (isNumber(durationValue)) {
+        this.duration = durationValue
+      }
     }
 
-    if (isString(this.doAccordion)) {
-      addAction(this.doAccordion, (args: { state: boolean, group: string }) => {
-        const { state, group } = args
+    /* Set accordion group */
 
-        this._doAccordion(state, group)
+    const accordion = this.getAttribute('accordion')
+
+    if (isStringStrict(accordion)) {
+      this.accordion = accordion
+      this.#type = 'accordion'
+
+      addAction(`clp:accordion:${accordion}`, (args: CollapsibleAccordionArgs) => {
+        if (args.element !== this && this.expanded) {
+          this.#toggle(false)
+        }
+      })
+
+      addAction('clp:accordion', (args: CollapsibleActiveArgs) => {
+        this.#type = args.active ? 'accordion' : 'single'
+      })
+    }
+
+    /* Set hoverable */
+
+    const hoverable = this.hasAttribute('hoverable')
+
+    if (hoverable) {
+      this.hoverable = true
+
+      addAction('clp:hoverable', (args: CollapsibleActiveArgs) => {  
+        this.#setHover(args.active)
       })
     }
 
     /* Add event listeners */
 
-    this.trigger.addEventListener('click', this._clickHandler)
-    this.container.addEventListener('keydown', this._keyHandler)
+    this.trigger.addEventListener('click', this.#clickHandler)
+    this.addEventListener('keydown', this.#keyHandler)
 
-    /* Hover functionality */
+    /* Open if expanded */
 
-    if (isString(this.doHover)) {
-      addAction(this.doHover, (args: { state: boolean }) => {
-        const { state } = args
+    const expanded = this.getAttribute('expanded')
 
-        this._doHover(state)
-      })
-    }
-
-    if (this.doHover === true) {
-      this._doHover(true)
-    }
-
-    /* Expand if start open */
-
-    if (this.startOpen) {
-      this._toggle(true)
+    if (expanded === 'true') {
+      this.#toggle(true)
     }
 
     /* Init successful */
@@ -208,193 +253,145 @@ class Collapsible {
   }
 
   /**
-   * Set/unset hover
+   * Set and unset hover events
    *
    * @private
-   * @param {boolean} state
+   * @param {boolean} [set=true]
    * @return {void}
    */
-  _doHover (state: boolean = false): void {
-    if (state) {
-      this.container.addEventListener('mouseenter', this._hoverHandler)
-      this.container.addEventListener('mouseleave', this._hoverHandler)
-      this.container.addEventListener('focusout', this._blurHandler)
+  #setHover (set: boolean = true): void {
+    if (set) {
+      this.addEventListener('mouseenter', this.#hoverHandler)
+      this.addEventListener('mouseleave', this.#hoverHandler)
+      this.addEventListener('focusout', this.#blurHandler)
     } else {
-      this.container.removeEventListener('mouseenter', this._hoverHandler)
-      this.container.removeEventListener('mouseleave', this._hoverHandler)
-      this.container.removeEventListener('focusout', this._blurHandler)
+      this.removeEventListener('mouseenter', this.#hoverHandler)
+      this.removeEventListener('mouseleave', this.#hoverHandler)
+      this.removeEventListener('focusout', this.#blurHandler)
     }
   }
 
   /**
-   * Set/unset accordion
+   * Open or close panel and update attributes
    *
    * @private
-   * @param {boolean} state
-   * @param {string} group
+   * @param {boolean} [open=true]
    * @return {void}
    */
-  _doAccordion (state: boolean = false, group: string = ''): void {
-    if (!isString(group)) {
+  #toggle (open: boolean = true): void {
+    /* Panel and different state required */
+
+    if (!isHtmlElement(this.panel) || open === this.expanded) {
       return
     }
 
-    this._doAccordionName = `frm-collapsible-${group}`
+    /* Get height */
 
-    if (state) {
-      addAction(this._doAccordionName, this._doAccordionAction)
-    } else {
-      removeAction(this._doAccordionName, this._doAccordionAction)
-    }
-  }
+    this.panel.style.height = 'auto'
+    const height = this.panel.clientHeight
+    this.panel.style.height = ''
 
-  /**
-   * Action to create accordion functionality
-   *
-   * @private
-   * @param {objects} args
-   * @param {string} args.accordionId
-   * @return {void}
-   */
-  _doAccordionAction = (args: { accordionId: string }): void => {
-    const { accordionId } = args
+    /* Set height */
 
-    if (accordionId !== this._accordionId && this._open) {
-      this._toggle(false)
-    }
-  }
+    this.style.setProperty('--clp-height', `${height}px`)
 
-  /**
-   * Get and set height
-   *
-   * @private
-   * @param {boolean} open
-   * @return {void}
-   */
-  _setHeight (): void {
-    this.collapsible.style.height = 'auto'
+    this.#delayId = window.setTimeout(() => {
+      this.style.setProperty('--clp-height', 'auto')
 
-    const height = this.collapsible.clientHeight
-
-    this.collapsible.style.height = ''
-    this.collapsible.style.setProperty('--clp-height', `${height}px`)
-
-    setTimeout(() => {
-      this.collapsible.style.setProperty('--clp-height', 'auto')
+      clearTimeout(this.#delayId)
     }, this.duration + 10)
-  }
 
-  /**
-   * Open or close, update trigger and publish id for accordion
-   *
-   * @private
-   * @param {boolean} open
-   * @return {void}
-   */
-  _toggle (open: boolean = true): void {
-    if (!this._set) {
-      return
+    /* Focus if tap */
+
+    if (open && this.trigger !== document.activeElement && this.#source === 'tap') {
+      this.trigger?.focus() // iOS Safari not focusing on buttons
     }
 
-    this._setHeight()
-    this._open = open
+    /* Update attributes */
 
-    if (open) {
-      if (this.trigger !== document.activeElement && this._source === 'tap') {
-        this.trigger.focus() // iOS Safari not focusing on buttons
-      }
+    this.#attrDelayId = window.setTimeout(() => {
+      this.trigger?.setAttribute('aria-expanded', open.toString())
+      this.setAttribute('data-collapsible-source', this.#source)
+      this.setAttribute('expanded', open.toString())
+      this.expanded = open
 
-      if (isString(this._doAccordionName)) {
-        doActions(this._doAccordionName, {
-          accordionId: this._accordionId
-        })
-      }
-    }
-
-    setTimeout(() => {
-      this.trigger.setAttribute('aria-expanded', open.toString())
-      this.container.setAttribute('data-collapsible-expanded', open.toString())
-      this.container.setAttribute('data-collapsible-source', this._source)
+      clearTimeout(this.#attrDelayId)
     }, 10)
+
+    /* Emit toggle event */
+
+    const toggleDetails: CollapsibleToggleDetail = {
+      open,
+      type: this.#type,
+      group: this.accordion
+    }
+
+    const onToggle = new CustomEvent('clp:toggle', {
+      detail: toggleDetails
+    })
+
+    this.dispatchEvent(onToggle)
+
+    /* Accordion group action */
+
+    if (this.#type === 'accordion' && open) {
+      doActions(`clp:accordion:${this.accordion}`, {
+        element: this
+      })
+    }
   }
 
   /**
-   * Click handler on trigger element - open or close
+   * Click handler on container element to toggle
    *
    * @private
    * @return {void}
    */
-  _click (): void {
-    const open = !this._open
-
-    this._source = 'tap'
-    this._toggle(open)
+  #click (): void {
+    this.#source = 'tap'
+    this.#toggle(!this.expanded)
   }
 
   /**
-   * Mouse handler on container element - open or close
+   * Mouse handler on container element to toggle
    *
    * @private
    * @param {MouseEvent} e
    * @return {void}
    */
-  _hover (e: MouseEvent): void {
-    const enter = e.type === 'mouseenter'
-
-    this._source = 'hover'
-    this._toggle(enter)
+  #hover (e: MouseEvent): void {
+    this.#source = 'hover'
+    this.#toggle(e.type === 'mouseenter')
   }
 
   /**
-   * Key handler on container element - set source
+   * Key handler on container element for key source
    *
    * @private
    * @return {void}
    */
-  _key (): void {
-    this._source = 'key'
+  #key (): void {
+    this.#source = 'key'
   }
 
   /**
-   * Focusout handler on container element - close
+   * Focusout handler on container element to close
    *
    * @private
    * @return {void}
    */
-  _blur (): void {
-    setTimeout(() => {
-      if (!this.container.contains(document.activeElement)) {
-        this._toggle(false)
+  #blur (): void {
+    /* Clear timeouts */
+
+    clearTimeout(this.#blurDelayId)
+
+    /* Wait for correct activeElement */
+
+    this.#blurDelayId = window.setTimeout(() => {
+      if (!this.contains(document.activeElement)) {
+        this.#toggle(false)
       }
-    }, 100) // Wait for correct activeElement
-  }
-
-  /**
-   * Public method - set or unset main properties
-   *
-   * @param {boolean} set
-   * @return {void}
-   */
-  set (set: boolean = true): void {
-    this._set = set
-
-    if (set) {
-      this._toggle(this._open)
-    } else {
-      this.collapsible.style.setProperty('--clp-height', '')
-      this.collapsible.style.setProperty('--clp-vis', '')
-      this.collapsible.style.setProperty('--clp-overflow', '')
-    }
-  }
-
-  /**
-   * Public method - open or close
-   *
-   * @param {boolean} open
-   * @return {void}
-   */
-  toggle (open: boolean = true): void {
-    this._toggle(open)
+    }, 100)
   }
 }
 

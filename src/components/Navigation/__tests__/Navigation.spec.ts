@@ -6,20 +6,14 @@
 
 import type { Navigation } from '../Navigation.js'
 import { test, expect } from '@playwright/test'
-import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
 test.describe('Navigation', () => {
   /* Html and coverage */
 
-  test.beforeEach(async ({ browserName, page }) => {
-    doCoverage(browserName, page, true)
+  test.beforeEach(async ({ page }) => {
     await page.goto('/spec/components/Navigation/__tests__/Navigation.html')
-  })
-
-  test.afterEach(async ({ browserName, page }) => {
-    doCoverage(browserName, page, false)
   })
 
   /* Test init */
@@ -35,7 +29,7 @@ test.describe('Navigation', () => {
 
   test('should initialize if contains required elements', async ({ page }) => {
     const navInit = await page.evaluate(() => {
-      const navs = Array.from(document.querySelectorAll('frm-navigation')) as Navigation[]
+      const navs: Navigation[] = Array.from(document.querySelectorAll('frm-navigation'))
       return navs.map(nav => nav.init)
     })
 
@@ -52,19 +46,19 @@ test.describe('Navigation', () => {
   test('should move all items into modal slots if past breakpoint', async ({ page }) => {
     await page.setViewportSize({
       width: 600,
-      height: 600,
+      height: 600
     })
 
     await page.waitForTimeout(100)
 
     const navSlots = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slots-breakpoint') as Navigation
+      const nav: Navigation | null = document.querySelector('#nav-slots-breakpoint')
 
       return {
-        one: nav.slots.get('one')?.children.length,
-        two: nav.slots.get('two')?.children.length,
-        modalOne: nav.modalSlots.get('one')?.children.length,
-        modalTwo: nav.modalSlots.get('two')?.children.length
+        one: nav?.slots.get('one')?.children.length,
+        two: nav?.slots.get('two')?.children.length,
+        modalOne: nav?.modalSlots.get('one')?.children.length,
+        modalTwo: nav?.modalSlots.get('two')?.children.length
       }
     })
 

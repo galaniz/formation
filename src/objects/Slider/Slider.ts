@@ -222,7 +222,7 @@ class Slider extends Tabs {
   /**
    * Constructor object
    */
-  constructor () { super() } // eslint-disable-line
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
    * Init - each time added to DOM
@@ -505,13 +505,16 @@ class Slider extends Tabs {
    * @return {TabsIndexArgs}
    */
   #getLoopIndexes (args: TabsIndexArgs, moved: boolean = false): TabsIndexArgs {
-    let {
-      currentIndex,
+    const {
       lastIndex,
-      panelIndex,
-      lastPanelIndex,
       focus,
       source
+    } = args
+
+    let {
+      currentIndex,
+      lastPanelIndex,
+      panelIndex
     } = args
 
     if (source === 'click') {

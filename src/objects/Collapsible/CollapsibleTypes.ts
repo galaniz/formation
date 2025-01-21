@@ -3,26 +3,34 @@
  */
 
 /**
- * @typedef {string|number|boolean} CollapsibleAction
+ * @typedef {string} CollapsibleTypes - single | accordion
  */
-export type CollapsibleAction = string | number | boolean
+export type CollapsibleTypes = 'single' | 'accordion'
 
 /**
- * @typedef {object} CollapsibleArgs
- * @prop {Element|null} container
- * @prop {Element|null} collapsible
- * @prop {Element|null} trigger
- * @prop {boolean} [startOpen=false]
- * @prop {number} [duration=300]
- * @prop {CollapsibleAction} [doAccordion=false]
- * @prop {CollapsibleAction} [doHover=false]
+ * @typedef {object} CollapsibleToggleDetail
+ * @prop {boolean} open
+ * @prop {CollapsibleTypes} type
+ * @prop {string} group
  */
-export interface CollapsibleArgs {
-  container: Element | null
-  collapsible: Element | null
-  trigger: Element | null
-  startOpen?: boolean
-  duration?: number
-  doAccordion?: string | number | boolean
-  doHover?: string | number | boolean
+export interface CollapsibleToggleDetail {
+  open: boolean
+  type: CollapsibleTypes
+  group: string
+}
+
+/**
+ * @typedef {object} CollapsibleActiveArgs
+ * @prop {boolean} active
+ */
+export interface CollapsibleActiveArgs {
+  active: boolean
+}
+
+/**
+ * @typedef {object} CollapsibleAccordionArgs
+ * @prop {HTMLElement} element
+ */
+export interface CollapsibleAccordionArgs {
+  element: HTMLElement
 }

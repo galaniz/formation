@@ -6,28 +6,22 @@
 
 import type { Slider } from '../Slider.js'
 import { test, expect } from '@playwright/test'
-import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
 test.describe('Slider', () => {
   /* Html and coverage */
 
-  test.beforeEach(async ({ browserName, page }) => {
-    doCoverage(browserName, page, true)
+  test.beforeEach(async ({ page }) => {
     await page.goto('/spec/objects/Slider/__tests__/Slider.html')
-  })
-
-  test.afterEach(async ({ browserName, page }) => {
-    doCoverage(browserName, page, false)
   })
 
   /* Test init */
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-empty') as Slider
-      return slider.init
+      const slider: Slider | null = document.querySelector('#sld-empty')
+      return slider?.init
     })
 
     expect(sliderInit).toBe(false)
@@ -35,7 +29,7 @@ test.describe('Slider', () => {
 
   test('should initialize if contains required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
-      const sliders = Array.from(document.querySelectorAll('frm-slider')) as Slider[]
+      const sliders: Slider[] = Array.from(document.querySelectorAll('frm-slider'))
       return sliders.map(slider => slider.init)
     })
 

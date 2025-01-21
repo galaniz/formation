@@ -78,7 +78,7 @@ class Navigation extends HTMLElement {
    *
    * @type {number}
    */
-  delayShow: number = 200
+  delay: number = 200
 
   /**
    * Breakpoint(s) to trigger "overflowing" state
@@ -170,7 +170,7 @@ class Navigation extends HTMLElement {
   /**
    * Constructor object
    */
-  constructor () { super() } // eslint-disable-line
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
    * Init - each time added to DOM
@@ -242,13 +242,13 @@ class Navigation extends HTMLElement {
 
     /* Set delay if it exists */
 
-    const delayShow = this.getAttribute('delay-show')
+    const delay = this.getAttribute('delay')
 
-    if (isStringStrict(delayShow)) {
-      const delayShowValue = parseInt(delayShow, 10)
+    if (isStringStrict(delay)) {
+      const delayValue = parseInt(delay, 10)
 
-      if (isNumber(delayShowValue)) {
-        this.delayShow = delayShowValue
+      if (isNumber(delayValue)) {
+        this.delay = delayValue
       }
     }
 
@@ -617,7 +617,7 @@ class Navigation extends HTMLElement {
           action: () => {
             this.dataset.navShowModal = ''
           },
-          delay: this.delayShow
+          delay: this.delay
         },
         {
           action: () => {
@@ -638,7 +638,7 @@ class Navigation extends HTMLElement {
             delete this.dataset.navShow
             delete this.dataset.navShowModal
           },
-          delay: this.delayShow
+          delay: this.delay
         },
         {
           action: () => {

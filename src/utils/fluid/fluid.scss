@@ -13,6 +13,20 @@
 @use "../calc/calc";
 
 /**
+ * Remove unit from number
+ *
+ * @param {number} $number
+ * @return {number}
+ */
+@function strip-unit($number) {
+  @if meta.type-of($number) == number and not math.is-unitless($number) {
+    @return math.div($number, $number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+/**
  * Fluidly resize between breakpoints
  *
  * @param {string} $prop
@@ -49,14 +63,14 @@
         #{$prop}: $size $oth $imp
       ));
     } @else {
-      $new-size: math.unitless(list.nth($sizes, $i + 1));
+      $new-size: strip-unit(list.nth($sizes, $i + 1));
       $new-bk: list.nth($breakpoints, $i + 1);
-      $new-bk-abs: math.unitless(calc.calc-rem(map.get(con.$breakpoints, $new-bk)));
-      $bk-abs: math.unitless($bk-rem);
+      $new-bk-abs: strip-unit(calc.calc-rem(map.get(con.$breakpoints, $new-bk)));
+      $bk-abs: strip-unit($bk-rem);
 
       @include breakpoint.breakpoint-batch-add($bk, (
         #{$prop}:
-          calc(#{$size} + ((100vw - #{$bk-rem}) / (#{$new-bk-abs} - #{$bk-abs})) * (#{$new-size} - #{math.unitless($size)}))
+          calc(#{$size} + ((100vw - #{$bk-rem}) / (#{$new-bk-abs} - #{$bk-abs})) * (#{$new-size} - #{strip-unit($size)}))
           $oth
           $imp
       ));

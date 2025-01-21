@@ -13,21 +13,25 @@ $object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.#{$object-fix}collapsible-main {
-  --#{con.$n}prop: #{con.$collapsible-prop};
-  --#{con.$n}duration: #{con.$collapsible-duration};
-  --#{con.$n}delay: #{con.$collapsible-delay};
+.#{$object-fix}collapsible {
   --clp-vis: hidden;
   --clp-overflow: hidden;
+  --clp-delay: #{con.$collapsible-delay};
   --clp-ht: 0;
+
+  &[expanded="true"] {
+    --clp-vis: visible;
+    --clp-delay: #{con.$collapsible-delay-expanded};
+    --clp-ht: var(--clp-height);
+  }
+}
+
+.#{$object-fix}collapsible-panel {
+  --#{con.$n}prop: #{con.$collapsible-prop};
+  --#{con.$n}duration: #{con.$collapsible-duration};
+  --#{con.$n}delay: var(--clp-delay);
 
   height: var(--clp-ht);
   visibility: var(--clp-vis);
   overflow: var(--clp-overflow);
-
-  [data-collapsible-expanded="true"] & {
-    --#{con.$n}delay: #{con.$collapsible-delay-expanded};
-    --clp-vis: visible;
-    --clp-ht: var(--clp-height);
-  }
 }

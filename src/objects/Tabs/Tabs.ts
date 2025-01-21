@@ -51,7 +51,7 @@ class Tabs extends HTMLElement {
   direction: 'horizontal' | 'vertical' = 'horizontal'
 
   /**
-   * Store initialize success
+   * Initialize success
    *
    * @type {boolean}
    */
@@ -72,7 +72,7 @@ class Tabs extends HTMLElement {
   #className: string = 'tabs'
 
   /**
-   * Store tab elements indexes
+   * Tab elements indexes
    *
    * @type {Map<HTMLElement, number>}
    */
@@ -114,7 +114,7 @@ class Tabs extends HTMLElement {
   /**
    * Constructor object
    */
-  constructor () { super() } // eslint-disable-line
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
    * Init - each time added to DOM
@@ -236,6 +236,7 @@ class Tabs extends HTMLElement {
         source: 'init'
       })
     }
+
     /* Init successful */
 
     return true

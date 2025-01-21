@@ -18,6 +18,7 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "lib",
     "declaration": true,
+    "removeComments": true,
     "lib": [
       "es2022",
       "dom",

@@ -20,6 +20,7 @@
     "sourceMap": true,
     "inlineSourceMap": false,
     "inlineSources": true,
+    "removeComments": true,
     "lib": [
       "es2022",
       "dom",

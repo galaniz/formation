@@ -79,9 +79,11 @@ $names-default: (
   "visually": "visually",
   "border-radius": "radius",
   "border-width": "width",
-  "text-height": "height",
-  "text-weight": "weight",
-  "text-align": "align",
+  "font": "font",
+  "font-weight": "weight",
+  "line-height": "leading",
+  "letter-spacing": "tracking",
+  "text-align": "text",
 ) !default;
 
 /* Terse class names */
@@ -120,9 +122,11 @@ $names-terse: (
   "visually": "vis",
   "border-radius": "radius",
   "border-width": "wd",
-  "text-height": "ht",
-  "text-weight": "wt",
-  "text-align": "align",
+  "font": "font",
+  "font-weight": "wt",
+  "line-height": "lead",
+  "letter-spacing": "track",
+  "text-align": "text",
 ) !default;
 
 /* Terse class name opt in */
@@ -143,7 +147,8 @@ $prefixes: (
   "effect": "e",
   "layout": "",
   "object": "",
-  "text": "t",
+  "text": "",
+  "color": "",
 ) !default;
 
 /* Store custom variables */

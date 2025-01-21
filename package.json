@@ -14,8 +14,8 @@
     }
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json && node scripts/lib.js",
-    "build:spec": "tsc --project tsconfig.spec.json && node scripts/spec.js",
+    "build": "npx tsc --project tsconfig.build.json && node scripts/lib.js",
+    "build:spec": "npx tsc --project tsconfig.spec.json && node scripts/spec.js",
     "lint:scss": "npx stylelint 'src/**/*.scss'",
     "lint:ts": "npx eslint .",
     "lint": "pnpm lint:ts && pnpm lint:scss",
@@ -39,19 +39,12 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@testing-library/dom": "^10.4.0",
-    "@types/istanbul-lib-coverage": "2.0.6",
-    "@types/istanbul-lib-report": "^3.0.3",
-    "@types/istanbul-reports": "^3.0.4",
     "@types/node": "^22.10.5",
     "@typescript-eslint/eslint-plugin": "8.19.1",
     "@typescript-eslint/parser": "8.19.1",
     "@vitest/coverage-v8": "2.1.8",
     "eslint": "9.15.0",
     "happy-dom": "^16.3.0",
-    "istanbul-lib-coverage": "^3.2.2",
-    "istanbul-lib-report": "^3.0.1",
-    "istanbul-reports": "^3.1.7",
-    "jsdoc-api": "^9.3.4",
     "release-it": "^18.0.0",
     "sass": "^1.83.1",
     "serve": "^14.2.4",
@@ -59,7 +52,6 @@
     "stylelint-config-standard-scss": "^14.0.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "8.19.1",
-    "v8-to-istanbul": "^9.3.0",
     "vitest": "^2.1.8"
   },
   "release-it": {
