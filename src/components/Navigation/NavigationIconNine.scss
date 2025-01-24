@@ -40,7 +40,7 @@ $y: icon.$y + 0.0313rem; // 0.0313 to make corner sharp
     transform-origin: 100% 0;
   }
 
-  [data-nav-show] & {
+  [show] & {
     --ico-y: #{$y};
     --ico-y-1: #{$y * -1};
     --ico-rotate: 45deg;

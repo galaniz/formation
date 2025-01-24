@@ -58,7 +58,7 @@ $component-fix: fix.get-class-prefix("component");
     opacity: var(--ico-op);
   }
 
-  [data-nav-show] & {
+  [show] & {
     .#{$component-fix}nav-icon-middle {
       --#{con.$n}delay: 0ms;
       --ico-op: 0;

@@ -8,23 +8,15 @@
 export type CollapsibleTypes = 'single' | 'accordion'
 
 /**
- * @typedef {object} CollapsibleToggleDetail
- * @prop {boolean} open
- * @prop {CollapsibleTypes} type
- * @prop {string} group
+ * @typedef {object} CollapsibleActionArgs
+ * @prop {boolean} [hoverable]
+ * @prop {boolean} [expanded]
+ * @prop {CollapsibleTypes} [type]
  */
-export interface CollapsibleToggleDetail {
-  open: boolean
-  type: CollapsibleTypes
-  group: string
-}
-
-/**
- * @typedef {object} CollapsibleActiveArgs
- * @prop {boolean} active
- */
-export interface CollapsibleActiveArgs {
-  active: boolean
+export interface CollapsibleActionArgs {
+  hoverable?: boolean
+  expanded?: boolean
+  type?: CollapsibleTypes
 }
 
 /**

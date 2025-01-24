@@ -228,6 +228,12 @@ class Slider extends Tabs {
    * Init - each time added to DOM
    */
   override connectedCallback (): void {
+    /* Inherit */
+
+    if (this.init) {
+      return
+    }
+
     super.connectedCallback()
 
     /* Add event listeners */
@@ -244,8 +250,20 @@ class Slider extends Tabs {
   /**
    * Clean up - each time removed from DOM
    */
-  override disconnectedCallback (): void {
-    super.disconnectedCallback()
+  override async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
+
+    await Promise.resolve()
+
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
+    /* Inherit */
+
+    await super.disconnectedCallback()
 
     /* Remove event listeners */
 

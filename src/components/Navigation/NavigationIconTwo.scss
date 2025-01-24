@@ -32,7 +32,7 @@ $component-fix: fix.get-class-prefix("component");
     opacity: var(--ico-op);
   }
 
-  [data-nav-show] & {
+  [show] & {
     --ico-y: #{icon.$y};
     --ico-y-1: #{icon.$y * -1};
     --ico-op: 0;

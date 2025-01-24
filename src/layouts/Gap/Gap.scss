@@ -19,6 +19,10 @@ $gap-fix: fix.get-class-fix("gap");
   gap: var(--#{con.$n}gap);
 }
 
+.#{$layout-fix}#{$gap-fix} {
+  @extend %l-gap;
+}
+
 @each $g in con.$gaps {
   .#{$layout-fix}#{$gap-fix}-#{$g} {
     --#{con.$n}gap: var(--#{con.$n}#{$g});

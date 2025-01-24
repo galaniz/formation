@@ -372,34 +372,34 @@ $default-delay: map.get($transitions, "default", "delay");
 
 $collapsible-prop: visibility, height;
 $collapsible-duration: 0ms, #{$default-duration};
-$collapsible-delay: #{$default-duration}, 10ms;
-$collapsible-delay-expanded: 10ms, 0ms;
+$collapsible-delay: #{$default-duration}, 0ms;
+$collapsible-delay-expanded: 0ms, 0ms;
 
 /* Loader transition */
 
 $loader-prop: visibility, opacity;
 $loader-duration: 0ms, #{$default-duration};
 $loader-delay: #{$default-duration}, 0ms;
-$loader-delay-show: 0ms, 10ms;
+$loader-delay-show: 0ms, 0ms;
 
 /* Page transition */
 
 $page-transition-prop: visibility, opacity;
 $page-transition-duration: 0ms, #{$default-duration};
 $page-transition-easing: #{$default-easing};
-$page-transition-delay: #{$default-duration}, 10ms;
-$page-transition-delay-show: 10ms, 0ms;
+$page-transition-delay: #{$default-duration}, 0ms;
+$page-transition-delay-show: 0ms, 0ms;
 
 /* Modal transition */
 
 $modal-prop: visibility;
 $modal-duration: 0ms;
 $modal-delay: #{$default-duration};
-$modal-delay-open: 10ms;
+$modal-delay-open: 0ms;
 $modal-overlay-window-prop: visibility, opacity;
 $modal-overlay-window-duration: 0ms, #{$default-duration};
-$modal-overlay-window-delay: #{$default-duration}, 10ms;
-$modal-overlay-window-delay-open: 10ms, 0ms;
+$modal-overlay-window-delay: #{$default-duration}, 0ms;
+$modal-overlay-window-delay-open: 0ms, 0ms;
 
 /* Z index */
 

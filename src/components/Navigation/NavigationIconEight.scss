@@ -52,7 +52,7 @@ $y: (icon.$y + calc.calc-rem(math.div($line-width, 2)) + 0.0313rem); // 0.0313 t
     margin-left: 50%;
   }
 
-  [data-nav-show] & {
+  [show] & {
     --ico-rotate: -45deg;
     --ico-rotate-1: -90deg;
     --ico-x: #{$x};

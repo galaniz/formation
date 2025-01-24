@@ -16,11 +16,11 @@ $component-fix: fix.get-class-prefix("component");
   --nav-hide: block;
   --nav-vis: hidden;
 
-  &[data-nav-open="true"] {
+  &[open="true"] {
     --nav-vis: visible;
   }
 
-  &[data-nav-overflow="false"] {
+  &[overflow="false"] {
     --nav-hide: none;
   }
 }

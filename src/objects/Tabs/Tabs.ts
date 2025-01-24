@@ -12,6 +12,17 @@ import { isNumber } from '../../utils/number/number.js'
 import { getKey } from '../../utils/key/key.js'
 
 /**
+ * Custom event details
+ */
+declare global {
+  interface ElementEventMap {
+    'tabs:deactivate': CustomEvent<TabsEventDetail>
+    'tabs:activate': CustomEvent<TabsEventDetail>
+    'tabs:activated': CustomEvent<TabsEventDetail>
+  }
+}
+
+/**
  * Display tabs and corresponding panels with click and keyboard navigation
  */
 class Tabs extends HTMLElement {
@@ -120,13 +131,27 @@ class Tabs extends HTMLElement {
    * Init - each time added to DOM
    */
   connectedCallback (): void {
+    if (this.init) {
+      return
+    }
+
     this.init = this.#initialize()
   }
 
   /**
    * Clean up - each time removed from DOM
    */
-  disconnectedCallback (): void {
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
+
+    await Promise.resolve()
+
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
     /* Remove event listeners */
 
     this.tabs.forEach((tab) => {

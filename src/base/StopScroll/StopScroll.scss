@@ -2,7 +2,6 @@
  * Base - Stop Scroll Styles
  */
 
-html[data-stop-scroll],
 html[data-stop-scroll] body {
   overflow: hidden;
   overscroll-behavior: none;

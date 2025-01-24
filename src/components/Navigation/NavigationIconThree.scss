@@ -36,7 +36,7 @@ $component-fix: fix.get-class-prefix("component");
     opacity: var(--ico-op);
   }
 
-  [data-nav-show] & {
+  [show] & {
     --ico-rotate: 45deg;
     --ico-rotate-1: 90deg;
     --ico-y: #{icon.$y};

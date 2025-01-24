@@ -34,7 +34,7 @@ $component-fix: fix.get-class-prefix("component");
     transform: translateY(var(--ico-y-1)) rotate(var(--ico-rotate-1));
   }
 
-  [data-nav-show] & {
+  [show] & {
     --ico-y: #{icon.$y};
     --ico-y-1: #{icon.$y * -1};
     --ico-rotate: 45deg;

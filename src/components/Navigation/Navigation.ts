@@ -21,6 +21,19 @@ import { onEscape, removeEscape } from '../../utils/escape/escape.js'
 import { config } from '../../config/config.js'
 
 /**
+ * Custom event details
+ */
+declare global {
+  interface ElementEventMap {
+    'nav:reset': CustomEvent
+    'nav:resetted': CustomEvent
+    'nav:set': CustomEvent
+    'nav:toggle': CustomEvent
+    'nav:toggled': CustomEvent
+  }
+}
+
+/**
  * Move navigation items based on overflow/breakpoint and toggle modal element
  */
 class Navigation extends HTMLElement {
@@ -99,7 +112,14 @@ class Navigation extends HTMLElement {
    *
    * @type {boolean}
    */
-  isOpen: boolean = false
+  open: boolean = false
+
+  /**
+   * Overflow state
+   *
+   * @type {boolean}
+   */
+  overflow: boolean = false
 
   /**
    * Items by group attribute
@@ -176,13 +196,27 @@ class Navigation extends HTMLElement {
    * Init - each time added to DOM
    */
   connectedCallback (): void {
+    if (this.init) {
+      return
+    }
+
     this.init = this.#initialize()
   }
 
   /**
    * Clean up - each time removed from DOM
    */
-  disconnectedCallback (): void {
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
+
+    await Promise.resolve()
+
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
     /* Remove event listeners */
 
     this.openButton?.removeEventListener('click', this.#clickOpenHandler)
@@ -390,7 +424,7 @@ class Navigation extends HTMLElement {
 
     /* Reset attributes */
 
-    this.dataset.navOverflow = 'false'
+    this.setAttribute('overflow', 'false')
 
     /* No items in modal */
 
@@ -483,9 +517,10 @@ class Navigation extends HTMLElement {
    * Reset, check overflow and move items if overflowing
    *
    * @private
+   * @param {boolean} [resize]
    * @return {void}
    */
-  #set (): void {
+  #set (resize: boolean = false): void {
     /* Reset and emit event */
 
     this.#reset()
@@ -549,26 +584,26 @@ class Navigation extends HTMLElement {
     /* Set attribute if overflow or close */
 
     const currentGroupsLen = this.#currentModalGroups.size
+    const overflow = currentGroupsLen > 0
 
-    if (currentGroupsLen > 0) {
-      this.dataset.navOverflow = 'true'
-    } else {
+    if (overflow) {
+      this.setAttribute('overflow', 'true')
+    }
+
+    if (!overflow && resize) {
       this.#toggle(true, false)
     }
 
+    this.overflow = overflow
+
     /* Emit set event */
 
-    const onSet = new CustomEvent('nav:set', {
-      detail: {
-        init: !this.init
-      }
-    })
-
+    const onSet = new CustomEvent('nav:set')
     this.dispatchEvent(onSet)
   }
 
   /**
-   * Open/close modal - set and unset attributes and toggleFocusability
+   * Open/close modal - set and unset attributes and toggle focusability
    *
    * @private
    * @param {boolean} close
@@ -576,21 +611,18 @@ class Navigation extends HTMLElement {
    * @return {void}
    */
   #toggle (close: boolean = true, focusOpenButton: boolean = true): void {
+    /* Open state */
+
+    this.open = !close
+
     /* Emit on event */
 
-    const onToggle = new CustomEvent('nav:toggle', {
-      detail: {
-        open: !close
-      }
-    })
-
+    const onToggle = new CustomEvent('nav:toggle')
     this.dispatchEvent(onToggle)
 
     /* Make items outside modal inert and get first focusable element */
 
-    this.isOpen = !close
-
-    toggleFocusability(!this.isOpen, getOuterFocusableItems(this.modal))
+    toggleFocusability(!this.open, getOuterFocusableItems(this.modal))
 
     if (!isHtmlElement(this.#firstFocusableItem)) {
       const innerFocusableItems = getInnerFocusableItems(this.modal)
@@ -603,46 +635,23 @@ class Navigation extends HTMLElement {
 
     /* Update attributes, modal focus and scroll */
 
-    if (!close) {
+    if (close) {
       cascade([
         {
           action: () => {
-            stopScroll(true)
-
-            this.dataset.navShow = ''
-            this.dataset.navOpen = 'true'
+            this.setAttribute('show-modal', '')
           }
         },
         {
           action: () => {
-            this.dataset.navShowModal = ''
+            this.removeAttribute('show')
+            this.removeAttribute('show-modal')
           },
           delay: this.delay
         },
         {
           action: () => {
-            this.dataset.navShowModal = 'items'
-            this.#firstFocusableItem?.focus()
-          }
-        }
-      ])
-    } else {
-      cascade([
-        {
-          action: () => {
-            this.dataset.navShowModal = ''
-          }
-        },
-        {
-          action: () => {
-            delete this.dataset.navShow
-            delete this.dataset.navShowModal
-          },
-          delay: this.delay
-        },
-        {
-          action: () => {
-            this.dataset.navOpen = 'false'
+            this.setAttribute('open', 'false')
 
             stopScroll(false)
           }
@@ -663,13 +672,31 @@ class Navigation extends HTMLElement {
         },
         {
           action: () => {
-            const onToggled = new CustomEvent('nav:toggled', {
-              detail: {
-                open: this.isOpen
-              }
-            })
-
+            const onToggled = new CustomEvent('nav:toggled')
             this.dispatchEvent(onToggled)
+          }
+        }
+      ])
+    } else {
+      cascade([
+        {
+          action: () => {
+            stopScroll(true)
+
+            this.setAttribute('show', '')
+            this.setAttribute('open', 'true')
+          }
+        },
+        {
+          action: () => {
+            this.setAttribute('show-modal', '')
+          },
+          delay: this.delay
+        },
+        {
+          action: () => {
+            this.setAttribute('show-modal', 'items')
+            this.#firstFocusableItem?.focus()
           }
         }
       ])
@@ -690,7 +717,7 @@ class Navigation extends HTMLElement {
     }
 
     this.#viewportWidth = viewportWidth
-    this.#set()
+    this.#set(true)
   }
 
   /**
@@ -700,7 +727,7 @@ class Navigation extends HTMLElement {
    * @return {void}
    */
   #escape (): void {
-    if (this.isOpen) {
+    if (this.open) {
       this.#toggle()
     }
   }

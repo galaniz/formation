@@ -6,8 +6,7 @@
 
 import type {
   CollapsibleAccordionArgs,
-  CollapsibleActiveArgs,
-  CollapsibleToggleDetail,
+  CollapsibleActionArgs,
   CollapsibleTypes
 } from './CollapsibleTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -15,6 +14,15 @@ import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
 import { addAction, doActions } from '../../utils/action/action.js'
 import { getItem } from '../../utils/item/item.js'
+
+/**
+ * Custom event details
+ */
+declare global {
+  interface ElementEventMap {
+    'clp:toggle': CustomEvent
+  }
+}
 
 /**
  * Get and set height to open/close element
@@ -94,7 +102,7 @@ class Collapsible extends HTMLElement {
   #blurDelayId: number = 0
 
   /**
-   * Id for transition timeout
+   * Id for expand timeout
    *
    * @private
    * @type {number}
@@ -102,12 +110,12 @@ class Collapsible extends HTMLElement {
   #delayId: number = 0
 
   /**
-   * Id for attribute timeout
+   * Id for height timeout
    *
    * @private
    * @type {number}
    */
-  #attrDelayId: number = 0
+  #autoDelayId: number = 0
 
   /**
    * Bind this to event callbacks
@@ -164,8 +172,8 @@ class Collapsible extends HTMLElement {
     /* Clear timeouts */
 
     clearTimeout(this.#blurDelayId)
+    clearTimeout(this.#autoDelayId)
     clearTimeout(this.#delayId)
-    clearTimeout(this.#attrDelayId)
   }
 
   /**
@@ -216,10 +224,6 @@ class Collapsible extends HTMLElement {
           this.#toggle(false)
         }
       })
-
-      addAction('clp:accordion', (args: CollapsibleActiveArgs) => {
-        this.#type = args.active ? 'accordion' : 'single'
-      })
     }
 
     /* Set hoverable */
@@ -228,9 +232,29 @@ class Collapsible extends HTMLElement {
 
     if (hoverable) {
       this.hoverable = true
+      this.#setHover(true)
+    }
 
-      addAction('clp:hoverable', (args: CollapsibleActiveArgs) => {  
-        this.#setHover(args.active)
+    /* Set action */
+
+    const action = this.getAttribute('action')
+
+    if (isStringStrict(action)) {
+      addAction(`clp:${action}`, (args: CollapsibleActionArgs) => {
+        const { hoverable, expanded, type } = args
+
+        if (hoverable != null) {
+          this.hoverable = hoverable
+          this.#setHover(hoverable)
+        }
+
+        if (expanded != null) {
+          this.#toggle(expanded)
+        }
+
+        if (isStringStrict(type)) {
+          this.#type = type
+        }
       })
     }
 
@@ -279,6 +303,11 @@ class Collapsible extends HTMLElement {
    * @return {void}
    */
   #toggle (open: boolean = true): void {
+    /* Clear timeouts */
+
+    clearTimeout(this.#autoDelayId)
+    clearTimeout(this.#delayId)
+
     /* Panel and different state required */
 
     if (!isHtmlElement(this.panel) || open === this.expanded) {
@@ -287,19 +316,30 @@ class Collapsible extends HTMLElement {
 
     /* Get height */
 
-    this.panel.style.height = 'auto'
-    const height = this.panel.clientHeight
-    this.panel.style.height = ''
+    let height = 'auto'
+
+    if (!this.hoverable) { // Skip height setting if hoverable
+      this.panel.style.height = 'auto'
+      height = `${this.panel.clientHeight}px`
+      this.panel.style.height = ''
+    }
+
+    /* Update attributes */
+
+    this.#delayId = window.setTimeout(() => {
+      this.trigger?.setAttribute('aria-expanded', open.toString())
+      this.setAttribute('source', this.#source)
+      this.setAttribute('expanded', open.toString())
+      this.expanded = open
+    }, 0)
 
     /* Set height */
 
-    this.style.setProperty('--clp-height', `${height}px`)
+    this.style.setProperty('--clp-height', height)
 
-    this.#delayId = window.setTimeout(() => {
+    this.#autoDelayId = window.setTimeout(() => {
       this.style.setProperty('--clp-height', 'auto')
-
-      clearTimeout(this.#delayId)
-    }, this.duration + 10)
+    }, this.duration)
 
     /* Focus if tap */
 
@@ -307,29 +347,9 @@ class Collapsible extends HTMLElement {
       this.trigger?.focus() // iOS Safari not focusing on buttons
     }
 
-    /* Update attributes */
-
-    this.#attrDelayId = window.setTimeout(() => {
-      this.trigger?.setAttribute('aria-expanded', open.toString())
-      this.setAttribute('data-collapsible-source', this.#source)
-      this.setAttribute('expanded', open.toString())
-      this.expanded = open
-
-      clearTimeout(this.#attrDelayId)
-    }, 10)
-
     /* Emit toggle event */
 
-    const toggleDetails: CollapsibleToggleDetail = {
-      open,
-      type: this.#type,
-      group: this.accordion
-    }
-
-    const onToggle = new CustomEvent('clp:toggle', {
-      detail: toggleDetails
-    })
-
+    const onToggle = new CustomEvent('clp:toggle')
     this.dispatchEvent(onToggle)
 
     /* Accordion group action */

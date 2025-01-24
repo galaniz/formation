@@ -86,7 +86,7 @@ $component-fix: fix.get-class-prefix("component");
 
   /* Transform */
 
-  [data-nav-show] & {
+  [show] & {
     --ico-delay-top: 0ms;
     --ico-delay-middle: 125ms;
     --ico-delay-bottom: 250ms;
