@@ -18,13 +18,13 @@ export default defineConfig({
       'src/**/*.test.ts'
     ],
     coverage: {
+      reportsDirectory: 'util-coverage',
       include: [
         'src/config/**/*.ts',
         'src/utils/**/*.ts'
       ],
       exclude: [
         '**/*.test.ts',
-        'src/tests/*.ts',
         'src/**/*Types.ts',
         'src/**/*Mock.ts'
       ]

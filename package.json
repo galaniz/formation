@@ -22,7 +22,7 @@
     "release": "release-it",
     "release:beta": "release-it --preRelease=beta",
     "test:util": "vitest --run --reporter verbose --environment happy-dom --coverage",
-    "test:spec": "pnpm build:spec && npx playwright test && node scripts/report.js",
+    "test:spec": "pnpm build:spec && npx playwright test",
     "test": "pnpm test:util && pnpm test:spec",
     "serve": "npx serve --cors"
   },
@@ -37,11 +37,10 @@
   },
   "homepage": "https://github.com/galaniz/formation#readme",
   "devDependencies": {
+    "@alanizcreative/formation-coverage": "0.0.3",
     "@playwright/test": "^1.49.1",
     "@testing-library/dom": "^10.4.0",
     "@types/node": "^22.10.5",
-    "@typescript-eslint/eslint-plugin": "8.19.1",
-    "@typescript-eslint/parser": "8.19.1",
     "@vitest/coverage-v8": "2.1.8",
     "eslint": "9.15.0",
     "happy-dom": "^16.3.0",
@@ -62,6 +61,9 @@
     "github": {
       "release": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "browserslist": [
     "> 0.5%"

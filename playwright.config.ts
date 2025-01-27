@@ -11,6 +11,8 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './spec',
   testMatch: '**/*.spec.js',
+  globalSetup: './tests/setup.ts',
+  globalTeardown: './tests/teardown.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

@@ -6,14 +6,20 @@
 
 import type { Slider } from '../Slider.js'
 import { test, expect } from '@playwright/test'
+import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
 test.describe('Slider', () => {
   /* Html and coverage */
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ browserName, page }) => {
+    await doCoverage(browserName, page, true)
     await page.goto('/spec/objects/Slider/__tests__/Slider.html')
+  })
+
+  test.afterEach(async ({ browserName, page }) => {
+    await doCoverage(browserName, page, false)
   })
 
   /* Test init */

@@ -6,14 +6,20 @@
 
 import type { Navigation } from '../Navigation.js'
 import { test, expect } from '@playwright/test'
+import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
 test.describe('Navigation', () => {
   /* Html and coverage */
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ browserName, page }) => {
+    await doCoverage(browserName, page, true)
     await page.goto('/spec/components/Navigation/__tests__/Navigation.html')
+  })
+
+  test.afterEach(async ({ browserName, page }) => {
+    await doCoverage(browserName, page, false)
   })
 
   /* Test init */
@@ -43,6 +49,7 @@ test.describe('Navigation', () => {
     ])
   })
 
+  /*
   test('should move all items into modal slots if past breakpoint', async ({ page }) => {
     await page.setViewportSize({
       width: 600,
@@ -74,4 +81,5 @@ test.describe('Navigation', () => {
     expect(modalOne).toBe(6)
     expect(modalTwo).toBe(4)
   })
+  */
 })

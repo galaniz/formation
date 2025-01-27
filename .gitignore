@@ -2,7 +2,8 @@ node_modules/
 lib/
 spec/
 docs/
-coverage/
+util-coverage/
+spec-coverage/
 test-results/
 playwright-report/
 playwright/.cache/

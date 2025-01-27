@@ -27,9 +27,11 @@
   },
   "include": [
     "src/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "*.config.ts",
   ],
   "exclude": [
+    "tests/**/*.ts",
     "*.config.ts",
     "*.config.js"
   ]
