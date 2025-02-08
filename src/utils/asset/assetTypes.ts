@@ -12,7 +12,8 @@ export type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | nu
  *
  * @typedef {function} AssetDone
  * @param {Asset[]|boolean} result
- * @param {string|Event} [error]
+ * @param {Event|Error} [error]
  * @return {void}
  */
-export type AssetDone = (result: Asset[] | boolean, error?: string | Event | Error) => void
+export type AssetDone = (result: Asset[] | boolean, error?: Event | Error) => void
+

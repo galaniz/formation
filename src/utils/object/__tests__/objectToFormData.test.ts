@@ -11,6 +11,7 @@ import { objectToFormData } from '../objectToFormData.js'
 
 describe('objectToFormData()', () => {
   it('should return emtpy form data object if value is undefined', () => {
+    // @ts-expect-error - test undefined value
     const result = objectToFormData(undefined)
     const expectedResult = new FormData()
 

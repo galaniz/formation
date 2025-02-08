@@ -320,7 +320,7 @@ describe('isItemFocusable()', () => {
     const { focusable } = html
 
     const store: Set<boolean> = new Set(
-      focusable.map((item) => isItemFocusable(item))
+      focusable.map(item => isItemFocusable(item))
     )
 
     const result = !store.has(false)
@@ -334,7 +334,7 @@ describe('isItemFocusable()', () => {
     const { nonFocusable } = html
 
     const store: Set<boolean> = new Set(
-      nonFocusable.map((item) => isItemFocusable(item))
+      nonFocusable.map(item => isItemFocusable(item))
     )
 
     const result = !store.has(true)

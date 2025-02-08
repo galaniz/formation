@@ -422,7 +422,7 @@ class Slider extends Tabs {
       panelsFrag.append(...this.panels)
 
       for (let i = 1; i < 3; i += 1) {
-        this.panels.map((panel) => {
+        this.panels.map(panel => {
           const clone = panel.cloneNode(true) as HTMLElement
 
           clone.id = `${panel.id}-clone-${i}`
@@ -648,7 +648,7 @@ class Slider extends Tabs {
     const isInit = source === 'init'
 
     if (isInit) {
-      this.panels.forEach((p) => {
+      this.panels.forEach(p => {
         if (panel === p) {
           return
         }

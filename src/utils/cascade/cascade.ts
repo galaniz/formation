@@ -5,6 +5,7 @@
 /* Imports */
 
 import type { CascadeEvent } from './cascadeTypes.js'
+import type { GenericFunction } from '../../global/globalTypes.js'
 import { isObjectStrict } from '../object/object.js'
 import { isFunction } from '../function/function.js'
 import { isNumber } from '../number/number.js'
@@ -13,11 +14,11 @@ import { isNumber } from '../number/number.js'
  * More precise set timeout with requestAnimationFrame
  *
  * @private
- * @param {function} action
+ * @param {GenericFunction} action
  * @param {number} delay
  * @return {void}
  */
-const requestTimeout = (action: Function, delay: number): void => {
+const requestTimeout = (action: GenericFunction, delay: number): void => {
   /* Starting values */
 
   const start = performance.now()
@@ -122,7 +123,7 @@ const cascade = (events: CascadeEvent[], repeat = 0): void => {
     /* Run action */
 
     requestTimeout(() => {
-      if (action.length === 3) { // Hold off on recursion if doRecurse param exists
+      if (action.length === 3) { // Hold off on recursion if waitUntil param exists
         action(i, j, () => {
           recurse(i + 1, j)
         })

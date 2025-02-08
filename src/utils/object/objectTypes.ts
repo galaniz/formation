@@ -20,13 +20,13 @@ export type ObjectRecurseCallback = (prop: string | number | symbol, value: unkn
 
 /**
  * @typedef {function} ObjectRecurse
- * @param {object} obj
- * @param {function} condition - Return boolean
- * @param {function} [callback]
+ * @param {object} value
+ * @param {ObjectRecurseCondition} condition - Return boolean
+ * @param {ObjectRecurseCallback} [callback]
  * @return {void}
  */
-export type ObjectRecurse = <T>(
-  obj: T,
+export type ObjectRecurse = (
+  value: object,
   condition: ObjectRecurseCondition,
   callback?: ObjectRecurseCallback
 ) => void

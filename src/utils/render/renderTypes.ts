@@ -55,8 +55,7 @@ export interface RenderParents {
  * @prop {RenderItems[]} children
  * @prop {RenderParents[]} parents
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface RenderFunctionArgs<T = any> { 
+export interface RenderFunctionArgs<T = any> { // eslint-disable-line @typescript-eslint/no-explicit-any
   args: 0 extends (1 & T) ? RenderItems : T extends object ? T & RenderItems : object
   children: RenderItems[]
   parents: RenderParents[]
@@ -64,28 +63,24 @@ export interface RenderFunctionArgs<T = any> {
 
 /**
  * @typedef {function} RenderStringFunction
- * @param {RenderFunctionArgs} obj
+ * @param {RenderFunctionArgs} args
  * @return {string|string[]}
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RenderStringFunction<T = any> = (obj: RenderFunctionArgs<T>) => string | string[]
+export type RenderStringFunction<T = any> = (args: RenderFunctionArgs<T>) => string | string[] // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * @typedef {Object<string, RenderStringFunction>} RenderStringFunctions
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RenderStringFunctions<T = any> = Record<string, RenderStringFunction<T>>
+export type RenderStringFunctions<T = any> = Record<string, RenderStringFunction<T>> // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * @typedef {function} RenderFunction
- * @param {RenderFunctionArgs} obj
+ * @param {RenderFunctionArgs} args
  * @return {RenderElementArgs}
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RenderFunction<T = any> = (obj: RenderFunctionArgs<T>) => RenderElementArgs
+export type RenderFunction<T = any> = (args: RenderFunctionArgs<T>) => RenderElementArgs // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
  * @typedef {Object<string, RenderFunction>} RenderFunctions
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RenderFunctions<T = any> = Record<string, RenderFunction<T>>
+export type RenderFunctions<T = any> = Record<string, RenderFunction<T>> // eslint-disable-line @typescript-eslint/no-explicit-any

@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { GenericFunction } from '../../global/globalTypes.js'
 import { isStringStrict } from '../string/string.js'
 import { isFunction } from '../function/function.js'
 import { isSet } from '../set/set.js'
@@ -11,9 +12,9 @@ import { isSet } from '../set/set.js'
 /**
  * Store action callbacks by name
  *
- * @type {Map<string, Set<Function>>}
+ * @type {Map<string, Set<GenericFunction>>}
  */
-const actions: Map<string, Set<Function>> = new Map([
+const actions: Map<string, Set<GenericFunction>> = new Map([
   ['resize', new Set()],
   ['escape', new Set()],
   ['scroll', new Set()]
@@ -23,10 +24,10 @@ const actions: Map<string, Set<Function>> = new Map([
  * Add function to actions map
  *
  * @param {string} name
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {boolean}
  */
-const addAction = (name: string, action: Function): boolean => {
+const addAction = (name: string, action: GenericFunction): boolean => {
   if (!isStringStrict(name) || !isFunction(action)) {
     return false
   }
@@ -48,10 +49,10 @@ const addAction = (name: string, action: Function): boolean => {
  * Remove action from actions map
  *
  * @param {string} name
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {boolean}
  */
-const removeAction = (name: string, action: Function): boolean => {
+const removeAction = (name: string, action: GenericFunction): boolean => {
   if (!isStringStrict(name) || !isFunction(action)) {
     return false
   }
@@ -72,7 +73,7 @@ const removeAction = (name: string, action: Function): boolean => {
  * @param {*} [args]
  * @return {void}
  */
-const doActions = <T>(name: string, args?: T): void => {
+const doActions = (name: string, args?: unknown): void => {
   const actionSet = actions.get(name)
 
   if (!isSet(actionSet)) {

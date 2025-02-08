@@ -21,7 +21,7 @@ const isObject = <T>(value: T): value is object & T => {
 /**
  * Non-object types
  */
-type NotObject<T, K> = Exclude<T, string | number | boolean | Function | Map<T, K> | Set<T> | HTMLElement | Element | FormData | null | undefined | unknown[] | string[] | number[] | boolean[] | Function[]>
+type NotObject<T, K> = Exclude<T, string | number | boolean | Map<T, K> | Set<T> | HTMLElement | Element | FormData | Blob | null | undefined | unknown[] | string[] | number[] | boolean[]>
 
 /**
  * Check if value is an object and not an array or HTML element

@@ -19,7 +19,7 @@ describe('isFunction()', () => {
   })
 
   it('should return true if value is a method', () => {
-    const value = { func (): void {} }
+    const value = { func: () => {} }
     const result = isFunction(value.func)
     const expectedResult = true
 
@@ -27,7 +27,7 @@ describe('isFunction()', () => {
   })
 
   it('should return true if value is a class method', () => {
-    class TestClass { static func (): void {} }
+    class TestClass { static func = () => {} } // eslint-disable-line @typescript-eslint/no-extraneous-class
     const result = isFunction(TestClass.func)
     const expectedResult = true
 

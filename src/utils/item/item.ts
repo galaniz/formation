@@ -82,7 +82,7 @@ const getItems = <T>(
       if (isStringStrict(contextSelector)) {
         const newContext = Array.from(context.querySelectorAll(contextSelector))
 
-        newContext.forEach((newContextItem) => {
+        newContext.forEach(newContextItem => {
           const itemCopy = { ...item }
 
           const newItemProps = getItems(itemCopy, newContextItem, false)
@@ -100,7 +100,7 @@ const getItems = <T>(
   if (isObjectStrict(items)) {
     const newItems: ItemsObj = {}
 
-    getObjectKeys(items).forEach((prop) => {
+    getObjectKeys(items).forEach(prop => {
       const item = items[prop]
 
       if (prop === 'context') {

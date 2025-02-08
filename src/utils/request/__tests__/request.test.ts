@@ -15,7 +15,7 @@ import { request } from '../request.js'
  *
  * @type {string}
  */
-const testUrl = 'https://testapi.com'
+const testUrl: string = 'https://testapi.com'
 
 /**
  * Fake body data
@@ -52,7 +52,7 @@ describe('request()', () => {
           const expectedCount = 1
           const expectedValue = 'application/json'
 
-          headers.forEach((v) => {
+          headers.forEach(v => {
             value = v
             count += 1
           })
@@ -81,8 +81,6 @@ describe('request()', () => {
       await request({
         url: testUrl,
         body: testBody,
-        // @ts-expect-error
-        headers: false,
         onError () {},
         onSuccess () {}
       })
@@ -137,7 +135,7 @@ describe('request()', () => {
     async () => {
       const testRun = vi.fn()
 
-      mockRequestFetch.mockImplementationOnce(async (_url, _options) => {
+      mockRequestFetch.mockImplementationOnce(async () => {
         return await new Promise((resolve) => {
           testRun()
           resolve({
@@ -161,9 +159,9 @@ describe('request()', () => {
       await request({
         url: testUrl,
         body: testBody,
-        // @ts-expect-error
+        // @ts-expect-error - test invalid callback
         onError: false,
-        // @ts-expect-error
+        // @ts-expect-error - test invalid callback
         onSuccess: false
       })
 
@@ -176,7 +174,7 @@ describe('request()', () => {
     async () => {
       const testRun = vi.fn()
 
-      mockRequestFetch.mockImplementationOnce(async (_url, _options) => {
+      mockRequestFetch.mockImplementationOnce(async () => {
         return await new Promise((resolve) => {
           testRun()
           resolve({
@@ -197,7 +195,7 @@ describe('request()', () => {
         })
       })
 
-      // @ts-expect-error
+      // @ts-expect-error - test null args
       await request(null)
 
       expect(testRun).toHaveBeenCalledTimes(1)
@@ -260,7 +258,7 @@ describe('request()', () => {
 
       await request({
         url: testUrl,
-        // @ts-expect-error
+        // @ts-expect-error - test undefined body
         body: undefined,
         onError (error) {
           testError(error)

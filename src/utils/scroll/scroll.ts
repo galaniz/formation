@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { GenericFunction } from '../../global/globalTypes.js'
 import { actions, addAction, doActions, removeAction } from '../action/action.js'
 import { isSetStrict } from '../set/set.js'
 import { config } from '../../config/config.js'
@@ -14,7 +15,7 @@ import { config } from '../../config/config.js'
  * @private
  * @type {number}
  */
-let scrollId = 0
+let scrollId: number = 0
 
 /**
  * Scroll event callback
@@ -37,10 +38,10 @@ const scroll = (): void => {
 /**
  * Run actions on scroll event
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {void}
  */
-const onScroll = (action: Function): void => {
+const onScroll = (action: GenericFunction): void => {
   /* Add to scroll action */
 
   addAction('scroll', action)
@@ -53,10 +54,10 @@ const onScroll = (action: Function): void => {
 /**
  * Remove action from scroll set
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {boolean}
  */
-const removeScroll = (action: Function): boolean => {
+const removeScroll = (action: GenericFunction): boolean => {
   return removeAction('scroll', action)
 }
 

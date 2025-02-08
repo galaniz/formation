@@ -12,16 +12,17 @@ import { vi } from 'vitest'
 /**
  * @typedef {object} MockRequestFetchArgs
  * @prop {string} [encode=json]
- * @prop {string} [expect]
+ * @prop {string} [expect=json]
  * @prop {number} [status=200]
  * @prop {string|object} [data]
+ * @prop {Function} reset
  */
 const mockRequestFetchArgs: {
   encode: 'url' | 'json' | 'formData'
-  expect: string
+  expect: 'json' | 'text'
   status: number
   data?: string | object
-  reset: Function
+  reset: () => void
 } = {
   encode: 'json',
   expect: 'json',
@@ -61,10 +62,13 @@ const mockRequestFetch = vi.fn(async (
     } = options
 
     /* Request options to compare against */
+  
+    const {
+      encode = 'json',
+      expect = 'json'
+    } = mockRequestFetchArgs
 
     let {
-      encode = 'json',
-      expect = 'json',
       status = 200,
       data = undefined
     } = mockRequestFetchArgs
@@ -128,7 +132,7 @@ const mockRequestFetch = vi.fn(async (
 
     /* Result */
 
-    const res = expect === 'json' ? JSON.stringify(data) : String(data)
+    const res = expect === 'json' ? JSON.stringify(data) : String(isString(data) ? data : '')
 
     resolve({
       ok,

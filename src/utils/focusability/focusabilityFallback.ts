@@ -104,7 +104,7 @@ const getOuterFocusableItemsFallback = (item: Element | null): Element[] => {
 
   let outerFocusableItems: Element[] = []
 
-  outerItems.forEach((o) => {
+  outerItems.forEach(o => {
     if (isItemFocusable(o)) {
       outerFocusableItems.push(o)
     } else {

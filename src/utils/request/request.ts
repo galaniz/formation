@@ -25,7 +25,7 @@ const request = async (args: RequestArgs): Promise<void> => {
   const {
     method = 'GET',
     url = '',
-    headers = {},
+    headers,
     body = '',
     encode = 'json',
     expect = 'json'

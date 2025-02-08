@@ -13,27 +13,28 @@ import { isArray } from '../array/array.js'
 /**
  * Recursively convert object key value pairs into form data
  *
- * @param {object} value
- * @param {boolean} objToStr
+ * @param {object|string} value - object stringified if toString true
+ * @param {boolean} [toString=false]
  * @return {FormData}
  */
-const objectToFormData = <T>(
-  value: T,
-  objToStr = false,
+const objectToFormData = (
+  value: object | string,
+  toString = false,
   _key?: string, // Store key to reflect nested properties
   _data: FormData = new FormData()
 ): FormData => {
   const isKeySet = isStringStrict(_key)
 
   if (isObjectStrict(value) || isArray(value)) {
-    getObjectKeys(value).forEach((k) => {
+    getObjectKeys(value).forEach(k => {
       const v = value[k]
       const isObj = isObjectStrict(v) || isArray(v)
+      const _k = (k as string).toString()
 
       objectToFormData(
-        objToStr && isObj ? JSON.stringify(v) : v,
-        objToStr,
-        isKeySet ? `${_key.toString()}[${k.toString()}]` : k.toString(),
+        toString && isObj ? JSON.stringify(v) : v,
+        toString,
+        isKeySet ? `${_key.toString()}[${_k}]` : _k,
         _data
       )
     })

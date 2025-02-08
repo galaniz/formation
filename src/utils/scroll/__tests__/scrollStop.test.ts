@@ -42,7 +42,7 @@ describe('stopScroll()', () => {
   })
 
   it('should add data attribute to html element if on is truthy', () => {
-    // @ts-expect-error
+    // @ts-expect-error - test truthy on value
     const result = stopScroll('false')
     const attrResult = testCheckAttribute()
 
@@ -69,7 +69,7 @@ describe('stopScroll()', () => {
   it('should remove data attribute from html element if on is falsey', () => {
     stopScroll()
 
-    // @ts-expect-error
+    // @ts-expect-error - test falsey on value
     const result = stopScroll(null)
     const attrResult = testCheckAttribute()
 

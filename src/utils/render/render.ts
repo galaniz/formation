@@ -42,14 +42,14 @@ const renderElement = (args: RenderElementArgs): HTMLElement | null => {
   const el = document.createElement(tag)
 
   if (isObjectStrict(props)) {
-    getObjectKeys(props).forEach((prop) => {
+    getObjectKeys(props).forEach(prop => {
       // @ts-expect-error - flexible property setting
       el[prop] = props[prop]
     })
   }
 
   if (isObjectStrict(attrs)) {
-    Object.keys(attrs).forEach((attr) => {
+    Object.keys(attrs).forEach(attr => {
       const value = attrs[attr]
 
       if (!isString(value)) {
@@ -90,7 +90,7 @@ const render = (
   /* Recurse array items */
 
   if (isArr) {
-    items.forEach((item) => {
+    items.forEach(item => {
       render(functions, item, _output, _parents)
     })
   }
@@ -173,7 +173,7 @@ const renderString = (
   /* Recurse array items */
 
   if (isArr) {
-    items.forEach((item) => {
+    items.forEach(item => {
       renderString(functions, item, _output, _parents)
     })
   }

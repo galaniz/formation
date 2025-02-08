@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { GenericFunction } from '../../global/globalTypes.js'
 import { actions, addAction, doActions, removeAction } from '../action/action.js'
 import { isSetStrict } from '../set/set.js'
 import { config } from '../../config/config.js'
@@ -14,7 +15,7 @@ import { config } from '../../config/config.js'
  * @private
  * @type {number}
  */
-let resizeId = 0
+let resizeId: number = 0
 
 /**
  * Resize event callback
@@ -37,10 +38,10 @@ const resize = (): void => {
 /**
  * Run actions on resize event
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {void}
  */
-const onResize = (action: Function): void => {
+const onResize = (action: GenericFunction): void => {
   /* Add to resize action */
 
   addAction('resize', action)
@@ -53,10 +54,10 @@ const onResize = (action: Function): void => {
 /**
  * Remove action from resize set
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {boolean}
  */
-const removeResize = (action: Function): boolean => {
+const removeResize = (action: GenericFunction): boolean => {
   return removeAction('resize', action)
 }
 

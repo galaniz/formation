@@ -27,11 +27,26 @@ export interface Config {
 }
 
 /**
+ * @typedef {function} ConfigFallbackToggleFocusability
+ * @param {boolean} on
+ * @param {Element[]} items
+ * @return {boolean|undefined}
+ */
+export type ConfigFallbackToggleFocusability = (on: boolean, items: Element[]) => boolean | undefined
+
+/**
+ * @typedef {function} ConfigFallbackGetOuterFocusableItems
+ * @param {Element|null} item
+ * @return {Element[]}
+ */
+export type ConfigFallbackGetOuterFocusableItems = (item: Element | null) => Element[]
+
+/**
  * @typedef {object} ConfigFallback
- * @prop {function} [toggleFocusability]
- * @prop {function} [getOuterFocusableItems]
+ * @prop {ConfigFallbackToggleFocusability} [toggleFocusability]
+ * @prop {ConfigFallbackGetOuterFocusableItems} [getOuterFocusableItems]
  */
 export interface ConfigFallback {
-  toggleFocusability?: Function
-  getOuterFocusableItems?: Function
+  toggleFocusability?: ConfigFallbackToggleFocusability
+  getOuterFocusableItems?: ConfigFallbackGetOuterFocusableItems
 }

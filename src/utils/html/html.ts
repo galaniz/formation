@@ -15,7 +15,7 @@ import { isArrayStrict } from '../array/array.js'
  */
 const isHtmlElement = <T extends HTMLElement>(
   value: unknown,
-  instance: new () => T = HTMLElement as any
+  instance: new () => T = HTMLElement as unknown as new () => T
 ): value is T => {
   return value instanceof instance
 }
@@ -29,7 +29,7 @@ const isHtmlElement = <T extends HTMLElement>(
  */
 const isHtmlElementArray = <T extends HTMLElement>(
   value: unknown,
-  instance: new () => T = HTMLElement as any
+  instance: new () => T = HTMLElement as unknown as new () => T
 ): value is T[] => {
   if (!isArrayStrict(value)) {
     return false
@@ -47,7 +47,7 @@ const isHtmlElementArray = <T extends HTMLElement>(
  */
 const isHtmlElementArrayStrict = <T extends HTMLElement>(
   value: unknown,
-  instance: new () => T = HTMLElement as any
+  instance: new () => T = HTMLElement as unknown as new () => T
 ): value is T[] => {
   if (!isArrayStrict(value)) {
     return false

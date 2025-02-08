@@ -14,27 +14,27 @@ import { isObject } from './object.js'
  *
  * @type {ObjectRecurse}
  */
-const recurseObject: ObjectRecurse = (obj, condition, callback) => {
-  if (!isObject(obj) || !isFunction(condition)) {
+const recurseObject: ObjectRecurse = (value, condition, callback) => {
+  if (!isObject(value) || !isFunction(condition)) {
     return
   }
 
-  const keys = getObjectKeys(obj)
+  const keys = getObjectKeys(value)
 
   for (const prop of keys) {
-    const value = obj[prop]
-    const res = condition(prop, value)
+    const val = value[prop]
+    const res = condition(prop, val)
 
     if (!res) {
       break
     }
 
-    if (isObject(value)) {
-      recurseObject(value, condition, callback)
+    if (isObject(val)) {
+      recurseObject(val, condition, callback)
     }
 
     if (isFunction(callback)) {
-      callback(prop, value)
+      callback(prop, val)
     }
   }
 }

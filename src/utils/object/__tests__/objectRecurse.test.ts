@@ -10,19 +10,24 @@ import { recurseObject } from '../objectRecurse.js'
 /* Tests */
 
 describe('recurseObject()', () => {
-  it('should return undefined if value is null', () => {
-    const result = recurseObject(null, () => true)
-    const expectedResult = undefined
+  it('should not run condition or callback if value is null', () => {
+    const condition = vi.fn()
+    const callback = vi.fn()
 
-    expect(result).toBe(expectedResult)
+    // @ts-expect-error - test null value
+    recurseObject(null, condition, callback)
+
+    expect(condition).not.toHaveBeenCalled()
+    expect(callback).not.toHaveBeenCalled()
   })
 
-  it('should return undefined if condition is null', () => {
-    // @ts-expect-error - test invalid condition
-    const result = recurseObject({ key: 'value' }, null)
-    const expectedResult = undefined
+  it('should not run callback if condition is null', () => {
+    const callback = vi.fn()
 
-    expect(result).toBe(expectedResult)
+    // @ts-expect-error - test invalid condition
+    recurseObject({ key: 'value' }, null, callback)
+
+    expect(callback).not.toHaveBeenCalled()
   })
 
   it('should recurse through multi-level object until third key', () => {

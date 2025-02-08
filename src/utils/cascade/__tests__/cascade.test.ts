@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { GenericFunction } from '../../../global/globalTypes.js'
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import { cascade } from '../cascade.js'
 
@@ -103,7 +104,7 @@ const testRoundRange = (num: number, target: number, buffer = 100): number => {
 const testHasIncrement = (target = 10): boolean => {
   /* Convert ms to increments */
 
-  const increments: number[] = testMs.map((m) => {
+  const increments: number[] = testMs.map(m => {
     const [first, second] = m
 
     const increment = testRoundDiff(first, second, target)
@@ -330,7 +331,7 @@ describe('cascade()', () => {
   it(
     'should run action callback before next action',
     async () => await new Promise(resolve => {
-      const testDone = vi.fn((callback: Function): void => {
+      const testDone = vi.fn((callback: GenericFunction): void => {
         callback()
       })
 
@@ -339,9 +340,9 @@ describe('cascade()', () => {
           action (): void {}
         },
         {
-          action (_index, _repeatIndex, doRecurse): void {
+          action (_index, _repeatIndex, waitUntil): void {
             testDone(() => {
-              doRecurse()
+              waitUntil()
             })
           }
         },

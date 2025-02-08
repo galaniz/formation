@@ -2,14 +2,18 @@
  * Utils - Cascade Types
  */
 
+/* Imports */
+
+import type { GenericFunction } from '../../global/globalTypes.js'
+
 /**
  * @method CascadeAction
  * @param {number} index
  * @param {number} repeatIndex
- * @param {function} doRecurse - Hold off recursion until function call
+ * @param {GenericFunction} waitUntil - Hold off recursion until function call
  * @return {void}
  */
-export type CascadeAction = (index: number, repeatIndex: number, doRecurse: Function) => void
+export type CascadeAction = (index: number, repeatIndex: number, waitUntil: GenericFunction) => void
 
 /**
  * @typedef {object} CascadeEvent

@@ -18,6 +18,14 @@ describe('isHtmlElement()', () => {
     expect(result).toBe(expectedResult)
   })
 
+  it('should return true if value is an html button element', () => {
+    const value = document.createElement('button')
+    const result = isHtmlElement(value, HTMLButtonElement)
+    const expectedResult = true
+
+    expect(result).toBe(expectedResult)
+  })
+
   it('should return false if value is an object', () => {
     const value = {}
     const result = isHtmlElement(value)

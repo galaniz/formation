@@ -3,32 +3,31 @@
  */
 
 /**
- * @typedef {Object.<string, *>} Generic
+ * @typedef {Object<string, *>} Generic
  */
-export interface Generic {
-  [key: string]: unknown
-}
+export type Generic = Record<string, unknown>
 
 /**
- * @typedef {Object.<string, function>} GenericFunctions
+ * @typedef {function} GenericFunction
+ * @param {*} args
+ * @return {*}
  */
-export interface GenericFunctions {
-  [key: string]: Function
-}
+export type GenericFunction<T extends (...args: any[]) => any = (...args: any[]) => any> = T // eslint-disable-line @typescript-eslint/no-explicit-any
 
 /**
- * @typedef {Object.<string, string>} GenericStrings
+ * @typedef {Object<string, GenericFunction>} GenericFunctions
  */
-export interface GenericStrings {
-  [key: string]: string
-}
+export type GenericFunctions = Record<string, GenericFunction>
 
 /**
- * @typedef {Object.<string, number>} GenericNumbers
+ * @typedef {Object<string, string>} GenericStrings
  */
-export interface GenericNumbers {
-  [key: string]: number
-}
+export type GenericStrings = Record<string, string>
+
+/**
+ * @typedef {Object<string, number>} GenericNumbers
+ */
+export type GenericNumbers = Record<string, number>
 
 /**
  * Equality check with conditional types
@@ -36,8 +35,8 @@ export interface GenericNumbers {
  * Source: https://stackoverflow.com/a/52473108/2887218
  */
 type IfEquals<X, Y, A=X, B=never> =
-  (<T>() => T extends X ? 1 : 2) extends
-  (<T>() => T extends Y ? 1 : 2) ? A : B
+  (<T>() => T extends X ? 1 : 2) extends // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
+  (<T>() => T extends Y ? 1 : 2) ? A : B // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
 
 /**
  * Filter out readonly properties

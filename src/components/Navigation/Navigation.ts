@@ -342,7 +342,7 @@ class Navigation extends HTMLElement {
 
     /* Set up slots by name */
 
-    slots.forEach((slot) => {
+    slots.forEach(slot => {
       const slotName = this.#getName(slot.dataset.navSlot)
 
       if (isNumber(breakpoint0)) {
@@ -352,13 +352,13 @@ class Navigation extends HTMLElement {
       this.slots.set(slotName, slot)
     })
 
-    modalSlots.forEach((slot) => {
+    modalSlots.forEach(slot => {
       this.modalSlots.set(this.#getName(slot.dataset.navModalSlot), slot)
     })
 
     /* Set up groups and slot names */
 
-    this.items.forEach((item) => {
+    this.items.forEach(item => {
       /* Group */
 
       const groupName = this.#getName(item.dataset.navGroup)
@@ -436,7 +436,7 @@ class Navigation extends HTMLElement {
 
     const frag: Map<string, DocumentFragment> = new Map()
 
-    this.#slotNames.forEach((name) => {
+    this.#slotNames.forEach(name => {
       frag.set(name, new DocumentFragment())
     })
 
@@ -444,7 +444,7 @@ class Navigation extends HTMLElement {
 
     const slotNames: Set<string> = new Set()
 
-    this.items.forEach((item) => {
+    this.items.forEach(item => {
       const slotName = this.#getName(item.dataset.navItem)
       const slotFrag = frag.get(slotName)
 
@@ -454,7 +454,7 @@ class Navigation extends HTMLElement {
 
     /* Append items to slots */
 
-    slotNames.forEach((name) => {
+    slotNames.forEach(name => {
       const slot = this.slots.get(name)
       const fragSlot = frag.get(name)
 
@@ -488,7 +488,7 @@ class Navigation extends HTMLElement {
 
     /* Check for breakpoint or scroll to determine overflow */
 
-    slotNames.forEach((name) => {
+    slotNames.forEach(name => {
       /* Slot breakpoint check */
 
       const bk = this.breakpoints[name]
@@ -532,7 +532,7 @@ class Navigation extends HTMLElement {
 
     const frag: Map<string, DocumentFragment> = new Map()
 
-    this.#slotNames.forEach((name) => {
+    this.#slotNames.forEach(name => {
       frag.set(name, new DocumentFragment())
     })
 
@@ -557,7 +557,7 @@ class Navigation extends HTMLElement {
 
       /* Move group items to fragment */
 
-      group.forEach((item) => {
+      group.forEach(item => {
         const slotName = this.#getName(item.dataset.navItem)
         const slotFrag = frag.get(slotName)
 
@@ -572,7 +572,7 @@ class Navigation extends HTMLElement {
 
     /* Append items to modal slots */
 
-    slotNames.forEach((name) => {
+    slotNames.forEach(name => {
       const slot = this.modalSlots.get(name)
       const fragSlot = frag.get(name)
 

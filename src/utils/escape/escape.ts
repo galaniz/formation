@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { GenericFunction } from '../../global/globalTypes.js'
 import { actions, addAction, doActions, removeAction } from '../action/action.js'
 import { getKey } from '../key/key.js'
 import { isSetStrict } from '../set/set.js'
@@ -29,10 +30,10 @@ const keydown = (e: KeyboardEvent): void => {
 /**
  * Run actions on escape event
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {void}
  */
-const onEscape = (action: Function): void => {
+const onEscape = (action: GenericFunction): void => {
   /* Add to escape action */
 
   addAction('escape', action)
@@ -45,10 +46,10 @@ const onEscape = (action: Function): void => {
 /**
  * Remove action from escape set
  *
- * @param {function} action
+ * @param {GenericFunction} action
  * @return {boolean}
  */
-const removeEscape = (action: Function): boolean => {
+const removeEscape = (action: GenericFunction): boolean => {
   return removeAction('escape', action)
 }
 

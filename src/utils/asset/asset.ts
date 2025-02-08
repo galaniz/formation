@@ -7,6 +7,7 @@
 import type { Asset, AssetDone } from './assetTypes.js'
 import { isHtmlElement } from '../html/html.js'
 import { isArrayStrict } from '../array/array.js'
+import { isString } from '../string/string.js'
 
 /**
  * Check if single asset is loaded
@@ -20,12 +21,12 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
       resolve(asset)
     }
 
-    const error = (err: string | Event | Error): void => {
-      reject(err)
+    const error = (err: string | Event): void => {
+      reject(isString(err) ? new Error(err) : err) // eslint-disable-line @typescript-eslint/prefer-promise-reject-errors
     }
 
     if (!isHtmlElement(asset)) {
-      error(new Error('Asset is not an HTML element'))
+      error('Asset is not an HTML element')
       return
     }
 
@@ -55,7 +56,7 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
  */
 const assetsLoaded = (assets: Asset[], done: AssetDone = () => {}): void => {
   if (!isArrayStrict(assets)) {
-    done(false, 'Assets empty')
+    done(false, new Error('Assets empty'))
     return
   }
 
@@ -63,8 +64,8 @@ const assetsLoaded = (assets: Asset[], done: AssetDone = () => {}): void => {
     .then(data => {
       done(data)
     })
-    .catch(error => {
-      done(false, error)
+    .catch((error: unknown) => {
+      done(false, error as Event | Error)
     })
 }
 

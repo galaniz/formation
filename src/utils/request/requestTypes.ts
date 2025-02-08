@@ -11,10 +11,10 @@ export type RequestErrorCallback = (error: Error) => void
 
 /**
  * @typedef {function} RequestSuccessCallback
- * @param {string|object} res
+ * @param {string|object} result
  * @return {void}
  */
-export type RequestSuccessCallback = (res: unknown) => void
+export type RequestSuccessCallback = (result: unknown) => void
 
 /**
  * @typedef {object} RequestArgs

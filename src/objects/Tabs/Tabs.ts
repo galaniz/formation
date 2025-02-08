@@ -154,7 +154,7 @@ class Tabs extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.tabs.forEach((tab) => {
+    this.tabs.forEach(tab => {
       tab.removeEventListener('click', this.#clickHandler)
       tab.removeEventListener('keydown', this.#keyDownHandler)
       tab.removeEventListener('keyup', this.#keyUpHandler)

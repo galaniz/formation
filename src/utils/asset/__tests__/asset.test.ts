@@ -82,7 +82,7 @@ describe('assetLoaded()', () => {
   it('should throw an error if asset is null', async () => {
     const asset = null
 
-    return await expect(assetLoaded(asset)).rejects.toThrowError()
+    await expect(async () => { await assetLoaded(asset) }).rejects.toThrowError()
   })
 
   it(
@@ -101,7 +101,7 @@ describe('assetLoaded()', () => {
   it(
     'should resolve to complete image',
     async () => {
-      const image = document.createElement('img') as HTMLImageElement
+      const image = document.createElement('img')
 
       Object.defineProperty(image, 'complete', { // Override complete property to return true
         get: () => true
@@ -163,7 +163,7 @@ describe('assetsLoaded()', () => {
         const expectedResult = false
 
         expect(result).toBe(expectedResult)
-        expect(error).toBeTypeOf('string')
+        expect(error).toBeInstanceOf(Error)
         resolve('')
       })
     })

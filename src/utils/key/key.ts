@@ -40,24 +40,13 @@ const keys: Record<string | number, string> = {
  * @return {string}
  */
 const getKey = (event: KeyboardEvent): string => {
-  let key = ''
-  let k = `${event.keyCode}`
+  const val = keys[event.key]
 
-  if (isString(event.code)) {
-    k = event.code
+  if (isString(val)) {
+    return val
   }
 
-  if (isString(event.key)) {
-    k = event.key
-  }
-
-  const v = keys[k]
-
-  if (isString(v)) {
-    key = v
-  }
-
-  return key
+  return ''
 }
 
 /* Exports */

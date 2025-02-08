@@ -90,7 +90,7 @@ const getInnerFocusableItems = (item: Element | null): Element[] => {
 /**
  * Get all focusable elements outside item
  *
- * @param {Element} item
+ * @param {Element|null} item
  * @return {Element[]}
  */
 const getOuterFocusableItems = (item: Element | null): Element[] => {
