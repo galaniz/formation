@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "../../utils/fix/fix";
 @use "../../utils/breakpoint/breakpoint";
 
@@ -24,4 +25,24 @@ $align-fix: fix.get-class-fix("align");
 
 .#{$layout-fix}#{$align-fix}-end {
   align-items: flex-end;
+}
+
+@each $b in con.$align-breakpoints {
+  .#{$layout-fix}#{$align-fix}-center-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: center
+    ));
+  }
+
+  .#{$layout-fix}#{$align-fix}-start-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: flex-start
+    ));
+  }
+
+  .#{$layout-fix}#{$align-fix}-end-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: flex-end
+    ));
+  }
 }

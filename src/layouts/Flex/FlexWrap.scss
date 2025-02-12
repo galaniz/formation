@@ -1,0 +1,37 @@
+/**
+ * Layouts - Flex Wrap Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+
+/* Styles */
+
+.#{$layout-fix}wrap {
+  flex-wrap: wrap;
+}
+
+.#{$layout-fix}nowrap {
+  flex-wrap: nowrap;
+}
+
+@each $b in con.$flex-wrap-breakpoints {
+  .#{$layout-fix}wrap-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      flex-wrap: wrap
+    ));
+  }
+
+  .#{$layout-fix}nowrap-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      flex-wrap: nowrap
+    ));
+  }
+}

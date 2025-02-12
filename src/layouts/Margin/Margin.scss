@@ -31,20 +31,24 @@ $margin-x-fix: fix.get-class-fix("margin-x");
   margin: auto;
 }
 
-.#{$layout-fix}#{$margin-top-fix}-auto {
+.#{$layout-fix}#{$margin-top-fix}-auto,
+.#{$layout-fix}#{$margin-y-fix}-auto {
   margin-top: auto;
 }
 
-.#{$layout-fix}#{$margin-left-fix}-auto {
+.#{$layout-fix}#{$margin-bottom-fix}-auto,
+.#{$layout-fix}#{$margin-y-fix}-auto {
+  margin-bottom: auto;
+}
+
+.#{$layout-fix}#{$margin-left-fix}-auto,
+.#{$layout-fix}#{$margin-x-fix}-auto {
   margin-left: auto;
 }
 
-.#{$layout-fix}#{$margin-right-fix}-auto {
+.#{$layout-fix}#{$margin-right-fix}-auto,
+.#{$layout-fix}#{$margin-x-fix}-auto {
   margin-right: auto;
-}
-
-.#{$layout-fix}#{$margin-bottom-fix}-auto {
-  margin-bottom: auto;
 }
 
 /* Config vertical margins */

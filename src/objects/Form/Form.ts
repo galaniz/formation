@@ -1,292 +1,456 @@
-// @ts-nocheck
-
 /**
  * Objects - Form
- *
- * @param {object} args
- * @param {NodeList} args.inputs
- * @param {string} args.fieldClass
- * @param {string} args.groupClass
- * @param {string} args.labelClass
- * @param {boolean} args.submitted
- * @param {function} args.onValidate
  */
 
 /* Imports */
 
-import { focusSelector, getOuterItems, isItemFocusable } from '../../utils/utils'
+import type {
+  FormInput,
+  FormGroup,
+  FormErrorListItem,
+  FormValidateResult,
+  FormValue,
+  FormValueFilter
+} from './FormTypes.js'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
+import { isFunction } from '../../utils/function/function.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { isItemFocusable, focusSelector } from '../../utils/focusability/focusability.js'
+import { getOuterItems } from '../../utils/item/itemOuter.js'
+import { getItem } from '../../utils/item/item.js'
 
-/* Form validation and get values */
-
-class Form {
+/**
+ * Form validation and input values retrieval
+ */
+class Form extends HTMLElement {
   /**
-   * Constructor
+   * Form element
+   *
+   * @type {HTMLFormElement|null}
    */
+  form: HTMLFormElement | null = null
 
-  constructor (args) {
-    /**
-     * Public variables
-     */
+  /**
+   * Data (state, values, inputs...) by input name
+   *
+   * @type {Map<string, FormGroup>}
+   */
+  groups: Map<string, FormGroup> = new Map()
 
-    const {
-      inputs = null,
-      fieldClass = '',
-      groupClass = '',
-      labelClass = '',
-      errorTemplate = "<span id='%id'><span id='%id-text'>%message</span></span>",
-      errorSummary = {
-        container: null,
-        list: null
-      },
-      submitted = false,
-      onValidate = () => {}
-    } = args
+  /**
+   * Error summary container
+   *
+   * @type {HTMLElement|null}
+   */
+  errorSummary: HTMLElement | null = null
 
-    this.inputs = inputs
-    this.fieldClass = fieldClass
-    this.groupClass = groupClass
-    this.labelClass = labelClass
-    this.errorTemplate = errorTemplate
-    this.errorSummary = errorSummary
-    this.submitted = submitted
-    this.onValidate = onValidate
+  /**
+   * Error list container
+   *
+   * @type {HTMLUListElement|null}
+   */
+  errorList: HTMLUListElement | null = null
 
-    /**
-     * Internal variables
-     *
-     * @see {@link https://emailregex.com/|Source}
-     * @see {@link https://urlregex.com/|Source}
-     */
+  /**
+   * Error message template
+   *
+   * @type {string}
+   */
+  errorTemplate: string = '<span id="%id"><span id="%id-text">%message</span></span>'
 
-    this._exp = {
-      url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/,
-      email: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  /**
+   * Track submit state
+   *
+   * @type {boolean}
+   */
+  submitted: boolean = false
+
+  /**
+   * Initialize success
+   *
+   * @type {boolean}
+   */
+  init: boolean = false
+
+  /**
+   * Types by input name
+   *
+   * @private
+   * @type {Map<string, string>}
+   */
+  #types: Map<string, string> = new Map()
+
+  /**
+   * Labels by input name
+   *
+   * @private
+   * @type {Map<string, string>}
+   */
+  #labels: Map<string, string> = new Map()
+
+  /**
+   * Legends by input name
+   *
+   * @private
+   * @type {Map<string, string>}
+   */
+  #legends: Map<string, string> = new Map()
+
+  /**
+   * Error list item ids
+   *
+   * @private
+   * @type {Set<string>}
+   */
+  #errorListIds: Set<string> = new Set()
+
+  /**
+   * Error list item messages by id
+   *
+   * @private
+   * @type {Map<string, string>}
+   */
+  #errorListMessages: Map<string, string> = new Map()
+
+  /**
+   * Error list item element and message by id
+   *
+   * @private
+   * @type {Map<string, FormErrorListItem>}
+   */
+  #errorListItems: Map<string, FormErrorListItem> = new Map()
+
+  /**
+   * Url validation regex
+   *
+   * @private
+   * @type {RegExp}
+   * @see {@link https://urlregex.com/|Source}
+   */
+  #urlRegex: RegExp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/
+
+  /**
+   * Email validation regex
+   *
+   * @private
+   * @type {RegExp}
+   * @see {@link https://emailregex.com/|Source}
+   */
+  #emailRegex: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+  /**
+   * Id for blur timeout
+   *
+   * @private
+   * @type {number}
+   */
+  #blurDelayId: number = 0
+
+  /**
+   * Bind this to event callbacks
+   *
+   * @private
+   */
+  #blurHandler = this.#blur.bind(this)
+  #blurSummaryHandler = this.#blurSummary.bind(this)
+
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
+
+  /**
+   * Init - each time added to DOM
+   */
+  connectedCallback (): void {
+    if (this.init) {
+      return
     }
 
-    /* Input data goes here */
-
-    this._inputGroups = {}
-
-    /* Input types by name */
-
-    this._inputTypes = {}
-
-    /* Input labels by name */
-
-    this._inputLabels = {}
-
-    /* Input legends name */
-
-    this._inputLegends = {}
-
-    /* Store errors for summary list */
-
-    this._errorSummaryList = {
-      ids: [],
-      messages: {},
-      items: {}
-    }
-
-    /**
-     * Initialize
-     */
-
-    const init = this._initialize()
-
-    if (!init) {
-      return false
-    }
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize
+   * Clean up - each time removed from DOM
    */
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
 
-  _initialize () {
-    /* Check that required variables not null */
+    await Promise.resolve()
 
-    if (!this.inputs || !this.fieldClass) {
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
+    /* Remove event listeners */
+
+    this.errorSummary?.addEventListener('blur', this.#blurSummaryHandler)
+
+    this.groups.forEach(group => {
+      const { inputs } = group
+
+      inputs.forEach(input => {
+        input.removeEventListener('click', this.#blurHandler)
+      })
+    })
+
+    /* Empty/nullify props */
+
+    this.groups.clear()
+    this.form = null
+    this.errorSummary = null
+    this.errorList = null
+    this.init = false
+    this.submitted = false
+    this.#types.clear()
+    this.#labels.clear()
+    this.#legends.clear()
+    this.#errorListIds.clear()
+    this.#errorListMessages.clear()
+    this.#errorListItems.clear()
+
+    /* Clear timeouts */
+
+    clearTimeout(this.#blurDelayId)
+  }
+
+  /**
+   * Initialize - check required items and set properties
+   *
+   * @private
+   * @return {boolean}
+   */
+  #initialize (): boolean {
+    /* Get items */
+
+    const inputs = getItem(['[data-form-input]'], this) as FormInput[]
+    const errorSummary = getItem(['[data-form-error-summary]'], this)
+    const errorList = getItem(['[data-form-error-list]'], this)
+
+    /* Check that required items exist */
+
+    if (!isHtmlElementArray(inputs)) {
       return false
     }
 
-    this.inputs = Array.from(this.inputs)
+    /* Create groups */
 
-    /* Loop through inputs to insert input data into inputGroups */
+    let init = false
 
-    this.inputs.forEach((input) => {
+    inputs.forEach(input => {
+      /* Name */
+
       const name = input.name
 
-      /* Already exists in inputGroups so push input into inputs array */
+      if (!isStringStrict(name)) {
+        return
+      }
 
-      if (Object.getOwnPropertyDescriptor(this._inputGroups, name)) {
-        this._inputGroups[name].inputs.push(input)
-      } else {
-        /* Doesn't exist so create new object of input data */
+      /* Append input */
 
-        const reqAttr = input.getAttribute('aria-required')
-        let required = (reqAttr === 'true' || reqAttr === '1')
+      const group = this.groups.get(name)
 
-        const dataReqAttr = input.getAttribute('data-aria-required') // Required radio buttons and checkboxes in groups
-        let excludeAriaInvalid = false
+      if (group != null) {
+        group.inputs.push(input)
+        return
+      }
 
-        if (dataReqAttr === 'true' || dataReqAttr === '1') {
-          required = true
-          excludeAriaInvalid = true
-        }
+      /* Required */
 
-        /* Type */
+      const ariaRequired = input.getAttribute('aria-required')
+      const dataRequired = input.dataset.ariaRequired // Required radio buttons and checkboxes in groups
 
-        let type = input.tagName.toLowerCase()
+      let required = ariaRequired === 'true'
+      let allowAriaInvalid = true
 
-        if (type === 'input') {
-          type = input.type
-        }
+      if (dataRequired === 'true') {
+        required = true
+        allowAriaInvalid = false
+      }
 
-        this._inputTypes[name] = type
+      /* Type */
 
-        /* Legend */
+      let type = input.tagName.toLowerCase()
 
-        const fieldset = input.closest(this.groupClass)
-        let legend = null
-        let excludeLabel = false
+      if (type === 'input') {
+        type = input.type
+      }
 
-        if (fieldset) {
-          legend = fieldset.querySelector('legend')
+      this.#types.set(name, type)
 
-          if (legend) {
-            this._inputLegends[name] = legend.textContent.replace(' required', '')
+      /* Legend */
 
-            if (type === 'radio' || type === 'checkbox') {
-              excludeLabel = true
-            }
-          }
-        }
+      const legend = input.closest('fieldset')?.querySelector('legend')
+      const hasLegend = isHtmlElement(legend)
 
-        /* Field */
+      let allowLabel = true
+      let groupLabel = null
 
-        const field = input.closest(this.fieldClass)
+      if (hasLegend) {
+        groupLabel = legend
+        allowLabel = type !== 'radio' && type !== 'checkbox'
 
-        /* Label */
+        const legendText = legend.textContent
 
-        let label = null
-        let labelText = ''
-
-        if (field) {
-          label = field.querySelector('.' + this.labelClass)
-
-          if (label && !excludeLabel) {
-            labelText = label.textContent.replace(' required', '')
-          }
-
-          if (!label && !excludeLabel) {
-            labelText = input.getAttribute('aria-label')
-          }
-        }
-
-        this._inputLabels[name] = labelText
-
-        /* Empty and invalid messages */
-
-        const emptyMessage = input.getAttribute('data-empty-message')
-        const invalidMessage = input.getAttribute('data-invalid-message')
-
-        /* Group object */
-
-        this._inputGroups[name] = {
-          inputs: [input], // Array for checkboxes and radio buttons
-          legend,
-          label,
-          required,
-          type,
-          values: [],
-          valid: false,
-          emptyMessage,
-          invalidMessage,
-          excludeAriaInvalid
+        if (isStringStrict(legendText)) {
+          this.#legends.set(name, legendText.replace(' required', ''))
         }
       }
 
-      /* Listen on blur so can validate then rather than only submit */
+      /* Label */
 
-      input.addEventListener('blur', this._onBlur.bind(this))
+      const label = input.closest('[data-form-field]')?.querySelector('[data-form-label]')
+      const hasLabel = isHtmlElement(label)
+
+      if (hasLabel && allowLabel) {
+        groupLabel = label
+
+        const labelText = label.textContent
+
+        if (isStringStrict(labelText)) {
+          this.#labels.set(name, labelText.replace(' required', ''))
+        }
+      }
+
+      /* Group label required */
+
+      if (!groupLabel) {
+        return
+      }
+
+      /* Empty and invalid messages */
+
+      const emptyMessage = input.dataset.formEmpty
+      const invalidMessage = input.dataset.formInvalid
+
+      /* Group data */
+
+      this.groups.set(name, {
+        inputs: [input], // Array for checkboxes and radio buttons
+        label: groupLabel,
+        labelType: hasLegend ? 'legend' : 'label',
+        required,
+        type,
+        values: [],
+        valid: false,
+        emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
+        invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : '',
+        allowAriaInvalid
+      })
+
+      /* Blur to validate beyond submit */
+
+      input.addEventListener('blur', this.#blurHandler)
+
+      /* Input processed */
+
+      init = true
     })
 
-    /* Add blur to error summary container */
+    /* Error list container */
 
-    if (this.errorSummary.container) {
-      this.errorSummary.container.addEventListener('blur', this._onErrorSummaryBlur.bind(this))
+    if (isHtmlElement(errorSummary) && isHtmlElement(errorList, HTMLUListElement)) {
+      this.errorSummary = errorSummary
+      this.errorList = errorList
+      this.errorSummary.addEventListener('blur', this.#blurSummaryHandler)
     }
 
-    /* Successful init */
+    /* Init successful */
 
-    return true
+    return init
   }
 
   /**
-   * Internal helper methods
+   * Validate inputs
+   *
+   * @private
+   * @param {FormInput[]} inputs
+   * @param {string} type
+   * @param {boolean} required
+   * @param {string} emptyMessage
+   * @param {string} invalidMessage
+   * @return {FormValidateResult}
    */
-
-  _validateInputs (inputs, type, required, emptyMessage = '', invalidMessage = '') {
-    const values = []
+  #validateInputs (
+    inputs: FormInput[],
+    type: string,
+    required: boolean,
+    emptyMessage: string,
+    invalidMessage: string
+  ): FormValidateResult {
+    const values: string[] = []
 
     let message = ''
     let valid = false
 
-    /* Get values from inputGroup */
+    /* Get values from inputs */
 
-    inputs.forEach((input) => {
-      let value = ''
+    inputs.forEach(input => {
+      let value: string | undefined
 
       switch (type) {
         case 'checkbox':
         case 'radio':
-          value = (input.checked ? input.value.trim() : '')
+          value = ((input as HTMLInputElement).checked ? (input as HTMLInputElement).value.trim() : '')
           break
         case 'select':
-          value = input.options[input.selectedIndex].value.trim()
+          const selected = (input as HTMLSelectElement).selectedOptions
+
+          for (const option of selected) {
+            values.push(option.value.trim())
+          }
+
           break
         default:
           value = input.value.trim()
       }
 
-      if (value !== '') {
+      if (isStringStrict(value)) {
         values.push(value)
       }
     })
 
-    /* Check if has values */
+    /* Bail if no values */
 
     if (values.length === 0) {
-      if (required) {
-        valid = false
-        message = emptyMessage || 'This field is required'
-      } else {
-        valid = true
-      }
-    } else {
-      /* Check if inputs like email, url... are valid */
-
-      switch (type) {
-        case 'email':
-          if (values[0].toLowerCase().match(this._exp.email)) {
-            valid = true
-          } else {
-            valid = false
-            message = invalidMessage || 'Enter a valid email'
-          }
-          break
-        case 'url':
-          if (values[0].toLowerCase().match(this._exp.url)) {
-            valid = true
-          } else {
-            valid = false
-            message = invalidMessage || 'Enter a valid URL'
-          }
-          break
-        default:
-          valid = true
+      return {
+        values: [],
+        message: isStringStrict(emptyMessage) ? emptyMessage : 'This field is required',
+        valid: required ? false : true
       }
     }
+
+    /* Check if inputs like email, url... are valid */
+
+    const hasInvalidMessage = isStringStrict(invalidMessage)
+    const firstValue = values[0] as string
+
+    switch (type) {
+      case 'email':
+        if (firstValue.toLowerCase().match(this.#emailRegex)) {
+          valid = true
+        } else {
+          valid = false
+          message = hasInvalidMessage ? invalidMessage : 'Enter a valid email'
+        }
+
+        break
+      case 'url':
+        if (firstValue.toLowerCase().match(this.#urlRegex)) {
+          valid = true
+        } else {
+          valid = false
+          message = hasInvalidMessage ? invalidMessage : 'Enter a valid URL'
+        }
+
+        break
+      default:
+        valid = true
+    }
+
+    /* Result */
 
     return {
       values,
@@ -295,104 +459,134 @@ class Form {
     }
   }
 
-  _validateGroup (inputGroup, name) {
-    /* Get inputGroup data */
-
-    let validGroup = true
+  /**
+   * Validate input group
+   *
+   * @private
+   * @param {FormGroup} group
+   * @param {string} name
+   * @return {boolean}
+   */
+  #validateGroup (group: FormGroup, name: string): boolean {
+    /* Group data */
 
     const {
       inputs,
-      legend,
       label,
+      labelType,
       type,
       required,
-      excludeAriaInvalid,
+      allowAriaInvalid,
       emptyMessage,
       invalidMessage
-    } = inputGroup
+    } = group
 
-    const useLegend = legend && (type === 'radio' || type === 'checkbox')
+    /* Label required */
 
-    const l = useLegend ? legend : label
+    if (!isHtmlElement(label)) {
+      return true
+    }
 
-    const errorId = useLegend ? l.id : inputs[0].id
+    /* Error id required */
 
-    /* Validate inputGroup */
+    const useLegend = labelType === 'legend'
+    const errorId: string | undefined = useLegend ? label.id : inputs[0]?.id
 
-    const validate = this._validateInputs(inputs, type, required, emptyMessage, invalidMessage)
-    const values = validate.values
-    const valid = validate.valid
-    const message = validate.message
+    if (!isStringStrict(errorId)) {
+      return true
+    }
+
+    /* Validate input group */
+
+    const validate = this.#validateInputs(inputs, type, required, emptyMessage, invalidMessage)
+    const { values, valid, message } = validate
 
     if (!valid) {
-      this._setErrorMessage(inputs, name, type, l, message, excludeAriaInvalid)
-
-      if (l) {
-        if (!this._errorSummaryList.ids.includes(errorId)) {
-          this._errorSummaryList.ids.push(errorId)
-        }
-
-        this._errorSummaryList.messages[errorId] = message
-      }
-
-      validGroup = false
+      this.#setErrorMessage(inputs, name, label, message, allowAriaInvalid)
+      this.#errorListIds.add(errorId)
+      this.#errorListMessages.set(errorId, message)
     } else {
-      this._removeErrorMessage(inputs, name, type, l, excludeAriaInvalid)
-
-      if (l) {
-        if (this._errorSummaryList.ids.includes(errorId)) {
-          this._errorSummaryList.ids = this._errorSummaryList.ids.filter((id) => {
-            return errorId !== id
-          })
-
-          this._errorSummaryList.messages[errorId] = ''
-        }
-      }
+      this.#removeErrorMessage(inputs, name, label, allowAriaInvalid)
+      this.#errorListIds.delete(errorId)
+      this.#errorListMessages.delete(errorId)
     }
 
     /* Reset summary list */
 
-    this._setErrorSummaryList()
+    this.#setErrorList()
 
-    /* Save valid state and values in inputGroup */
+    /* Save valid state and values in group */
 
-    inputGroup.values = values
-    inputGroup.valid = valid
+    group.values = values
+    group.valid = valid
 
-    this.onValidate()
+    /* Result */
 
-    return validGroup
+    return valid
   }
 
-  _setErrorMessage (inputs, name, type, label, message, excludeAriaInvalid) {
+  /**
+   * Set field error message
+   *
+   * @private
+   * @param {FormInput[]} inputs
+   * @param {string} name
+   * @param {HTMLElement} label
+   * @param {string} message
+   * @param {boolean} allowAriaInvalid
+   * @return {void}
+   */
+  #setErrorMessage (
+    inputs: FormInput[],
+    name: string,
+    label: HTMLElement,
+    message: string,
+    allowAriaInvalid: boolean
+  ): void {
     /* Error element id */
 
     const errorId = name + '-error'
 
     /* Check if error element exists */
 
-    const error = document.getElementById(errorId)
+    const error = document.getElementById(`${errorId}-text`)
 
     /* Output */
 
-    if (error !== null) {
-      const messageElement = error.querySelector(`#${errorId}-text`)
-      messageElement.textContent = message
+    if (isHtmlElement(error)) {
+      error.textContent = message
     } else {
-      const errorHtml = this.errorTemplate.replace(/%id/g, errorId).replace(/%message/g, message)
-      label.insertAdjacentHTML('beforeend', errorHtml)
+      label.insertAdjacentHTML(
+        'beforeend',
+        this.errorTemplate.replace(/%id/g, errorId).replace(/%message/g, message)
+      )
     }
 
     /* Set inputs as invalid */
 
-    if (!excludeAriaInvalid) {
+    if (allowAriaInvalid) {
       inputs.forEach((input) => {
-        input.setAttribute('aria-invalid', true)
+        input.setAttribute('aria-invalid', 'true')
       })
     }
   }
 
-  _removeErrorMessage (inputs, name, type, label, excludeAriaInvalid) {
+  /**
+   * Remove field error message
+   *
+   * @private
+   * @param {FormInput[]} inputs
+   * @param {string} name
+   * @param {HTMLElement} label
+   * @param {boolean} allowAriaInvalid
+   * @return {void}
+   */
+  #removeErrorMessage (
+    inputs: FormInput[],
+    name: string,
+    label: HTMLElement,
+    allowAriaInvalid: boolean
+  ): void {
     /* Error element id */
 
     const errorId = name + '-error'
@@ -401,220 +595,302 @@ class Form {
 
     const error = document.getElementById(errorId)
 
-    if (error !== null) {
+    if (isHtmlElement(error)) {
       label.removeChild(error)
     }
 
     /* Set inputs as valid */
 
-    if (!excludeAriaInvalid) {
+    if (allowAriaInvalid) {
       inputs.forEach((input) => {
-        input.setAttribute('aria-invalid', false)
+        input.setAttribute('aria-invalid', 'false')
       })
     }
   }
 
-  _displayErrorSummary (display = true) {
-    if (!this.errorSummary.container) {
-      return
-    }
+  /**
+   * Clear error messages and hide error summary
+   *
+   * @private
+   * @return {void}
+   */
+  #clearErrorMessages (): void {
+    this.groups.forEach((group, name) => {
+      const { inputs, label, allowAriaInvalid } = group
 
-    this.errorSummary.container.style.setProperty('display', display ? 'block' : 'none')
-  }
-
-  _setErrorSummaryList () {
-    if (!this.errorSummary.list) {
-      return
-    }
-
-    if (!this._errorSummaryList.ids.length) {
-      this._displayErrorSummary(false)
-    }
-
-    const frag = new window.DocumentFragment()
-    let focusItem = null
-
-    this._errorSummaryList.ids.forEach((id) => {
-      const existingItem = this._errorSummaryList.items[id] || {}
-      const { message, item } = existingItem
-
-      let currentItem = null
-      const currentMessage = this._errorSummaryList.messages[id]
-
-      if (existingItem && message === currentMessage) {
-        currentItem = item
-
-        if (currentItem.firstElementChild === document.activeElement) {
-          focusItem = document.activeElement
-        }
+      if (!isHtmlElement(label)) {
+        return
       }
 
-      if (!currentItem) {
-        currentItem = document.createElement('LI')
-        currentItem.innerHTML = `<a href="#${id}">${currentMessage}</a>`
-      }
-
-      const returnItem = frag.appendChild(currentItem)
-
-      this._errorSummaryList.items[id] = {
-        id,
-        message: currentMessage,
-        item: returnItem
-      }
+      this.#removeErrorMessage(inputs, name, label, allowAriaInvalid)
     })
 
-    this.errorSummary.list.innerHTML = ''
-    this.errorSummary.list.appendChild(frag)
-
-    if (focusItem) {
-      focusItem.focus()
-    }
-  }
-
-  _onBlur (e) {
-    const input = e.currentTarget
-    const name = input.name
-    const inputGroup = this._inputGroups[name]
-
-    if (this.submitted) {
-      setTimeout(() => {
-        let focusInErrorSummary = false
-
-        if (this.errorSummary.container) {
-          focusInErrorSummary = this.errorSummary.container.contains(document.activeElement)
-        }
-
-        this._validateGroup(inputGroup, name)
-
-        if (this._errorSummaryList.ids.length) {
-          this._displayErrorSummary(true)
-        } else {
-          let prevFocusItem = null
-
-          /* Previous focusable element from error summary */
-
-          getOuterItems(
-            this.errorSummary.container,
-            'prev',
-            (store) => {
-              let stop = false
-
-              for (let i = 0; i < store.length; i += 1) {
-                const item = store[i]
-
-                if (isItemFocusable(item)) {
-                  stop = true
-                  prevFocusItem = item
-                  break
-                } else {
-                  const f = item.querySelectorAll(focusSelector)
-
-                  if (f.length) {
-                    stop = true
-                    prevFocusItem = f[0]
-                    break
-                  }
-                }
-              }
-
-              return { store, stop }
-            }
-          )
-
-          if (focusInErrorSummary && prevFocusItem) {
-            prevFocusItem.focus()
-          }
-        }
-      }, 10) // Delay to get correct active element
-    }
-  }
-
-  _onErrorSummaryBlur () {
-    this.errorSummary.container.removeAttribute('role')
+    this.#displayErrorSummary(false)
   }
 
   /**
-   * Public methods
+   * Handle error summary element display and focus
+   *
+   * @private
+   * @param {boolean} display
+   * @param {boolean} [focus]
+   * @return {void}
    */
-
-  validate () {
-    let validForm = true
-
-    /* Validate individual input groups */
-
-    Object.keys(this._inputGroups || {}).forEach((name) => {
-      const validGroup = this._validateGroup(this._inputGroups[name], name)
-
-      if (!validGroup) {
-        validForm = false
-      }
-    })
-
-    this._displayErrorSummary(!validForm)
-
-    if (!validForm) {
-      if (this.errorSummary.container) {
-        this.errorSummary.container.setAttribute('role', 'alert')
-        this.errorSummary.container.focus()
-      }
+  #displayErrorSummary (display: boolean, focus: boolean = false): void {
+    if (!isHtmlElement(this.errorSummary)) {
+      return
     }
 
-    return validForm
+    this.errorSummary.style.display = display ? 'block' : 'none'
+
+    if (focus) {
+      this.errorSummary.setAttribute('role', 'alert')
+      this.errorSummary.focus()
+    }
   }
 
-  appendFormValues (formValues, filter = false) {
-    formValues.inputs = {}
+  /**
+   * Create/update error list items
+   *
+   * @private
+   * @return {void}
+   */
+  #setErrorList (): void {
+    if (!isHtmlElement(this.errorList)) {
+      return
+    }
 
-    Object.keys(this._inputGroups || {}).forEach((name) => {
-      const inputGroup = this._inputGroups[name]
-      let values = inputGroup.values
+    if (this.#errorListIds.size === 0) {
+      this.#displayErrorSummary(false)
+    }
 
-      if (values.length === 0) {
-        values = ''
-      } else if (values.length === 1) {
-        values = values[0]
-      }
+    const frag = new window.DocumentFragment()
+    let focusItem: HTMLElement | null = null
 
-      let formObj = {
-        value: values,
-        type: this._inputTypes[name]
-      }
+    this.#errorListIds.forEach(id => {
+      const existing = this.#errorListItems.get(id)
+      const currentMessage = this.#errorListMessages.get(id)
+      const { message, item } = existing as FormErrorListItem
 
-      if (Object.getOwnPropertyDescriptor(this._inputLegends, name)) {
-        const legend = this._inputLegends[name]
+      let currentItem: HTMLLIElement | null = null
 
-        if (legend) {
-          formObj.legend = legend
+      if (existing != null && message === currentMessage) {
+        currentItem = item
+
+        if (currentItem.firstElementChild === document.activeElement) {
+          focusItem = document.activeElement as HTMLElement
         }
       }
 
-      formObj.label = this._inputLabels[name]
-
-      if (filter && typeof filter === 'function') {
-        formObj = filter(formObj, inputGroup.inputs)
+      if (currentItem == null) {
+        currentItem = document.createElement('li')
+        currentItem.innerHTML = `<a href="#${id}">${currentMessage}</a>`
       }
 
-      formValues.inputs[name] = formObj
+      frag.appendChild(currentItem)
+
+      this.#errorListItems.set(id, {
+        message: isStringStrict(currentMessage) ? currentMessage : '',
+        item: currentItem
+      })
     })
+
+    this.errorList.innerHTML = ''
+    this.errorList.appendChild(frag)
+
+    if (focusItem != null) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+      (focusItem as HTMLElement).focus()
+    }
   }
 
-  clearErrorMessages () {
-    Object.keys(this._inputGroups || {}).forEach((name) => {
-      const inputGroup = this._inputGroups[name]
+  /**
+   * Blur handler on input element
+   *
+   * @private
+   * @param {Event} e
+   * @return {void}
+   */
+  #blur (e: Event): void {
+    /* Clear timeout */
 
-      const {
-        inputs,
-        type,
-        legend,
-        label
-      } = inputGroup
+    clearTimeout(this.#blurDelayId)
 
-      const l = legend && (type === 'radio' || type === 'checkbox') ? legend : label
+    /* Only after submit */
 
-      this._removeErrorMessage(inputs, name, type, l)
+    if (!this.submitted) {
+      return
+    }
+
+    /* Group required */
+
+    const name = (e.currentTarget as HTMLInputElement).name
+    const group = this.groups.get(name)
+
+    if (group == null) {
+      return
+    }
+
+    /* Delay for correct active element */
+
+    this.#blurDelayId = window.setTimeout(() => {
+      /* Validate group */
+
+      this.#validateGroup(group, name)
+
+      /* Display error summary */
+
+      if (this.#errorListIds.size) {
+        this.#displayErrorSummary(true)
+        return
+      }
+
+      /* Previous focusable element from error summary */
+
+      let prevFocusItem: Element | null = null
+
+      getOuterItems(
+        this.errorSummary,
+        'prev',
+        (store) => {
+          let stop = false
+
+          for (const item of store) {
+            if (isItemFocusable(item)) {
+              stop = true
+              prevFocusItem = item
+              break
+            }
+
+            const innerFocusable = item.querySelectorAll(focusSelector)
+            const [firstItem] = innerFocusable
+
+            if (isHtmlElement(firstItem)) {
+              stop = true
+              prevFocusItem = firstItem
+              break
+            }
+          }
+
+          return { store, stop }
+        }
+      )
+
+      const focusInErrorSummary = this.errorSummary?.contains(document.activeElement)
+
+      if (focusInErrorSummary && prevFocusItem != null) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        (prevFocusItem as HTMLElement).focus()
+      }
+    }, 10)
+  }
+
+  /**
+   * Blur handler on error summary element
+   *
+   * @private
+   * @return {void}
+   */
+  #blurSummary (): void {
+    this.errorSummary?.removeAttribute('role')
+  }
+
+  /**
+   * Submit form
+   *
+   * @private
+   * @param {Event} e
+   * @return {void}
+   */
+  submit (e: Event): void {
+    e.preventDefault()
+
+    this.submitted = true
+    this.validate()
+  }
+
+  /**
+   * Validate form
+   *
+   * @private
+   * @return {boolean}
+   */
+  validate (): boolean {
+    let valid = true
+
+    this.groups.forEach((group, name) => {
+      const validGroup = this.#validateGroup(group, name)
+
+      if (!validGroup) {
+        valid = false
+      }
     })
 
-    this._displayErrorSummary(false)
+    this.#displayErrorSummary(!valid, true)
+
+    return valid
+  }
+
+  /**
+   * Filtered form values
+   *
+   * @param {FormValueFilter} filter
+   * @return {Object<string, FormValue>}
+   */
+  getValues (filter: FormValueFilter): Record<string, FormValue> {
+    const formValues: Record<string, FormValue> = {}
+
+    this.groups.forEach((group, name) => {
+      const { values } = group
+      const valuesLen = values.length
+
+      const legend = this.#legends.get(name)
+      const label = this.#labels.get(name)
+      const type = this.#types.get(name)
+
+      let newValues: string | string[] = values
+
+      if (valuesLen === 0) {
+        newValues = ''
+      }
+
+      if (valuesLen === 1) {
+        newValues = values[0] as string
+      }
+
+      let formObj: FormValue | null = {
+        value: newValues,
+        type: isStringStrict(type) ? type : ''
+      }
+
+      if (legend) {
+        formObj.legend = legend
+      }
+
+      if (label) {
+        formObj.label = label
+      }
+
+      if (isFunction(filter)) {
+        formObj = filter(formObj)
+      }
+
+      if (formObj == null) {
+        return
+      }
+
+      formValues[name] = formObj
+    })
+
+    return formValues
+  }
+
+  /**
+   * Clear form values and error messages
+   *
+   * @return {void}
+   */
+  clear (): void {
+    this.form?.reset()
+    this.#clearErrorMessages()
   }
 }
 

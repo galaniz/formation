@@ -118,13 +118,13 @@ const mockRequestFetch = vi.fn(async (
       data = undefined
     }
 
-    if (data === undefined && err === undefined) {
+    if (data == null && err == null) {
       ok = false
       err = new TypeError(mockFetchErrorMessage.data)
       status = status === 200 ? 500 : status
     }
 
-    if (err !== undefined) {
+    if (err != null) {
       data = {
         error: err.message
       }

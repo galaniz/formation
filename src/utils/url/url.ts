@@ -22,12 +22,12 @@ const urlEncode = (
   if (isObject(value)) {
     const isArr = isArray(value)
 
-    if (isArr && _key === undefined) {
+    if (isArr && _key == null) {
       _key = ''
     }
 
     Object.keys(value).forEach(k => {
-      urlEncode((value as Record<string, unknown>)[k] as object, _key !== undefined ? `${_key.toString()}[${k.toString()}]` : k.toString(), _data)
+      urlEncode((value as Record<string, unknown>)[k] as object, _key != null ? `${_key.toString()}[${k.toString()}]` : k.toString(), _data)
     })
   } else {
     let str = String(value)
@@ -37,7 +37,7 @@ const urlEncode = (
       str = str.toWellFormed() as string // eslint-disable-line @typescript-eslint/no-unsafe-call
     }
 
-    const kv = _key !== undefined ? `${_key}=${encodeURIComponent(str)}` : ''
+    const kv = _key != null ? `${_key}=${encodeURIComponent(str)}` : ''
 
     if (kv !== '') {
       _data.push(kv)

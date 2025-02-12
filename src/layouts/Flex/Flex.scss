@@ -1,5 +1,5 @@
 /**
- * Layouts - Flexbox Styles
+ * Layouts - Flex Styles
  */
 
 /* Imports */
@@ -21,10 +21,6 @@ $column-fix: fix.get-class-fix("column");
 
 .#{$layout-fix}row {
   flex-direction: row;
-}
-
-.#{$layout-fix}wrap {
-  flex-wrap: wrap;
 }
 
 .#{$layout-fix}shrink-0 {

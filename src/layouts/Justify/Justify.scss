@@ -4,6 +4,7 @@
 
 /* Imports */
 
+@use "../../config/config" as con;
 @use "../../utils/fix/fix";
 @use "../../utils/breakpoint/breakpoint";
 
@@ -28,4 +29,30 @@ $justify-fix: fix.get-class-fix("justify");
 
 .#{$layout-fix}#{$justify-fix}-end {
   justify-content: flex-end;
+}
+
+@each $b in con.$justify-breakpoints {
+  .#{$layout-fix}#{$justify-fix}-between-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: space-between
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-center-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: center
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-start-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: flex-start
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-end-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: flex-end
+    ));
+  }
 }

@@ -395,7 +395,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Focusout handler on container element to close
+   * Blur handler on container element to close
    *
    * @private
    * @return {void}
