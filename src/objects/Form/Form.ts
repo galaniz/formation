@@ -52,11 +52,11 @@ class Form extends HTMLElement {
   errorList: HTMLUListElement | null = null
 
   /**
-   * Error message template
+   * Error message template element
    *
-   * @type {string}
+   * @type {HTMLTemplateElement|null}
    */
-  errorTemplate: string = '<span id="%id"><span id="%id-text">%message</span></span>'
+  errorTemplate: HTMLTemplateElement | null = null
 
   /**
    * Track submit state
@@ -202,6 +202,7 @@ class Form extends HTMLElement {
     this.form = null
     this.errorSummary = null
     this.errorList = null
+    this.errorTemplate = null
     this.init = false
     this.submitted = false
     this.#types.clear()
@@ -234,6 +235,22 @@ class Form extends HTMLElement {
     if (!isHtmlElementArray(inputs)) {
       return false
     }
+
+    /* Error template required */
+
+    const errorTemplateId = this.dataset.errorTemplateId
+
+    if (!isStringStrict(errorTemplateId)) {
+      return false
+    }
+
+    const errorTemplate = document.getElementById(errorTemplateId)
+
+    if (!isHtmlElement(errorTemplate, HTMLTemplateElement)) {
+      return false
+    }
+
+    this.errorTemplate = errorTemplate
 
     /* Create groups */
 
@@ -556,16 +573,22 @@ class Form extends HTMLElement {
     if (isHtmlElement(error)) {
       error.textContent = message
     } else {
-      label.insertAdjacentHTML(
-        'beforeend',
-        this.errorTemplate.replace(/%id/g, errorId).replace(/%message/g, message)
-      )
+      const template = this.errorTemplate?.content.cloneNode(true).firstChild
+      const span = isHtmlElement(template) ? template : document.createElement('span')
+      const templateText = span.querySelector('[data-form-error-text]')
+      const spanText = isHtmlElement(templateText) ? templateText : span.appendChild(document.createElement('span'))
+
+      span.id = errorId
+      spanText.id = `${errorId}-text`
+      spanText.textContent = message
+
+      label.insertAdjacentElement('beforeend', span)
     }
 
     /* Set inputs as invalid */
 
     if (allowAriaInvalid) {
-      inputs.forEach((input) => {
+      inputs.forEach(input => {
         input.setAttribute('aria-invalid', 'true')
       })
     }
@@ -602,7 +625,7 @@ class Form extends HTMLElement {
     /* Set inputs as valid */
 
     if (allowAriaInvalid) {
-      inputs.forEach((input) => {
+      inputs.forEach(input => {
         input.setAttribute('aria-invalid', 'false')
       })
     }

@@ -98,19 +98,19 @@ export default /* html */`
           </div>
         </div>
       </div>
-      <button
-        class="slider-prev wd-8 ht-8 t-background-light b-radius-full absolute left-0"
-        aria-label="Previous"
-        data-slider-prev
-      >
-      </button>  
-      <button
-        class="slider-next wd-8 ht-8 t-background-light b-radius-full absolute right-0"
-        aria-label="Next"
-        data-slider-next
-      >
-      </button>
     </div>
+    <button
+      class="slider-prev wd-8 ht-8 t-background-light b-radius-full absolute left-0"
+      aria-label="Previous"
+      data-slider-prev
+    >
+    </button>  
+    <button
+      class="slider-next wd-8 ht-8 t-background-light b-radius-full absolute right-0"
+      aria-label="Next"
+      data-slider-next
+    >
+    </button>
     <ul
       class="slider-tabs flex gap-1 justify-center pt-6"
       role="tablist"
