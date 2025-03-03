@@ -1,24 +1,22 @@
 // @ts-nocheck
 
 /**
- * Layouts - Masonry
+ * Layouts - Margin Masonry
  */
 
 /**
- * Create masonry layout by placing items into columns
+ * Create masonry layout with negative margins
  */
 
-class Masonry {
+class MarginMasonry {
   /**
    * Set public properties and initialize
    *
    * @param {object} args
    * @param {HTMLElement} args.container
    * @param {NodeList} args.items
+   * @param {string} args.itemSelector
    * @param {object[]} args.breakpoints
-   * @param {object} args.column
-   * @param {string} args.column.tag
-   * @param {string} args.column.class
    * @return {void|boolean} - false if init errors
    */
 
@@ -26,26 +24,59 @@ class Masonry {
     const {
       container = null,
       items = null,
-      breakpoints = [],
-      column = {
-        tag: 'div',
-        class: ''
-      }
+      itemSelector = '',
+      breakpoints = []
     } = args
 
     this.container = container
     this.items = items
+    this.itemSelector = itemSelector
     this.breakpoints = breakpoints
-    this.column = column
 
     /**
-     * Store break point ranges
+     * Store items info - element, offsets, height and indexes
      *
      * @private
      * @type {object[]}
      */
 
-    this._bkRanges = []
+    this._itemInfo = []
+
+    /**
+     * Store items and height by top offset
+     *
+     * @private
+     * @type {object}
+     */
+
+    this._rows = {}
+
+    /**
+     * Store heights from previous rows to get offsets
+     *
+     * @private
+     * @type {number}
+     */
+
+    this._cumulativeOffset = 0
+
+    /**
+     * Store specified column in breakpoints array/adjusted column number
+     *
+     * @private
+     * @type {number}
+     */
+
+    this._currentColumns = 0
+
+    /**
+     * Store specified margin in breakpoints array
+     *
+     * @private
+     * @type {number}
+     */
+
+    this._currentMargin = 0
 
     /**
      * Store timeout id in resize event
@@ -75,7 +106,7 @@ class Masonry {
   }
 
   /**
-   * Initialize - check required props, set breakpoint ranges and arrange
+   * Initialize - check required props, set breakpoint ranges
    *
    * @private
    * @return {boolean}
@@ -84,181 +115,239 @@ class Masonry {
   _initialize () {
     /* Check that required properties not null */
 
-    if (!this.container || !this.items || this.items.length === 0) {
+    if (!this.container || !this.items || !this.itemSelector || !this.breakpoints) {
       return false
     }
 
-    /* Convert items to array */
+    /* Make sure items are array instead of nodelist */
 
     this.items = Array.from(this.items)
 
-    /* Store number of items */
+    /* Store container parent for appending adjusted items */
 
-    this._itemsLength = this.items.length
+    this._containerParent = this.container.parentNode
 
     /* Set breakpoint ranges */
 
     const breakpointLength = this.breakpoints.length
 
     this.breakpoints.forEach((bk, i) => {
-      let low = 0
-      let high = bk.width
-      let cols = 1
+      const low = bk.width
+      let high = 99999
 
-      if (i > 0) {
-        low = this.breakpoints[i - 1].width
-        cols = this.breakpoints[i - 1].cols
+      if (breakpointLength > 1 && i < breakpointLength - 1) {
+        high = this.breakpoints[i + 1].width
       }
 
-      this._bkRanges.push({
-        high,
-        low,
-        cols
-      })
-
-      if (i === breakpointLength - 1) {
-        low = bk.width
-        high = 99999
-        cols = bk.cols
-
-        this._bkRanges.push({
-          high,
-          low,
-          cols
-        })
-      }
+      bk.low = low
+      bk.high = high
     })
 
-    /* Store number of breakpoint ranges */
+    /* Set rows and item info and margins */
 
-    this._bkRangesLength = this._bkRanges.length
+    const set = this._setVars(true)
+
+    if (set) {
+      this._getMargins()
+      this._setMargins()
+    }
 
     /* Event listeners */
 
-    window.addEventListener('resize', this._resizeHandler.bind(this))
+    this._resizeHandler = this._resize.bind(this)
 
-    /* Arrange into columns */
-
-    this._arrange()
+    window.addEventListener('resize', this._resizeHandler)
 
     return true
   }
 
   /**
-   * Determine columns from current breakpoint range and arrange items
+   * Set column number and margin, reset cumulative offset, rows and item info
    *
    * @private
-   * @return {void}
+   * @param {boolean} init
+   * @return {boolean}
    */
 
-  _arrange () {
-    let currentRange
+  _setVars (init = false) {
+    /* Current columns and margin */
 
-    for (let i = 0; i < this._bkRangesLength; i += 1) {
-      const bkRange = this._bkRanges[i]
-      const low = bkRange.low
-      const high = bkRange.high
+    this._currentColumns = 0
+    this._currentMargin = 0
 
-      if (this._viewportWidth >= low && this._viewportWidth < high) {
-        currentRange = this._bkRanges[i]
+    this.breakpoints.forEach((bk) => {
+      if (this._viewportWidth >= bk.low && this._viewportWidth < bk.high) {
+        this._currentColumns = bk.columns
+        this._currentMargin = bk.margin
+      }
+    })
+
+    if (!this._currentColumns && !this._currentMargin) {
+      this._setMargins(true)
+      return false
+    }
+
+    /* Get actual number of columns (eg. user zoomed in) */
+
+    let firstOffset = 0
+    let c = 0
+
+    for (let i = 0; i < this.items.length; i += 1) {
+      const offset = this.items[i].offsetTop
+
+      if (i === 0) {
+        firstOffset = offset
+      }
+
+      if (offset === firstOffset) {
+        c += 1
+      } else {
         break
       }
     }
 
-    this._wrapItems(currentRange.cols)
-  }
-
-  /**
-   * Wrap and unwrap items from columns
-   *
-   * @private
-   * @param {number} cols
-   * @return {void}
-   */
-
-  _wrapItems (cols) {
-    const fragment = document.createDocumentFragment()
-    const colItems = {}
-    const colHeights = []
-    const colKeys = []
-    const itemCols = []
-    const itemHeights = []
-    let indexTracker = 0
-
-    for (let i = 0; i < cols; i += 1) {
-      colItems[i] = []
-      colHeights[i] = 0
-      colKeys.push(i)
+    if (c) {
+      this._currentColumns = c
     }
 
-    this.items.forEach((item, index) => {
-      itemCols[index] = indexTracker
-      colItems[indexTracker].push(item)
+    /* Item and row info */
 
-      indexTracker += 1
+    if (!init) {
+      this._setMargins(true)
+    }
 
-      if (colKeys.indexOf(indexTracker) === -1) {
-        indexTracker = 0
+    this._cumulativeOffset = 0
+    this._rows = {}
+    this._itemInfo = []
+
+    const scrollY = window.scrollY
+
+    this.items.forEach((item, i) => {
+      const rect = item.getBoundingClientRect()
+      const offsetTop = rect.top + scrollY
+      const height = rect.height
+
+      if (!Object.getOwnPropertyDescriptor(this._rows, offsetTop)) {
+        this._rows[offsetTop] = {
+          items: [],
+          ogHeights: [],
+          ogHeight: 0,
+          heights: [],
+          height: 0
+        }
       }
 
-      indexTracker = colKeys[indexTracker]
-    })
+      const indexInRow = this._rows[offsetTop].items.push(item)
 
-    Object.keys(colItems || {}).forEach((index) => {
-      const elem = document.createElement(this.column.tag)
-      elem.setAttribute('class', this.column.class)
+      this._rows[offsetTop].ogHeights.push(height)
+      this._rows[offsetTop].heights.push(height)
 
-      colItems[index].forEach((item) => {
-        elem.appendChild(item)
+      const sI = i - this._currentColumns
+      const sisterIndex = this.items[sI] ? sI : undefined
+
+      this._itemInfo.push({
+        item,
+        top: offsetTop,
+        bottom: rect.bottom + scrollY,
+        height,
+        sisterIndex,
+        indexInRow: indexInRow - 1,
+        marginTop: 0
       })
-
-      fragment.appendChild(elem)
     })
 
-    this.container.innerHTML = ''
-    this.container.appendChild(fragment)
-
-    /**
-     * Hack for trying to equalize column heights a bit
-     */
-
-    /* Get offsets of all items */
-
-    const offsets = []
-
-    this.items.forEach((item, index) => {
-      offsets.push(item.offsetTop)
-
-      const itemHeight = item.clientHeight
-
-      colHeights[itemCols[index]] += itemHeight
-      itemHeights[index] = itemHeight
+    Object.keys(this._rows || {}).forEach((r) => {
+      const rr = this._rows[r]
+      rr.ogHeight = Math.max(...rr.ogHeights)
     })
 
-    /* Get last item (visually) */
-
-    const maxOffset = Math.max(...offsets)
-    const lastVisualItemIndex = offsets.indexOf(maxOffset)
-
-    colHeights[itemCols[lastVisualItemIndex]] -= itemHeights[lastVisualItemIndex]
-
-    /* Get smallest column */
-
-    const smCol = Math.min(...colHeights)
-    const smColIndex = colHeights.indexOf(smCol)
-    const smColContainer = this.container.children[smColIndex]
-
-    smColContainer.appendChild(this.items[lastVisualItemIndex])
+    return true
   }
 
   /**
-   * Resize event handler - re-arrange
+   * Update item info objects - margin top and bottom offset
    *
    * @private
    * @return {void}
    */
 
-  _resizeHandler () {
+  _getMargins () {
+    this._itemInfo.forEach((it, i) => {
+      if (it.sisterIndex === undefined) {
+        return
+      }
+
+      const sister = this._itemInfo[it.sisterIndex]
+      const sisterOffset = sister.bottom
+      const itOffset = it.top - this._cumulativeOffset
+      let marginTop = itOffset - sisterOffset - this._currentMargin
+
+      if (marginTop < 0) {
+        marginTop = 0
+      }
+
+      const newItHeight = it.height - marginTop
+
+      const row = this._rows[it.top]
+
+      row.heights[it.indexInRow] = newItHeight
+
+      it.marginTop = marginTop
+      it.bottom = it.bottom - marginTop - this._cumulativeOffset
+
+      /* Set cumulative height at end of row */
+
+      if (it.indexInRow === row.heights.length - 1) {
+        row.height = Math.max(...row.heights)
+        this._cumulativeOffset += row.ogHeight - row.height
+      }
+    })
+  }
+
+  /**
+   * Set and unset item margins
+   *
+   * @private
+   * @param {boolean} unset
+   * @return {void}
+   */
+
+  _setMargins (unset = false) {
+    const frag = new window.DocumentFragment()
+
+    frag.appendChild(this.container)
+
+    const items = Array.from(frag.querySelectorAll(this.itemSelector))
+
+    items.forEach((item, i) => {
+      item.parentNode.replaceChild(this.items[i], item)
+    })
+
+    const actualItems = Array.from(frag.querySelectorAll(this.itemSelector))
+
+    actualItems.forEach((item, i) => {
+      let val = 0
+
+      if (!unset) {
+        val = this._itemInfo[i].marginTop
+      }
+
+      const marginTop = unset ? '' : `-${val}px`
+
+      item.style.marginTop = marginTop
+    })
+
+    this._containerParent.appendChild(frag)
+  }
+
+  /**
+   * Resize event handler - reset margins
+   *
+   * @private
+   * @return {void}
+   */
+
+  _resize () {
     clearTimeout(this._resizeTimer)
 
     this._resizeTimer = setTimeout(() => {
@@ -270,30 +359,18 @@ class Masonry {
         return
       }
 
-      this._arrange()
+      this._setMargins(true)
+
+      const set = this._setVars()
+
+      if (set) {
+        this._getMargins()
+        this._setMargins()
+      }
     }, 100)
-  }
-
-  /**
-   * Public method - add items and re-arrange
-   *
-   * @param {NodeList} items
-   * @return {void}
-   */
-
-  addItems (items) {
-    items = Array.from(items)
-
-    items.forEach((item) => {
-      this.items.push(item)
-    })
-
-    this._itemsLength = this.items.length
-
-    this._arrange()
   }
 }
 
 /* Exports */
 
-export { Masonry }
+export { MarginMasonry }

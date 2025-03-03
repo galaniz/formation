@@ -32,7 +32,7 @@ import {
   request
 } from '../../utils/utils'
 
-import { Form } from '../Form/Form'
+import { Form } from '../Form/FormOLD'
 
 /* Send and validate form */
 

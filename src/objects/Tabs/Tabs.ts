@@ -180,7 +180,7 @@ class Tabs extends HTMLElement {
    * @return {boolean}
    */
   #initialize (): boolean {
-    /* Get items */
+    /* Items */
 
     const tabs = getItem(['[role="tab"]'], this)
     const panels = getItem(['[role="tabpanel"]'], this)

@@ -251,7 +251,7 @@ class Navigation extends HTMLElement {
    * @return {boolean}
    */
   #initialize (): boolean {
-    /* Get items */
+    /* Items */
 
     const slots = getItem(['[data-nav-slot]'], this)
     const items = getItem(['[data-nav-item]'], this)

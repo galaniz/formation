@@ -224,13 +224,13 @@ class Form extends HTMLElement {
    * @return {boolean}
    */
   #initialize (): boolean {
-    /* Get items */
+    /* Items */
 
     const inputs = getItem(['[data-form-input]'], this) as FormInput[]
     const errorSummary = getItem(['[data-form-error-summary]'], this)
     const errorList = getItem(['[data-form-error-list]'], this)
 
-    /* Check that required items exist */
+    /* Check required items exist */
 
     if (!isHtmlElementArray(inputs)) {
       return false

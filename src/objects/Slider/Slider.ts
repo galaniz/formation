@@ -302,7 +302,7 @@ class Slider extends Tabs {
    * @return {boolean}
    */
   #initialize (): boolean {
-    /* Get items */
+    /* Items */
 
     const track = getItem('[data-slider-track]', this)
     const items = getItem(['[data-slider-item]'], this)

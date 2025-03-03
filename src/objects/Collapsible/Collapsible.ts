@@ -20,7 +20,7 @@ import { getItem } from '../../utils/item/item.js'
  */
 declare global {
   interface ElementEventMap {
-    'clp:toggle': CustomEvent
+    'collapsible:toggle': CustomEvent
   }
 }
 
@@ -183,12 +183,12 @@ class Collapsible extends HTMLElement {
    * @return {boolean}
    */
   #initialize (): boolean {
-    /* Get items */
+    /* Items */
 
     const trigger = getItem('[data-collapsible-trigger]', this)
     const panel = getItem('[data-collapsible-panel]', this)
 
-    /* Check that required items exist */
+    /* Check required items exist */
 
     if (!isHtmlElement(trigger, HTMLButtonElement) || !isHtmlElement(panel)) {
       return false
@@ -219,7 +219,7 @@ class Collapsible extends HTMLElement {
       this.accordion = accordion
       this.#type = 'accordion'
 
-      addAction(`clp:accordion:${accordion}`, (args: CollapsibleAccordionArgs) => {
+      addAction(`collapsible:accordion:${accordion}`, (args: CollapsibleAccordionArgs) => {
         if (args.element !== this && this.expanded) {
           this.#toggle(false)
         }
@@ -240,7 +240,7 @@ class Collapsible extends HTMLElement {
     const action = this.getAttribute('action')
 
     if (isStringStrict(action)) {
-      addAction(`clp:${action}`, (args: CollapsibleActionArgs) => {
+      addAction(`collapsible:${action}`, (args: CollapsibleActionArgs) => {
         const { hoverable, expanded, type } = args
 
         if (hoverable != null) {
@@ -349,13 +349,13 @@ class Collapsible extends HTMLElement {
 
     /* Emit toggle event */
 
-    const onToggle = new CustomEvent('clp:toggle')
+    const onToggle = new CustomEvent('collapsible:toggle')
     this.dispatchEvent(onToggle)
 
     /* Accordion group action */
 
     if (this.#type === 'accordion' && open) {
-      doActions(`clp:accordion:${this.accordion}`, {
+      doActions(`collapsible:accordion:${this.accordion}`, {
         element: this
       })
     }
