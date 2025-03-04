@@ -129,7 +129,7 @@ class Overflow extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const track = getItem(['[data-overflow-track]'], this)
+    const track = getItem('[data-overflow-track]', this)
 
     /* Check required items exist */
 
