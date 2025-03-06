@@ -136,7 +136,7 @@ const testHasIncrement = (target = 10): boolean => {
 }
 
 /**
- * Get initial delay
+ * Initial delay
  *
  * @param {number} initMs
  * @param {number} target

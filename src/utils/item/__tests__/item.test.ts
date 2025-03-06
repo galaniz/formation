@@ -33,7 +33,7 @@ interface TestHtmlObj {
 }
 
 /**
- * Get html elements
+ * Html elements
  *
  * @return {TestHtmlObj}
  */

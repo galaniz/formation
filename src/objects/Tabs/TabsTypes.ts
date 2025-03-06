@@ -3,6 +3,11 @@
  */
 
 /**
+ * @typedef {'horizontal'|'vertical'} TabsDirection
+ */
+export type TabsDirection = 'horizontal' | 'vertical'
+
+/**
  * @typedef {object} TabsActivateArgs
  * @prop {number} current
  * @prop {boolean} [focus=true]

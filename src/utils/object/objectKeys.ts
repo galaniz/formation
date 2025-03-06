@@ -3,7 +3,7 @@
  */
 
 /**
- * Get object keys cast as keyof object (workaround for index signature)
+ * Object keys cast as keyof object (workaround for index signature)
  *
  * @param {object} obj
  * @return {string[]}

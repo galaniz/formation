@@ -74,7 +74,7 @@ const isItemFocusable = (item: Element | null): boolean => {
 }
 
 /**
- * Get all focusable elements inside item
+ * All focusable elements inside item
  *
  * @param {Element} item
  * @return {Element[]}
@@ -88,7 +88,7 @@ const getInnerFocusableItems = (item: Element | null): Element[] => {
 }
 
 /**
- * Get all focusable elements outside item
+ * All focusable elements outside item
  *
  * @param {Element|null} item
  * @return {Element[]}

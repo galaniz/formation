@@ -24,7 +24,7 @@ interface TestItems {
 }
 
 /**
- * Get asset(s)
+ * Asset(s)
  *
  * @return {TestItems}
  */

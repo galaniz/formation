@@ -24,7 +24,7 @@ import { getObjectKeys } from '../object/objectKeys.js'
  * @param {RenderElementArgs} args
  * @return {HTMLElement|null}
  */
-const renderElement = (args: RenderElementArgs): HTMLElement | null => {
+const renderElement = <T extends HTMLElement>(args: RenderElementArgs): T | null => { // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
   if (!isObjectStrict(args)) {
     return null
   }
@@ -60,7 +60,7 @@ const renderElement = (args: RenderElementArgs): HTMLElement | null => {
     })
   }
 
-  return el
+  return el as T
 }
 
 /**
@@ -70,12 +70,12 @@ const renderElement = (args: RenderElementArgs): HTMLElement | null => {
  * @param {RenderItems|RenderItems[]} items
  * @return {HTMLElement|null}
  */
-const render = (
+const render = <T extends HTMLElement>(
   functions: RenderFunctions,
   items: RenderItems | RenderItems[],
-  _output: HTMLElement | null = null,
+  _output: T | null = null,
   _parents: RenderParents[] = []
-): HTMLElement | null => {
+): T | null => {
   /* Functions object required */
 
   if (!isObjectStrict(functions)) {
@@ -131,7 +131,7 @@ const render = (
     if (isHtmlElement(_output)) {
       _output.append(output)
     } else {
-      _output = output
+      _output = output as T
     }
 
     if (isArrayStrict(children)) {

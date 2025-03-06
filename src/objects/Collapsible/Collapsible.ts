@@ -7,7 +7,7 @@
 import type {
   CollapsibleAccordionArgs,
   CollapsibleActionArgs,
-  CollapsibleTypes
+  CollapsibleType
 } from './CollapsibleTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement } from '../../utils/html/html.js'
@@ -81,9 +81,9 @@ class Collapsible extends HTMLElement {
    * Type of collapsible
    *
    * @private
-   * @type {CollapsibleTypes}
+   * @type {CollapsibleType}
    */
-  #type: CollapsibleTypes = 'single'
+  #type: CollapsibleType = 'single'
 
   /**
    * Source of trigger

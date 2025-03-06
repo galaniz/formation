@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import type { SliderTypes } from './SliderTypes.js'
+import type { SliderType } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexArgs } from '../Tabs/TabsTypes.js'
 import { Tabs } from '../Tabs/Tabs.js'
 import { getItem } from '../../utils/item/item.js'
@@ -71,13 +71,9 @@ class Slider extends Tabs {
   /**
    * Layout type
    *
-   * single - single item panels
-   * group - multi-item panels
-   * flex - multi-item panels different widths
-   *
-   * @type {SliderTypes}
+   * @type {SliderType}
    */
-  type: SliderTypes = 'single'
+  type: SliderType = 'single'
 
   /**
    * Number of visible items and panels by breakpoint for mult-item
@@ -346,7 +342,7 @@ class Slider extends Tabs {
     const isGroup = type === 'group'
 
     if (isStringStrict(type)) {
-      this.type = type as SliderTypes
+      this.type = type as SliderType
     }
 
     if (isGroup) {

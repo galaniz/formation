@@ -3,6 +3,11 @@
  */
 
 /**
+ * @typedef {'blur'|'submit'|'both'} FormValidateOn
+ */
+export type FormValidateOn = 'blur' | 'submit' | 'both'
+
+/**
  * @typedef {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement} FormInput
  */
 export type FormInput = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -35,12 +40,14 @@ export interface FormGroup {
 
 /**
  * @typedef {object} FormErrorListItem
- * @prop {HTMLLIElement} item
+ * @prop {HTMLLIElement|undefined} item
  * @prop {string} message
+ * @prop {boolean} [changed]
  */
 export interface FormErrorListItem {
-  item: HTMLLIElement
+  item: HTMLLIElement | undefined
   message: string
+  changed?: boolean
 }
 
 /**
@@ -68,6 +75,26 @@ export interface FormValue {
   label?: string
   legend?: string
 }
+
+/**
+ * @typedef {'errorSummary'|'errorList'|'error'} FormCloneKeys
+ */
+export type FormCloneKeys = 'errorSummary' | 'errorList' | 'error'
+
+/**
+ * @typedef {Map<FormCloneKeys, HTMLElement>} FormTemplates
+ */
+export type FormClones = Map<FormCloneKeys, HTMLElement>
+
+/**
+ * @typedef {'errorSummary'|'error'} FormTemplateKeys
+ */
+export type FormTemplateKeys = 'errorSummary' | 'error'
+
+/**
+ * @typedef {Map<FormTemplateKeys, HTMLElement>} FormTemplates
+ */
+export type FormTemplates = Map<FormTemplateKeys, HTMLElement>
 
 /**
  * @typedef {function} FormValueFilter

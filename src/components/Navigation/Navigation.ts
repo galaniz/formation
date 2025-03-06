@@ -394,7 +394,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Get slot or group name as string
+   * Slot or group name as string
    *
    * @private
    * @param {string} name

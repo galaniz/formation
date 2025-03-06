@@ -134,9 +134,33 @@ const getItems = <T>(
   return (isArr ? [] : {}) as Items<T>
 }
 
+/**
+ * First element from content template
+ *
+ * @param {string} id
+ * @return {HTMLElement|null}
+ */
+const getTemplateItem = <T extends HTMLElement>(id: string): T | null => { // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
+  const template = document.getElementById(id) as HTMLTemplateElement | null
+
+  return template?.content.firstElementChild as T | null
+}
+
+/**
+ * Clone element and check type
+ *
+ * @param {HTMLElement|null|undefined} item
+ * @return {HTMLElement|null}
+ */
+const cloneItem = <T extends HTMLElement>(item: T | null | undefined): T | null => {
+  return item?.cloneNode(true) as T
+}
+
 /* Exports */
 
 export {
   getItem,
-  getItems
+  getItems,
+  getTemplateItem,
+  cloneItem
 }

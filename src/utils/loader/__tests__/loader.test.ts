@@ -55,10 +55,9 @@ const testCheckFocus = (loader: HTMLElement): boolean => {
 /* Tests */
 
 describe('setLoader()', () => {
-  it('should return undefined if loader is null', () => {
-    // @ts-expect-error - test invalid loader
+  it('should return false if loader is null', () => {
     const result = setLoader(null)
-    const expectedResult = undefined
+    const expectedResult = false
 
     expect(result).toBe(expectedResult)
   })

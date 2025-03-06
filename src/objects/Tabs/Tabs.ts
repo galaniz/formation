@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import type { TabsActivateArgs, TabsIndexArgs, TabsEventDetail } from './TabsTypes.js'
+import type { TabsActivateArgs, TabsIndexArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -57,9 +57,9 @@ class Tabs extends HTMLElement {
   /**
    * Layout for keyboard navigation
    *
-   * @type {string}
+   * @type {TabsDirection}
    */
-  direction: 'horizontal' | 'vertical' = 'horizontal'
+  direction: TabsDirection = 'horizontal'
 
   /**
    * Initialize success
@@ -196,7 +196,7 @@ class Tabs extends HTMLElement {
     this.tabs = tabs
     this.panels = panels
 
-    /* Get end index */
+    /* End index */
 
     this.#endIndex = tabs.length - 1
 

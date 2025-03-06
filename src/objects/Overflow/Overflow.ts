@@ -106,7 +106,7 @@ class Overflow extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.track?.addEventListener('scroll', this.#scrollHandler)
+    this.track?.removeEventListener('scroll', this.#scrollHandler)
     removeResize(this.#resizeHandler)
 
     /* Empty/nullify props */

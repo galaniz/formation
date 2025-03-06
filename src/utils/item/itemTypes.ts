@@ -47,16 +47,21 @@ export interface ItemsOuterFilterReturn {
 export type ItemsOuterFilter = (store: Element[]) => ItemsOuterFilterReturn
 
 /**
+ * @typedef {'all'|'prev'|'next'} ItemsOuterType
+ */
+export type ItemsOuterType = 'all' | 'prev' | 'next'
+
+/**
  * @typedef {function} ItemsOuter
  * @param {HTMLElement} item
- * @param {string} [type] - all | prev | next
+ * @param {ItemsOuterType} [type]
  * @param {ItemsOuterFilter} [filter]
  * @param {Element[]} [_store]
  * @return {Element[]}
  */
 export type ItemsOuter = (
   item: HTMLElement | null,
-  type?: 'all' | 'prev' | 'next',
+  type?: ItemsOuterType,
   filter?: ItemsOuterFilter,
   _store?: Element[]
 ) => Element[]

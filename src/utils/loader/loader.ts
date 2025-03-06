@@ -9,18 +9,18 @@ import { isHtmlElement } from '../html/html.js'
 /**
  * Toggle display and focus of loader
  *
- * @param {HTMLElement} loader
+ * @param {Element|null} loader
  * @param {boolean} show
  * @param {boolean} focus
- * @return {boolean|undefined}
+ * @return {boolean}
  */
 const setLoader = (
-  loader: HTMLElement,
+  loader: Element | null,
   show = true,
   focus = true
-): boolean | undefined => {
+): boolean => {
   if (!isHtmlElement(loader)) {
-    return
+    return false
   }
 
   if (!show) {

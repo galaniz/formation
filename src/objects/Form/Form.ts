@@ -10,14 +10,17 @@ import type {
   FormErrorListItem,
   FormValidateResult,
   FormValue,
-  FormValueFilter
+  FormValueFilter,
+  FormTemplates,
+  FormClones,
+  FormValidateOn
 } from './FormTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isFunction } from '../../utils/function/function.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isItemFocusable, focusSelector } from '../../utils/focusability/focusability.js'
 import { getOuterItems } from '../../utils/item/itemOuter.js'
-import { getItem } from '../../utils/item/item.js'
+import { cloneItem, getItem, getTemplateItem } from '../../utils/item/item.js'
 
 /**
  * Form validation and input values retrieval
@@ -38,25 +41,18 @@ class Form extends HTMLElement {
   groups: Map<string, FormGroup> = new Map()
 
   /**
-   * Error summary container
+   * Error templates
    *
-   * @type {HTMLElement|null}
+   * @type {FormTemplates}
    */
-  errorSummary: HTMLElement | null = null
+  templates: FormTemplates = new Map()
 
   /**
-   * Error list container
+   * Validate on submit, blur or both
    *
-   * @type {HTMLUListElement|null}
+   * @type {FormValidateOn}
    */
-  errorList: HTMLUListElement | null = null
-
-  /**
-   * Error message template element
-   *
-   * @type {HTMLTemplateElement|null}
-   */
-  errorTemplate: HTMLTemplateElement | null = null
+  validateOn: FormValidateOn = 'both'
 
   /**
    * Track submit state
@@ -97,28 +93,20 @@ class Form extends HTMLElement {
   #legends: Map<string, string> = new Map()
 
   /**
-   * Error list item ids
+   * Clones of templates
    *
    * @private
-   * @type {Set<string>}
+   * @type {FormClones}
    */
-  #errorListIds: Set<string> = new Set()
+  #clones: FormClones = new Map()
 
   /**
-   * Error list item messages by id
-   *
-   * @private
-   * @type {Map<string, string>}
-   */
-  #errorListMessages: Map<string, string> = new Map()
-
-  /**
-   * Error list item element and message by id
+   * Error list item ids, messages and elements
    *
    * @private
    * @type {Map<string, FormErrorListItem>}
    */
-  #errorListItems: Map<string, FormErrorListItem> = new Map()
+  #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
    * Url validation regex
@@ -153,6 +141,7 @@ class Form extends HTMLElement {
    */
   #blurHandler = this.#blur.bind(this)
   #blurSummaryHandler = this.#blurSummary.bind(this)
+  #submitHandler = this.submit.bind(this)
 
   /**
    * Constructor object
@@ -186,7 +175,8 @@ class Form extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.errorSummary?.addEventListener('blur', this.#blurSummaryHandler)
+    this.form?.removeEventListener('submit', this.#submitHandler)
+    this.#clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
 
     this.groups.forEach(group => {
       const { inputs } = group
@@ -198,19 +188,16 @@ class Form extends HTMLElement {
 
     /* Empty/nullify props */
 
-    this.groups.clear()
     this.form = null
-    this.errorSummary = null
-    this.errorList = null
-    this.errorTemplate = null
+    this.groups.clear()
+    this.templates.clear()
     this.init = false
     this.submitted = false
     this.#types.clear()
     this.#labels.clear()
     this.#legends.clear()
-    this.#errorListIds.clear()
-    this.#errorListMessages.clear()
-    this.#errorListItems.clear()
+    this.#clones.clear()
+    this.#errorList.clear()
 
     /* Clear timeouts */
 
@@ -226,31 +213,32 @@ class Form extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
+    const form = getItem('form', this)
     const inputs = getItem(['[data-form-input]'], this) as FormInput[]
-    const errorSummary = getItem(['[data-form-error-summary]'], this)
-    const errorList = getItem(['[data-form-error-list]'], this)
 
     /* Check required items exist */
 
-    if (!isHtmlElementArray(inputs)) {
+    if (!isHtmlElementArray(inputs) || !isHtmlElement(form, HTMLFormElement)) {
       return false
     }
 
     /* Error template required */
 
-    const errorTemplateId = this.dataset.errorTemplateId
+    const error = getTemplateItem(this.getAttribute('error') ?? '')
 
-    if (!isStringStrict(errorTemplateId)) {
+    if (!isHtmlElement(error)) {
       return false
     }
 
-    const errorTemplate = document.getElementById(errorTemplateId)
+    this.templates.set('error', error)
 
-    if (!isHtmlElement(errorTemplate, HTMLTemplateElement)) {
-      return false
+    /* Error summary template */
+
+    const errorSummary = getTemplateItem(this.getAttribute('error-summary') ?? '')
+
+    if (isHtmlElement(errorSummary)) {
+      this.templates.set('errorSummary', errorSummary)
     }
-
-    this.errorTemplate = errorTemplate
 
     /* Create groups */
 
@@ -366,13 +354,10 @@ class Form extends HTMLElement {
       init = true
     })
 
-    /* Error list container */
+    /* Form */
 
-    if (isHtmlElement(errorSummary) && isHtmlElement(errorList, HTMLUListElement)) {
-      this.errorSummary = errorSummary
-      this.errorList = errorList
-      this.errorSummary.addEventListener('blur', this.#blurSummaryHandler)
-    }
+    this.form = form
+    this.form.addEventListener('submit', this.#submitHandler)
 
     /* Init successful */
 
@@ -402,7 +387,7 @@ class Form extends HTMLElement {
     let message = ''
     let valid = false
 
-    /* Get values from inputs */
+    /* Values from inputs */
 
     inputs.forEach(input => {
       let value: string | undefined
@@ -520,12 +505,23 @@ class Form extends HTMLElement {
 
     if (!valid) {
       this.#setErrorMessage(inputs, name, label, message, allowAriaInvalid)
-      this.#errorListIds.add(errorId)
-      this.#errorListMessages.set(errorId, message)
+
+      const existing = this.#errorList.get(errorId)
+      const existingItem = existing?.item
+      const existingMessage = existing?.message
+      const changed = existingItem != null && existingMessage === message
+
+      this.#errorList.set(errorId, {
+        message: isStringStrict(message) ? message : '',
+        item: existingItem, changed
+      })
+
+      /* Create error summary */
+
+      this.#setErrorSummary()
     } else {
       this.#removeErrorMessage(inputs, name, label, allowAriaInvalid)
-      this.#errorListIds.delete(errorId)
-      this.#errorListMessages.delete(errorId)
+      this.#errorList.delete(errorId)
     }
 
     /* Reset summary list */
@@ -573,16 +569,23 @@ class Form extends HTMLElement {
     if (isHtmlElement(error)) {
       error.textContent = message
     } else {
-      const template = this.errorTemplate?.content.cloneNode(true).firstChild
-      const span = isHtmlElement(template) ? template : document.createElement('span')
-      const templateText = span.querySelector('[data-form-error-text]')
-      const spanText = isHtmlElement(templateText) ? templateText : span.appendChild(document.createElement('span'))
+      const clone = cloneItem(this.templates.get('error'))
 
-      span.id = errorId
-      spanText.id = `${errorId}-text`
-      spanText.textContent = message
+      if (!isHtmlElement(clone)) {
+        return
+      }
 
-      label.insertAdjacentElement('beforeend', span)
+      const cloneText = getItem('span', clone)
+
+      if (!isHtmlElement(cloneText)) {
+        return
+      }
+
+      clone.id = errorId
+      cloneText.id = `${errorId}-text`
+      cloneText.textContent = message
+
+      label.insertAdjacentElement('beforeend', clone)
     }
 
     /* Set inputs as invalid */
@@ -652,6 +655,42 @@ class Form extends HTMLElement {
   }
 
   /**
+   * Create error summary
+   *
+   * @private
+   * @return {void}
+   */
+  #setErrorSummary (): void {
+    /* Check if exists */
+
+    const errorSummary = this.#clones.get('errorSummary')
+
+    if (errorSummary != null) {
+      return
+    }
+
+    /* Clone summary template */
+
+    const clone = cloneItem(this.templates.get('errorSummary'))
+
+    if (!isHtmlElement(clone)) {
+      return
+    }
+
+    this.prepend(clone)
+    this.#clones.set('errorSummary', clone)
+    clone.addEventListener('blur', this.#blurSummaryHandler)
+
+    /* Error list */
+
+    const errorList = getItem('ul', clone)
+
+    if (isHtmlElement(errorList, HTMLUListElement)) {
+      this.#clones.set('errorList', errorList)
+    }
+  }
+
+  /**
    * Handle error summary element display and focus
    *
    * @private
@@ -660,15 +699,17 @@ class Form extends HTMLElement {
    * @return {void}
    */
   #displayErrorSummary (display: boolean, focus: boolean = false): void {
-    if (!isHtmlElement(this.errorSummary)) {
+    const errorSummary = this.#clones.get('errorSummary')
+
+    if (!isHtmlElement(errorSummary)) {
       return
     }
 
-    this.errorSummary.style.display = display ? 'block' : 'none'
+    errorSummary.style.display = display ? 'block' : 'none'
 
     if (focus) {
-      this.errorSummary.setAttribute('role', 'alert')
-      this.errorSummary.focus()
+      errorSummary.setAttribute('role', 'alert')
+      errorSummary.focus()
     }
   }
 
@@ -679,50 +720,43 @@ class Form extends HTMLElement {
    * @return {void}
    */
   #setErrorList (): void {
-    if (!isHtmlElement(this.errorList)) {
-      return
-    }
-
-    if (this.#errorListIds.size === 0) {
+    if (this.#errorList.size === 0) {
       this.#displayErrorSummary(false)
     }
 
+    const errorList = this.#clones.get('errorList')
+
+    if (!isHtmlElement(errorList, HTMLUListElement)) {
+      return
+    }
+
     const frag = new window.DocumentFragment()
-    let focusItem: HTMLElement | null = null
+    let focusItem: HTMLElement | undefined
 
-    this.#errorListIds.forEach(id => {
-      const existing = this.#errorListItems.get(id)
-      const currentMessage = this.#errorListMessages.get(id)
-      const { message, item } = existing as FormErrorListItem
+    this.#errorList.forEach((listItem, id) => {
+      const { message, item, changed } = listItem
 
-      let currentItem: HTMLLIElement | null = null
+      let currentItem = changed ? item : null
 
-      if (existing != null && message === currentMessage) {
-        currentItem = item
-
-        if (currentItem.firstElementChild === document.activeElement) {
-          focusItem = document.activeElement as HTMLElement
-        }
+      if (changed && currentItem?.firstElementChild === document.activeElement) {
+        focusItem = document.activeElement as HTMLElement
       }
 
       if (currentItem == null) {
         currentItem = document.createElement('li')
-        currentItem.innerHTML = `<a href="#${id}">${currentMessage}</a>`
+        currentItem.innerHTML = `<a href="#${id}">${message}</a>`
       }
 
-      frag.appendChild(currentItem)
+      frag.append(currentItem)
 
-      this.#errorListItems.set(id, {
-        message: isStringStrict(currentMessage) ? currentMessage : '',
-        item: currentItem
-      })
+      this.#errorList.set(id, { message, item: currentItem })
     })
 
-    this.errorList.innerHTML = ''
-    this.errorList.appendChild(frag)
+    errorList.innerHTML = ''
+    errorList.append(frag)
 
-    if (focusItem != null) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-      (focusItem as HTMLElement).focus()
+    if (focusItem != null) {
+      focusItem.focus()
     }
   }
 
@@ -738,9 +772,11 @@ class Form extends HTMLElement {
 
     clearTimeout(this.#blurDelayId)
 
-    /* Only after submit */
+    /* Check validation onset */
 
-    if (!this.submitted) {
+    const on = this.validateOn
+
+    if (on === 'submit' || (!this.submitted && on === 'both')) {
       return
     }
 
@@ -762,17 +798,17 @@ class Form extends HTMLElement {
 
       /* Display error summary */
 
-      if (this.#errorListIds.size) {
+      if (this.#errorList.size) {
         this.#displayErrorSummary(true)
         return
       }
 
-      /* Previous focusable element from error summary */
+      /* Previous focusable element */
 
-      let prevFocusItem: Element | null = null
+      let prevFocusItem: HTMLElement | undefined
 
       getOuterItems(
-        this.errorSummary,
+        this,
         'prev',
         (store) => {
           let stop = false
@@ -780,7 +816,7 @@ class Form extends HTMLElement {
           for (const item of store) {
             if (isItemFocusable(item)) {
               stop = true
-              prevFocusItem = item
+              prevFocusItem = item as HTMLElement
               break
             }
 
@@ -798,10 +834,10 @@ class Form extends HTMLElement {
         }
       )
 
-      const focusInErrorSummary = this.errorSummary?.contains(document.activeElement)
+      const focusInErrorSummary = this.#clones.get('errorSummary')?.contains(document.activeElement)
 
-      if (focusInErrorSummary && prevFocusItem != null) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-        (prevFocusItem as HTMLElement).focus()
+      if (focusInErrorSummary && prevFocusItem != null) {
+        prevFocusItem.focus()
       }
     }, 10)
   }
@@ -810,20 +846,21 @@ class Form extends HTMLElement {
    * Blur handler on error summary element
    *
    * @private
+   * @param {Event} e
    * @return {void}
    */
-  #blurSummary (): void {
-    this.errorSummary?.removeAttribute('role')
+  #blurSummary (e: Event): void {
+    (e.currentTarget as HTMLElement).removeAttribute('role')
   }
 
   /**
    * Submit form
    *
    * @private
-   * @param {Event} e
+   * @param {SubmitEvent} e
    * @return {void}
    */
-  submit (e: Event): void {
+  submit (e: SubmitEvent): void {
     e.preventDefault()
 
     this.submitted = true

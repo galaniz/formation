@@ -3,9 +3,9 @@
  */
 
 /**
- * @typedef {string} CollapsibleTypes - single | accordion
+ * @typedef {'single'|'accordion'} CollapsibleType
  */
-export type CollapsibleTypes = 'single' | 'accordion'
+export type CollapsibleType = 'single' | 'accordion'
 
 /**
  * @typedef {object} CollapsibleActionArgs
@@ -16,7 +16,7 @@ export type CollapsibleTypes = 'single' | 'accordion'
 export interface CollapsibleActionArgs {
   hoverable?: boolean
   expanded?: boolean
-  type?: CollapsibleTypes
+  type?: CollapsibleType
 }
 
 /**
