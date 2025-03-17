@@ -8,7 +8,7 @@ import type { Config, ConfigFallback } from './configTypes.js'
 import { configDefaultFontSize } from './configDefaultFontSize.js'
 
 /**
- * Store attributes and feature support
+ * Attributes and feature support
  *
  * @type {Config}
  */
@@ -25,7 +25,7 @@ const config: Config = {
 }
 
 /**
- * Store feature fallback functions
+ * Feature fallback functions
  *
  * @type {ConfigFallback}
  */

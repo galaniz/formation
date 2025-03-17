@@ -10,10 +10,10 @@ import { Tabs } from '../Tabs/Tabs.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
+import { isNumber } from '../../utils/number/number.js'
 import { focusSelector } from '../../utils/focusability/focusability.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
 import { config } from '../../config/config.js'
-import { isNumber } from '../../utils/number/number.js'
 
 /**
  * Scroll based slider using panel and tab structure with layout and loop options
@@ -226,13 +226,9 @@ class Slider extends Tabs {
   override connectedCallback (): void {
     /* Inherit */
 
-    if (this.init) {
-      return
-    }
-
     super.connectedCallback()
 
-    /* Add event listeners */
+    /* Event listeners */
 
     this.addEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
     this.addEventListener('tabs:activate', this.#activateHandler as EventListener)
@@ -314,7 +310,7 @@ class Slider extends Tabs {
       return false
     }
 
-    /* Set element props */
+    /* Element props */
 
     this.track = track
     this.#insert = insert
@@ -349,7 +345,7 @@ class Slider extends Tabs {
       this.loop = false
     }
 
-    /* Add event listeners */
+    /* Event listeners */
 
     onResize(this.#resizeHandler)
 
@@ -360,7 +356,9 @@ class Slider extends Tabs {
       this.next.addEventListener('click', this.#nextHandler)
     }
 
-    /* Set breakpoints */
+    /* Breakpoints */
+
+    const { fontSizeMultiplier } = config
 
     const breakpoints = this.getAttribute('breakpoints')
     const visible = this.getAttribute('visible')
@@ -392,8 +390,8 @@ class Slider extends Tabs {
         }
 
         this.breakpoints.add({
-          low,
-          high,
+          low: low * fontSizeMultiplier,
+          high: high * fontSizeMultiplier,
           items,
           panels: Math.ceil(panelsLen / items)
         })
@@ -437,7 +435,7 @@ class Slider extends Tabs {
       current = this.currentIndex + this.#loopInitLength
     }
 
-    /* Set dimension properties */
+    /* Dimension properties */
 
     this.#setDimensions()
 
@@ -1056,7 +1054,7 @@ class Slider extends Tabs {
       const target = this.track.scrollLeft
       const offsets = this.#scrollLeftOffsets
 
-      /* Set new index to activate */
+      /* New index to activate */
 
       let newIndex = this.currentIndex
 

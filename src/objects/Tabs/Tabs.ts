@@ -23,7 +23,7 @@ declare global {
 }
 
 /**
- * Display tabs and corresponding panels with click and keyboard navigation
+ * Handles display of tabs and corresponding panels
  */
 class Tabs extends HTMLElement {
   /**
@@ -191,7 +191,7 @@ class Tabs extends HTMLElement {
       return false
     }
 
-    /* Set item props */
+    /* Element props */
 
     this.tabs = tabs
     this.panels = panels
@@ -204,7 +204,7 @@ class Tabs extends HTMLElement {
 
     this.#className = this.constructor.name.toLowerCase()
 
-    /* Set delay if it exists */
+    /* Delay if it exists */
 
     const delay = this.getAttribute('delay')
 
@@ -216,7 +216,7 @@ class Tabs extends HTMLElement {
       }
     }
 
-    /* Set direction if it exists */
+    /* Direction if it exists */
 
     const direction = this.getAttribute('direction')
 
@@ -228,7 +228,7 @@ class Tabs extends HTMLElement {
 
     const hash = window.location.hash
 
-    /* Set current and add event listeners */
+    /* Current and event listeners */
 
     let current = 0
 
@@ -289,7 +289,7 @@ class Tabs extends HTMLElement {
     clearTimeout(this.#delayId)
     clearTimeout(this.#focusDelayId)
 
-    /* Set args */
+    /* Args */
 
     const {
       current = 0,

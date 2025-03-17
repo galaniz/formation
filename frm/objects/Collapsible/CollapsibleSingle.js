@@ -1,6 +1,6 @@
 export default /* html */`
   <frm-collapsible id="clp-single" class="collapsible" expanded="true">
-    <button data-collapsible-trigger>
+    <button data-collapsible-toggle>
       Toggle
     </button>
     <div class="collapsible-panel e-trans" data-collapsible-panel>

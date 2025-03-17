@@ -10,7 +10,7 @@ import { isSetStrict } from '../set/set.js'
 import { config } from '../../config/config.js'
 
 /**
- * Store timeout id to clear later
+ * Timeout id to clear later
  *
  * @private
  * @type {number}

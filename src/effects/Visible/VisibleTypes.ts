@@ -1,25 +1,21 @@
 /**
- * Objects - Visible Types
+ * Effects - Visible Types
  */
 
 /**
- * @typedef {object} VisibleHashArgs
- * @prop {Element|null} link
- * @prop {Element|null|Element[]} item
- * @prop {number} [offset]
- */
-export interface VisibleHashArgs {
-  link: Element | null
-  item: Element | null | Element[]
-  offset?: number
-}
-
-/**
- * @typedef {object} VisibleHashRect
+ * @typedef {object} VisibleItem
+ * @prop {HTMLAnchorElement} link
+ * @prop {HTMLElement} item
+ * @prop {HTMLElement|null} next
  * @prop {number} top
  * @prop {number} bottom
+ * @prop {boolean} visible
  */
-export interface VisibleHashRect {
+export interface VisibleItem {
+  link: HTMLAnchorElement
+  item: HTMLElement
+  next: HTMLElement | null
   top: number
   bottom: number
+  visible: boolean
 }

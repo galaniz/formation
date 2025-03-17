@@ -1,112 +1,74 @@
-// @ts-nocheck
-
 /**
- * Objects - Lazy Load
- *
- * @param {HTMLElement[]} items
+ * Objects - Lazy
  */
 
 /* Imports */
 
-import { assetLoaded } from '../../utils/utils'
+import type { Asset } from '../../utils/asset/assetTypes.js'
+import { isHtmlElement } from '../../utils/html/html.js'
+import { getItem } from '../../utils/item/item.js'
+import { assetLoaded } from '../../utils/asset/asset.js'
 
-/* Class */
-
-class LazyLoad {
+/**
+ * Handles loaded state of asset
+ */
+class Lazy extends HTMLElement {
   /**
-   * Constructor
-   */
-
-  constructor (items = []) {
-    /* Public variables */
-
-    this.items = items
-
-    /* Initialize */
-
-    const init = this._initialize()
-
-    if (!init) {
-      return false
-    }
-  }
-
-  /**
-   * Initialize
-   */
-
-  _initialize () {
-    /* Check that required variables not null */
-
-    if (!this.items.length) return false
-
-    /* Check if IntersectionObserver is supported */
-
-    let ioSupported = false
-
-    if (
-      'IntersectionObserver' in window &&
-      'IntersectionObserverEntry' in window &&
-      'intersectionRatio' in window.IntersectionObserverEntry.prototype
-    ) {
-      ioSupported = true
-    }
-
-    this.items.forEach(item => {
-      if (ioSupported) {
-        this._show(item)
-      } else {
-        this._setSrc(item)
-      }
-    })
-  }
-
-  /**
-   * Set src and show asset
+   * Load success
    *
-   * @see {@link https://web.dev/lazy-loading-images/|Source}
+   * @type {boolean}
    */
+  loaded: boolean = false
 
-  _show (item) {
-    const observer = new window.IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          this._setSrc(item)
-          observer.unobserve(item)
-        }
-      })
-    })
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
-    observer.observe(item)
-  }
-
-  _setSrc (item) {
-    const url = item.getAttribute('data-src')
-
-    if (!url) {
+  /**
+   * Init - each time added to DOM
+   */
+  async connectedCallback (): Promise<void> {
+    if (this.loaded) {
       return
     }
 
-    item.src = url
+    this.loaded = await this.#load()
+  }
 
-    if (item.hasAttribute('data-srcset')) {
-      item.srcset = item.getAttribute('data-srcset')
+  /**
+   * Initialize - check required items and listen for load
+   *
+   * @private
+   * @return {boolean}
+   */
+  async #load (): Promise<boolean> {
+    /* Items */
+
+    const asset = getItem('[data-lazy]', this)
+
+    if (!isHtmlElement(asset)) {
+      return false
     }
 
-    if (item.hasAttribute('data-sizes')) {
-      item.sizes = item.getAttribute('data-sizes')
+    /* Check if loaded */
+
+    try {
+      await assetLoaded(asset as Asset)
+
+      asset.dataset.lazy = 'loaded'
+    } catch {
+      asset.dataset.lazy = 'error'
+
+      return false
     }
 
-    assetLoaded(item)
-      .then(() => {
-        item.setAttribute('data-loaded', 'true')
-      })
-      .catch(() => {
-        item.setAttribute('data-loaded', 'error')
-      })
+    /* Load successful */
+
+    return true
   }
 }
 
 /* Exports */
 
-export { LazyLoad }
+export { Lazy }

@@ -1,376 +1,315 @@
-// @ts-nocheck
-
 /**
- * Layouts - Margin Masonry
+ * Layouts - Masonry
  */
 
-/**
- * Create masonry layout with negative margins
- */
+/* Imports */
 
-class MarginMasonry {
+import { isHtmlElementArray } from '../../utils/html/html.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { isNumber } from '../../utils/number/number.js'
+import { getItem } from '../../utils/item/item.js'
+import { onResize, removeResize } from '../../utils/resize/resize.js'
+import { config } from '../../config/config.js'
+
+/**
+ * Handles arranging items into masonry layout
+ */
+class Masonry extends HTMLElement {
   /**
-   * Set public properties and initialize
+   * Elements to arrange
    *
-   * @param {object} args
-   * @param {HTMLElement} args.container
-   * @param {NodeList} args.items
-   * @param {string} args.itemSelector
-   * @param {object[]} args.breakpoints
-   * @return {void|boolean} - false if init errors
+   * @type {HTMLElement[]}
    */
+  items: HTMLElement[] = []
 
-  constructor (args) {
-    const {
-      container = null,
-      items = null,
-      itemSelector = '',
-      breakpoints = []
-    } = args
+  /**
+   * Number of columns and margins by breakpoint
+   *
+   * @type {Set<Record<string, number>>}
+   */
+  breakpoints: Set<Record<'low' | 'high' | 'columns' | 'margin', number>> = new Set()
 
-    this.container = container
-    this.items = items
-    this.itemSelector = itemSelector
-    this.breakpoints = breakpoints
+  /**
+   * Initialize success
+   *
+   * @type {boolean}
+   */
+  init: boolean = false
 
-    /**
-     * Store items info - element, offsets, height and indexes
-     *
-     * @private
-     * @type {object[]}
-     */
+  /**
+   * Item ids for margin styles
+   *
+   * @private
+   * @type {string[]}
+   */
+  #ids: string[] = []
 
-    this._itemInfo = []
+  /**
+   * Viewport width to check breakpoint(s)
+   *
+   * @private
+   * @type {number}
+   */
+  #viewportWidth: number = window.innerWidth
 
-    /**
-     * Store items and height by top offset
-     *
-     * @private
-     * @type {object}
-     */
+  /**
+   * Bind this to event callbacks
+   *
+   * @private
+   */
+  #resizeHandler = this.#resize.bind(this)
 
-    this._rows = {}
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
-    /**
-     * Store heights from previous rows to get offsets
-     *
-     * @private
-     * @type {number}
-     */
-
-    this._cumulativeOffset = 0
-
-    /**
-     * Store specified column in breakpoints array/adjusted column number
-     *
-     * @private
-     * @type {number}
-     */
-
-    this._currentColumns = 0
-
-    /**
-     * Store specified margin in breakpoints array
-     *
-     * @private
-     * @type {number}
-     */
-
-    this._currentMargin = 0
-
-    /**
-     * Store timeout id in resize event
-     *
-     * @private
-     * @type {number}
-     */
-
-    this._resizeTimer = -1
-
-    /**
-     * Store viewport width for resize event and check if within breakpoints
-     *
-     * @private
-     * @type {number}
-     */
-
-    this._viewportWidth = window.innerWidth
-
-    /* Initialize */
-
-    const init = this._initialize()
-
-    if (!init) {
-      return false
+  /**
+   * Init - each time added to DOM
+   */
+  connectedCallback (): void {
+    if (this.init) {
+      return
     }
+
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize - check required props, set breakpoint ranges
+   * Clean up - each time removed from DOM
+   */
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
+
+    await Promise.resolve()
+
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
+    /* Remove event listeners */
+
+    removeResize(this.#resizeHandler)
+
+    /* Empty/nullify props */
+
+    this.items = []
+    this.breakpoints.clear()
+    this.init = false
+    this.#ids = []
+  }
+
+  /**
+   * Initialize - check required items and set properties
    *
    * @private
    * @return {boolean}
    */
+  #initialize (): boolean {
+    /* Items */
 
-  _initialize () {
-    /* Check that required properties not null */
+    const items = getItem(['[data-masonry-item]'], this)
+    const ids = items.map(item => item.id)
 
-    if (!this.container || !this.items || !this.itemSelector || !this.breakpoints) {
+    /* Check required items exist */
+
+    if (!isHtmlElementArray(items) || ids.includes('') || !isStringStrict(this.id)) {
       return false
     }
 
-    /* Make sure items are array instead of nodelist */
+    /* Breakpoints required */
 
-    this.items = Array.from(this.items)
+    const { fontSizeMultiplier } = config
 
-    /* Store container parent for appending adjusted items */
+    const breakpoints = this.getAttribute('breakpoints')
+    const columns = this.getAttribute('columns')
+    const margins = this.getAttribute('margins')
 
-    this._containerParent = this.container.parentNode
+    if (isStringStrict(breakpoints) && isStringStrict(columns) && isStringStrict(margins)) {
+      const breakpointsArr = breakpoints.split(',')
+      const columnsArr = columns.split(',')
+      const marginsArr = margins.split(',')
 
-    /* Set breakpoint ranges */
+      breakpointsArr.forEach((b, i) => {
+        const c = columnsArr[i]
+        const m = marginsArr[i]
 
-    const breakpointLength = this.breakpoints.length
+        if (!isStringStrict(c) || !isStringStrict(m)) {
+          return
+        }
 
-    this.breakpoints.forEach((bk, i) => {
-      const low = bk.width
-      let high = 99999
+        const low = parseInt(b, 10)
+        const columns = parseInt(c, 10)
+        const margin = parseInt(m, 10)
 
-      if (breakpointLength > 1 && i < breakpointLength - 1) {
-        high = this.breakpoints[i + 1].width
-      }
+        if (!isNumber(low) || !isNumber(columns) || !isNumber(margin)) {
+          return
+        }
 
-      bk.low = low
-      bk.high = high
-    })
+        const next = breakpointsArr[i + 1]
+        const high = !isStringStrict(next) ? 99999 : parseInt(next, 10)
 
-    /* Set rows and item info and margins */
+        if (!isNumber(high)) {
+          return
+        }
 
-    const set = this._setVars(true)
-
-    if (set) {
-      this._getMargins()
-      this._setMargins()
+        this.breakpoints.add({
+          low: low * fontSizeMultiplier,
+          high: high * fontSizeMultiplier,
+          margin: margin * fontSizeMultiplier,
+          columns
+        })
+      })
     }
+
+    if (this.breakpoints.size === 0) {
+      return false
+    }
+
+    /* Props */
+
+    this.items = items
+    this.#ids = ids
 
     /* Event listeners */
 
-    this._resizeHandler = this._resize.bind(this)
+    onResize(this.#resizeHandler)
 
-    window.addEventListener('resize', this._resizeHandler)
+    /* Set layout */
+
+    this.#set()
+
+    /* Init successful */
 
     return true
   }
 
   /**
-   * Set column number and margin, reset cumulative offset, rows and item info
+   * Update negative margins based on current columns and margins
    *
    * @private
-   * @param {boolean} init
-   * @return {boolean}
+   * @return {void}
    */
+  #set (): void {
+    /* Reset margins */
 
-  _setVars (init = false) {
-    /* Current columns and margin */
+    const styleId = `mas-${this.id}-styles`
+    let styles = ''
 
-    this._currentColumns = 0
-    this._currentMargin = 0
+    this.#ids.forEach(id => {
+      styles += `#${id}{margin-top:var(--msn-${id}-margin, 0)}`
+    })
 
-    this.breakpoints.forEach((bk) => {
-      if (this._viewportWidth >= bk.low && this._viewportWidth < bk.high) {
-        this._currentColumns = bk.columns
-        this._currentMargin = bk.margin
+    let style = document.getElementById(styleId) as HTMLStyleElement
+    const hasStyle = style != null // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+    const newStyle = hasStyle ? style : document.createElement('style')
+
+    newStyle.id = styleId
+    newStyle.textContent = styles
+
+    if (!hasStyle) {
+      style = document.head.appendChild(newStyle)
+    }
+
+    /* Items */
+
+    const newLength = this.items.length
+
+    /* Columns and margin */
+
+    let newColumns = 1
+    let newMargin = 0
+
+    this.breakpoints.forEach(bk => {
+      const { low, high, columns, margin } = bk
+
+      if (this.#viewportWidth >= low && this.#viewportWidth < high) {
+        newColumns = columns
+        newMargin = margin
       }
     })
 
-    if (!this._currentColumns && !this._currentMargin) {
-      this._setMargins(true)
+    /* Layout */
+
+    const newLayout = Array.from({ length: newLength }, (_, i): [number, number, number] => {
+      const item = this.items[i] as HTMLElement
+      const rect = item.getBoundingClientRect()
+      const top = rect.top + scrollY
+      const height = rect.height
+
+      if (i < newColumns - 1) {
+        return [
+          i,
+          top + height + newMargin, // Bottom offset for next row
+          0 // Negative offset not needed for first row
+        ]
+      }
+
+      const prevOffset = (newLayout[i - newColumns] as [number, number, number])[1] // Number as previous row must exist
+      const negativeOffset = top - prevOffset
+      const bottomOffset = negativeOffset + height + newMargin
+
+      return [
+        i,
+        bottomOffset,
+        negativeOffset
+      ]
+    })
+
+    /* Update styles */
+
+    let newStyles = ''
+
+    this.#ids.forEach((id, i) => {
+      const negativeOffset = (newLayout[i] as [number, number, number])[2] // Number as ids length always matches items length
+
+      newStyles += `--msn-${id}-margin:${negativeOffset > 0 ? negativeOffset * -1 : 0}px;`
+    })
+
+    newStyles = `#${this.id}{${newStyles}}`
+    style.textContent = styles + newStyles
+  }
+
+  /**
+   * Resize hook callback
+   *
+   * @private
+   * @return {void}
+   */
+  #resize (): void {
+    const viewportWidth = window.innerWidth
+
+    if (viewportWidth === this.#viewportWidth) {
+      return
+    }
+
+    this.#viewportWidth = viewportWidth
+    this.#set()
+  }
+
+  /**
+   * Add new items to layout and reset
+   *
+   * @param {HTMLElement[]} newItems
+   * @return {boolean}
+   */
+  appendItems (newItems: HTMLElement[]): boolean {
+    const newIds = newItems.map(item => item.id)
+
+    if (!isHtmlElementArray(newItems) || newIds.includes('')) {
       return false
     }
 
-    /* Get actual number of columns (eg. user zoomed in) */
-
-    let firstOffset = 0
-    let c = 0
-
-    for (let i = 0; i < this.items.length; i += 1) {
-      const offset = this.items[i].offsetTop
-
-      if (i === 0) {
-        firstOffset = offset
-      }
-
-      if (offset === firstOffset) {
-        c += 1
-      } else {
-        break
-      }
-    }
-
-    if (c) {
-      this._currentColumns = c
-    }
-
-    /* Item and row info */
-
-    if (!init) {
-      this._setMargins(true)
-    }
-
-    this._cumulativeOffset = 0
-    this._rows = {}
-    this._itemInfo = []
-
-    const scrollY = window.scrollY
-
-    this.items.forEach((item, i) => {
-      const rect = item.getBoundingClientRect()
-      const offsetTop = rect.top + scrollY
-      const height = rect.height
-
-      if (!Object.getOwnPropertyDescriptor(this._rows, offsetTop)) {
-        this._rows[offsetTop] = {
-          items: [],
-          ogHeights: [],
-          ogHeight: 0,
-          heights: [],
-          height: 0
-        }
-      }
-
-      const indexInRow = this._rows[offsetTop].items.push(item)
-
-      this._rows[offsetTop].ogHeights.push(height)
-      this._rows[offsetTop].heights.push(height)
-
-      const sI = i - this._currentColumns
-      const sisterIndex = this.items[sI] ? sI : undefined
-
-      this._itemInfo.push({
-        item,
-        top: offsetTop,
-        bottom: rect.bottom + scrollY,
-        height,
-        sisterIndex,
-        indexInRow: indexInRow - 1,
-        marginTop: 0
-      })
-    })
-
-    Object.keys(this._rows || {}).forEach((r) => {
-      const rr = this._rows[r]
-      rr.ogHeight = Math.max(...rr.ogHeights)
-    })
+    this.items.push(...newItems)
+    this.#ids.push(...newIds)
+    this.#set()
 
     return true
-  }
-
-  /**
-   * Update item info objects - margin top and bottom offset
-   *
-   * @private
-   * @return {void}
-   */
-
-  _getMargins () {
-    this._itemInfo.forEach((it, i) => {
-      if (it.sisterIndex === undefined) {
-        return
-      }
-
-      const sister = this._itemInfo[it.sisterIndex]
-      const sisterOffset = sister.bottom
-      const itOffset = it.top - this._cumulativeOffset
-      let marginTop = itOffset - sisterOffset - this._currentMargin
-
-      if (marginTop < 0) {
-        marginTop = 0
-      }
-
-      const newItHeight = it.height - marginTop
-
-      const row = this._rows[it.top]
-
-      row.heights[it.indexInRow] = newItHeight
-
-      it.marginTop = marginTop
-      it.bottom = it.bottom - marginTop - this._cumulativeOffset
-
-      /* Set cumulative height at end of row */
-
-      if (it.indexInRow === row.heights.length - 1) {
-        row.height = Math.max(...row.heights)
-        this._cumulativeOffset += row.ogHeight - row.height
-      }
-    })
-  }
-
-  /**
-   * Set and unset item margins
-   *
-   * @private
-   * @param {boolean} unset
-   * @return {void}
-   */
-
-  _setMargins (unset = false) {
-    const frag = new window.DocumentFragment()
-
-    frag.appendChild(this.container)
-
-    const items = Array.from(frag.querySelectorAll(this.itemSelector))
-
-    items.forEach((item, i) => {
-      item.parentNode.replaceChild(this.items[i], item)
-    })
-
-    const actualItems = Array.from(frag.querySelectorAll(this.itemSelector))
-
-    actualItems.forEach((item, i) => {
-      let val = 0
-
-      if (!unset) {
-        val = this._itemInfo[i].marginTop
-      }
-
-      const marginTop = unset ? '' : `-${val}px`
-
-      item.style.marginTop = marginTop
-    })
-
-    this._containerParent.appendChild(frag)
-  }
-
-  /**
-   * Resize event handler - reset margins
-   *
-   * @private
-   * @return {void}
-   */
-
-  _resize () {
-    clearTimeout(this._resizeTimer)
-
-    this._resizeTimer = setTimeout(() => {
-      const viewportWidth = window.innerWidth
-
-      if (viewportWidth !== this._viewportWidth) {
-        this._viewportWidth = viewportWidth
-      } else {
-        return
-      }
-
-      this._setMargins(true)
-
-      const set = this._setVars()
-
-      if (set) {
-        this._getMargins()
-        this._setMargins()
-      }
-    }, 100)
   }
 }
 
 /* Exports */
 
-export { MarginMasonry }
+export { Masonry }

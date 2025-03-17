@@ -2,14 +2,23 @@
  * Utils - Duration
  */
 
+/* Imports */
+
+import type { DurationLabels } from './durationTypes.js'
+
 /**
  * Convert seconds to text (time or words)
  *
  * @param {number} seconds
- * @param {boolean} words
+ * @param {boolean} [words=false]
+ * @param {DurationLabels} [labels={}]
  * @return {string}
  */
-const getDuration = (seconds = 0, words = false): string => {
+const getDuration = (
+  seconds: number,
+  words: boolean = false,
+  labels: DurationLabels = {}
+): string => {
   /* Hours and min for formatting */
 
   const hours = Math.floor(seconds / 3600)
@@ -17,7 +26,7 @@ const getDuration = (seconds = 0, words = false): string => {
 
   seconds = seconds - (hours * 3600) - (min * 60)
 
-  /* Store output */
+  /* Output */
 
   let t = ''
 
@@ -36,16 +45,25 @@ const getDuration = (seconds = 0, words = false): string => {
 
   /* Words format */
 
+  const {
+    hours: hoursLabel = 'hours',
+    hour: hourLabel = 'hour',
+    minutes: minutesLabel = 'minutes',
+    minute: minuteLabel = 'minute',
+    seconds: secondsLabel = 'seconds',
+    second: secondLabel = 'second'
+  } = labels
+
   if (hours !== 0) {
-    t += `${hours}${hours > 1 ? ' hours' : ' hour'}${min !== 0 ? ' ' : ''}`
+    t += `${hours} ${hours > 1 ? hoursLabel : hourLabel}${min !== 0 ? ' ' : ''}`
   }
 
   if (min !== 0) {
-    t += `${min}${min > 1 ? ' minutes' : ' minute'}${seconds !== 0 ? ' ' : ''}`
+    t += `${min} ${min > 1 ? minutesLabel : minuteLabel}${seconds !== 0 ? ' ' : ''}`
   }
 
   if (seconds !== 0) {
-    t += `${seconds}${seconds > 1 ? ' seconds' : ' second'}`
+    t += `${seconds} ${seconds > 1 ? secondsLabel : secondLabel}`
   }
 
   return t

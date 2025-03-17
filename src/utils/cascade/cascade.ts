@@ -60,11 +60,11 @@ const requestTimeout = (action: GenericFunction, delay: number): void => {
  * @return {void}
  */
 const cascade = (events: CascadeEvent[], repeat = 0): void => {
-  /* Store number of events */
+  /* Number of events */
 
   const eventsLength = events.length - 1
 
-  /* Store increment */
+  /* Increment */
 
   let increment = 0
 
@@ -110,7 +110,7 @@ const cascade = (events: CascadeEvent[], repeat = 0): void => {
       return
     }
 
-    /* Set delay and increment values */
+    /* Delay and increment values */
 
     if (isNumber(eventIncrement)) {
       increment = eventIncrement

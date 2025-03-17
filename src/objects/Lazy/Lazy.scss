@@ -19,8 +19,8 @@ $object-fix: fix.get-class-prefix("object");
 
   opacity: var(--lz-op);
 
-  &[data-loaded="true"],
-  &[data-loaded="error"] {
+  &[data-lazy="loaded"],
+  &[data-lazy="error"] {
     --lz-op: 1;
   }
 }

@@ -25,22 +25,22 @@ declare global {
 }
 
 /**
- * Get and set height to open/close element
+ * Handles expansion and collapse of element
  */
 class Collapsible extends HTMLElement {
   /**
-   * Element that opens and closes
+   * Element expands and collapses
    *
    * @type {HTMLElement|null}
    */
   panel: HTMLElement | null = null
 
   /**
-   * Element that triggers open and close
+   * Button element initiates open and close
    *
    * @type {HTMLButtonElement|null}
    */
-  trigger: HTMLButtonElement | null = null
+  toggle: HTMLButtonElement | null = null
 
   /**
    * Open state
@@ -86,7 +86,7 @@ class Collapsible extends HTMLElement {
   #type: CollapsibleType = 'single'
 
   /**
-   * Source of trigger
+   * Source of toggle
    *
    * @private
    * @type {string}
@@ -159,13 +159,13 @@ class Collapsible extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.trigger?.removeEventListener('click', this.#clickHandler)
+    this.toggle?.removeEventListener('click', this.#clickHandler)
     this.removeEventListener('keydown', this.#keyHandler)
     this.#setHover(false)
 
     /* Empty/nullify props */
 
-    this.trigger = null
+    this.toggle = null
     this.panel = null
     this.init = false
 
@@ -185,21 +185,21 @@ class Collapsible extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const trigger = getItem('[data-collapsible-trigger]', this)
+    const toggle = getItem('[data-collapsible-toggle]', this)
     const panel = getItem('[data-collapsible-panel]', this)
 
     /* Check required items exist */
 
-    if (!isHtmlElement(trigger, HTMLButtonElement) || !isHtmlElement(panel)) {
+    if (!isHtmlElement(toggle, HTMLButtonElement) || !isHtmlElement(panel)) {
       return false
     }
 
-    /* Set props */
+    /* Element props */
 
-    this.trigger = trigger
+    this.toggle = toggle
     this.panel = panel
 
-    /* Set duration */
+    /* Duration */
 
     const duration = this.getAttribute('duration')
 
@@ -211,7 +211,7 @@ class Collapsible extends HTMLElement {
       }
     }
 
-    /* Set accordion group */
+    /* Accordion group */
 
     const accordion = this.getAttribute('accordion')
 
@@ -226,7 +226,7 @@ class Collapsible extends HTMLElement {
       })
     }
 
-    /* Set hoverable */
+    /* Hoverable */
 
     const hoverable = this.hasAttribute('hoverable')
 
@@ -235,7 +235,7 @@ class Collapsible extends HTMLElement {
       this.#setHover(true)
     }
 
-    /* Set action */
+    /* Action */
 
     const action = this.getAttribute('action')
 
@@ -258,9 +258,9 @@ class Collapsible extends HTMLElement {
       })
     }
 
-    /* Add event listeners */
+    /* Event listeners */
 
-    this.trigger.addEventListener('click', this.#clickHandler)
+    this.toggle.addEventListener('click', this.#clickHandler)
     this.addEventListener('keydown', this.#keyHandler)
 
     /* Open if expanded */
@@ -277,7 +277,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Set and unset hover events
+   * Handle hover events
    *
    * @private
    * @param {boolean} [set=true]
@@ -327,13 +327,13 @@ class Collapsible extends HTMLElement {
     /* Update attributes */
 
     this.#delayId = window.setTimeout(() => {
-      this.trigger?.setAttribute('aria-expanded', open.toString())
+      this.toggle?.setAttribute('aria-expanded', open.toString())
       this.setAttribute('source', this.#source)
       this.setAttribute('expanded', open.toString())
       this.expanded = open
     }, 0)
 
-    /* Set height */
+    /* Height */
 
     this.style.setProperty('--clp-height', height)
 
@@ -343,8 +343,8 @@ class Collapsible extends HTMLElement {
 
     /* Focus if tap */
 
-    if (open && this.trigger !== document.activeElement && this.#source === 'tap') {
-      this.trigger?.focus() // iOS Safari not focusing on buttons
+    if (open && this.toggle !== document.activeElement && this.#source === 'tap') {
+      this.toggle?.focus() // iOS Safari not focusing on buttons
     }
 
     /* Emit toggle event */

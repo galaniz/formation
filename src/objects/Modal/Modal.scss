@@ -21,25 +21,14 @@ $object-fix: fix.get-class-prefix("object");
   --mod-vis: hidden;
 
   z-index: map.get(con.$z-index, "modal");
-  visibility: var(--mod-vis);
 
-  &[data-modal-open="true"] {
+  &[open="true"] {
     --#{con.$n}delay: #{con.$modal-delay-open};
     --mod-vis: visible;
   }
 }
 
-.#{$object-fix}modal-overlay,
-.#{$object-fix}modal-window {
-  --#{con.$n}prop: #{con.$modal-overlay-window-prop};
-  --#{con.$n}duration: #{con.$modal-overlay-window-duration};
-  --#{con.$n}delay: #{con.$modal-overlay-window-delay};
-  --mod-op: 0;
-
-  opacity: var(--mod-op);
-
-  [data-modal-open="true"] & {
-    --#{con.$n}delay: #{con.$modal-overlay-window-delay-open};
-    --mod-op: 1;
-  }
+.#{$object-fix}modal,
+.#{$object-fix}modal-overlay {
+  visibility: var(--mod-vis);
 }

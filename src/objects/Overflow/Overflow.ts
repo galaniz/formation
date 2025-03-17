@@ -19,7 +19,7 @@ declare global {
 }
 
 /**
- * Indicate state and direction of overflow
+ * Handles state and direction of overflow
  */
 class Overflow extends HTMLElement {
   /**
@@ -141,7 +141,7 @@ class Overflow extends HTMLElement {
 
     const direction = this.getAttribute('direction')
 
-    /* Set props */
+    /* Props */
 
     this.track = track
     this.direction = direction === 'vertical' ? 'vertical' : 'horizontal'
@@ -172,7 +172,7 @@ class Overflow extends HTMLElement {
       return
     }
 
-    /* Set attributes */
+    /* Attributes */
 
     const isHorizontal = this.direction === 'horizontal'
     const scrollValue = isHorizontal ? this.track.scrollLeft : this.track.scrollTop

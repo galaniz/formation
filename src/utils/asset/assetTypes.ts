@@ -16,4 +16,3 @@ export type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | nu
  * @return {void}
  */
 export type AssetDone = (result: Asset[] | boolean, error?: Event | Error) => void
-

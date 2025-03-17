@@ -1,135 +1,182 @@
-// @ts-nocheck
-
 /**
  * Objects - Modal
- *
- * @param {object} args
- * @param {HTMLElement} args.modal
- * @param {HTMLElement} args.window
- * @param {HTMLElement} args.overlay
- * @param {HTMLElement} args.trigger
- * @param {HTMLElement} args.close
- * @param {function} args.onToggle
  */
 
 /* Imports */
 
+import { isHtmlElementArray, isHtmlElement } from '../../utils/html/html.js'
+import { onEscape, removeEscape } from '../../utils/escape/escape.js'
+import { stopScroll } from '../../utils/scroll/scrollStop.js'
+import { getItem } from '../../utils/item/item.js'
 import {
   toggleFocusability,
   getInnerFocusableItems,
-  getOuterFocusableItems,
-  getKey,
-  stopScroll
-} from '../../utils/utils'
+  getOuterFocusableItems
+} from '../../utils/focusability/focusability.js'
 
-/* Class */
+/**
+ * Custom event details
+ */
+declare global {
+  interface ElementEventMap {
+    'modal:toggle': CustomEvent
+  }
+}
 
-class Modal {
+/**
+ * Handles display of modal
+ */
+class Modal extends HTMLElement {
   /**
-   * Constructor
+   * Button element(s) open modal
+   *
+   * @type {HTMLButtonElement[]}
    */
+  opens: HTMLButtonElement[] = []
 
-  constructor (args) {
-    /**
-     * Public variables
-     */
+  /**
+   * Element(s) close modal
+   *
+   * @type {HTMLElement[]}
+   */
+  closes: HTMLElement[] = []
 
-    const {
-      modal = null,
-      window = null,
-      overlay = null,
-      trigger = null,
-      close = null,
-      onToggle = () => {}
-    } = args
+  /**
+   * Initialize success
+   *
+   * @type {boolean}
+   */
+  init: boolean = false
 
-    this.modal = modal
-    this.window = window
-    this.overlay = overlay
-    this.trigger = trigger
-    this.close = close
-    this.onToggle = onToggle
+  /**
+   * Open state
+   *
+   * @type {boolean}
+   */
+  open: boolean = false
 
-    /**
-     * Store first focusable element for when overflow element opens
-     *
-     * @private
-     * @type {HTMLElement}
-     */
+  /**
+   * Id for focus delay timeout
+   *
+   * @private
+   * @type {number}
+   */
+  #focusDelayId: number = 0
 
-    this._firstFocusableItem = null
+  /**
+   * First focusable element in modal
+   *
+   * @private
+   * @type {HTMLElement|null}
+   */
+  #firstFocusable: HTMLElement | null = null
 
-    /**
-     * Store index in innerFocusableItems array
-     *
-     * @private
-     * @type {number}
-     */
+  /**
+   * Last button element to open modal
+   *
+   * @private
+   * @type {HTMLButtonElement|null}
+   */
+  #lastOpens: HTMLButtonElement | null = null
 
-    this._innerFocusableIndex = 0
+  /**
+   * Bind this to event callbacks
+   *
+   * @private
+   */
+  #openHandler = this.#open.bind(this)
+  #closeHandler = this.#close.bind(this)
+  #escapeHandler = this.#escape.bind(this)
 
-    /**
-     * Store index in outerFocusableItems array
-     *
-     * @private
-     * @type {number}
-     */
+  /**
+   * Constructor object
+   */
+  constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
-    this._outerFocusableIndex = 0
-
-    /**
-     * Check if focusable indexes are numbers
-     *
-     * @private
-     * @type {boolean}
-     */
-
-    this._focusableIndexesValid = false
-
-    /* Track modal state */
-
-    this._open = false
-
-    /**
-     * Initialize
-     */
-
-    const init = this._initialize()
-
-    if (!init) {
-      return false
+  /**
+   * Init - each time added to DOM
+   */
+  connectedCallback (): void {
+    if (this.init) {
+      return
     }
+
+    this.init = this.#initialize()
   }
 
   /**
-   * Initialize
+   * Clean up - each time removed from DOM
    */
+  async disconnectedCallback (): Promise<void> {
+    /* Wait a tick to let DOM update */
 
-  _initialize () {
-    /* Check that required variables not null */
+    await Promise.resolve()
 
-    if (!this.modal || !this.window || !this.trigger || !this.close) {
+    /* Skip if moved */
+
+    if (this.isConnected || !this.init) {
+      return
+    }
+
+    /* Remove event listeners */
+
+    this.opens.forEach(open => {
+      open.removeEventListener('click', this.#openHandler)
+    })
+
+    this.closes.forEach(close => {
+      close.removeEventListener('click', this.#closeHandler)
+    })
+
+    removeEscape(this.#escapeHandler)
+
+    /* Empty/nullify props */
+
+    this.opens = []
+    this.closes = []
+    this.init = false
+    this.#firstFocusable = null
+    this.#lastOpens = null
+
+    /* Clear timeouts */
+
+    clearTimeout(this.#focusDelayId)
+  }
+
+  /**
+   * Initialize - check required items and set properties
+   *
+   * @private
+   * @return {boolean}
+   */
+  #initialize (): boolean {
+    /* Items */
+
+    const opens = this.getAttribute('opens')?.split(',').map(id => document.getElementById(id))
+    const closes = getItem(['[data-modal-close]'], this)
+
+    /* Check required items exist */
+
+    if (!isHtmlElementArray(opens, HTMLButtonElement) || !isHtmlElementArray(closes)) {
       return false
     }
 
-    /* Add event listeners */
+    /* Element props */
 
-    this.trigger.addEventListener('click', this._openHandler.bind(this))
-    this.close.addEventListener('click', this._closeHandler.bind(this))
+    this.opens = opens
+    this.closes = closes
 
-    if (this.overlay) {
-      this.overlay.addEventListener('click', this._closeHandler.bind(this))
-    }
+    /* Event listeners */
 
-    document.body.addEventListener('keydown', this._keyHandler.bind(this))
+    this.opens.forEach(open => {
+      open.addEventListener('click', this.#openHandler)
+    })
 
-    /* Set first focusable item */
+    this.closes.forEach(close => {
+      close.addEventListener('click', this.#closeHandler)
+    })
 
-    const innerFocusableItems = getInnerFocusableItems(this.modal)
-
-    if (getInnerFocusableItems.length) {
-      this._firstFocusableItem = innerFocusableItems[0]
-    }
+    onEscape(this.#escapeHandler)
 
     /* Init successful */
 
@@ -137,65 +184,92 @@ class Modal {
   }
 
   /**
-   * Internal helpers
+   * Open/close modal - handle attributes and toggle focusability
+   *
+   * @private
+   * @param {boolean} open
+   * @return {void}
    */
+  #toggle (open: boolean): void {
+    /* Open state */
 
-  /* Open or close modal */
+    this.open = open
 
-  _toggle (open = true) {
-    this._open = open
+    /* Clear timeouts */
 
-    this.onToggle(open)
+    clearTimeout(this.#focusDelayId)
 
-    toggleFocusability(!this._open, getOuterFocusableItems(this.modal))
+    /* Emit on event */
 
-    this.modal.setAttribute('data-modal-open', open)
+    const onToggle = new CustomEvent('modal:toggle')
+    this.dispatchEvent(onToggle)
+
+    /* Items outside modal inert and save first focusable element */
+
+    toggleFocusability(!this.open, getOuterFocusableItems(this))
+
+    if (! (this.#firstFocusable)) {
+      const innerFocusable = getInnerFocusableItems(this)
+      const [firstFocusable] = innerFocusable
+
+      if (isHtmlElement(firstFocusable)) {
+        this.#firstFocusable = firstFocusable
+      }
+    }
+
+    /* Update attributes, modal focus and scroll */
+
+    this.setAttribute('open', this.open.toString())
 
     if (open) {
-      if (this._firstFocusableItem) {
-        setTimeout(() => {
-          this._firstFocusableItem.focus()
-        }, 100)
-      }
+      this.#focusDelayId = window.setTimeout(() => {
+        this.#firstFocusable?.focus()
+      }, 100)
 
       stopScroll(true)
     } else {
-      this.trigger.focus()
-
+      this.#lastOpens?.focus()
       stopScroll(false)
     }
   }
 
   /**
-   * Event handlers
+   * Escape hook callback
+   *
+   * @private
+   * @return {void}
    */
-
-  _keyHandler (e) {
-    if (getKey(e) === 'ESC' && this._open) {
-      this._toggle(false)
+  #escape (): void {
+    if (this.open) {
+      this.#toggle(false)
     }
-  }
-
-  _openHandler (e) {
-    this._toggle(true)
-  }
-
-  _closeHandler (e) {
-    this._toggle(false)
   }
 
   /**
-   * Public methods
+   * Click handler on close element(s) to close modal
+   *
+   * @private
+   * @param {Event} e
+   * @return {void}
    */
+  #close (e: Event): void {
+    e.preventDefault()
 
-  getFirstFocusableItem () {
-    return this._firstFocusableItem
+    this.#toggle(false)
   }
 
-  setFirstFocusableItem (item) {
-    if (item) {
-      this._firstFocusableItem = item
-    }
+  /**
+   * Click handler on open button to open modal
+   *
+   * @private
+   * @param {Event} e
+   * @return {void}
+   */
+  #open (e: Event): void {
+    e.preventDefault()
+
+    this.#lastOpens = e.currentTarget as HTMLButtonElement
+    this.#toggle(true)
   }
 }
 

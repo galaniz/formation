@@ -34,7 +34,7 @@ declare global {
 }
 
 /**
- * Move navigation items based on overflow/breakpoint and toggle modal element
+ * Handles responsive navigation with modal support
  */
 class Navigation extends HTMLElement {
   /**
@@ -68,23 +68,16 @@ class Navigation extends HTMLElement {
   /**
    * Button element opens modal
    *
-   * @type {HTMLElement|null}
+   * @type {HTMLButtonElement|null}
    */
-  openButton: HTMLElement | null = null
+  opens: HTMLButtonElement | null = null
 
   /**
-   * Button element closes modal
+   * Element(s) close modal
    *
-   * @type {HTMLElement|null}
+   * @type {HTMLElement[]}
    */
-  closeButton: HTMLElement | null = null
-
-  /**
-   * Overlay element closes modal
-   *
-   * @type {HTMLElement|null}
-   */
-  overlay: HTMLElement | null = null
+  closes: HTMLElement[] = []
 
   /**
    * Milliseconds to delay show attribute
@@ -94,11 +87,11 @@ class Navigation extends HTMLElement {
   delay: number = 200
 
   /**
-   * Breakpoint(s) to trigger "overflowing" state
+   * Breakpoint(s) to prompt "overflowing" state
    *
-   * @type {Object<string, number>}
+   * @type {Map<string, number>}
    */
-  breakpoints: Record<string, number> = { 0: 0 }
+  breakpoints: Map<string, number> = new Map([['0', 0]])
 
   /**
    * Initialize state
@@ -135,7 +128,7 @@ class Navigation extends HTMLElement {
    * @private
    * @type {Set<Set<HTMLElement>>}
    */
-  #currentModalGroups: Set<Set<HTMLElement>> = new Set()
+  #modalGroups: Set<Set<HTMLElement>> = new Set()
 
   /**
    * Slot names by group
@@ -162,12 +155,12 @@ class Navigation extends HTMLElement {
   #slotNames: Set<string> = new Set()
 
   /**
-   * First focusable element when modal opens
+   * First focusable element in modal
    *
    * @private
    * @type {HTMLElement|null}
    */
-  #firstFocusableItem: HTMLElement | null = null
+  #firstFocusable: HTMLElement | null = null
 
   /**
    * Viewport width to check breakpoint(s)
@@ -182,8 +175,8 @@ class Navigation extends HTMLElement {
    *
    * @private
    */
-  #clickOpenHandler = this.#clickOpen.bind(this)
-  #clickCloseHandler = this.#clickClose.bind(this)
+  #openHandler = this.#open.bind(this)
+  #closeHandler = this.#close.bind(this)
   #resizeHandler = this.#resize.bind(this)
   #escapeHandler = this.#escape.bind(this)
 
@@ -219,9 +212,11 @@ class Navigation extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.openButton?.removeEventListener('click', this.#clickOpenHandler)
-    this.closeButton?.removeEventListener('click', this.#clickCloseHandler)
-    this.overlay?.removeEventListener('click', this.#clickCloseHandler)
+    this.opens?.removeEventListener('click', this.#openHandler)
+
+    this.closes.forEach(close => {
+      close.removeEventListener('click', this.#closeHandler)
+    })
 
     removeResize(this.#resizeHandler)
     removeEscape(this.#escapeHandler)
@@ -232,16 +227,16 @@ class Navigation extends HTMLElement {
     this.items = []
     this.modal = null
     this.modalSlots.clear()
-    this.openButton = null
-    this.closeButton = null
-    this.overlay = null
+    this.breakpoints.clear()
+    this.opens = null
+    this.closes = []
     this.init = false
     this.#itemGroups.clear()
-    this.#currentModalGroups.clear()
+    this.#modalGroups.clear()
     this.#slotGroups.clear()
     this.#groupNames.clear()
     this.#slotNames.clear()
-    this.#firstFocusableItem = null
+    this.#firstFocusable = null
   }
 
   /**
@@ -257,9 +252,8 @@ class Navigation extends HTMLElement {
     const items = getItem(['[data-nav-item]'], this)
     const modal = getItem('[data-nav-modal]', this)
     const modalSlots = getItem(['[data-nav-modal-slot]'], this)
-    const openButton = getItem('[data-nav-open-button]', this)
-    const closeButton = getItem('[data-nav-close-button]', this)
-    const overlay = getItem('[data-nav-overlay]', this)
+    const opens = getItem('[data-nav-open]', this)
+    const closes = getItem(['[data-nav-close]'], this)
 
     /* Check required items exist */
 
@@ -268,13 +262,13 @@ class Navigation extends HTMLElement {
       !isHtmlElementArray(items) ||
       !isHtmlElement(modal) ||
       !isHtmlElementArray(modalSlots) ||
-      !isHtmlElement(openButton) ||
-      !isHtmlElement(closeButton)
+      !isHtmlElement(opens, HTMLButtonElement) ||
+      !isHtmlElementArray(closes)
     ) {
       return false
     }
 
-    /* Set delay if it exists */
+    /* Delay if it exists */
 
     const delay = this.getAttribute('delay')
 
@@ -286,7 +280,7 @@ class Navigation extends HTMLElement {
       }
     }
 
-    /* Set breakpoint if it exists */
+    /* Breakpoint(s) if it exists */
 
     const { fontSizeMultiplier } = config
 
@@ -316,37 +310,35 @@ class Navigation extends HTMLElement {
           return
         }
 
-        this.breakpoints[key] = breakpointNum
+        this.breakpoints.set(key, breakpointNum)
       })
     }
 
-    /* Set element props */
+    /* Element props */
 
     this.items = items
     this.modal = modal
-    this.openButton = openButton
-    this.closeButton = closeButton
+    this.opens = opens
+    this.closes = closes
 
-    /* Add event listeners */
+    /* Event listeners */
 
-    this.openButton.addEventListener('click', this.#clickOpenHandler)
-    this.closeButton.addEventListener('click', this.#clickCloseHandler)
+    this.opens.addEventListener('click', this.#openHandler)
 
-    if (isHtmlElement(overlay)) {
-      this.overlay = overlay
-      this.overlay.addEventListener('click', this.#clickCloseHandler)
-    }
+    this.closes.forEach(close => {
+      close.addEventListener('click', this.#closeHandler)
+    })
 
     onResize(this.#resizeHandler)
     onEscape(this.#escapeHandler)
 
-    /* Set up slots by name */
+    /* Slots by name */
 
     slots.forEach(slot => {
       const slotName = this.#getName(slot.dataset.navSlot)
 
       if (isNumber(breakpoint0)) {
-        this.breakpoints[slotName] = breakpoint0
+        this.breakpoints.set(slotName, breakpoint0)
       }
 
       this.slots.set(slotName, slot)
@@ -356,7 +348,7 @@ class Navigation extends HTMLElement {
       this.modalSlots.set(this.#getName(slot.dataset.navModalSlot), slot)
     })
 
-    /* Set up groups and slot names */
+    /* Groups and slot names */
 
     this.items.forEach(item => {
       /* Group */
@@ -428,7 +420,7 @@ class Navigation extends HTMLElement {
 
     /* No items in modal */
 
-    if (this.#currentModalGroups.size === 0) {
+    if (this.#modalGroups.size === 0) {
       return
     }
 
@@ -465,7 +457,7 @@ class Navigation extends HTMLElement {
 
     /* Clear current groups */
 
-    this.#currentModalGroups.clear()
+    this.#modalGroups.clear()
   }
 
   /**
@@ -491,7 +483,7 @@ class Navigation extends HTMLElement {
     slotNames.forEach(name => {
       /* Slot breakpoint check */
 
-      const bk = this.breakpoints[name]
+      const bk = this.breakpoints.get(name)
 
       if (isNumber(bk) && bk > 0) {
         overflow = this.#viewportWidth <= bk
@@ -567,7 +559,7 @@ class Navigation extends HTMLElement {
 
       /* Add group to current */
 
-      this.#currentModalGroups.add(group)
+      this.#modalGroups.add(group)
     }
 
     /* Append items to modal slots */
@@ -581,17 +573,17 @@ class Navigation extends HTMLElement {
       }
     })
 
-    /* Set attribute if overflow or close */
+    /* Update overflow state */
 
-    const currentGroupsLen = this.#currentModalGroups.size
-    const overflow = currentGroupsLen > 0
+    const modalGroupsLen = this.#modalGroups.size
+    const overflow = modalGroupsLen > 0
 
     if (overflow) {
       this.setAttribute('overflow', 'true')
     }
 
     if (!overflow && resize) {
-      this.#toggle(true, false)
+      this.#toggle(false, false)
     }
 
     this.overflow = overflow
@@ -603,39 +595,62 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Open/close modal - set and unset attributes and toggle focusability
+   * Open/close modal - handle attributes and toggle focusability
    *
    * @private
-   * @param {boolean} close
-   * @param {boolean} focusOpenButton
+   * @param {boolean} open
+   * @param {boolean} [focusOpens=true]
    * @return {void}
    */
-  #toggle (close: boolean = true, focusOpenButton: boolean = true): void {
+  #toggle (open: boolean, focusOpens: boolean = true): void {
     /* Open state */
 
-    this.open = !close
+    this.open = open
 
     /* Emit on event */
 
     const onToggle = new CustomEvent('nav:toggle')
     this.dispatchEvent(onToggle)
 
-    /* Make items outside modal inert and get first focusable element */
+    /* Items outside modal inert and save first focusable element */
 
     toggleFocusability(!this.open, getOuterFocusableItems(this.modal))
 
-    if (!isHtmlElement(this.#firstFocusableItem)) {
-      const innerFocusableItems = getInnerFocusableItems(this.modal)
-      const [firstFocusableItem] = innerFocusableItems
+    if (!isHtmlElement(this.#firstFocusable)) {
+      const innerFocusable = getInnerFocusableItems(this.modal)
+      const [firstFocusable] = innerFocusable
 
-      if (isHtmlElement(firstFocusableItem)) {
-        this.#firstFocusableItem = firstFocusableItem
+      if (isHtmlElement(firstFocusable)) {
+        this.#firstFocusable = firstFocusable
       }
     }
 
     /* Update attributes, modal focus and scroll */
 
-    if (close) {
+    if (open) {
+      cascade([
+        {
+          action: () => {
+            stopScroll(true)
+
+            this.setAttribute('show', '')
+            this.setAttribute('open', 'true')
+          }
+        },
+        {
+          action: () => {
+            this.setAttribute('show-modal', '')
+          },
+          delay: this.delay
+        },
+        {
+          action: () => {
+            this.setAttribute('show-modal', 'items')
+            this.#firstFocusable?.focus()
+          }
+        }
+      ])
+    } else {
       cascade([
         {
           action: () => {
@@ -658,15 +673,11 @@ class Navigation extends HTMLElement {
         },
         {
           action: () => {
-            if (!focusOpenButton) {
+            if (!focusOpens) {
               return
             }
 
-            if (!isHtmlElement(this.openButton)) {
-              return
-            }
-
-            this.openButton.focus()
+            this.opens?.focus()
           },
           delay: 100
         },
@@ -674,29 +685,6 @@ class Navigation extends HTMLElement {
           action: () => {
             const onToggled = new CustomEvent('nav:toggled')
             this.dispatchEvent(onToggled)
-          }
-        }
-      ])
-    } else {
-      cascade([
-        {
-          action: () => {
-            stopScroll(true)
-
-            this.setAttribute('show', '')
-            this.setAttribute('open', 'true')
-          }
-        },
-        {
-          action: () => {
-            this.setAttribute('show-modal', '')
-          },
-          delay: this.delay
-        },
-        {
-          action: () => {
-            this.setAttribute('show-modal', 'items')
-            this.#firstFocusableItem?.focus()
           }
         }
       ])
@@ -728,21 +716,21 @@ class Navigation extends HTMLElement {
    */
   #escape (): void {
     if (this.open) {
-      this.#toggle()
+      this.#toggle(false)
     }
   }
 
   /**
-   * Click handler on close button and overlay to close modal
+   * Click handler on close element(s) to close modal
    *
    * @private
    * @param {Event} e
    * @return {void}
    */
-  #clickClose (e: Event): void {
+  #close (e: Event): void {
     e.preventDefault()
 
-    this.#toggle()
+    this.#toggle(false)
   }
 
   /**
@@ -752,10 +740,10 @@ class Navigation extends HTMLElement {
    * @param {Event} e
    * @return {void}
    */
-  #clickOpen (e: Event): void {
+  #open (e: Event): void {
     e.preventDefault()
 
-    this.#toggle(false)
+    this.#toggle(true)
   }
 }
 

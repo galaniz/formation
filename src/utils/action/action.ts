@@ -10,7 +10,7 @@ import { isFunction } from '../function/function.js'
 import { isSet } from '../set/set.js'
 
 /**
- * Store action callbacks by name
+ * Action callbacks by name
  *
  * @type {Map<string, Set<GenericFunction>>}
  */

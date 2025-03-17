@@ -22,7 +22,7 @@ export default /* html */`
     <button
       class="nav-hide"
       aria-haspopup="true"
-      data-nav-open-button
+      data-nav-open
     >
       Open
     </button>
@@ -34,8 +34,8 @@ export default /* html */`
     >
       <ul data-nav-modal-slot="one"></ul>
       <ul data-nav-modal-slot="two"></ul>
-      <button data-nav-close-button>Close</button>
-      <div class="nav-overlay" data-nav-overlay></div>
+      <button data-nav-close>Close</button>
+      <div class="nav-overlay" data-nav-close></div>
     </div>
   </frm-navigation>
 `

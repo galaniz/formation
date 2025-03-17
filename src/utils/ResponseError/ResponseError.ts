@@ -7,7 +7,7 @@
  */
 class ResponseError extends Error {
   /**
-   * Store response data
+   * Response data
    *
    * @type {Response}
    */

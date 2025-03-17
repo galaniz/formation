@@ -151,7 +151,7 @@ $prefixes: (
   "color": "",
 ) !default;
 
-/* Store custom variables */
+/* Custom variables */
 
 $vars: () !default;
 
@@ -395,24 +395,12 @@ $loader-duration: 0ms, #{$default-duration};
 $loader-delay: #{$default-duration}, 0ms;
 $loader-delay-show: 0ms, 0ms;
 
-/* Page transition */
-
-$page-transition-prop: visibility, opacity;
-$page-transition-duration: 0ms, #{$default-duration};
-$page-transition-easing: #{$default-easing};
-$page-transition-delay: #{$default-duration}, 0ms;
-$page-transition-delay-show: 0ms, 0ms;
-
 /* Modal transition */
 
 $modal-prop: visibility;
 $modal-duration: 0ms;
 $modal-delay: #{$default-duration};
 $modal-delay-open: 0ms;
-$modal-overlay-window-prop: visibility, opacity;
-$modal-overlay-window-duration: 0ms, #{$default-duration};
-$modal-overlay-window-delay: #{$default-duration}, 0ms;
-$modal-overlay-window-delay-open: 0ms, 0ms;
 
 /* Z index */
 
@@ -420,9 +408,8 @@ $z-index: () !default;
 $z-index: maps.map-recursive-merge(
   (
     "skip-link": 100,
-    "page-transition": 100,
     "modal": 90,
-    "nav": 85,
+    "header": 85,
     "loader": 80,
   ),
   $z-index

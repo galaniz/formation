@@ -9,21 +9,25 @@ import type {
   FormGroup,
   FormErrorListItem,
   FormValidateResult,
+  FormValidateFilterArgs,
   FormValue,
-  FormValueFilter,
+  FormValueFilterArgs,
+  FormValues,
+  FormValuesFilterArgs,
   FormTemplates,
   FormClones,
-  FormValidateOn
+  FormValidateOn,
+  FormGroups
 } from './FormTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
-import { isFunction } from '../../utils/function/function.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isItemFocusable, focusSelector } from '../../utils/focusability/focusability.js'
 import { getOuterItems } from '../../utils/item/itemOuter.js'
 import { cloneItem, getItem, getTemplateItem } from '../../utils/item/item.js'
+import { applyFilters } from '../../utils/filter/filter.js'
 
 /**
- * Form validation and input values retrieval
+ * Handles form validation and retrieval of values
  */
 class Form extends HTMLElement {
   /**
@@ -36,16 +40,9 @@ class Form extends HTMLElement {
   /**
    * Data (state, values, inputs...) by input name
    *
-   * @type {Map<string, FormGroup>}
+   * @type {FormGroups}
    */
-  groups: Map<string, FormGroup> = new Map()
-
-  /**
-   * Error templates
-   *
-   * @type {FormTemplates}
-   */
-  templates: FormTemplates = new Map()
+  groups: FormGroups = new Map()
 
   /**
    * Validate on submit, blur or both
@@ -69,12 +66,11 @@ class Form extends HTMLElement {
   init: boolean = false
 
   /**
-   * Types by input name
+   * Error, loader and success fragments
    *
-   * @private
-   * @type {Map<string, string>}
+   * @type {FormTemplates}
    */
-  #types: Map<string, string> = new Map()
+  static templates: FormTemplates = new Map()
 
   /**
    * Labels by input name
@@ -107,24 +103,6 @@ class Form extends HTMLElement {
    * @type {Map<string, FormErrorListItem>}
    */
   #errorList: Map<string, FormErrorListItem> = new Map()
-
-  /**
-   * Url validation regex
-   *
-   * @private
-   * @type {RegExp}
-   * @see {@link https://urlregex.com/|Source}
-   */
-  #urlRegex: RegExp = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/
-
-  /**
-   * Email validation regex
-   *
-   * @private
-   * @type {RegExp}
-   * @see {@link https://emailregex.com/|Source}
-   */
-  #emailRegex: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   /**
    * Id for blur timeout
@@ -190,10 +168,9 @@ class Form extends HTMLElement {
 
     this.form = null
     this.groups.clear()
-    this.templates.clear()
     this.init = false
     this.submitted = false
-    this.#types.clear()
+    Form.templates.clear()
     this.#labels.clear()
     this.#legends.clear()
     this.#clones.clear()
@@ -222,57 +199,46 @@ class Form extends HTMLElement {
       return false
     }
 
-    /* Error template required */
+    /* Error inline template required */
 
-    const error = getTemplateItem(this.getAttribute('error') ?? '')
+    const errorInline = getTemplateItem(this.getAttribute('error-inline') ?? '')
 
-    if (!isHtmlElement(error)) {
+    if (!isHtmlElement(errorInline)) {
       return false
     }
 
-    this.templates.set('error', error)
+    Form.templates.set('errorInline', errorInline)
 
     /* Error summary template */
 
     const errorSummary = getTemplateItem(this.getAttribute('error-summary') ?? '')
 
     if (isHtmlElement(errorSummary)) {
-      this.templates.set('errorSummary', errorSummary)
+      Form.templates.set('errorSummary', errorSummary)
     }
+
+    /* Validate on */
+
+    const validateOn = this.getAttribute('validate-on')
+
+    if (isStringStrict(validateOn)) {
+      this.validateOn = validateOn as FormValidateOn
+    }
+
+    const addBlur = this.validateOn !== 'submit'
 
     /* Create groups */
 
     let init = false
 
-    inputs.forEach(input => {
-      /* Name */
+    for (const input of inputs) {
+      /* Name and id (error list) required */
 
       const name = input.name
+      const id = input.id
 
-      if (!isStringStrict(name)) {
-        return
-      }
-
-      /* Append input */
-
-      const group = this.groups.get(name)
-
-      if (group != null) {
-        group.inputs.push(input)
-        return
-      }
-
-      /* Required */
-
-      const ariaRequired = input.getAttribute('aria-required')
-      const dataRequired = input.dataset.ariaRequired // Required radio buttons and checkboxes in groups
-
-      let required = ariaRequired === 'true'
-      let allowAriaInvalid = true
-
-      if (dataRequired === 'true') {
-        required = true
-        allowAriaInvalid = false
+      if (!isStringStrict(name) || !isStringStrict(id)) {
+        continue
       }
 
       /* Type */
@@ -283,76 +249,109 @@ class Form extends HTMLElement {
         type = input.type
       }
 
-      this.#types.set(name, type)
+      /* Group data */
+
+      const group = this.groups.get(name)
+      const groupExists = group != null
+
+      if (addBlur && groupExists) {
+        input.addEventListener('blur', this.#blurHandler)
+      }
+
+      if (groupExists) {
+        group.inputs.push(input)
+        group.type.push(type)
+        continue
+      }
+
+      /* Field required */
+
+      const field = input.closest('[data-form-field]')
+
+      if (!isHtmlElement(field)) {
+        continue
+      }
+
+      /* Fieldset check */
+
+      const fieldset = input.closest('fieldset')
+      const hasFieldset = isHtmlElement(fieldset)
+      const fieldsetRequired = hasFieldset ? fieldset.hasAttribute('data-form-required') : false
+
+      /* Required */
+
+      const required = input.required || input.ariaRequired === 'true' || fieldsetRequired
 
       /* Legend */
 
-      const legend = input.closest('fieldset')?.querySelector('legend')
+      const legend = fieldset?.querySelector('legend')
       const hasLegend = isHtmlElement(legend)
+      const legendId = legend?.id
 
-      let allowLabel = true
-      let groupLabel = null
+      if (fieldsetRequired && !isStringStrict(legendId)) { // Legend id required for error list
+        continue
+      }
 
       if (hasLegend) {
-        groupLabel = legend
-        allowLabel = type !== 'radio' && type !== 'checkbox'
-
-        const legendText = legend.textContent
+        const legendText = getItem('[data-form-legend-text]', legend)
 
         if (isStringStrict(legendText)) {
-          this.#legends.set(name, legendText.replace(' required', ''))
+          this.#legends.set(name, legendText)
         }
       }
 
       /* Label */
 
-      const label = input.closest('[data-form-field]')?.querySelector('[data-form-label]')
+      const label = field.querySelector('label')
       const hasLabel = isHtmlElement(label)
 
-      if (hasLabel && allowLabel) {
-        groupLabel = label
-
-        const labelText = label.textContent
+      if (hasLabel) {
+        const labelText = getItem('[data-form-label-text]', label)
 
         if (isStringStrict(labelText)) {
-          this.#labels.set(name, labelText.replace(' required', ''))
+          this.#labels.set(name, labelText)
         }
       }
 
       /* Group label required */
 
+      const groupLabel = fieldsetRequired ? legend : label
+      const groupLabelType = fieldsetRequired ? 'legend' : 'label'
+
       if (!groupLabel) {
-        return
+        continue
       }
 
       /* Empty and invalid messages */
 
-      const emptyMessage = input.dataset.formEmpty
-      const invalidMessage = input.dataset.formInvalid
+      const emptyMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formEmpty
+      const invalidMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formInvalid
 
       /* Group data */
 
       this.groups.set(name, {
-        inputs: [input], // Array for checkboxes and radio buttons
+        field,
+        inputs: [input],
         label: groupLabel,
-        labelType: hasLegend ? 'legend' : 'label',
+        labelType: groupLabelType,
         required,
-        type,
+        type: [type],
         values: [],
         valid: false,
         emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
-        invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : '',
-        allowAriaInvalid
+        invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
       })
 
-      /* Blur to validate beyond submit */
+      /* Blur to validate after submit */
 
-      input.addEventListener('blur', this.#blurHandler)
+      if (addBlur) {
+        input.addEventListener('blur', this.#blurHandler)
+      }
 
       /* Input processed */
 
       init = true
-    })
+    }
 
     /* Form */
 
@@ -369,39 +368,51 @@ class Form extends HTMLElement {
    *
    * @private
    * @param {FormInput[]} inputs
-   * @param {string} type
+   * @param {string} name
    * @param {boolean} required
    * @param {string} emptyMessage
-   * @param {string} invalidMessage
    * @return {FormValidateResult}
    */
   #validateInputs (
     inputs: FormInput[],
-    type: string,
+    name: string,
+    type: string[],
     required: boolean,
-    emptyMessage: string,
-    invalidMessage: string
+    emptyMessage: string
   ): FormValidateResult {
     const values: string[] = []
+    const ariaInvalid: number[] = []
 
     let message = ''
-    let valid = false
+    let valid = true
 
     /* Values from inputs */
 
-    inputs.forEach(input => {
+    inputs.forEach((input, i) => {
       let value: string | undefined
+      let isControl = false
+      let hasValue = false
 
-      switch (type) {
+      switch (type[i]) {
         case 'checkbox':
         case 'radio':
+          isControl = true
           value = ((input as HTMLInputElement).checked ? (input as HTMLInputElement).value.trim() : '')
           break
         case 'select':
           const selected = (input as HTMLSelectElement).selectedOptions
 
+          if (!selected) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+            break
+          }
+
           for (const option of selected) {
-            values.push(option.value.trim())
+            const optValue = option.value.trim()
+
+            if (isStringStrict(optValue)) {
+              hasValue = true
+              values.push(optValue)
+            }
           }
 
           break
@@ -410,55 +421,28 @@ class Form extends HTMLElement {
       }
 
       if (isStringStrict(value)) {
+        hasValue = true
         values.push(value)
+      }
+
+      if (!hasValue && !isControl) {
+        ariaInvalid.push(i)
       }
     })
 
-    /* Bail if no values */
+    /* No values */
 
     if (values.length === 0) {
-      return {
-        values: [],
-        message: isStringStrict(emptyMessage) ? emptyMessage : 'This field is required',
-        valid: required ? false : true
-      }
-    }
-
-    /* Check if inputs like email, url... are valid */
-
-    const hasInvalidMessage = isStringStrict(invalidMessage)
-    const firstValue = values[0] as string
-
-    switch (type) {
-      case 'email':
-        if (firstValue.toLowerCase().match(this.#emailRegex)) {
-          valid = true
-        } else {
-          valid = false
-          message = hasInvalidMessage ? invalidMessage : 'Enter a valid email'
-        }
-
-        break
-      case 'url':
-        if (firstValue.toLowerCase().match(this.#urlRegex)) {
-          valid = true
-        } else {
-          valid = false
-          message = hasInvalidMessage ? invalidMessage : 'Enter a valid URL'
-        }
-
-        break
-      default:
-        valid = true
+      message = isStringStrict(emptyMessage) ? emptyMessage : 'Required'
+      valid = required ? false : true
     }
 
     /* Result */
 
-    return {
-      values,
-      message,
-      valid
-    }
+    const result: FormValidateResult = { values, message, valid, ariaInvalid }
+    const resultArgs: FormValidateFilterArgs = { name, groups: this.groups }
+
+    return applyFilters(`form:validate:${this.id}`, result, resultArgs)
   }
 
   /**
@@ -473,14 +457,13 @@ class Form extends HTMLElement {
     /* Group data */
 
     const {
+      field,
       inputs,
+      type,
       label,
       labelType,
-      type,
       required,
-      allowAriaInvalid,
-      emptyMessage,
-      invalidMessage
+      emptyMessage
     } = group
 
     /* Label required */
@@ -489,7 +472,7 @@ class Form extends HTMLElement {
       return true
     }
 
-    /* Error id required */
+    /* Error id required for list */
 
     const useLegend = labelType === 'legend'
     const errorId: string | undefined = useLegend ? label.id : inputs[0]?.id
@@ -500,11 +483,11 @@ class Form extends HTMLElement {
 
     /* Validate input group */
 
-    const validate = this.#validateInputs(inputs, type, required, emptyMessage, invalidMessage)
-    const { values, valid, message } = validate
+    const validate = this.#validateInputs(inputs, name, type, required, emptyMessage)
+    const { values, valid, ariaInvalid, message } = validate
 
     if (!valid) {
-      this.#setErrorMessage(inputs, name, label, message, allowAriaInvalid)
+      this.#setErrorMessage(field, inputs, name, label, message, ariaInvalid)
 
       const existing = this.#errorList.get(errorId)
       const existingItem = existing?.item
@@ -520,7 +503,7 @@ class Form extends HTMLElement {
 
       this.#setErrorSummary()
     } else {
-      this.#removeErrorMessage(inputs, name, label, allowAriaInvalid)
+      this.#removeErrorMessage(field, inputs, name, label)
       this.#errorList.delete(errorId)
     }
 
@@ -542,19 +525,21 @@ class Form extends HTMLElement {
    * Set field error message
    *
    * @private
+   * @param {HTMLElement} field
    * @param {FormInput[]} inputs
    * @param {string} name
    * @param {HTMLElement} label
    * @param {string} message
-   * @param {boolean} allowAriaInvalid
+   * @param {number[]} ariaInvalid
    * @return {void}
    */
   #setErrorMessage (
+    field: HTMLElement,
     inputs: FormInput[],
     name: string,
     label: HTMLElement,
     message: string,
-    allowAriaInvalid: boolean
+    ariaInvalid: number[]
   ): void {
     /* Error element id */
 
@@ -569,13 +554,13 @@ class Form extends HTMLElement {
     if (isHtmlElement(error)) {
       error.textContent = message
     } else {
-      const clone = cloneItem(this.templates.get('error'))
+      const clone = cloneItem(Form.templates.get('errorInline'))
 
       if (!isHtmlElement(clone)) {
         return
       }
 
-      const cloneText = getItem('span', clone)
+      const cloneText = getItem('[data-form-error-text]', clone)
 
       if (!isHtmlElement(cloneText)) {
         return
@@ -588,30 +573,36 @@ class Form extends HTMLElement {
       label.insertAdjacentElement('beforeend', clone)
     }
 
-    /* Set inputs as invalid */
+    /* Update field */
 
-    if (allowAriaInvalid) {
-      inputs.forEach(input => {
+    field.dataset.formFieldError = ''
+
+    /* Invalid inputs */
+
+    inputs.forEach((input, i) => {
+      if (ariaInvalid.includes(i)) {
         input.setAttribute('aria-invalid', 'true')
-      })
-    }
+      } else {
+        input.removeAttribute('aria-invalid')
+      }
+    })
   }
 
   /**
    * Remove field error message
    *
    * @private
+   * @param {HTMLElement} field
    * @param {FormInput[]} inputs
    * @param {string} name
    * @param {HTMLElement} label
-   * @param {boolean} allowAriaInvalid
    * @return {void}
    */
   #removeErrorMessage (
+    field: HTMLElement,
     inputs: FormInput[],
     name: string,
-    label: HTMLElement,
-    allowAriaInvalid: boolean
+    label: HTMLElement
   ): void {
     /* Error element id */
 
@@ -625,13 +616,15 @@ class Form extends HTMLElement {
       label.removeChild(error)
     }
 
-    /* Set inputs as valid */
+    /* Update field */
 
-    if (allowAriaInvalid) {
-      inputs.forEach(input => {
-        input.setAttribute('aria-invalid', 'false')
-      })
-    }
+    delete field.dataset.formFieldError
+
+    /* Valid inputs */
+
+    inputs.forEach(input => {
+      input.removeAttribute('aria-invalid')
+    })
   }
 
   /**
@@ -642,13 +635,13 @@ class Form extends HTMLElement {
    */
   #clearErrorMessages (): void {
     this.groups.forEach((group, name) => {
-      const { inputs, label, allowAriaInvalid } = group
+      const { field, inputs, label } = group
 
       if (!isHtmlElement(label)) {
         return
       }
 
-      this.#removeErrorMessage(inputs, name, label, allowAriaInvalid)
+      this.#removeErrorMessage(field, inputs, name, label)
     })
 
     this.#displayErrorSummary(false)
@@ -671,7 +664,7 @@ class Form extends HTMLElement {
 
     /* Clone summary template */
 
-    const clone = cloneItem(this.templates.get('errorSummary'))
+    const clone = cloneItem(Form.templates.get('errorSummary'))
 
     if (!isHtmlElement(clone)) {
       return
@@ -776,7 +769,7 @@ class Form extends HTMLElement {
 
     const on = this.validateOn
 
-    if (on === 'submit' || (!this.submitted && on === 'both')) {
+    if (!this.submitted && on === 'both') {
       return
     }
 
@@ -854,9 +847,8 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Submit form
+   * Submit handler on form element
    *
-   * @private
    * @param {SubmitEvent} e
    * @return {void}
    */
@@ -870,7 +862,6 @@ class Form extends HTMLElement {
   /**
    * Validate form
    *
-   * @private
    * @return {boolean}
    */
   validate (): boolean {
@@ -890,21 +881,19 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Filtered form values
+   * Retrieve form values
    *
-   * @param {FormValueFilter} filter
-   * @return {Object<string, FormValue>}
+   * @return {FormValues}
    */
-  getValues (filter: FormValueFilter): Record<string, FormValue> {
-    const formValues: Record<string, FormValue> = {}
+  getValues (): FormValues {
+    const formValues: FormValues = {}
 
     this.groups.forEach((group, name) => {
-      const { values } = group
+      const { values, type } = group
       const valuesLen = values.length
-
       const legend = this.#legends.get(name)
       const label = this.#labels.get(name)
-      const type = this.#types.get(name)
+      const single = valuesLen === 1
 
       let newValues: string | string[] = values
 
@@ -912,13 +901,13 @@ class Form extends HTMLElement {
         newValues = ''
       }
 
-      if (valuesLen === 1) {
+      if (single) {
         newValues = values[0] as string
       }
 
-      let formObj: FormValue | null = {
+      const formObj: FormValue = {
         value: newValues,
-        type: isStringStrict(type) ? type : ''
+        type: single ? type[0] as string : type
       }
 
       if (legend) {
@@ -929,18 +918,14 @@ class Form extends HTMLElement {
         formObj.label = label
       }
 
-      if (isFunction(filter)) {
-        formObj = filter(formObj)
-      }
+      const valueArgs: FormValueFilterArgs = { name, group }
 
-      if (formObj == null) {
-        return
-      }
-
-      formValues[name] = formObj
+      formValues[name] = applyFilters(`form:value:${this.id}`, formObj, valueArgs)
     })
 
-    return formValues
+    const valuesArgs: FormValuesFilterArgs = { groups: this.groups }
+
+    return applyFilters(`form:values:${this.id}`, formValues, valuesArgs)
   }
 
   /**

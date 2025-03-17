@@ -36,7 +36,7 @@ jobs:
 
       # Lint ts and scss files
       - name: Run lint (ts and scss)
-        run: pnpm lint:scss
+        run: pnpm lint
 
       # Test ts files
       - name: Run tests (ts)
