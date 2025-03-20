@@ -5,7 +5,7 @@
 /**
  * @typedef {'blur'|'submit'|'both'} FormValidateOn
  */
-export type FormValidateOn = 'blur' | 'submit' | 'both'
+export type FormValidateOn = 'change' | 'submit' | 'both'
 
 /**
  * @typedef {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement} FormInput

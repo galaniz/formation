@@ -59,7 +59,7 @@ const testLoadAssets = (
   items: Asset[],
   types: Array<'img' | 'video' | 'audio' | 'iframe' | 'error'>
 ): number => {
-  const loadTypes = {
+  const loadType = {
     img: 'load',
     video: 'canplay',
     audio: 'canplay',
@@ -71,7 +71,7 @@ const testLoadAssets = (
     items.forEach((item, i) => {
       const type = types[i]
 
-      fireEvent(item as Element, new Event(loadTypes[type as keyof typeof loadTypes]))
+      fireEvent(item as Element, new Event(loadType[type as keyof typeof loadType]))
     })
   }, 10)
 }

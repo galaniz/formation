@@ -4,18 +4,13 @@
 
 /* Imports */
 
-import { it, expect, describe, beforeEach } from 'vitest'
-import { config, configFallback } from '../../../config/config.js'
+import { it, expect, describe } from 'vitest'
 import {
   toggleFocusability,
   isItemFocusable,
   getInnerFocusableItems,
   getOuterFocusableItems
 } from '../focusability.js'
-import {
-  toggleFocusabilityFallback,
-  getOuterFocusableItemsFallback
-} from '../focusabilityFallback.js'
 
 /**
  * @typedef {object} TestHtmlObj
@@ -23,7 +18,6 @@ import {
  * @prop {HTMLElement[]} nonFocusable
  * @prop {HTMLElement[]} inner
  * @prop {HTMLElement[]} outer
- * @prop {HTMLElement[]} outerFallback
  * @prop {HTMLElement} item
  */
 interface TestHtmlObj {
@@ -31,7 +25,6 @@ interface TestHtmlObj {
   nonFocusable: HTMLElement[]
   inner: HTMLElement[]
   outer: HTMLElement[]
-  outerFallback: HTMLElement[]
   item: HTMLElement
 }
 
@@ -128,16 +121,6 @@ const testHtml = (): TestHtmlObj => {
       nav,
       footer
     ],
-    outerFallback: [
-      iframe,
-      video,
-      divTab,
-      divEdit,
-      link,
-      select,
-      input,
-      textarea
-    ],
     item: div
   }
 }
@@ -145,12 +128,6 @@ const testHtml = (): TestHtmlObj => {
 /* Test toggleFocusability */
 
 describe('toggleFocusability()', () => {
-  beforeEach(() => {
-    config.inert = true
-    configFallback.toggleFocusability = undefined
-    configFallback.getOuterFocusableItems = undefined
-  })
-
   it('should return undefined if items are empty', () => {
     const result = toggleFocusability(true, [])
     const expectedResult = undefined
@@ -165,47 +142,6 @@ describe('toggleFocusability()', () => {
 
     expect(result).toBe(expectedResult)
   })
-
-  it('should return undefined if inert false and no callable fallback', () => {
-    config.inert = false
-
-    const html = testHtml()
-    const { outer } = html
-
-    const result = toggleFocusability(false, outer)
-    const expectedResult = undefined
-
-    expect(result).toBe(expectedResult)
-  })
-
-  it(
-    'should modify aria hidden, tabindex and contenteditable attributes if inert false and fallback exists',
-    () => {
-      config.inert = false
-      configFallback.toggleFocusability = toggleFocusabilityFallback
-
-      const html = testHtml()
-      const { outerFallback } = html
-
-      const result = toggleFocusability(false, outerFallback)
-      const fakeInertResult = outerFallback.filter(item => {
-        const ariaHidden = item.ariaHidden
-        const tabIndex = item.tabIndex
-        const editable = item.contentEditable
-
-        if (ariaHidden === 'true' && tabIndex === -1 && editable === 'false') {
-          return false
-        }
-
-        return true
-      }).length
-      const expectedResult = false
-      const expectedFakeInertResult = 0
-
-      expect(result).toBe(expectedResult)
-      expect(fakeInertResult).toBe(expectedFakeInertResult)
-    }
-  )
 
   it('should add inert attribute to items if on is false', () => {
     const html = testHtml()
@@ -234,75 +170,6 @@ describe('toggleFocusability()', () => {
     expect(result).toBe(expectedResult)
     expect(inertResult).toBe(expectedInertResult)
   })
-})
-
-/* Test toggleFocusabilityFallback */
-
-describe('toggleFocusabilityFallback()', () => {
-  it('should return undefined if items are null', () => {
-    // @ts-expect-error - test invalid items
-    const result = toggleFocusabilityFallback(true, null)
-    const expectedResult = undefined
-
-    expect(result).toBe(expectedResult)
-  })
-
-  it(
-    'should modify aria hidden, tabindex and contenteditable attributes if fallback and on is false',
-    () => {
-      const html = testHtml()
-      const { outerFallback } = html
-
-      const result = toggleFocusabilityFallback(false, outerFallback)
-      const fakeInertResult = outerFallback.filter(item => {
-        const ariaHidden = item.ariaHidden
-        const tabIndex = item.tabIndex
-        const editable = item.contentEditable
-
-        if (ariaHidden === 'true' && tabIndex === -1 && editable === 'false') {
-          return false
-        }
-
-        return true
-      }).length
-      const expectedResult = false
-      const expectedFakeInertResult = 0
-
-      expect(result).toBe(expectedResult)
-      expect(fakeInertResult).toBe(expectedFakeInertResult)
-    }
-  )
-
-  it(
-    'should restore aria hidden, tabindex and contenteditable values if fallback and on is true',
-    () => {
-      const html = testHtml()
-      const { outerFallback } = html
-
-      toggleFocusabilityFallback(false, outerFallback)
-
-      const result = toggleFocusabilityFallback(true, outerFallback)
-      const fakeInertResult = outerFallback.filter(item => {
-        const ariaHidden = item.ariaHidden
-        const tabIndex = item.getAttribute('tabindex')
-        const editable = item.getAttribute('contenteditable')
-        const ariaCompare = item.id === 'hidden-test' ? 'true' : null
-        const tabIndexCompare = item.id === 'tabindex-test' ? '0' : null
-        const editableCompare = item.id === 'editable-text' ? 'true' : null
-
-        if (ariaHidden === ariaCompare && tabIndex === tabIndexCompare && editable === editableCompare) {
-          return false
-        }
-
-        return true
-      }).length
-      const expectedResult = true
-      const expectedFakeInertResult = 0
-
-      expect(result).toBe(expectedResult)
-      expect(fakeInertResult).toBe(expectedFakeInertResult)
-    }
-  )
 })
 
 /* Test isItemFocusable */
@@ -366,12 +233,6 @@ describe('getInnerFocusableItems()', () => {
 /* Test getOuterFocusableItems */
 
 describe('getOuterFocusableItems()', () => {
-  beforeEach(() => {
-    config.inert = true
-    configFallback.toggleFocusability = undefined
-    configFallback.getOuterFocusableItems = undefined
-  })
-
   it('should return empty array if item is null', () => {
     const result = getOuterFocusableItems(null)
     const expectedResult: unknown[] = []
@@ -383,48 +244,6 @@ describe('getOuterFocusableItems()', () => {
     const html = testHtml()
     const { outer: expectedResult, item } = html
     const result = getOuterFocusableItems(item)
-
-    expect(result).toEqual(expectedResult)
-  })
-
-  it('should return empty array if inert false and no callable fallback', () => {
-    config.inert = false
-
-    const html = testHtml()
-    const { item } = html
-
-    const result = getOuterFocusableItems(item)
-    const expectedResult: unknown[] = []
-
-    expect(result).toEqual(expectedResult)
-  })
-
-  it('should return array of focusable elements outside item if inert false and fallback exists', () => {
-    config.inert = false
-    configFallback.getOuterFocusableItems = getOuterFocusableItemsFallback
-
-    const html = testHtml()
-    const { outerFallback: expectedResult, item } = html
-    const result = getOuterFocusableItems(item)
-
-    expect(result).toEqual(expectedResult)
-  })
-})
-
-/* Test getOuterFocusableItemsFallback */
-
-describe('getOuterFocusableItemsFallback()', () => {
-  it('should return empty array if item is null', () => {
-    const result = getOuterFocusableItemsFallback(null)
-    const expectedResult: unknown[] = []
-
-    expect(result).toEqual(expectedResult)
-  })
-
-  it('should return array of focusable elements outside item', () => {
-    const html = testHtml()
-    const { outerFallback: expectedResult, item } = html
-    const result = getOuterFocusableItemsFallback(item)
 
     expect(result).toEqual(expectedResult)
   })

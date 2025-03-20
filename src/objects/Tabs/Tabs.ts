@@ -4,12 +4,13 @@
 
 /* Imports */
 
-import type { TabsActivateArgs, TabsIndexArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
+import type { TabsActivateArgs, TabsIndexesFilterArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
 import { getKey } from '../../utils/key/key.js'
+import { applyFilters } from '../../utils/filter/filter.js'
 
 /**
  * Custom event details
@@ -48,13 +49,6 @@ class Tabs extends HTMLElement {
   delay: number = 0
 
   /**
-   * Delay before focusing panels
-   *
-   * @type {number}
-   */
-  focusDelay: number = 0
-
-  /**
    * Layout for keyboard navigation
    *
    * @type {TabsDirection}
@@ -76,18 +70,11 @@ class Tabs extends HTMLElement {
   currentIndex: number = 0
 
   /**
-   * Base or derived class name
+   * Distinguish from derived classes
    *
-   * @type {string}
+   * @type {boolean}
    */
-  #className: string = 'tabs'
-
-  /**
-   * Tab elements indexes
-   *
-   * @type {Map<HTMLElement, number>}
-   */
-  #indexes: Map<HTMLElement, number> = new Map()
+  #isTabs: boolean = false
 
   /**
    * Final tab/panel element index
@@ -104,14 +91,6 @@ class Tabs extends HTMLElement {
    * @type {number}
    */
   #delayId: number = 0
-
-  /**
-   * Id for focus delay timeout
-   *
-   * @private
-   * @type {number}
-   */
-  #focusDelayId: number = 0
 
   /**
    * Bind this to event callbacks
@@ -165,12 +144,10 @@ class Tabs extends HTMLElement {
     this.tabs = []
     this.panels = []
     this.init = false
-    this.#indexes.clear()
 
     /* Clear timeouts */
 
     clearTimeout(this.#delayId)
-    clearTimeout(this.#focusDelayId)
   }
 
   /**
@@ -200,9 +177,9 @@ class Tabs extends HTMLElement {
 
     this.#endIndex = tabs.length - 1
 
-    /* Class name */
+    /* Tabs class */
 
-    this.#className = this.constructor.name.toLowerCase()
+    this.#isTabs = this.constructor.name.toLowerCase() === 'tabs'
 
     /* Delay if it exists */
 
@@ -237,13 +214,15 @@ class Tabs extends HTMLElement {
       tab.addEventListener('keydown', this.#keyDownHandler)
       tab.addEventListener('keyup', this.#keyUpHandler)
 
-      this.#indexes.set(tab, i)
+      tab.dataset.tabIndex = i.toString()
 
-      const selected = tab.ariaSelected
+      const selected = tab.ariaSelected === 'true'
 
-      if (selected === 'true') {
+      if (selected) {
         current = i
       }
+
+      tab.tabIndex = selected ? 0 : -1
 
       if (isHtmlElement(tab, HTMLAnchorElement) && tab.hash === hash) {
         current = i
@@ -254,10 +233,9 @@ class Tabs extends HTMLElement {
 
     /* Go to current */
 
-    if (this.#className === 'tabs') {
+    if (this.#isTabs) {
       return this.activate({
         current,
-        focus: false,
         source: 'init'
       })
     }
@@ -268,17 +246,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Filter indexes on activation
-   *
-   * @param {TabsIndexArgs} args
-   * @return {TabsIndexArgs}
-   */
-  getIndexes (args: TabsIndexArgs): TabsIndexArgs {
-    return args
-  }
-
-  /**
-   * Hide, show and focus panels and tabs
+   * Hide and show panels and tabs
    *
    * @param {TabsActivateArgs} args
    * @return {boolean}
@@ -287,37 +255,34 @@ class Tabs extends HTMLElement {
     /* Clear timeouts */
 
     clearTimeout(this.#delayId)
-    clearTimeout(this.#focusDelayId)
 
     /* Args */
 
     const {
       current = 0,
-      focus = true,
+      raw = current,
       source = ''
     } = args
 
     const lastIdx = this.currentIndex
     const endIdx = this.#endIndex
-    const currentIdx = current > endIdx ? endIdx : current
-
-    this.currentIndex = currentIdx
-
-    const {
-      currentIndex = currentIdx,
-      lastIndex = lastIdx,
-      panelIndex = currentIdx,
-      lastPanelIndex = lastIdx,
-      endIndex = endIdx
-    } = this.getIndexes({
+    const indexes: TabsIndexesFilterArgs = {
+      rawIndex: raw,
       currentIndex: current,
       lastIndex: lastIdx,
       panelIndex: current,
       lastPanelIndex: lastIdx,
       endIndex: endIdx,
-      focus,
       source
-    })
+    }
+
+    const {
+      currentIndex,
+      lastIndex,
+      panelIndex,
+      lastPanelIndex,
+      endIndex = endIdx
+    } = applyFilters(`tabs:indexes:${this.id}`, indexes)
 
     this.currentIndex = currentIndex
     this.#endIndex = endIndex
@@ -340,8 +305,7 @@ class Tabs extends HTMLElement {
 
     /* Type */
 
-    const type = this.#className
-    const displayType = type === 'tabs' ? 'hidden' : 'aria-hidden'
+    const isTabs = this.#isTabs
 
     /* Args to pass to events */
 
@@ -355,7 +319,6 @@ class Tabs extends HTMLElement {
       lastPanel,
       tab,
       lastTab,
-      focus,
       source
     }
 
@@ -371,39 +334,37 @@ class Tabs extends HTMLElement {
 
     lastTab.tabIndex = -1
     lastTab.ariaSelected = 'false'
+    lastPanel.removeAttribute('tabindex')
 
     /* Deactivate last panel */
 
-    lastPanel.dataset[`${type}Selected`] = 'false'
+    if (isTabs) {
+      lastPanel.dataset.tabsSelected = 'false'
+    }
+
     this.dispatchEvent(onDeactivate)
 
     /* Activate current tab */
 
     tab.tabIndex = 0
     tab.ariaSelected = 'true'
+    panel.tabIndex = 0
 
     /* Activate current panel */
 
-    panel.dataset[`${type}Selected`] = 'true'
+    if (isTabs) {
+      panel.dataset.tabsSelected = 'true'
+    }
+
     this.dispatchEvent(onActivate)
 
     this.#delayId = window.setTimeout(() => {
-      if (displayType === 'hidden') {
+      if (isTabs) {
         lastPanel.hidden = true
         panel.hidden = false
-      } else {
-        lastPanel.ariaHidden = 'true'
-        panel.ariaHidden = 'false'
       }
 
-      if (focus) {
-        this.#focusDelayId = window.setTimeout(() => {
-          panel.focus()
-          this.dispatchEvent(onActivated)
-        }, this.focusDelay)
-      } else {
-        this.dispatchEvent(onActivated)
-      }
+      this.dispatchEvent(onActivated)
     }, this.delay)
 
     return true
@@ -424,7 +385,7 @@ class Tabs extends HTMLElement {
       return fallback
     }
 
-    const index = this.#indexes.get(target)
+    const index = parseInt(target.dataset.tabIndex ?? '', 10)
 
     if (!isNumber(index)) {
       return fallback
@@ -441,21 +402,25 @@ class Tabs extends HTMLElement {
    * @return {void}
    */
   #focusTab (index: number): void {
+    let newIndex = index
+
     if (index < 0) {
-      index = this.#endIndex
+      newIndex = this.#endIndex
     }
 
     if (index > this.#endIndex) {
-      index = 0
+      newIndex = 0
     }
 
-    const tab = this.tabs[index]
+    const tab = this.tabs[newIndex]
 
-    if (!isHtmlElement(tab)) {
-      return
-    }
+    tab?.focus()
 
-    tab.focus()
+    this.activate({
+      current: newIndex,
+      raw: index,
+      source: 'click'
+    })
   }
 
   /**

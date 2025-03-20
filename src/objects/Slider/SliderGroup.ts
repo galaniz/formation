@@ -8,23 +8,31 @@ import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
 import { Tabs } from '../Tabs/Tabs.js'
 import { getItem } from '../../utils/item/item.js'
-import { isHtmlElement } from '../../utils/html/html.js'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
+import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
-import { getInnerFocusableItems } from '../../utils/focusability/focusability.js'
 import { addFilter, removeFilter } from '../../utils/filter/filter.js'
+import { config } from '../../config/config.js'
 import { sliderScrollTo } from './sliderUtils.js'
 
 /**
- * Handles scroll based slider with single item panels
+ * Handles scroll based slider with multiple items in panels
  */
-class Slider extends Tabs {
+class SliderGroup extends Tabs {
   /**
    * Scrollable container element
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
+
+  /**
+   * Elements within panels
+   *
+   * @type {HTMLElement[]}
+   */
+  items: HTMLElement[] = []
 
   /**
    * Target height element
@@ -55,11 +63,11 @@ class Slider extends Tabs {
   duration: number = 500
 
   /**
-   * Repeat panels to the left and right
+   * Number of visible items and panels by breakpoint
    *
-   * @type {boolean}
+   * @type {Set<Record<string, number>>}
    */
-  loop: boolean = false
+  breakpoints: Set<Record<'low' | 'high' | 'items' | 'panels', number>> = new Set()
 
   /**
    * Panels parent element
@@ -68,6 +76,14 @@ class Slider extends Tabs {
    * @type {HTMLElement|null}
    */
   #insert: HTMLElement | null = null
+
+  /**
+   * Last panels index
+   *
+   * @private
+   * @type {number}
+   */
+  #endIndex: number = 0
 
   /**
    * Scroll to animation id
@@ -99,7 +115,7 @@ class Slider extends Tabs {
    * @private
    * @type {number}
    */
-  #offset: number = 0
+  #offset: number = 0 
 
   /**
    * Viewport width to check breakpoint(s)
@@ -108,38 +124,6 @@ class Slider extends Tabs {
    * @type {number}
    */
   #viewportWidth: number = window.innerWidth
-
-  /**
-   * Visible current tab index in loop
-   *
-   * @private
-   * @type {number}
-   */
-  #loopCurrentIndex: number = 0
-
-  /**
-   * Track element width
-   *
-   * @private
-   * @type {number}
-   */
-  #loopTrackWidth: number = 0
-
-  /**
-   * Initial number of panels in loop
-   *
-   * @private
-   * @type {number}
-   */
-  #loopInitLength: number = 0
-
-  /**
-   * Number of panels in loop including cloned panels
-   *
-   * @private
-   * @type {number}
-   */
-  #loopLength: number = 0
 
   /**
    * Bind this to event callbacks
@@ -220,9 +204,11 @@ class Slider extends Tabs {
     /* Empty/nullify props */
 
     this.track = null
+    this.items = []
     this.heightItem = null
     this.prev = null
     this.next = null
+    this.breakpoints = new Set()
     this.#insert = null
 
     /* Clear timeout and animation */
@@ -241,6 +227,7 @@ class Slider extends Tabs {
     /* Items */
 
     const track = getItem('[data-slider-track]', this)
+    const items = getItem(['[data-slider-item]'], this)
     const heightItem = getItem('[data-slider-height]', this)
     const prev = getItem('[data-slider-prev]', this)
     const next = getItem('[data-slider-next]', this)
@@ -249,7 +236,7 @@ class Slider extends Tabs {
 
     /* Check required items exist */
 
-    if (!isHtmlElement(track) || !isHtmlElement(insert)) {
+    if (!isHtmlElement(track) || !isHtmlElement(insert) || !isHtmlElementArray(items)) {
       return false
     }
 
@@ -258,12 +245,12 @@ class Slider extends Tabs {
     this.track = track
     this.#insert = insert
 
-    if (isHtmlElement(heightItem)) {
-      this.heightItem = heightItem
+    if (isHtmlElementArray(items)) {
+      this.items = items
     }
 
-    if (this.hasAttribute('loop')) {
-      this.loop = true
+    if (isHtmlElement(heightItem)) {
+      this.heightItem = heightItem
     }
 
     /* Delays */
@@ -281,40 +268,69 @@ class Slider extends Tabs {
       this.next.addEventListener('click', this.#nextHandler)
     }
 
+    /* Breakpoints required */
+
+    const { fontSizeMultiplier } = config
+
+    const breakpoints = this.getAttribute('breakpoints')
+    const visible = this.getAttribute('visible')
+
+    if (isStringStrict(breakpoints) && isStringStrict(visible)) {
+      const breakpointsArr = breakpoints.split(',')
+      const visibleArr = visible.split(',')
+      const panelsLen = this.panels.length
+
+      breakpointsArr.forEach((b, i) => {
+        const v = visibleArr[i]
+
+        if (!isStringStrict(v)) {
+          return
+        }
+
+        const low = parseInt(b, 10)
+        const items = parseInt(v, 10)
+
+        if (!isNumber(low) || !isNumber(items)) {
+          return
+        }
+
+        const next = breakpointsArr[i + 1]
+        const high = !isStringStrict(next) ? 99999 : parseInt(next, 10)
+
+        if (!isNumber(high)) {
+          return
+        }
+
+        this.breakpoints.add({
+          low: low * fontSizeMultiplier,
+          high: high * fontSizeMultiplier,
+          items,
+          panels: Math.ceil(panelsLen / items)
+        })
+      })
+    }
+
+    if (this.breakpoints.size === 0) {
+      return false
+    }
+
+    /* Last group */
+
+    this.#endIndex = this.panels.length - 1
+
     /* Current */
 
     let current = this.currentIndex
 
-    /* Clone panels for loop */
-
-    if (this.loop) {
-      this.#loopInitLength = this.panels.length
-
-      const panelsFrag = new DocumentFragment()
-      panelsFrag.append(...this.panels)
-
-      for (let i = 1; i < 3; i += 1) {
-        this.panels.map(panel => {
-          const clone = panel.cloneNode(true) as HTMLElement
-
-          clone.id = `${panel.id}-clone-${i}`
-
-          panelsFrag.append(clone)
-
-          return clone
-        })
-      }
-
-      this.#insert.append(panelsFrag)
-      this.panels = [...this.#insert.children] as HTMLElement[]
-      this.#loopLength = this.panels.length
-
-      current = this.currentIndex + this.#loopInitLength
-    }
-
     /* Dimension properties */
 
     this.#setDimensions()
+
+    /* Cap current */
+
+    if (current > this.#endIndex) {
+      current = this.#endIndex
+    }
 
     /* Activate current */
 
@@ -329,7 +345,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Set offsets, loop width and optional height
+   * Set offsets and optional height
    *
    * @private
    * @return {void}
@@ -346,76 +362,27 @@ class Slider extends Tabs {
     /* Track width and offset */
 
     if (isHtmlElement(this.track)) {
-      this.#loopTrackWidth = this.loop ? this.track.clientWidth : 0
-
       const style = getComputedStyle(this.track)
       const left = style.getPropertyValue('scroll-padding-left')
       const leftNum = parseInt(left)
       this.#offset = isNumber(leftNum) ? leftNum : 0
     }
 
+    /* Shift items to different panels */
+
+    this.#moveGroups()
+
     /* Reset offsets */
 
     this.#leftOffsets = []
-    const endIndex = this.panels.length - 1
 
     this.panels.forEach((panel, i) => {
-      if (!this.loop && i > endIndex) {
+      if (i > this.#endIndex) {
         return
       }
 
       this.#leftOffsets.push(panel.offsetLeft - this.#offset)
     })
-  }
-
-  /**
-   * Filter indexes for loop
-   *
-   * @private
-   * @param {TabsIndexesFilterArgs} args
-   * @param {boolean} [moved=false]
-   * @return {TabsIndexesFilterArgs}
-   */
-  #getLoopIndexes (args: TabsIndexesFilterArgs, moved: boolean = false): TabsIndexesFilterArgs {
-    const { lastIndex, source } = args
-
-    let {
-      currentIndex,
-      lastPanelIndex,
-      panelIndex
-    } = args
-
-    const { rawIndex = currentIndex } = args // Raw index needed for tab keydown
-
-    currentIndex = rawIndex
-    panelIndex = rawIndex
-
-    if (source === 'click') {
-      currentIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
-    }
-
-    lastPanelIndex = lastIndex + (this.#loopInitLength * this.#loopCurrentIndex)
-
-    if (lastIndex === 0) {
-      lastPanelIndex = 0
-    }
-
-    this.#loopCurrentIndex = Math.floor(currentIndex / this.#loopInitLength)
-    currentIndex = currentIndex - (this.#loopInitLength * this.#loopCurrentIndex)
-
-    if (source === 'init' || moved) {
-      this.#loopCurrentIndex = 1
-    }
-
-    panelIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
-
-    return {
-      currentIndex,
-      lastIndex,
-      panelIndex,
-      lastPanelIndex,
-      source
-    }
   }
 
   /**
@@ -425,11 +392,8 @@ class Slider extends Tabs {
    * @return {TabsIndexesFilterArgs}
    */
   #indexes (args: TabsIndexesFilterArgs): TabsIndexesFilterArgs {
-    const {
-      currentIndex,
-      lastIndex,
-      source
-    } = args
+    const { currentIndex, source } = args
+    const isEnd = currentIndex >= this.#endIndex
 
     /* Remove scroll listener */
 
@@ -441,15 +405,15 @@ class Slider extends Tabs {
 
     /* Update prev and next state */
 
-    if (isHtmlElement(this.prev) && isHtmlElement(this.next) && !this.loop) {
+    if (isHtmlElement(this.prev) && isHtmlElement(this.next)) {
       let prevDisabled = false
       let nextDisabled = false
 
-      if (currentIndex === 0) {
+      if (currentIndex <= 0) {
         prevDisabled = true
       }
 
-      if (currentIndex === lastIndex) {
+      if (isEnd) {
         nextDisabled = true
       }
 
@@ -457,24 +421,13 @@ class Slider extends Tabs {
       this.next.disabled = nextDisabled
     }
 
-    /* Not loop exit */
+    /* Update end index */
 
-    if (!this.loop) {
-      return args
+    if (isEnd) {
+      args.currentIndex = this.#endIndex
     }
 
-    /* Loop args */
-
-    args = this.#getLoopIndexes(args)
-
-    const newCurrentIndex = this.#moveLoopEnd(args)
-
-    if (isNumber(newCurrentIndex)) {
-      return this.#getLoopIndexes({
-        ...args,
-        currentIndex: newCurrentIndex
-      }, true)
-    }
+    args.endIndex = this.#endIndex
 
     /* End args */
 
@@ -489,22 +442,10 @@ class Slider extends Tabs {
    * @return {void}
    */
   #deactivate (e: CustomEvent): void {
-    const { panel } = e.detail as TabsEventDetail
+    const { currentIndex } = e.detail as TabsEventDetail
 
-    this.panels.forEach(p => {
-      const fakeInert = p !== panel
-      const focusable = getInnerFocusableItems(p)
-
-      focusable.forEach(f => {
-        (f as HTMLElement).tabIndex = fakeInert ? -1 : 0
-      })
-
-      if (fakeInert) {
-        p.setAttribute('aria-disabled', 'true')
-        p.removeAttribute('tabindex')
-      } else {
-        p.removeAttribute('aria-disabled')
-      }
+    this.panels.forEach((panel, i) => {
+      panel.inert = i !== currentIndex
     })
   }
 
@@ -548,90 +489,91 @@ class Slider extends Tabs {
   }
 
   /**
-   * Move panels if first or last panel visible
+   * Move items to corresponding panels by breakpoint
    *
    * @private
-   * @param {TabsIndexesFilterArgs} args
-   * @return {number|undefined}
+   * @return {void}
    */
-  #moveLoopEnd (args: TabsIndexesFilterArgs): number | undefined {
-    /* Check required elements */
+  #moveGroups (): void {
+    /* Check required */
 
-    if (!isHtmlElement(this.track) || !isHtmlElement(this.#insert)) {
+    if (!isHtmlElement(this.#insert)) {
       return
     }
 
-    /* Args */
+    /* Number of panels and visible items */
 
-    const {
-      currentIndex,
-      panelIndex,
-      lastIndex,
-      source
-    } = args
+    let numberOfPanels = 1
+    let perPanel = 1
 
-    const offsets = this.#leftOffsets
-    const target = offsets[panelIndex]
+    for (const b of this.breakpoints.values()) {
+      const { low, high, items, panels } = b
 
-    /* Target required */
+      if (!isNumber(low) || !isNumber(high) || !isNumber(items) || !isNumber(panels)) {
+        continue
+      }
 
-    if (!isNumber(target)) {
-      return
+      if (this.#viewportWidth >= low && this.#viewportWidth < high) {
+        numberOfPanels = panels
+        perPanel = items
+      }
     }
 
-    /* First and last offsets */
+    this.#endIndex = numberOfPanels - 1
 
-    const startBuffer = offsets[1]
-    const endBuffer = offsets[this.#loopLength - 1]
+    /* Update tabs */
 
-    /* Move elements from end to start */
+    this.tabs.forEach((tab, i) => {
+      const hide = i >= numberOfPanels
+      const panel = this.panels[i]
 
-    let move = false
-    let newIndex: number | undefined
-    let diff = 0
+      tab.style.display = hide ? 'none' : ''
 
-    if (isNumber(startBuffer) && target <= startBuffer) {
-      move = true
-    }
+      if (isHtmlElement(panel)) {
+        panel.style.display = hide ? 'none' : ''
+      }
+    })
 
-    if (isNumber(endBuffer) && target + this.#loopTrackWidth >= endBuffer) {
-      move = true
-    }
+    /* Create fragment and map for new groups */
 
-    if (move) {
-      const panelsFrag = new DocumentFragment()
-      const start = this.#loopLength - this.#loopInitLength
+    const panelsFrag = new DocumentFragment()
+    panelsFrag.append(...this.panels)
 
-      for (let i = start; i < this.#loopLength; i += 1) {
-        const panel = this.panels[i]
+    const panelsLen = this.panels.length
+    const panelsMap: number[][] = Array.from({ length: numberOfPanels }).map((_, i) => {
+      const start = i * perPanel
+      const panel = []
 
-        if (!isHtmlElement(panel)) {
-          continue
+      for (let j = start; j < start + perPanel; j += 1) {
+        if (j < panelsLen) {
+          panel.push(j)
+        }
+      }
+
+      return panel
+    })
+
+    /* Insert panels into new map formation */
+
+    panelsMap.forEach((indices, i) => {
+      const panel = panelsFrag.children[i]
+
+      if (!isHtmlElement(panel)) {
+        return
+      }
+
+      indices.forEach(j => {
+        const item = this.items[j]
+
+        if (!isHtmlElement(item)) {
+          return
         }
 
-        panelsFrag.append(panel)
-      }
+        panel.append(item)
+      })
+    })
 
-      this.#insert.prepend(panelsFrag)
-      this.panels = [...this.#insert.children] as HTMLElement[]
-
-      newIndex = currentIndex + this.#loopInitLength
-      diff = source === 'click' ? lastIndex - currentIndex : 0
-    }
-
-    /* Move track to new index offset */
-
-    if (isNumber(newIndex)) {
-      const left = this.#leftOffsets[newIndex + diff]
-
-      if (isNumber(left)) {
-        this.track.scrollLeft = left
-      }
-    }
-
-    /* New index */
-
-    return newIndex
+    this.#insert.prepend(panelsFrag)
   }
 
   /**
@@ -730,4 +672,4 @@ class Slider extends Tabs {
 
 /* Exports */
 
-export { Slider }
+export { SliderGroup }

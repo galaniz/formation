@@ -31,23 +31,6 @@ $object-fix: fix.get-class-prefix("object");
   --sld-nav-fill: currentcolor;
   --sld-tab-fill: currentcolor;
 
-  &[type="single"] {
-    --sld-spacer-add: (var(--sld-width)) * (var(--sld-items) - 1);
-    --sld-width:
-      var(--sld-item-width) - ((var(--sld-padding) + (var(--sld-gap) * var(--sld-items))) / var(--sld-items));
-  }
-
-  &[type="group"] {
-    --sld-width: 100% - (var(--sld-padding) + var(--sld-gap));
-    --sld-spacer: var(--sld-padding);
-  }
-
-  &[type="flex"] {
-    --sld-item-width: 100% * var(--sld-items);
-    --sld-factor: var(--sld-length) / var(--sld-items);
-    --sld-width: (100% * var(--sld-factor) - (var(--sld-padding) * (var(--sld-factor) * 2)));
-  }
-
   @include breakpoint.breakpoint-min("s") {
     --sld-items: var(--sld-items-s);
   }
@@ -69,6 +52,17 @@ $object-fix: fix.get-class-prefix("object");
   }
 }
 
+.#{$object-fix}slider-single {
+  --sld-spacer-add: (var(--sld-width)) * (var(--sld-items) - 1);
+  --sld-width:
+    var(--sld-item-width) - ((var(--sld-padding) + (var(--sld-gap) * var(--sld-items))) / var(--sld-items));
+}
+
+.#{$object-fix}slider-group {
+  --sld-width: 100% - (var(--sld-padding) + var(--sld-gap));
+  --sld-spacer: var(--sld-padding);
+}
+
 .#{$object-fix}slider-contain {
   @include breakpoint.breakpoint-min("container-no-padding") {
     --sld-spacer: var(--sld-gap);
@@ -79,18 +73,14 @@ $object-fix: fix.get-class-prefix("object");
     padding-left: var(--sld-padding);
     padding-right: var(--sld-padding);
 
-    &[type="single"] {
+    &.#{$object-fix}slider-single {
       --sld-width: var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items));
     }
 
-    &[type="group"] {
+    &.#{$object-fix}slider-group {
       --sld-width: 100%;
       --sld-spacer: 0px;
       --sld-spacer-width: 0px;
-    }
-
-    &[type="flex"] {
-      --sld-width: 100% * var(--sld-factor);
     }
   }
 }
@@ -102,7 +92,7 @@ $object-fix: fix.get-class-prefix("object");
     --sld-track-scroll: 0 0 0 calc(50vw - (var(--#{con.$n}scrollbar-width, 0px) / 2) - (var(--sld-container) / 2));
     --sld-track-padding: 0;
 
-    &[type="single"] {
+    &.#{$object-fix}slider-single {
       --sld-width: var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items));
     }
   }
@@ -132,12 +122,6 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-item {
-  [type="flex"] & {
-    --sld-item-width: (1 / var(--sld-factor)) * var(--sld-item-width);
-
-    scroll-snap-align: start;
-  }
-
   width: calc(var(--sld-item-width));
 }
 

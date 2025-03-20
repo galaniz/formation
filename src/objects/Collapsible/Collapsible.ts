@@ -341,12 +341,6 @@ class Collapsible extends HTMLElement {
       this.style.setProperty('--clp-height', 'auto')
     }, this.duration)
 
-    /* Focus if tap */
-
-    if (open && this.toggle !== document.activeElement && this.#source === 'tap') {
-      this.toggle?.focus() // iOS Safari not focusing on buttons
-    }
-
     /* Emit toggle event */
 
     const onToggle = new CustomEvent('collapsible:toggle')

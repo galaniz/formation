@@ -24,10 +24,16 @@ for await (const entry of glob('src/**/*.json')) {
   const fileName = basename(entry)
   const parentPath = entry.replace(`/__tests__/${fileName}`, '')
   const componentDir = parentPath.replace('src/', '')
-  const componentName = componentDir.split('/').pop()
+
+  let componentName = componentDir.split('/').pop()
+
   const componentStyles = sass.compile(`frm/${componentDir}/${componentName}.scss`, {
     style: 'compressed'
   })
+
+  if (fileName === 'SliderGroup.json') {
+    componentName = 'SliderGroup'
+  }
 
   const data = JSON.parse(json)
   let output = ''

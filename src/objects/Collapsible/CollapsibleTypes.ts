@@ -11,7 +11,7 @@ export type CollapsibleType = 'single' | 'accordion'
  * @typedef {object} CollapsibleActionArgs
  * @prop {boolean} [hoverable]
  * @prop {boolean} [expanded]
- * @prop {CollapsibleTypes} [type]
+ * @prop {CollapsibleType} [type]
  */
 export interface CollapsibleActionArgs {
   hoverable?: boolean

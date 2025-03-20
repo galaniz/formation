@@ -10,32 +10,32 @@ export type TabsDirection = 'horizontal' | 'vertical'
 /**
  * @typedef {object} TabsActivateArgs
  * @prop {number} current
- * @prop {boolean} [focus=true]
+ * @prop {number} [raw]
  * @prop {string} [source='']
  */
 export interface TabsActivateArgs {
   current: number
-  focus?: boolean
+  raw?: number
   source?: string
 }
 
 /**
- * @typedef {object} TabsIndexArgs
+ * @typedef {object} TabsIndexesFilterArgs
+ * @prop {number} [rawIndex]
  * @prop {number} currentIndex
  * @prop {number} lastIndex
  * @prop {number} panelIndex
  * @prop {number} lastPanelIndex
  * @prop {number} endIndex
- * @prop {boolean} focus
  * @prop {string} source
  */
-export interface TabsIndexArgs {
+export interface TabsIndexesFilterArgs {
+  rawIndex?: number
   currentIndex: number
   lastIndex: number
   panelIndex: number
   lastPanelIndex: number
   endIndex?: number
-  focus: boolean
   source: string
 }
 
@@ -50,7 +50,6 @@ export interface TabsIndexArgs {
  * @prop {HTMLElement} lastPanel
  * @prop {HTMLElement} tab
  * @prop {HTMLElement} lastTab
- * @prop {boolean} focus
  * @prop {string} source
  */
 export interface TabsEventDetail {
@@ -63,6 +62,5 @@ export interface TabsEventDetail {
   lastPanel: HTMLElement
   tab: HTMLElement
   lastTab: HTMLElement
-  focus: boolean
   source: string
 }

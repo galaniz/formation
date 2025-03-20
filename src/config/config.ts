@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import type { Config, ConfigFallback } from './configTypes.js'
+import type { Config } from './configTypes.js'
 import { configDefaultFontSize } from './configDefaultFontSize.js'
 
 /**
@@ -15,21 +15,14 @@ import { configDefaultFontSize } from './configDefaultFontSize.js'
 const config: Config = {
   inert: false,
   reduceMotion: false,
-  intersectionObserver: false,
   wellFormed: false,
   flexGap: false,
   defaultFontSize: 16,
   fontSizeMultiplier: 1,
   resizeDelay: 100,
-  scrollDelay: 10
+  scrollDelay: 10,
+  labels: {}
 }
-
-/**
- * Feature fallback functions
- *
- * @type {ConfigFallback}
- */
-const configFallback: ConfigFallback = {}
 
 /**
  * Check attribute/feature support
@@ -82,6 +75,5 @@ const setConfig = (): void => {
 
 export {
   config,
-  configFallback,
   setConfig
 }

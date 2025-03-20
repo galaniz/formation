@@ -3,9 +3,9 @@
  */
 
 /**
- * @typedef {'single'|'group'|'flex'} SliderType
- * 'single' - single item panels
- * 'group' - multi-item panels
- * 'flex' - multi-item panels different widths
+ * @typedef {object} SliderAnimRef
+ * @prop {number} id
  */
-export type SliderType = 'single' | 'group' | 'flex'
+export interface SliderAnimRef {
+  id: number
+}

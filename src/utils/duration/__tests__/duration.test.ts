@@ -17,6 +17,14 @@ describe('getDuration()', () => {
     expect(result).toBe(expectedResult)
   })
 
+  it('should return 0:00 if seconds is not a number', () => {
+    // @ts-expect-error - test invalid seconds
+    const result = getDuration('')
+    const expectedResult = '0:00'
+
+    expect(result).toBe(expectedResult)
+  })
+
   it('should return 0:04 if 4 seconds', () => {
     const result = getDuration(4)
     const expectedResult = '0:04'

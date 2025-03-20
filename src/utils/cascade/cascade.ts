@@ -35,7 +35,7 @@ const requestTimeout = (action: GenericFunction, delay: number): void => {
 
     const elapsed = timestamp - start
 
-    /* Run action when delay is up */
+    /* Run action after delay */
 
     if (elapsed >= delay) {
       action()

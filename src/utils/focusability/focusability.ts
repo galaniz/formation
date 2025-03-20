@@ -4,9 +4,7 @@
 
 /* Imports */
 
-import { config, configFallback } from '../../config/config.js'
 import { isHtmlElement, isHtmlElementArray } from '../html/html.js'
-import { isFunction } from '../function/function.js'
 import { getOuterItems } from '../item/itemOuter.js'
 
 /**
@@ -21,17 +19,11 @@ const toggleFocusability = (on: boolean, items: Element[] = []): boolean | undef
     return
   }
 
-  if (config.inert) {
-    items.forEach(item => {
-      item.inert = !on
-    })
+  items.forEach(item => {
+    item.inert = !on
+  })
 
-    return on
-  }
-
-  if (isFunction(configFallback.toggleFocusability)) {
-    return configFallback.toggleFocusability(on, items)
-  }
+  return on
 }
 
 /**
@@ -98,15 +90,7 @@ const getOuterFocusableItems = (item: Element | null): Element[] => {
     return []
   }
 
-  if (config.inert) {
-    return getOuterItems(item)
-  }
-
-  if (isFunction(configFallback.getOuterFocusableItems)) {
-    return configFallback.getOuterFocusableItems(item)
-  }
-
-  return []
+  return getOuterItems(item)
 }
 
 /* Exports */

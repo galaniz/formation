@@ -1,9 +1,8 @@
 export default /* html */`
-  <frm-slider
+  <frm-slider-group
     id="sld-group"
-    class="slider slider-contain wd-full flex col m-auto"
+    class="slider slider-group slider-contain wd-full flex col m-auto relative"
     role="group"
-    type="group"
     breakpoints="0,600,900,1200"
     visible="1,2,3,4"
     style="
@@ -137,8 +136,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 1"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>
@@ -149,8 +146,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 2"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>
@@ -161,7 +156,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="0"
           aria-selected="true"
           aria-label="Panel 3"
         >
@@ -173,8 +167,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 4"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>
@@ -185,8 +177,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 5"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>
@@ -197,8 +187,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 6"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>
@@ -209,8 +197,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center wd-6 ht-6"
           type="button"
           role="tab"
-          tabindex="-1"
-          aria-selected="false"
           aria-label="Panel 7"
         >
           <span class="slider-dot block b-radius-full b-all wd-3 ht-3"></span>

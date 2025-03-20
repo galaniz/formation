@@ -1,21 +1,21 @@
 /**
- * Objects - Slider Test
+ * Objects - Slider Group Test
  */
 
 /* Imports */
 
-import type { Slider } from '../Slider.js'
+import type { SliderGroup } from '../SliderGroup.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Tests */
 
-test.describe('Slider', () => {
+test.describe('SliderGroup', () => {
   /* Html and coverage */
 
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
-    await page.goto('/spec/objects/Slider/__tests__/Slider.html')
+    await page.goto('/spec/objects/Slider/__tests__/SliderGroup.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
@@ -26,7 +26,7 @@ test.describe('Slider', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
-      const slider: Slider | null = document.querySelector('#sld-empty')
+      const slider: SliderGroup | null = document.querySelector('#sld-group-empty')
       return slider?.init
     })
 
@@ -35,14 +35,13 @@ test.describe('Slider', () => {
 
   test('should initialize if contains required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
-      const sliders: Slider[] = Array.from(document.querySelectorAll('frm-slider'))
+      const sliders: SliderGroup[] = Array.from(document.querySelectorAll('frm-slider-group'))
       return sliders.map(slider => slider.init)
     })
 
     expect(sliderInit).toStrictEqual([
-      false, // #sld-empty
-      false, // #sld-single
-      true   // #sld-loop
+      false, // #sld-group-empty
+      true   // #sld-group
     ])
   })
 })

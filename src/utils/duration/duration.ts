@@ -4,22 +4,22 @@
 
 /* Imports */
 
-import type { DurationLabels } from './durationTypes.js'
+import { isNumber } from '../number/number.js'
+import { config } from '../../config/config.js'
 
 /**
  * Convert seconds to text (time or words)
  *
- * @param {number} seconds
+ * @param {number} [seconds=0]
  * @param {boolean} [words=false]
- * @param {DurationLabels} [labels={}]
  * @return {string}
  */
-const getDuration = (
-  seconds: number,
-  words: boolean = false,
-  labels: DurationLabels = {}
-): string => {
+const getDuration = (seconds: number = 0, words: boolean = false): string => {
   /* Hours and min for formatting */
+
+  if (!isNumber(seconds)) {
+    seconds = 0
+  }
 
   const hours = Math.floor(seconds / 3600)
   const min = Math.floor((seconds - (hours * 3600)) / 60)
@@ -52,7 +52,7 @@ const getDuration = (
     minute: minuteLabel = 'minute',
     seconds: secondsLabel = 'seconds',
     second: secondLabel = 'second'
-  } = labels
+  } = config.labels
 
   if (hours !== 0) {
     t += `${hours} ${hours > 1 ? hoursLabel : hourLabel}${min !== 0 ? ' ' : ''}`

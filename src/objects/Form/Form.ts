@@ -15,6 +15,7 @@ import type {
   FormValues,
   FormValuesFilterArgs,
   FormTemplates,
+  FormTemplateKeys,
   FormClones,
   FormValidateOn,
   FormGroups
@@ -45,7 +46,7 @@ class Form extends HTMLElement {
   groups: FormGroups = new Map()
 
   /**
-   * Validate on submit, blur or both
+   * Validate on submit, change or both
    *
    * @type {FormValidateOn}
    */
@@ -64,6 +65,13 @@ class Form extends HTMLElement {
    * @type {boolean}
    */
   init: boolean = false
+
+  /**
+   * Template types in use
+   *
+   * @type {Set<FormTemplateKeys>}
+   */
+  usedTemplates: Set<FormTemplateKeys> = new Set(['errorInline'])
 
   /**
    * Error, loader and success fragments
@@ -105,19 +113,19 @@ class Form extends HTMLElement {
   #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
-   * Id for blur timeout
+   * Id for change timeout
    *
    * @private
    * @type {number}
    */
-  #blurDelayId: number = 0
+  #changeDelayId: number = 0
 
   /**
    * Bind this to event callbacks
    *
    * @private
    */
-  #blurHandler = this.#blur.bind(this)
+  #changeHandler = this.#change.bind(this)
   #blurSummaryHandler = this.#blurSummary.bind(this)
   #submitHandler = this.submit.bind(this)
 
@@ -160,7 +168,7 @@ class Form extends HTMLElement {
       const { inputs } = group
 
       inputs.forEach(input => {
-        input.removeEventListener('click', this.#blurHandler)
+        input.removeEventListener('change', this.#changeHandler)
       })
     })
 
@@ -178,7 +186,7 @@ class Form extends HTMLElement {
 
     /* Clear timeouts */
 
-    clearTimeout(this.#blurDelayId)
+    clearTimeout(this.#changeDelayId)
   }
 
   /**
@@ -192,22 +200,25 @@ class Form extends HTMLElement {
 
     const form = getItem('form', this)
     const inputs = getItem(['[data-form-input]'], this) as FormInput[]
+    const errorInlineId = this.getAttribute('error-inline')
 
     /* Check required items exist */
 
-    if (!isHtmlElementArray(inputs) || !isHtmlElement(form, HTMLFormElement)) {
+    if (!isHtmlElementArray(inputs) || !isHtmlElement(form, HTMLFormElement) || !isStringStrict(errorInlineId)) {
       return false
     }
 
     /* Error inline template required */
 
-    const errorInline = getTemplateItem(this.getAttribute('error-inline') ?? '')
+    if (!Form.templates.has('errorInline')) {
+      const errorInline = getTemplateItem(errorInlineId)
 
-    if (!isHtmlElement(errorInline)) {
-      return false
+      if (!isHtmlElement(errorInline)) {
+        return false
+      }
+
+      Form.templates.set('errorInline', errorInline)
     }
-
-    Form.templates.set('errorInline', errorInline)
 
     /* Error summary template */
 
@@ -215,6 +226,7 @@ class Form extends HTMLElement {
 
     if (isHtmlElement(errorSummary)) {
       Form.templates.set('errorSummary', errorSummary)
+      this.usedTemplates.add('errorSummary')
     }
 
     /* Validate on */
@@ -225,132 +237,14 @@ class Form extends HTMLElement {
       this.validateOn = validateOn as FormValidateOn
     }
 
-    const addBlur = this.validateOn !== 'submit'
-
     /* Create groups */
 
-    let init = false
-
     for (const input of inputs) {
-      /* Name and id (error list) required */
+      this.appendInput(input)
+    }
 
-      const name = input.name
-      const id = input.id
-
-      if (!isStringStrict(name) || !isStringStrict(id)) {
-        continue
-      }
-
-      /* Type */
-
-      let type = input.tagName.toLowerCase()
-
-      if (type === 'input') {
-        type = input.type
-      }
-
-      /* Group data */
-
-      const group = this.groups.get(name)
-      const groupExists = group != null
-
-      if (addBlur && groupExists) {
-        input.addEventListener('blur', this.#blurHandler)
-      }
-
-      if (groupExists) {
-        group.inputs.push(input)
-        group.type.push(type)
-        continue
-      }
-
-      /* Field required */
-
-      const field = input.closest('[data-form-field]')
-
-      if (!isHtmlElement(field)) {
-        continue
-      }
-
-      /* Fieldset check */
-
-      const fieldset = input.closest('fieldset')
-      const hasFieldset = isHtmlElement(fieldset)
-      const fieldsetRequired = hasFieldset ? fieldset.hasAttribute('data-form-required') : false
-
-      /* Required */
-
-      const required = input.required || input.ariaRequired === 'true' || fieldsetRequired
-
-      /* Legend */
-
-      const legend = fieldset?.querySelector('legend')
-      const hasLegend = isHtmlElement(legend)
-      const legendId = legend?.id
-
-      if (fieldsetRequired && !isStringStrict(legendId)) { // Legend id required for error list
-        continue
-      }
-
-      if (hasLegend) {
-        const legendText = getItem('[data-form-legend-text]', legend)
-
-        if (isStringStrict(legendText)) {
-          this.#legends.set(name, legendText)
-        }
-      }
-
-      /* Label */
-
-      const label = field.querySelector('label')
-      const hasLabel = isHtmlElement(label)
-
-      if (hasLabel) {
-        const labelText = getItem('[data-form-label-text]', label)
-
-        if (isStringStrict(labelText)) {
-          this.#labels.set(name, labelText)
-        }
-      }
-
-      /* Group label required */
-
-      const groupLabel = fieldsetRequired ? legend : label
-      const groupLabelType = fieldsetRequired ? 'legend' : 'label'
-
-      if (!groupLabel) {
-        continue
-      }
-
-      /* Empty and invalid messages */
-
-      const emptyMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formEmpty
-      const invalidMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formInvalid
-
-      /* Group data */
-
-      this.groups.set(name, {
-        field,
-        inputs: [input],
-        label: groupLabel,
-        labelType: groupLabelType,
-        required,
-        type: [type],
-        values: [],
-        valid: false,
-        emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
-        invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
-      })
-
-      /* Blur to validate after submit */
-
-      if (addBlur) {
-        input.addEventListener('blur', this.#blurHandler)
-      }
-
-      /* Input processed */
-
-      init = true
+    if (this.groups.size === 0) {
+      return false
     }
 
     /* Form */
@@ -360,7 +254,7 @@ class Form extends HTMLElement {
 
     /* Init successful */
 
-    return init
+    return true
   }
 
   /**
@@ -658,7 +552,7 @@ class Form extends HTMLElement {
 
     const errorSummary = this.#clones.get('errorSummary')
 
-    if (errorSummary != null) {
+    if (errorSummary != null || !this.usedTemplates.has('errorSummary')) {
       return
     }
 
@@ -694,7 +588,7 @@ class Form extends HTMLElement {
   #displayErrorSummary (display: boolean, focus: boolean = false): void {
     const errorSummary = this.#clones.get('errorSummary')
 
-    if (!isHtmlElement(errorSummary)) {
+    if (!isHtmlElement(errorSummary) || !this.usedTemplates.has('errorSummary')) {
       return
     }
 
@@ -754,16 +648,16 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Blur handler on input element
+   * Change handler on input element
    *
    * @private
    * @param {Event} e
    * @return {void}
    */
-  #blur (e: Event): void {
+  #change (e: Event): void {
     /* Clear timeout */
 
-    clearTimeout(this.#blurDelayId)
+    clearTimeout(this.#changeDelayId)
 
     /* Check validation onset */
 
@@ -784,7 +678,7 @@ class Form extends HTMLElement {
 
     /* Delay for correct active element */
 
-    this.#blurDelayId = window.setTimeout(() => {
+    this.#changeDelayId = window.setTimeout(() => {
       /* Validate group */
 
       this.#validateGroup(group, name)
@@ -857,6 +751,138 @@ class Form extends HTMLElement {
 
     this.submitted = true
     this.validate()
+  }
+
+  /**
+   * Add input to groups
+   *
+   * @param {FormInput} input
+   * @return {boolean}
+   */
+  appendInput (input: FormInput): boolean {
+    /* Name and id (error list) required */
+
+    const name = input.name
+    const id = input.id
+
+    if (!isStringStrict(name) || !isStringStrict(id)) {
+      return false
+    }
+
+    /* Type */
+
+    let type = input.tagName.toLowerCase()
+
+    if (type === 'input') {
+      type = input.type
+    }
+
+    /* Change */
+
+    const addChange = this.validateOn !== 'submit'
+
+    /* Group data */
+
+    const group = this.groups.get(name)
+    const groupExists = group != null
+
+    if (addChange && groupExists) {
+      input.addEventListener('change', this.#changeHandler)
+    }
+
+    if (groupExists) {
+      group.inputs.push(input)
+      group.type.push(type)
+      return true
+    }
+
+    /* Field required */
+
+    const field = input.closest('[data-form-field]')
+
+    if (!isHtmlElement(field)) {
+      return false
+    }
+
+    /* Fieldset check */
+
+    const fieldset = input.closest('fieldset')
+    const hasFieldset = isHtmlElement(fieldset)
+    const fieldsetRequired = hasFieldset ? fieldset.hasAttribute('data-form-required') : false
+
+    /* Required */
+
+    const required = input.required || input.ariaRequired === 'true' || fieldsetRequired
+
+    /* Legend */
+
+    const legend = fieldset?.querySelector('legend')
+    const hasLegend = isHtmlElement(legend)
+    const legendId = legend?.id
+
+    if (fieldsetRequired && !isStringStrict(legendId)) { // Legend id required for error list
+      return false
+    }
+
+    if (hasLegend) {
+      const legendText = getItem('[data-form-legend-text]', legend)
+
+      if (isStringStrict(legendText)) {
+        this.#legends.set(name, legendText)
+      }
+    }
+
+    /* Label */
+
+    const label = field.querySelector('label')
+    const hasLabel = isHtmlElement(label)
+
+    if (hasLabel) {
+      const labelText = getItem('[data-form-label-text]', label)
+
+      if (isStringStrict(labelText)) {
+        this.#labels.set(name, labelText)
+      }
+    }
+
+    /* Group label required */
+
+    const groupLabel = fieldsetRequired ? legend : label
+    const groupLabelType = fieldsetRequired ? 'legend' : 'label'
+
+    if (!groupLabel) {
+      return false
+    }
+
+    /* Empty and invalid messages */
+
+    const emptyMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formEmpty
+    const invalidMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formInvalid
+
+    /* Group data */
+
+    this.groups.set(name, {
+      field,
+      inputs: [input],
+      label: groupLabel,
+      labelType: groupLabelType,
+      required,
+      type: [type],
+      values: [],
+      valid: false,
+      emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
+      invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
+    })
+
+    /* Change to validate after submit */
+
+    if (addChange) {
+      input.addEventListener('change', this.#changeHandler)
+    }
+
+    /* Successfully added */
+
+    return true
   }
 
   /**

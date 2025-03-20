@@ -2,51 +2,64 @@
  * Config - Types
  */
 
+/* Imports */
+
+import type { Generic } from '../global/globalTypes.js'
+
 /**
  * @typedef {object} Config
  * @prop {boolean} inert
  * @prop {boolean} reduceMotion
- * @prop {boolean} intersectionObserver
  * @prop {boolean} wellFormed
  * @prop {boolean} flexGap
  * @prop {number} defaultFontSize
  * @prop {number} fontSizeMultiplier
  * @prop {number} resizeDelay
  * @prop {number} scrollDelay
+ * @prop {ConfigLabels} labels
  */
 export interface Config {
   inert: boolean
   reduceMotion: boolean
-  intersectionObserver: boolean
   wellFormed: boolean
   flexGap: boolean
   defaultFontSize: number
   fontSizeMultiplier: number
   resizeDelay: number
   scrollDelay: number
+  labels: ConfigLabels
 }
 
 /**
- * @typedef {function} ConfigFallbackToggleFocusability
- * @param {boolean} on
- * @param {Element[]} items
- * @return {boolean|undefined}
+ * @typedef {object} ConfigLabels
+ * @prop {string} [hours=hours]
+ * @prop {string} [hour=hour]
+ * @prop {string} [minutes=minutes]
+ * @prop {string} [minute=minute]
+ * @prop {string} [seconds=seconds]
+ * @prop {string} [second=second]
+ * @prop {string} [play=Play]
+ * @prop {string} [pause=Pause]
+ * @prop {string} [mute=Mute]
+ * @prop {string} [unmute=Unmute]
+ * @prop {string} [volume=Volume]
+ * @prop {string} [fullscreen=Fullscreen]
+ * @prop {string} [exitFullscreen=Exit Fullscreen]
+ * @prop {string} [of=of]
  */
-export type ConfigFallbackToggleFocusability = (on: boolean, items: Element[]) => boolean | undefined
-
-/**
- * @typedef {function} ConfigFallbackGetOuterFocusableItems
- * @param {Element|null} item
- * @return {Element[]}
- */
-export type ConfigFallbackGetOuterFocusableItems = (item: Element | null) => Element[]
-
-/**
- * @typedef {object} ConfigFallback
- * @prop {ConfigFallbackToggleFocusability} [toggleFocusability]
- * @prop {ConfigFallbackGetOuterFocusableItems} [getOuterFocusableItems]
- */
-export interface ConfigFallback {
-  toggleFocusability?: ConfigFallbackToggleFocusability
-  getOuterFocusableItems?: ConfigFallbackGetOuterFocusableItems
+export interface ConfigLabels extends Generic {
+  hours?: string
+  hour?: string
+  minutes?: string
+  minute?: string
+  seconds?: string
+  second?: string
+  play?: string
+  pause?: string
+  mute?: string
+  unmute?: string
+  volume?: string
+  fullscreen?: string
+  exitFullscreen?: string
+  of?: string
 }
