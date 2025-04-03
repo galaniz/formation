@@ -53,8 +53,8 @@ for await (const entry of glob('src/**/*.json')) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>${componentName?.replace(/([A-Z])/g, ' $1').trim()} Test</title>
         <style>
-          ${globalStyles.css != null ? globalStyles.css : ''}
-          ${componentStyles.css != null ? componentStyles.css : ''}
+          ${globalStyles.css || ''}
+          ${componentStyles.css || ''}
         </style>
       </head>
       <body>

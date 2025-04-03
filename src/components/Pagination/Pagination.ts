@@ -144,13 +144,13 @@ class Pagination extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const ellipsis = getTemplateItem(this.getAttribute('ellipsis') ?? '')
-    const prevLink = getTemplateItem(this.getAttribute('prev-link') ?? '')
-    const prevText = getTemplateItem(this.getAttribute('prev-text') ?? '')
-    const nextLink = getTemplateItem(this.getAttribute('next-link') ?? '')
-    const nextText = getTemplateItem(this.getAttribute('next-text') ?? '')
-    const current = getTemplateItem(this.getAttribute('current') ?? '')
-    const item = getTemplateItem(this.getAttribute('item') ?? '')
+    const ellipsis = getTemplateItem(this.getAttribute('ellipsis') || '')
+    const prevLink = getTemplateItem(this.getAttribute('prev-link') || '')
+    const prevText = getTemplateItem(this.getAttribute('prev-text') || '')
+    const nextLink = getTemplateItem(this.getAttribute('next-link') || '')
+    const nextText = getTemplateItem(this.getAttribute('next-text') || '')
+    const current = getTemplateItem(this.getAttribute('current') || '')
+    const item = getTemplateItem(this.getAttribute('item') || '')
     const list = getItem('[data-pag-list]', this)
     const form = getItem('[data-pag-form]', this)
     const filters = getItem(['[data-pag-filter]'], this)

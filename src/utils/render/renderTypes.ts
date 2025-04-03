@@ -31,8 +31,8 @@ export interface RenderElementArgs {
 }
 
 /**
- * @typedef RenderItems
- * @type {Generic}
+ * @typedef {object} RenderItems
+ * @extends {Generic}
  * @prop {string} renderType
  * @prop {string|RenderItems[]} [content]
  */
@@ -46,7 +46,7 @@ export interface RenderItems extends Generic {
  * @prop {RenderItems} args
  */
 export interface RenderParents {
-  args: RenderItems & Generic
+  args: RenderItems
 }
 
 /**

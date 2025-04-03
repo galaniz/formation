@@ -41,14 +41,13 @@ const setConfig = (): void => {
 
   /* Inert */
 
-  let test: HTMLDivElement | null = document.createElement('div')
+  const test = document.createElement('div')
 
   if ('inert' in test) {
     config.inert = true
   }
 
   test.remove()
-  test = null
 
   /* Reduce motion */
 

@@ -345,7 +345,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Set offsets and optional height
+   * Offsets and optional height
    *
    * @private
    * @return {void}

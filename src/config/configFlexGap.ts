@@ -7,14 +7,14 @@
 import { config } from './config.js'
 
 /**
- * Check browser flex box support
+ * Browser flexbox gap support
  *
  * @see {@link https://ishadeed.com/article/flexbox-gap/|Source}
  *
  * @return {void}
  */
 const configFlexGap = (): void => {
-  let flex: HTMLDivElement | null = document.createElement('div')
+  const flex = document.createElement('div')
 
   flex.style.display = 'flex'
   flex.style.flexDirection = 'column'
@@ -32,7 +32,6 @@ const configFlexGap = (): void => {
   }
 
   flex.remove()
-  flex = null
 }
 
 /* Exports */

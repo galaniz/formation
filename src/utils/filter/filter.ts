@@ -32,11 +32,7 @@ const addFilter = (name: string, filter: GenericFunction): boolean => {
     filters.set(name, new Set())
   }
 
-  const filterSet = filters.get(name)
-
-  if (isSet(filterSet)) {
-    filterSet.add(filter)
-  }
+  filters.get(name)?.add(filter)
 
   return true
 }

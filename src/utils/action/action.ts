@@ -36,11 +36,7 @@ const addAction = (name: string, action: GenericFunction): boolean => {
     actions.set(name, new Set())
   }
 
-  const actionSet = actions.get(name)
-
-  if (isSet(actionSet)) {
-    actionSet.add(action)
-  }
+  actions.get(name)?.add(action)
 
   return true
 }

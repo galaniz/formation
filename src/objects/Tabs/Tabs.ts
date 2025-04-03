@@ -385,7 +385,7 @@ class Tabs extends HTMLElement {
       return fallback
     }
 
-    const index = parseInt(target.dataset.tabIndex ?? '', 10)
+    const index = parseInt(target.dataset.tabIndex || '', 10)
 
     if (!isNumber(index)) {
       return fallback

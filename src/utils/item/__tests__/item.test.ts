@@ -5,10 +5,10 @@
 /* Imports */
 
 import { it, expect, describe } from 'vitest'
-import { getItem, getItems } from '../item.js'
+import { getItem, getItems, getTemplateItem, cloneItem } from '../item.js'
 
 /**
- * @typedef {object} TestHtmlObj
+ * @typedef {object} TestHtml
  * @prop {HTMLElement} nav
  * @prop {HTMLElement} main
  * @prop {HTMLElement} footer
@@ -18,8 +18,9 @@ import { getItem, getItems } from '../item.js'
  * @prop {HTMLElement} list
  * @prop {HTMLElement[]} items
  * @prop {HTMLElement[]} footerItems
+ * @prop {HTMLElement} template
  */
-interface TestHtmlObj {
+interface TestHtml {
   nav: HTMLElement
   main: HTMLElement
   footer: HTMLElement
@@ -30,14 +31,15 @@ interface TestHtmlObj {
   items: HTMLElement[]
   footerItems: HTMLElement[]
   linkItems: HTMLElement[]
+  template: HTMLElement
 }
 
 /**
  * Html elements
  *
- * @return {TestHtmlObj}
+ * @return {TestHtml}
  */
-const testHtml = (): TestHtmlObj => {
+const testHtml = (): TestHtml => {
   const nav = document.createElement('nav')
   const list = document.createElement('ul')
   const itemOne = document.createElement('li')
@@ -54,6 +56,9 @@ const testHtml = (): TestHtmlObj => {
   const linkOne = document.createElement('a')
   const linkTwo = document.createElement('a')
   const linkThree = document.createElement('a')
+  const templateOne = document.createElement('template')
+  const templateTwo = document.createElement('template')
+  const template = document.createElement('div')
   const body = document.body
   const className = 'test-class'
 
@@ -63,6 +68,10 @@ const testHtml = (): TestHtmlObj => {
   divFour.className = className
   divFive.className = className
   divSix.className = className
+
+  templateOne.id = 'template-one'
+  templateTwo.id = 'template-two'
+  template.id = 'template'
 
   itemOne.append(linkOne)
   itemTwo.append(linkTwo)
@@ -77,11 +86,14 @@ const testHtml = (): TestHtmlObj => {
   footer.append(divFour)
   footer.append(divFive)
   footer.append(divSix)
+  templateTwo.append(template)
 
   body.innerHTML = ''
   body.append(nav)
   body.append(main)
   body.append(footer)
+  body.append(templateOne)
+  body.append(templateTwo)
 
   return {
     nav,
@@ -109,7 +121,8 @@ const testHtml = (): TestHtmlObj => {
       linkOne,
       linkTwo,
       linkThree
-    ]
+    ],
+    template
   }
 }
 
@@ -326,5 +339,56 @@ describe('getItems()', () => {
     }
 
     expect(result).toEqual(expectedResult)
+  })
+})
+
+/* Test getTemplateItem */
+
+describe('getTemplateItem()', () => {
+  it('should return undefined if template item does not exist', () => {
+    const result = getTemplateItem('does-not-exist')
+    const expectedResult = undefined
+
+    expect(result).toEqual(expectedResult)
+  })
+
+  it('should return null if first element does not exist', () => {
+    testHtml()
+
+    const result = getTemplateItem('template-one')
+    const expectedResult = null
+
+    expect(result).toEqual(expectedResult)
+  })
+
+  it('should return first element from template', () => {
+    const { template } = testHtml()
+
+    const result = getTemplateItem('template-two')
+    const expectedResult = template
+
+    expect(result).toEqual(expectedResult)
+  })
+})
+
+/* Test cloneItem */
+
+describe('cloneItem()', () => {
+  it('should return undefined if item is null', () => {
+    const result = cloneItem(null)
+    const expectedResult = undefined
+
+    expect(result).toEqual(expectedResult)
+  })
+
+  it('should return cloned item', () => {
+    const { template } = testHtml()
+
+    const result = cloneItem(template)
+    const expectedId = template.id
+    const expectedTag = template.tagName
+
+    expect(result?.id).toEqual(expectedId)
+    expect(result?.tagName).toEqual(expectedTag)
   })
 })

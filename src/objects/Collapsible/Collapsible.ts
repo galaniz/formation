@@ -314,7 +314,7 @@ class Collapsible extends HTMLElement {
       return
     }
 
-    /* Get height */
+    /* Height */
 
     let height = 'auto'
 

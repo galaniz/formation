@@ -329,7 +329,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Set offsets, loop width and optional height
+   * Offsets, loop width and optional height
    *
    * @private
    * @return {void}

@@ -1,5 +1,5 @@
 /**
- * Objects - Lazy
+ * Effects - Reveal
  */
 
 /* Imports */
@@ -10,9 +10,9 @@ import { getItem } from '../../utils/item/item.js'
 import { assetLoaded } from '../../utils/asset/asset.js'
 
 /**
- * Handles loaded state of asset
+ * Handles reveal based on loaded state of asset
  */
-class Lazy extends HTMLElement {
+class Reveal extends HTMLElement {
   /**
    * Load success
    *
@@ -45,7 +45,7 @@ class Lazy extends HTMLElement {
   async #load (): Promise<boolean> {
     /* Items */
 
-    const asset = getItem('[data-lazy]', this)
+    const asset = getItem('[data-reveal]', this)
 
     if (!isHtmlElement(asset)) {
       return false
@@ -56,9 +56,9 @@ class Lazy extends HTMLElement {
     try {
       await assetLoaded(asset as Asset)
 
-      asset.dataset.lazy = 'loaded'
+      asset.dataset.reveal = 'loaded'
     } catch {
-      asset.dataset.lazy = 'error'
+      asset.dataset.reveal = 'error'
 
       return false
     }
@@ -71,4 +71,4 @@ class Lazy extends HTMLElement {
 
 /* Exports */
 
-export { Lazy }
+export { Reveal }

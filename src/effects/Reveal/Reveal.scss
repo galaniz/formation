@@ -1,5 +1,5 @@
 /**
- * Objects - Lazy Load Styles
+ * Effects - Reveal Styles
  */
 
 /* Imports */
@@ -13,14 +13,13 @@ $object-fix: fix.get-class-prefix("object");
 
 /* Styles */
 
-.#{$object-fix}lazy {
+.#{$object-fix}reveal {
   --#{con.$n}duration: 200ms;
-  --lz-op: 0;
+  --rv-op: 0;
 
-  opacity: var(--lz-op);
+  opacity: var(--rv-op);
 
-  &[data-lazy="loaded"],
-  &[data-lazy="error"] {
-    --lz-op: 1;
+  &[data-reveal="loaded"] {
+    --rv-op: 1;
   }
 }

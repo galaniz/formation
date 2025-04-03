@@ -7,14 +7,14 @@
 import { isString, isStringStrict } from '../string/string.js'
 
 /**
- * Set browser cookie
+ * Add browser cookie
  *
  * @param {string} name
  * @param {string} value
  * @param {number} [expirationDays=0]
  * @return {boolean}
  */
-const setCookie = (name: string, value: string, expirationDays = 0): boolean => {
+const setCookie = (name: string, value: string, expirationDays: number = 0): boolean => {
   if (!isStringStrict(name) || !isStringStrict(value)) {
     return false
   }
@@ -35,7 +35,7 @@ const setCookie = (name: string, value: string, expirationDays = 0): boolean => 
 }
 
 /**
- * Get browser cookie
+ * Retrieve browser cookie
  *
  * @param {string} name
  * @return {string}

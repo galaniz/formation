@@ -33,7 +33,7 @@ const testClearCookies = (): void => {
     const cookieArr = cookie.split('=')
     const [n] = cookieArr
 
-    if (n == null) {
+    if (!n) {
       continue
     }
 

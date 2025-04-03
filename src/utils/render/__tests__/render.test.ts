@@ -382,7 +382,7 @@ describe('render()', () => {
       testItemsDataOne
     )
 
-    const result = html == null ? '' : testMinify(html.outerHTML)
+    const result = !html ? '' : testMinify(html.outerHTML)
     const compare = document.createElement('ul')
     compare.role = 'list'
     compare.innerHTML = `
@@ -421,7 +421,7 @@ describe('render()', () => {
       testItemsDataTwo
     )
 
-    const result = html == null ? '' : testMinify(html.outerHTML)
+    const result = !html ? '' : testMinify(html.outerHTML)
     const compare = document.createElement('ul')
     compare.role = 'list'
     compare.innerHTML = `

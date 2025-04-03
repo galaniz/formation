@@ -13,7 +13,7 @@ export default /* html */`
       --sld-gap-l: var(--frm-6);
     "
   >
-    <div class="slider-main overflow-hidden relative">
+    <div class="slider-body overflow-hidden relative">
       <div
         class="slider-track overflow-x-auto overflow-y-hidden"
         data-slider-track

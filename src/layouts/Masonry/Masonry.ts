@@ -177,7 +177,7 @@ class Masonry extends HTMLElement {
 
     onResize(this.#resizeHandler)
 
-    /* Set layout */
+    /* Layout */
 
     this.#set()
 

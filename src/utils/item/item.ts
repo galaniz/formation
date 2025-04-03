@@ -138,21 +138,21 @@ const getItems = <T>(
  * First element from content template
  *
  * @param {string} id
- * @return {HTMLElement|null}
+ * @return {HTMLElement|null|undefined}
  */
-const getTemplateItem = <T extends HTMLElement>(id: string): T | null => { // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
+const getTemplateItem = <T extends HTMLElement>(id: string): T | null |undefined => { // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
   const template = document.getElementById(id) as HTMLTemplateElement | null
 
-  return template?.content.firstElementChild as T | null
+  return template?.content.firstElementChild as T
 }
 
 /**
  * Clone element and check type
  *
  * @param {HTMLElement|null|undefined} item
- * @return {HTMLElement|null}
+ * @return {HTMLElement|null|undefined}
  */
-const cloneItem = <T extends HTMLElement>(item: T | null | undefined): T | null => {
+const cloneItem = <T extends HTMLElement>(item: T | null | undefined): T | null | undefined => {
   return item?.cloneNode(true) as T
 }
 

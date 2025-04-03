@@ -222,7 +222,7 @@ class Form extends HTMLElement {
 
     /* Error summary template */
 
-    const errorSummary = getTemplateItem(this.getAttribute('error-summary') ?? '')
+    const errorSummary = getTemplateItem(this.getAttribute('error-summary') || '')
 
     if (isHtmlElement(errorSummary)) {
       Form.templates.set('errorSummary', errorSummary)
@@ -386,7 +386,7 @@ class Form extends HTMLElement {
       const existing = this.#errorList.get(errorId)
       const existingItem = existing?.item
       const existingMessage = existing?.message
-      const changed = existingItem != null && existingMessage === message
+      const changed = existingItem && existingMessage === message
 
       this.#errorList.set(errorId, {
         message: isStringStrict(message) ? message : '',
@@ -416,7 +416,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Set field error message
+   * Field error message
    *
    * @private
    * @param {HTMLElement} field
@@ -552,7 +552,7 @@ class Form extends HTMLElement {
 
     const errorSummary = this.#clones.get('errorSummary')
 
-    if (errorSummary != null || !this.usedTemplates.has('errorSummary')) {
+    if (errorSummary || !this.usedTemplates.has('errorSummary')) {
       return
     }
 
@@ -629,7 +629,7 @@ class Form extends HTMLElement {
         focusItem = document.activeElement as HTMLElement
       }
 
-      if (currentItem == null) {
+      if (!currentItem) {
         currentItem = document.createElement('li')
         currentItem.innerHTML = `<a href="#${id}">${message}</a>`
       }
@@ -642,7 +642,7 @@ class Form extends HTMLElement {
     errorList.innerHTML = ''
     errorList.append(frag)
 
-    if (focusItem != null) {
+    if (focusItem) {
       focusItem.focus()
     }
   }
@@ -672,7 +672,7 @@ class Form extends HTMLElement {
     const name = (e.currentTarget as HTMLInputElement).name
     const group = this.groups.get(name)
 
-    if (group == null) {
+    if (!group) {
       return
     }
 
@@ -723,7 +723,7 @@ class Form extends HTMLElement {
 
       const focusInErrorSummary = this.#clones.get('errorSummary')?.contains(document.activeElement)
 
-      if (focusInErrorSummary && prevFocusItem != null) {
+      if (focusInErrorSummary && prevFocusItem) {
         prevFocusItem.focus()
       }
     }, 10)
@@ -775,6 +775,23 @@ class Form extends HTMLElement {
 
     if (type === 'input') {
       type = input.type
+    }
+
+    if (type === 'hidden') {
+      this.groups.set(name, {
+        field: input,
+        inputs: [input],
+        label: input,
+        labelType: 'label',
+        required: false,
+        type: [type],
+        values: [],
+        valid: true,
+        emptyMessage: '',
+        invalidMessage: ''
+      })
+
+      return true
     }
 
     /* Change */

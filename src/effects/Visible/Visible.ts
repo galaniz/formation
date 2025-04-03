@@ -116,7 +116,7 @@ class Visible extends HTMLElement {
 
     /* End element */
 
-    const end = document.getElementById(this.getAttribute('end') ?? '')
+    const end = document.getElementById(this.getAttribute('end') || '')
 
     if (isHtmlElement(end)) {
       this.#end = end
@@ -153,7 +153,7 @@ class Visible extends HTMLElement {
     nextMap.forEach((item, id) => {
       const visibleItem = this.items.get(id)
 
-      if (visibleItem != null) {
+      if (visibleItem) {
         visibleItem.next = item
       }
     })
@@ -167,7 +167,7 @@ class Visible extends HTMLElement {
     /* Offset */
 
     const offset = this.getAttribute('offset')
-    const offsetNum = parseInt(offset ?? '', 10)
+    const offsetNum = parseInt(offset || '0', 10)
 
     if (isNumber(offsetNum)) {
       this.offset = offsetNum
@@ -189,7 +189,7 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Get and set top and bottom offsets
+   * Top and bottom offsets
    *
    * @private
    * @return {void}
@@ -204,7 +204,7 @@ class Visible extends HTMLElement {
       const top = rect.top + scrollY
       let bottom = rect.bottom + scrollY
 
-      if (next != null) {
+      if (next) {
         bottom = next.getBoundingClientRect().top + scrollY
       }
 
