@@ -243,7 +243,7 @@ class Form extends HTMLElement {
       this.appendInput(input)
     }
 
-    if (this.groups.size === 0) {
+    if (!this.groups.size) {
       return false
     }
 
@@ -326,7 +326,7 @@ class Form extends HTMLElement {
 
     /* No values */
 
-    if (values.length === 0) {
+    if (!values.length) {
       message = isStringStrict(emptyMessage) ? emptyMessage : 'Required'
       valid = required ? false : true
     }
@@ -607,7 +607,7 @@ class Form extends HTMLElement {
    * @return {void}
    */
   #setErrorList (): void {
-    if (this.#errorList.size === 0) {
+    if (!this.#errorList.size) {
       this.#displayErrorSummary(false)
     }
 
@@ -940,7 +940,7 @@ class Form extends HTMLElement {
 
       let newValues: string | string[] = values
 
-      if (valuesLen === 0) {
+      if (!valuesLen) {
         newValues = ''
       }
 

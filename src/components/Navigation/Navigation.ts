@@ -420,7 +420,7 @@ class Navigation extends HTMLElement {
 
     /* No items in modal */
 
-    if (this.#modalGroups.size === 0) {
+    if (!this.#modalGroups.size) {
       return
     }
 

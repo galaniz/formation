@@ -160,7 +160,7 @@ class Visible extends HTMLElement {
 
     nextMap.clear()
 
-    if (this.items.size === 0) {
+    if (!this.items.size) {
       return false
     }
 

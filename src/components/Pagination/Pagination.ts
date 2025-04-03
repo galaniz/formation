@@ -174,7 +174,7 @@ class Pagination extends HTMLElement {
 
     /* Templates */
 
-    if (Pagination.templates.size === 0) {
+    if (!Pagination.templates.size) {
       Pagination.templates = new Map([
         ['prev-link', prevLink],
         ['prev-text', prevText],

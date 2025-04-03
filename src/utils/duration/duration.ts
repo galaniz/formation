@@ -33,11 +33,11 @@ const getDuration = (seconds: number = 0, words: boolean = false): string => {
   /* Time format */
 
   if (!words) {
-    if (hours !== 0) {
+    if (hours > 0) {
       t += `${hours < 10 && hours > 0 ? '0' : ''}${hours}:`
     }
 
-    t += `${hours !== 0 && min < 10 ? '0' : ''}${min}:`
+    t += `${hours > 0 && min < 10 ? '0' : ''}${min}:`
     t += `${seconds < 10 ? '0' : ''}${seconds}`
 
     return t
@@ -54,15 +54,15 @@ const getDuration = (seconds: number = 0, words: boolean = false): string => {
     second: secondLabel = 'second'
   } = config.labels
 
-  if (hours !== 0) {
-    t += `${hours} ${hours > 1 ? hoursLabel : hourLabel}${min !== 0 ? ' ' : ''}`
+  if (hours > 0) {
+    t += `${hours} ${hours > 1 ? hoursLabel : hourLabel}${min > 0 ? ' ' : ''}`
   }
 
-  if (min !== 0) {
-    t += `${min} ${min > 1 ? minutesLabel : minuteLabel}${seconds !== 0 ? ' ' : ''}`
+  if (min > 0) {
+    t += `${min} ${min > 1 ? minutesLabel : minuteLabel}${seconds > 0 ? ' ' : ''}`
   }
 
-  if (seconds !== 0) {
+  if (seconds > 0) {
     t += `${seconds} ${seconds > 1 ? secondsLabel : secondLabel}`
   }
 

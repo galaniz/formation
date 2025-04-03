@@ -164,7 +164,7 @@ class Masonry extends HTMLElement {
       })
     }
 
-    if (this.breakpoints.size === 0) {
+    if (!this.breakpoints.size) {
       return false
     }
 

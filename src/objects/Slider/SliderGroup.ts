@@ -310,7 +310,7 @@ class SliderGroup extends Tabs {
       })
     }
 
-    if (this.breakpoints.size === 0) {
+    if (!this.breakpoints.size) {
       return false
     }
 
