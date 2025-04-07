@@ -12,12 +12,12 @@ export type Item<T> = T extends string[] ? Element[] : T extends string ? Elemen
  */
 
 /**
- * @typedef {Object<string|number|symbol, ItemElem|ItemsObj>} ItemsObj
+ * @typedef {Object<string|number|symbol, ItemElem|ItemsRes>} ItemsRes
  */
-export type ItemsObj = Record<string | number | symbol, Element | null | object>
+export type ItemsRes = Record<string | number | symbol, Element | null | object>
 
 /**
- * @typedef {ItemsObj|ItemsObj[]} Items
+ * @typedef {ItemsRes|ItemsRes[]} Items
  */
 export type Items<T> =
   T extends object ? {

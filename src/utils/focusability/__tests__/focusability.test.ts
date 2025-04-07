@@ -13,14 +13,14 @@ import {
 } from '../focusability.js'
 
 /**
- * @typedef {object} TestHtmlObj
+ * @typedef {object} TestHtml
  * @prop {HTMLElement[]} focusable
  * @prop {HTMLElement[]} nonFocusable
  * @prop {HTMLElement[]} inner
  * @prop {HTMLElement[]} outer
  * @prop {HTMLElement} item
  */
-interface TestHtmlObj {
+interface TestHtml {
   focusable: HTMLElement[]
   nonFocusable: HTMLElement[]
   inner: HTMLElement[]
@@ -31,9 +31,9 @@ interface TestHtmlObj {
 /**
  * Create elements and group by type
  *
- * @return {TestHtmlObj}
+ * @return {TestHtml}
  */
-const testHtml = (): TestHtmlObj => {
+const testHtml = (): TestHtml => {
   const nav = document.createElement('nav')
   const link = document.createElement('a')
   const main = document.createElement('main')

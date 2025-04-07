@@ -4,7 +4,7 @@
 
 /* Imports */
 
-import type { Items, ItemsObj, Items0, Item } from './itemTypes.js'
+import type { Items, ItemsRes, Items0, Item } from './itemTypes.js'
 import { getObjectKeys } from '../object/objectKeys.js'
 import { isObject, isObjectStrict } from '../object/object.js'
 import { isArray, isArrayStrict } from '../array/array.js'
@@ -98,7 +98,7 @@ const getItems = <T>(
   /* Object entry */
 
   if (isObjectStrict(items)) {
-    const newItems: ItemsObj = {}
+    const newItems: ItemsRes = {}
 
     getObjectKeys(items).forEach(prop => {
       const item = items[prop]

@@ -8,14 +8,14 @@ import { it, expect, describe } from 'vitest'
 import { getOuterItems } from '../itemOuter.js'
 
 /**
- * @typedef {object} TestItemsObj
+ * @typedef {object} TestItems
  * @prop {HTMLElement[]} all
  * @prop {HTMLElement[]} filtered
  * @prop {HTMLElement[]} prev
  * @prop {HTMLElement[]} next
  * @prop {HTMLElement} item
  */
-interface TestItemsObj {
+interface TestItems {
   all: HTMLElement[]
   filtered: HTMLElement[]
   prev: HTMLElement[]
@@ -27,9 +27,9 @@ interface TestItemsObj {
  * Create elements and group by type
  *
  * @param {boolean} [single]
- * @return {TestItemsObj}
+ * @return {TestItems}
  */
-const testItems = (single = false): TestItemsObj => {
+const testItems = (single = false): TestItems => {
   const container = document.createElement('div')
   const head = document.createElement('head')
   const style = document.createElement('style')
