@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "5.1.0-beta.15",
+  "version": "5.1.0-beta.16",
   "description": "A collection of front end web components and utilities",
   "main": "./lib/config/config.js",
   "packageManager": "pnpm@10.6.3",
