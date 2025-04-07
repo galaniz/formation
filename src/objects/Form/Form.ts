@@ -937,10 +937,11 @@ class Form extends HTMLElement {
       const legend = this.#legends.get(name)
       const label = this.#labels.get(name)
       const single = valuesLen === 1
+      const empty = !valuesLen
 
       let newValues: string | string[] = values
 
-      if (!valuesLen) {
+      if (empty) {
         newValues = ''
       }
 
@@ -950,7 +951,7 @@ class Form extends HTMLElement {
 
       const formObj: FormValue = {
         value: newValues,
-        type: single ? type[0] as string : type
+        type: single || empty ? type[0] as string : type
       }
 
       if (legend) {
