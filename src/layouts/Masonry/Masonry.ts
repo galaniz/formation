@@ -65,7 +65,7 @@ class Masonry extends HTMLElement {
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init - each time added to DOM
+   * Init after added to DOM
    */
   connectedCallback (): void {
     if (this.init) {
@@ -76,7 +76,7 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Clean up - each time removed from DOM
+   * Clean up after removed from DOM
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -102,7 +102,7 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Initialize - check required items and set properties
+   * Init check required items and set properties
    *
    * @private
    * @return {boolean}

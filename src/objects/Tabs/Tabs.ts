@@ -107,7 +107,7 @@ class Tabs extends HTMLElement {
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init - each time added to DOM
+   * Init after added to DOM
    */
   connectedCallback (): void {
     if (this.init) {
@@ -118,7 +118,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Clean up - each time removed from DOM
+   * Clean up after removed from DOM
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -151,7 +151,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Initialize - check required items exist and activate
+   * Init check required items exist and activate
    *
    * @private
    * @return {boolean}

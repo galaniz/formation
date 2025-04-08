@@ -62,6 +62,13 @@ class Slider extends Tabs {
   loop: boolean = false
 
   /**
+   * Initialize success
+   *
+   * @type {boolean}
+   */
+  subInit: boolean = false
+
+  /**
    * Panels parent element
    *
    * @private
@@ -161,7 +168,7 @@ class Slider extends Tabs {
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init - each time added to DOM
+   * Init after added to DOM
    */
   override connectedCallback (): void {
     /* Inherit */
@@ -180,26 +187,26 @@ class Slider extends Tabs {
 
     /* Initialize */
 
-    this.init = this.#initialize()
+    this.subInit = this.#initialize()
   }
 
   /**
-   * Clean up - each time removed from DOM
+   * Clean up after removed from DOM
    */
   override async disconnectedCallback (): Promise<void> {
+    /* Inherit */
+
+    await super.disconnectedCallback()
+
     /* Wait a tick to let DOM update */
 
     await Promise.resolve()
 
     /* Skip if moved */
 
-    if (this.isConnected || !this.init) {
+    if (this.isConnected || !this.subInit) {
       return
     }
-
-    /* Inherit */
-
-    await super.disconnectedCallback()
 
     /* Remove event listeners */
 
@@ -232,7 +239,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Initialize - check required items, set variables and activate
+   * Init check required items, set variables and activate
    *
    * @private
    * @return {boolean}

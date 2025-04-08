@@ -26,7 +26,7 @@ class Reveal extends HTMLElement {
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init - each time added to DOM
+   * Init after added to DOM
    */
   async connectedCallback (): Promise<void> {
     if (this.loaded) {
@@ -37,7 +37,7 @@ class Reveal extends HTMLElement {
   }
 
   /**
-   * Initialize - check required items and listen for load
+   * Init check required items and listen for load
    *
    * @private
    * @return {boolean}
