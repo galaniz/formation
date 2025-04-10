@@ -93,7 +93,7 @@ class Masonry extends HTMLElement {
 
     removeResize(this.#resizeHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.items = []
     this.breakpoints.clear()

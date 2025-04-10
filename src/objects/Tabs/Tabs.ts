@@ -139,7 +139,7 @@ class Tabs extends HTMLElement {
       tab.removeEventListener('keyup', this.#keyUpHandler)
     })
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.tabs = []
     this.panels = []

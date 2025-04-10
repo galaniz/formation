@@ -130,7 +130,7 @@ class Modal extends HTMLElement {
 
     removeEscape(this.#escapeHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.opens = []
     this.closes = []

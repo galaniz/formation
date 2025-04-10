@@ -82,7 +82,7 @@ class Media extends HTMLElement {
       return
     }
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.init = false
   }

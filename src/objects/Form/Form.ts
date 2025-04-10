@@ -161,7 +161,7 @@ class Form extends HTMLElement {
 
     /* Remove event listeners */
 
-    this.form?.removeEventListener('submit', this.#submitHandler)
+    this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
     this.#clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
 
     this.groups.forEach(group => {
@@ -172,7 +172,7 @@ class Form extends HTMLElement {
       })
     })
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.form = null
     this.groups.clear()
@@ -220,14 +220,27 @@ class Form extends HTMLElement {
       Form.templates.set('errorInline', errorInline)
     }
 
-    /* Error summary template */
+    /* Optional templates */
 
-    const errorSummary = getTemplateItem(this.getAttribute('error-summary') || '')
+    const optionalTemplates: FormTemplateKeys[] = ['errorSummary', 'error', 'success', 'loader']
 
-    if (isHtmlElement(errorSummary)) {
-      Form.templates.set('errorSummary', errorSummary)
-      this.usedTemplates.add('errorSummary')
-    }
+    optionalTemplates.forEach(tmpl => {
+      const tmplId = this.getAttribute(tmpl === 'errorSummary' ? 'error-summary' : tmpl)
+      
+      if (!isStringStrict(tmplId)) {
+        return
+      }
+
+      this.usedTemplates.add(tmpl)
+
+      if (!Form.templates.has(tmpl)) {
+        const tmplItem = getTemplateItem(tmplId)
+
+        if (isHtmlElement(tmplItem)) {
+          Form.templates.set(tmpl, tmplItem)
+        }
+      }
+    })
 
     /* Validate on */
 
@@ -250,7 +263,7 @@ class Form extends HTMLElement {
     /* Form */
 
     this.form = form
-    this.form.addEventListener('submit', this.#submitHandler)
+    this.form.addEventListener('submit', this.#submitHandler as EventListener)
 
     /* Init successful */
 
@@ -552,7 +565,7 @@ class Form extends HTMLElement {
 
     const errorSummary = this.#clones.get('errorSummary')
 
-    if (errorSummary || !this.usedTemplates.has('errorSummary')) {
+    if (!errorSummary || !this.usedTemplates.has('errorSummary')) {
       return
     }
 
@@ -744,9 +757,9 @@ class Form extends HTMLElement {
    * Submit handler on form element
    *
    * @param {SubmitEvent} e
-   * @return {void}
+   * @return {Promise<void>|void}
    */
-  submit (e: SubmitEvent): void {
+  submit (e: SubmitEvent): Promise<void> | void {
     e.preventDefault()
 
     this.submitted = true

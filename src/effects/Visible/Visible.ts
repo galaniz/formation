@@ -93,7 +93,7 @@ class Visible extends HTMLElement {
     removeResize(this.#resizeHandler)
     removeScroll(this.#scrollHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.init = false
     this.items.clear()

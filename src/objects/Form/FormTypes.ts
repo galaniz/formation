@@ -2,6 +2,10 @@
  * Objects - Form Types
  */
 
+/* Imports */
+
+import type { Generic } from '../../global/globalTypes.js'
+
 /**
  * @typedef {'blur'|'submit'|'both'} FormValidateOn
  */
@@ -81,12 +85,13 @@ export type FormGroups = Map<string, FormGroup>
 
 /**
  * @typedef {object} FormValue
- * @prop {string|boolean|number} value
+ * @extends {Generic}
+ * @prop {string|boolean|number|string[]|number[]} value
  * @prop {string|string[]} type
  * @prop {string} [label]
  * @prop {string} [legend]
  */
-export interface FormValue {
+export interface FormValue extends Generic {
   value: string | boolean | number | string[] | number[]
   type: string | string[]
   label?: string

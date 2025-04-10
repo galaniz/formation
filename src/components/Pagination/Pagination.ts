@@ -128,7 +128,7 @@ class Pagination extends HTMLElement {
     this.list?.removeEventListener('click', this.#clickHandler)
     this.form?.removeEventListener('submit', this.#submitHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.list = null
     this.form = null

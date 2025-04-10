@@ -224,7 +224,7 @@ class Slider extends Tabs {
 
     removeFilter(`tabs:indexes:${this.id}`, this.#indexesHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.track = null
     this.heightItem = null

@@ -163,7 +163,7 @@ class Collapsible extends HTMLElement {
     this.removeEventListener('keydown', this.#keyHandler)
     this.#setHover(false)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.toggle = null
     this.panel = null

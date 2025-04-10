@@ -221,7 +221,7 @@ class Navigation extends HTMLElement {
     removeResize(this.#resizeHandler)
     removeEscape(this.#escapeHandler)
 
-    /* Empty/nullify props */
+    /* Empty props */
 
     this.slots.clear()
     this.items = []
