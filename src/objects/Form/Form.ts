@@ -81,6 +81,13 @@ class Form extends HTMLElement {
   static templates: FormTemplates = new Map()
 
   /**
+   * Clones of templates
+   *
+   * @type {FormClones}
+   */
+  clones: FormClones = new Map()
+
+  /**
    * Labels by input name
    *
    * @private
@@ -95,14 +102,6 @@ class Form extends HTMLElement {
    * @type {Map<string, string>}
    */
   #legends: Map<string, string> = new Map()
-
-  /**
-   * Clones of templates
-   *
-   * @private
-   * @type {FormClones}
-   */
-  #clones: FormClones = new Map()
 
   /**
    * Error list item ids, messages and elements
@@ -162,7 +161,7 @@ class Form extends HTMLElement {
     /* Remove event listeners */
 
     this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
-    this.#clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
+    this.clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
 
     this.groups.forEach(group => {
       const { inputs } = group
@@ -179,9 +178,9 @@ class Form extends HTMLElement {
     this.init = false
     this.submitted = false
     Form.templates.clear()
+    this.clones.clear()
     this.#labels.clear()
     this.#legends.clear()
-    this.#clones.clear()
     this.#errorList.clear()
 
     /* Clear timeouts */
@@ -406,9 +405,7 @@ class Form extends HTMLElement {
         item: existingItem, changed
       })
 
-      /* Create error summary */
-
-      this.#setErrorSummary()
+      this.getClone('errorSummary')
     } else {
       this.#removeErrorMessage(field, inputs, name, label)
       this.#errorList.delete(errorId)
@@ -555,42 +552,6 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Create error summary
-   *
-   * @private
-   * @return {void}
-   */
-  #setErrorSummary (): void {
-    /* Check if exists */
-
-    const errorSummary = this.#clones.get('errorSummary')
-
-    if (!errorSummary || !this.usedTemplates.has('errorSummary')) {
-      return
-    }
-
-    /* Clone summary template */
-
-    const clone = cloneItem(Form.templates.get('errorSummary'))
-
-    if (!isHtmlElement(clone)) {
-      return
-    }
-
-    this.prepend(clone)
-    this.#clones.set('errorSummary', clone)
-    clone.addEventListener('blur', this.#blurSummaryHandler)
-
-    /* Error list */
-
-    const errorList = getItem('ul', clone)
-
-    if (isHtmlElement(errorList, HTMLUListElement)) {
-      this.#clones.set('errorList', errorList)
-    }
-  }
-
-  /**
    * Handle error summary element display and focus
    *
    * @private
@@ -599,9 +560,9 @@ class Form extends HTMLElement {
    * @return {void}
    */
   #displayErrorSummary (display: boolean, focus: boolean = false): void {
-    const errorSummary = this.#clones.get('errorSummary')
+    const errorSummary = this.getClone('errorSummary')
 
-    if (!isHtmlElement(errorSummary) || !this.usedTemplates.has('errorSummary')) {
+    if (!errorSummary) {
       return
     }
 
@@ -624,7 +585,7 @@ class Form extends HTMLElement {
       this.#displayErrorSummary(false)
     }
 
-    const errorList = this.#clones.get('errorList')
+    const errorList = this.clones.get('errorList')
 
     if (!isHtmlElement(errorList, HTMLUListElement)) {
       return
@@ -734,7 +695,7 @@ class Form extends HTMLElement {
         }
       )
 
-      const focusInErrorSummary = this.#clones.get('errorSummary')?.contains(document.activeElement)
+      const focusInErrorSummary = this.clones.get('errorSummary')?.contains(document.activeElement)
 
       if (focusInErrorSummary && prevFocusItem) {
         prevFocusItem.focus()
@@ -764,6 +725,60 @@ class Form extends HTMLElement {
 
     this.submitted = true
     this.validate()
+  }
+
+  /**
+   * Clone and return template element if used
+   *
+   * @param {FormTemplateKeys} type
+   * @param {HTMLElement|null} [appendTo]
+   * @return {HTMLElement|null}
+   */
+  getClone (type: FormTemplateKeys, appendTo?: HTMLElement | null): HTMLElement | null {
+    /* Check if exists */
+
+    if (!this.usedTemplates.has(type)) {
+      return null
+    }
+
+    const result = this.clones.get(type)
+
+    if (isHtmlElement(result)) {
+      return result
+    }
+
+    /* Clone template */
+
+    const clone = cloneItem(Form.templates.get(type))
+
+    if (!isHtmlElement(clone)) {
+      return null
+    }
+
+    this.clones.set(type, clone)
+
+    /* Append to element */
+
+    if (isHtmlElement(appendTo)) {
+      appendTo.append(clone)
+    }
+
+    /* Error summary and list */
+
+    if (type === 'errorSummary') {
+      this.form?.prepend(clone)
+      clone.addEventListener('blur', this.#blurSummaryHandler)
+
+      const errorList = getItem('ul', clone)
+
+      if (isHtmlElement(errorList, HTMLUListElement)) {
+        this.clones.set('errorList', errorList)
+      }
+    }
+
+    /* Return clone */
+
+    return clone
   }
 
   /**
