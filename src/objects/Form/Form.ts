@@ -158,7 +158,7 @@ class Form extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
     this.clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)

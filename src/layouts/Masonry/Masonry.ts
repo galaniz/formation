@@ -89,7 +89,7 @@ class Masonry extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     removeResize(this.#resizeHandler)
 

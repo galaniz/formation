@@ -192,7 +192,7 @@ class SliderGroup extends Tabs {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.removeEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
     this.removeEventListener('tabs:activate', this.#activateHandler as EventListener)

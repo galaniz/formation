@@ -88,7 +88,7 @@ class Visible extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     removeResize(this.#resizeHandler)
     removeScroll(this.#scrollHandler)

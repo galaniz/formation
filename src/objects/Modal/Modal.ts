@@ -118,7 +118,7 @@ class Modal extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.opens.forEach(open => {
       open.removeEventListener('click', this.#openHandler)

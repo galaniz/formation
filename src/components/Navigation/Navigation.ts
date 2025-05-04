@@ -210,7 +210,7 @@ class Navigation extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.opens?.removeEventListener('click', this.#openHandler)
 

@@ -123,7 +123,7 @@ class Pagination extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.list?.removeEventListener('click', this.#clickHandler)
     this.form?.removeEventListener('submit', this.#submitHandler)

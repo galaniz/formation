@@ -157,7 +157,7 @@ class Collapsible extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.toggle?.removeEventListener('click', this.#clickHandler)
     this.removeEventListener('keydown', this.#keyHandler)

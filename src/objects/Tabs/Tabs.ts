@@ -131,7 +131,7 @@ class Tabs extends HTMLElement {
       return
     }
 
-    /* Remove event listeners */
+    /* Clear event listeners */
 
     this.tabs.forEach(tab => {
       tab.removeEventListener('click', this.#clickHandler)
