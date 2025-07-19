@@ -11,7 +11,7 @@ import { isFunction } from '../function/function.js'
 import { isNumber } from '../number/number.js'
 
 /**
- * More precise set timeout with requestAnimationFrame
+ * More precise set timeout with requestAnimationFrame.
  *
  * @private
  * @param {GenericFunction} action
@@ -53,7 +53,7 @@ const requestTimeout = (action: GenericFunction, delay: number): void => {
 }
 
 /**
- * Sequentially and recursively call and delay functions
+ * Sequentially and recursively call and delay functions.
  *
  * @param {CascadeEvent[]} events
  * @param {number} [repeat=0]

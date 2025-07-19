@@ -11,7 +11,7 @@ import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 /* Tests */
 
 test.describe('Form', () => {
-  /* Html and coverage */
+  /* Test page and coverage */
 
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)

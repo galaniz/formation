@@ -7,7 +7,7 @@
 import { isHtmlElement } from '../html/html.js'
 
 /**
- * Toggle display and focus of loader
+ * Toggle display and focus of loader.
  *
  * @param {Element|null} loader
  * @param {boolean} show

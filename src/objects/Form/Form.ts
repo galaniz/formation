@@ -28,67 +28,67 @@ import { cloneItem, getItem, getTemplateItem } from '../../utils/item/item.js'
 import { applyFilters } from '../../utils/filter/filter.js'
 
 /**
- * Handles form validation and retrieval of values
+ * Handles form validation and retrieval of values.
  */
 class Form extends HTMLElement {
   /**
-   * Form element
+   * Form element.
    *
    * @type {HTMLFormElement|null}
    */
   form: HTMLFormElement | null = null
 
   /**
-   * Data (state, values, inputs...) by input name
+   * Data (state, values, inputs...) by input name.
    *
    * @type {FormGroups}
    */
   groups: FormGroups = new Map()
 
   /**
-   * Validate on submit, change or both
+   * Validate on submit, change or both.
    *
    * @type {FormValidateOn}
    */
   validateOn: FormValidateOn = 'both'
 
   /**
-   * Track submit state
+   * Track submit state.
    *
    * @type {boolean}
    */
   submitted: boolean = false
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Template types in use
+   * Template types in use.
    *
    * @type {Set<FormTemplateKeys>}
    */
   usedTemplates: Set<FormTemplateKeys> = new Set(['errorInline'])
 
   /**
-   * Error, loader and success fragments
+   * Error, loader and success fragments.
    *
    * @type {FormTemplates}
    */
   static templates: FormTemplates = new Map()
 
   /**
-   * Clones of templates
+   * Clones of templates.
    *
    * @type {FormClones}
    */
   clones: FormClones = new Map()
 
   /**
-   * Labels by input name
+   * Labels by input name.
    *
    * @private
    * @type {Map<string, string>}
@@ -96,7 +96,7 @@ class Form extends HTMLElement {
   #labels: Map<string, string> = new Map()
 
   /**
-   * Legends by input name
+   * Legends by input name.
    *
    * @private
    * @type {Map<string, string>}
@@ -104,7 +104,7 @@ class Form extends HTMLElement {
   #legends: Map<string, string> = new Map()
 
   /**
-   * Error list item ids, messages and elements
+   * Error list item ids, messages and elements.
    *
    * @private
    * @type {Map<string, FormErrorListItem>}
@@ -112,7 +112,7 @@ class Form extends HTMLElement {
   #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
-   * Id for change timeout
+   * Id for change timeout.
    *
    * @private
    * @type {number}
@@ -120,7 +120,7 @@ class Form extends HTMLElement {
   #changeDelayId: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -129,12 +129,12 @@ class Form extends HTMLElement {
   #submitHandler = this.submit.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -145,7 +145,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -189,7 +189,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -270,7 +270,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Validate inputs
+   * Validate inputs.
    *
    * @private
    * @param {FormInput[]} inputs
@@ -352,7 +352,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Validate input group
+   * Validate input group.
    *
    * @private
    * @param {FormGroup} group
@@ -426,7 +426,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Field error message
+   * Field error message.
    *
    * @private
    * @param {HTMLElement} field
@@ -493,7 +493,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Remove field error message
+   * Remove field error message.
    *
    * @private
    * @param {HTMLElement} field
@@ -532,7 +532,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clear error messages and hide error summary
+   * Clear error messages and hide error summary.
    *
    * @private
    * @return {void}
@@ -552,7 +552,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Handle error summary element display and focus
+   * Handle error summary element display and focus.
    *
    * @private
    * @param {boolean} display
@@ -575,7 +575,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Create/update error list items
+   * Create/update error list items.
    *
    * @private
    * @return {void}
@@ -622,7 +622,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Change handler on input element
+   * Change handler on input element.
    *
    * @private
    * @param {Event} e
@@ -704,7 +704,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Blur handler on error summary element
+   * Blur handler on error summary element.
    *
    * @private
    * @param {Event} e
@@ -715,7 +715,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Submit handler on form element
+   * Submit handler on form element.
    *
    * @param {SubmitEvent} e
    * @return {Promise<void>|void}
@@ -728,7 +728,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clone and return template element if used
+   * Clone and return template element if used.
    *
    * @param {FormTemplateKeys} type
    * @param {HTMLElement|null} [appendTo]
@@ -782,7 +782,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Add input to groups
+   * Add input to groups.
    *
    * @param {FormInput} input
    * @return {boolean}
@@ -931,7 +931,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Validate form
+   * Validate form.
    *
    * @return {boolean}
    */
@@ -952,7 +952,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Retrieve form values
+   * Retrieve form values.
    *
    * @return {FormValues}
    */
@@ -1001,7 +1001,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clear form values and error messages
+   * Clear form values and error messages.
    *
    * @return {void}
    */

@@ -7,58 +7,58 @@
 import type { MediaTemplates } from './MediaTypes.js'
 
 /**
- * Handles
+ * Handles...
  */
 class Media extends HTMLElement {
   /**
-   * Media element
+   * Media element.
    *
    * @type {HTMLMediaElement | null}
    */
   media: HTMLMediaElement | null = null
 
   /**
-   * Type of media
+   * Type of media.
    *
    * @type {'audio'|'video'}
    */
   type: 'audio' | 'video' = 'video'
 
   /**
-   * Url of file to load
+   * URL of file to load.
    *
    * @type {string}
    */
   url: string = ''
 
   /**
-   * Play state
+   * Play state.
    *
    * @type {boolean}
    */
   playing: boolean = false
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Loader, error and source fragments
+   * Loader, error and source fragments.
    *
    * @type {MediaTemplates}
    */
   static templates: MediaTemplates = new Map()
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -69,7 +69,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -88,7 +88,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}

@@ -10,14 +10,14 @@ import { isStringStrict } from '../string/string.js'
 import { isFunction } from '../function/function.js'
 
 /**
- * Filter callbacks by name
+ * Filter callbacks by name.
  *
  * @type {Map<string, Set<GenericFunction>>}
  */
 const filters: Map<string, Set<GenericFunction>> = new Map()
 
 /**
- * Add filter to filters map
+ * Add filter to filters map.
  *
  * @param {string} name
  * @param {GenericFunction} filter
@@ -38,7 +38,7 @@ const addFilter = (name: string, filter: GenericFunction): boolean => {
 }
 
 /**
- * Remove filter from filters map
+ * Remove filter from filters map.
  *
  * @param {string} name
  * @param {GenericFunction} filter
@@ -59,7 +59,7 @@ const removeFilter = (name: string, filter: GenericFunction): boolean => {
 }
 
 /**
- * Update value from callback return values
+ * Update value from callback return values.
  *
  * @param {string} name
  * @param {*} value

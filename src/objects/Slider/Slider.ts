@@ -6,6 +6,7 @@
 
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
+import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
 import { Tabs } from '../Tabs/Tabs.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement } from '../../utils/html/html.js'
@@ -16,60 +17,53 @@ import { addFilter, removeFilter } from '../../utils/filter/filter.js'
 import { sliderScrollTo } from './sliderUtils.js'
 
 /**
- * Handles scroll based slider with single item panels
+ * Handles scroll based slider with single item panels.
  */
 class Slider extends Tabs {
   /**
-   * Scrollable container element
+   * Scrollable container element.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Target height element
-   *
-   * @type {HTMLElement|null}
-   */
-  heightItem: HTMLElement | null = null
-
-  /**
-   * Previous navigation button element
+   * Previous navigation button element.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element
+   * Next navigation button element.
    *
    * @type {HTMLButtonElement|null}
    */
   next: HTMLButtonElement | null = null
 
   /**
-   * Transition duration on scroll (tab or button click)
+   * Transition duration on scroll (tab or button click).
    *
    * @type {number}
    */
   duration: number = 500
 
   /**
-   * Repeat panels to the left and right
+   * Repeat panels to the left and right.
    *
    * @type {boolean}
    */
   loop: boolean = false
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   subInit: boolean = false
 
   /**
-   * Panels parent element
+   * Panels parent element.
    *
    * @private
    * @type {HTMLElement|null}
@@ -77,7 +71,7 @@ class Slider extends Tabs {
   #insert: HTMLElement | null = null
 
   /**
-   * Scroll to animation id
+   * Scroll to animation id.
    *
    * @private
    * @type {SliderAnimRef}
@@ -85,7 +79,7 @@ class Slider extends Tabs {
   #animRef: SliderAnimRef = { id: 0 }
 
   /**
-   * Scroll listener timeout id
+   * Scroll listener timeout id.
    *
    * @private
    * @type {number}
@@ -93,7 +87,7 @@ class Slider extends Tabs {
   #scrollId: number = 0
 
   /**
-   * Left panel offsets to scroll to
+   * Left panel offsets to scroll to.
    *
    * @private
    * @type {number[]}
@@ -101,23 +95,7 @@ class Slider extends Tabs {
   #leftOffsets: number[] = []
 
   /**
-   * Account for track scroll padding
-   *
-   * @private
-   * @type {number}
-   */
-  #offset: number = 0
-
-  /**
-   * Viewport width to check breakpoint(s)
-   *
-   * @private
-   * @type {number}
-   */
-  #viewportWidth: number = window.innerWidth
-
-  /**
-   * Visible current tab index in loop
+   * Visible current tab index in loop.
    *
    * @private
    * @type {number}
@@ -125,7 +103,7 @@ class Slider extends Tabs {
   #loopCurrentIndex: number = 0
 
   /**
-   * Track element width
+   * Track element width.
    *
    * @private
    * @type {number}
@@ -133,7 +111,7 @@ class Slider extends Tabs {
   #loopTrackWidth: number = 0
 
   /**
-   * Initial number of panels in loop
+   * Initial number of panels in loop.
    *
    * @private
    * @type {number}
@@ -141,7 +119,7 @@ class Slider extends Tabs {
   #loopInitLength: number = 0
 
   /**
-   * Number of panels in loop including cloned panels
+   * Number of panels in loop including cloned panels.
    *
    * @private
    * @type {number}
@@ -149,7 +127,7 @@ class Slider extends Tabs {
   #loopLength: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -163,12 +141,12 @@ class Slider extends Tabs {
   #resizeHandler = this.#resize.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   override connectedCallback (): void {
     /* Inherit */
@@ -191,7 +169,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   override async disconnectedCallback (): Promise<void> {
     /* Inherit */
@@ -227,7 +205,6 @@ class Slider extends Tabs {
     /* Empty props */
 
     this.track = null
-    this.heightItem = null
     this.prev = null
     this.next = null
     this.#insert = null
@@ -239,7 +216,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Init check required items, set variables and activate
+   * Init check required items, set variables and activate.
    *
    * @private
    * @return {boolean}
@@ -248,7 +225,6 @@ class Slider extends Tabs {
     /* Items */
 
     const track = getItem('[data-slider-track]', this)
-    const heightItem = getItem('[data-slider-height]', this)
     const prev = getItem('[data-slider-prev]', this)
     const next = getItem('[data-slider-next]', this)
     const [firstPanel] = this.panels
@@ -264,10 +240,6 @@ class Slider extends Tabs {
 
     this.track = track
     this.#insert = insert
-
-    if (isHtmlElement(heightItem)) {
-      this.heightItem = heightItem
-    }
 
     if (this.hasAttribute('loop')) {
       this.loop = true
@@ -336,29 +308,23 @@ class Slider extends Tabs {
   }
 
   /**
-   * Offsets, loop width and optional height
+   * Offsets, loop and viewport width.
    *
    * @private
    * @return {void}
    */
   #setDimensions (): void {
-    /* Update height */
-
-    if (isHtmlElement(this.heightItem)) {
-      const height = Math.ceil(this.heightItem.clientHeight)
-
-      this.style.setProperty('--sld-height', `${height}px`)
-    }
-
     /* Track width and offset */
+
+    let offset = 0
 
     if (isHtmlElement(this.track)) {
       this.#loopTrackWidth = this.loop ? this.track.clientWidth : 0
 
-      const style = getComputedStyle(this.track)
-      const left = style.getPropertyValue('scroll-padding-left')
-      const leftNum = parseInt(left)
-      this.#offset = isNumber(leftNum) ? leftNum : 0
+      const left = getComputedStyle(this.track).getPropertyValue('scroll-padding-left')
+      const leftNum = parseInt(left, 10)
+
+      offset = isNumber(leftNum) ? leftNum : 0
     }
 
     /* Reset offsets */
@@ -371,12 +337,12 @@ class Slider extends Tabs {
         return
       }
 
-      this.#leftOffsets.push(panel.offsetLeft - this.#offset)
+      this.#leftOffsets.push(panel.offsetLeft - offset)
     })
   }
 
   /**
-   * Filter indexes for loop
+   * Filter indexes for loop.
    *
    * @private
    * @param {TabsIndexesFilterArgs} args
@@ -426,7 +392,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Filter indexes, update track scroll listener and button states
+   * Filter indexes, update track scroll listener and button states.
    *
    * @param {TabsIndexesFilterArgs} args
    * @return {TabsIndexesFilterArgs}
@@ -489,7 +455,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Tabs deactivate handler - manage panel focus
+   * Tabs deactivate handler manages panel focus.
    *
    * @private
    * @param {CustomEvent} e
@@ -516,7 +482,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Tabs activate handler - move panels (click, init or resize)
+   * Tabs activate handler moves panels (click, init or resize).
    *
    * @private
    * @param {CustomEvent} e
@@ -538,7 +504,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Tabs activated handler - add scroll listener after panel activation
+   * Tabs activated handler adds scroll listener after panel activation.
    *
    * @private
    * @param {CustomEvent} e
@@ -555,7 +521,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Move panels if first or last panel visible
+   * Move panels if first or last panel visible.
    *
    * @private
    * @param {TabsIndexesFilterArgs} args
@@ -642,7 +608,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Click handler on prev button to display previous panel
+   * Click handler on prev button to display previous panel.
    *
    * @private
    * @return {void}
@@ -655,7 +621,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Click handler on next button to display next panel
+   * Click handler on next button to display next panel.
    *
    * @private
    * @return {void}
@@ -668,7 +634,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Scroll handler on track element
+   * Scroll handler on track element.
    *
    * @private
    * @return {void}
@@ -714,19 +680,19 @@ class Slider extends Tabs {
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
+   * @param {ResizeActionArgs} args
    * @return {void}
    */
-  #resize (): void {
-    const viewportWidth = window.innerWidth
+  #resize (args: ResizeActionArgs): void {
+    const [oldViewportWidth, newViewportWidth] = args
 
-    if (viewportWidth === this.#viewportWidth) {
+    if (oldViewportWidth === newViewportWidth) {
       return
     }
 
-    this.#viewportWidth = viewportWidth
     this.#setDimensions()
     this.activate({
       current: this.currentIndex,

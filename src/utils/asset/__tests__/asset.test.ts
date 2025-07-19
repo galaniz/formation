@@ -24,7 +24,7 @@ interface TestItems {
 }
 
 /**
- * Asset(s)
+ * Asset(s).
  *
  * @return {TestItems}
  */
@@ -49,7 +49,7 @@ const testAssets = (): TestItems => {
 }
 
 /**
- * Load asset(s)
+ * Load asset(s).
  *
  * @param {Asset[]} items
  * @param {string[]} types

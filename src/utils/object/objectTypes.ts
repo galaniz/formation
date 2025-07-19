@@ -21,7 +21,7 @@ export type ObjectRecurseCallback = (prop: string | number | symbol, value: unkn
 /**
  * @typedef {function} ObjectRecurse
  * @param {object} value
- * @param {ObjectRecurseCondition} condition - Return boolean
+ * @param {ObjectRecurseCondition} condition
  * @param {ObjectRecurseCallback} [callback]
  * @return {void}
  */

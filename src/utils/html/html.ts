@@ -7,7 +7,7 @@
 import { isArrayStrict } from '../array/array.js'
 
 /**
- * Check if value is an HTMLElement
+ * Check if value is an HTMLElement.
  *
  * @param {*} value
  * @param {HTMLElement} [instance]
@@ -21,7 +21,7 @@ const isHtmlElement = <T extends HTMLElement>(
 }
 
 /**
- * Check if first value in array is HTMLElement
+ * Check if first value in array is HTMLElement.
  *
  * @param {*} value
  * @param {HTMLElement} [instance]
@@ -39,7 +39,7 @@ const isHtmlElementArray = <T extends HTMLElement>(
 }
 
 /**
- * Check if all values in array are HTMLElement
+ * Check if all values in array are HTMLElement.
  *
  * @param {*} value
  * @param {HTMLElement} [instance]

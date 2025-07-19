@@ -7,7 +7,7 @@
 import { config } from './config.js'
 
 /**
- * Browser font size in pixels
+ * Browser font size in pixels.
  *
  * @return {void}
  */
@@ -15,6 +15,7 @@ const configDefaultFontSize = (): void => {
   const element = document.createElement('div')
 
   element.style.width = '1rem'
+  element.style.position = 'absolute'
 
   document.body.append(element)
 

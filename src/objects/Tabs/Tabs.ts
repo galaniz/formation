@@ -13,7 +13,7 @@ import { getKey } from '../../utils/key/key.js'
 import { applyFilters } from '../../utils/filter/filter.js'
 
 /**
- * Custom event details
+ * Custom event details.
  */
 declare global {
   interface ElementEventMap {
@@ -24,60 +24,60 @@ declare global {
 }
 
 /**
- * Handles display of tabs and corresponding panels
+ * Handles display of tabs and corresponding panels.
  */
 class Tabs extends HTMLElement {
   /**
-   * Tab elements
+   * Tab elements.
    *
    * @type {HTMLElement[]}
    */
   tabs: HTMLElement[] = []
 
   /**
-   * Panel elements
+   * Panel elements.
    *
    * @type {HTMLElement[]}
    */
   panels: HTMLElement[] = []
 
   /**
-   * Delay before displaying panel
+   * Delay before displaying panel.
    *
    * @type {number}
    */
   delay: number = 0
 
   /**
-   * Layout for keyboard navigation
+   * Layout for keyboard navigation.
    *
    * @type {TabsDirection}
    */
   direction: TabsDirection = 'horizontal'
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Current tab index
+   * Current tab index.
    *
    * @type {number}
    */
   currentIndex: number = 0
 
   /**
-   * Distinguish from derived classes
+   * Distinguish from derived classes.
    *
    * @type {boolean}
    */
   #isTabs: boolean = false
 
   /**
-   * Final tab/panel element index
+   * Final tab/panel element index.
    *
    * @private
    * @type {number}
@@ -85,7 +85,7 @@ class Tabs extends HTMLElement {
   #endIndex: number = 0
 
   /**
-   * Id for delay timeout
+   * Id for delay timeout.
    *
    * @private
    * @type {number}
@@ -93,7 +93,7 @@ class Tabs extends HTMLElement {
   #delayId: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -102,12 +102,12 @@ class Tabs extends HTMLElement {
   #keyUpHandler = this.#keyUp.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -118,7 +118,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -151,7 +151,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Init check required items exist and activate
+   * Init check required items and activate.
    *
    * @private
    * @return {boolean}
@@ -246,7 +246,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Hide and show panels and tabs
+   * Hide and show panels and tabs.
    *
    * @param {TabsActivateArgs} args
    * @return {boolean}
@@ -371,7 +371,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Index from tab attribute
+   * Index from tab attribute.
    *
    * @private
    * @param {Event} e
@@ -395,7 +395,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Focus tab at specified index
+   * Focus tab at specified index.
    *
    * @private
    * @param {number} index
@@ -424,7 +424,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Click handler on tab to display panel
+   * Click handler on tab to display panel.
    *
    * @private
    * @param {Event} e
@@ -438,7 +438,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Key down handler on tab to change focus depending on key
+   * Key down handler on tab to change focus depending on key.
    *
    * @private
    * @param {KeyboardEvent} e
@@ -480,7 +480,7 @@ class Tabs extends HTMLElement {
   }
 
   /**
-   * Key up handler on tab to change focus depending on key
+   * Key up handler on tab to change focus depending on key.
    *
    * @private
    * @param {KeyboardEvent} e

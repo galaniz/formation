@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
 import { isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
@@ -12,32 +13,32 @@ import { onResize, removeResize } from '../../utils/resize/resize.js'
 import { config } from '../../config/config.js'
 
 /**
- * Handles arranging items into masonry layout
+ * Handles arranging items into masonry layout.
  */
 class Masonry extends HTMLElement {
   /**
-   * Elements to arrange
+   * Elements to arrange.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Number of columns and margins by breakpoint
+   * Number of columns and margins by breakpoint.
    *
    * @type {Set<Record<string, number>>}
    */
   breakpoints: Set<Record<'low' | 'high' | 'columns' | 'margin', number>> = new Set()
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Item ids for margin styles
+   * Item ids for margin styles.
    *
    * @private
    * @type {string[]}
@@ -45,27 +46,27 @@ class Masonry extends HTMLElement {
   #ids: string[] = []
 
   /**
-   * Viewport width to check breakpoint(s)
+   * Viewport width to check breakpoint(s).
    *
    * @private
    * @type {number}
    */
-  #viewportWidth: number = window.innerWidth
+  #viewportWidth: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
   #resizeHandler = this.#resize.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -76,7 +77,7 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -102,7 +103,7 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -175,11 +176,11 @@ class Masonry extends HTMLElement {
 
     /* Event listeners */
 
-    onResize(this.#resizeHandler)
+    const viewportWidth = onResize(this.#resizeHandler)
 
     /* Layout */
 
-    this.#set()
+    this.#set(viewportWidth)
 
     /* Init successful */
 
@@ -187,12 +188,19 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Update negative margins based on current columns and margins
+   * Update negative margins based on current columns and margins.
    *
    * @private
+   * @param {number} [viewportWidth]
    * @return {void}
    */
-  #set (): void {
+  #set (viewportWidth?: number): void {
+    /* Viewport width */
+
+    if (viewportWidth) {
+      this.#viewportWidth = viewportWidth
+    }
+
     /* Reset margins */
 
     const styleId = `mas-${this.id}-styles`
@@ -273,24 +281,24 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
+   * @param {ResizeActionArgs} args
    * @return {void}
    */
-  #resize (): void {
-    const viewportWidth = window.innerWidth
+  #resize (args: ResizeActionArgs): void {
+    const [oldViewportWidth, newViewportWidth] = args
 
-    if (viewportWidth === this.#viewportWidth) {
+    if (oldViewportWidth === newViewportWidth) {
       return
     }
 
-    this.#viewportWidth = viewportWidth
-    this.#set()
+    this.#set(newViewportWidth)
   }
 
   /**
-   * Add new items to layout and reset
+   * Add new items to layout and reset.
    *
    * @param {HTMLElement[]} newItems
    * @return {boolean}

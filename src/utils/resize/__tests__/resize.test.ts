@@ -4,37 +4,56 @@
 
 /* Imports */
 
-import { it, expect, describe, beforeEach, vi } from 'vitest'
+import { it, expect, describe, afterEach, vi } from 'vitest'
 import { fireEvent } from '@testing-library/dom'
 import { actions } from '../../action/action.js'
 import { onResize, removeResize } from '../resize.js'
 import { config } from '../../../config/config.js'
 
 /**
- * Fire window resize event
+ * Reset viewport to default.
+ *
+ * @return {void}
+ */
+const resetViewport = (): void => {
+  window.resizeTo(1024, 1024)
+  window.innerWidth = 1024
+  window.innerHeight = 1024
+  fireEvent(window, new Event('resize'))
+}
+
+/**
+ * Fire window resize event.
  *
  * @return {void}
  */
 const resizeEvent = (): void => {
   window.resizeTo(800, 800)
+  window.innerWidth = 800
+  window.innerHeight = 800
   fireEvent(window, new Event('resize'))
 }
 
 /* Test onResize */
 
 describe('onResize()', () => {
-  beforeEach(() => {
+  afterEach(() => {
     actions.get('resize')?.clear()
+    resetViewport()
   })
 
   it('should run function on window resize',
     async () => await new Promise(resolve => {
-      const testOne = vi.fn(() => {
+      let initViewportWidth = 0
+
+      const testOne = vi.fn((viewportWidths: [number, number]) => {
         expect(testOne).toHaveBeenCalledTimes(1)
+        expect(viewportWidths).toEqual([1024, 800])
+        expect(initViewportWidth).toEqual(1024)
         resolve('')
       })
 
-      onResize(testOne)
+      initViewportWidth = onResize(testOne)
       resizeEvent()
     })
   )
@@ -42,15 +61,23 @@ describe('onResize()', () => {
   it(
     'should run two functions on window resize',
     async () => await new Promise(resolve => {
-      const testOne = vi.fn()
-      const testTwo = vi.fn(() => {
+      let initViewportWidth = 0
+
+      const testOne = vi.fn((viewportWidths: [number, number]) => {
         expect(testOne).toHaveBeenCalledTimes(1)
+        expect(viewportWidths).toEqual([1024, 800])
+        expect(initViewportWidth).toEqual(1024)
+      })
+
+      const testTwo = vi.fn((viewportWidths: [number, number]) => {
         expect(testTwo).toHaveBeenCalledTimes(1)
+        expect(viewportWidths).toEqual([1024, 800])
+        expect(initViewportWidth).toEqual(1024)
         resolve('')
       })
 
-      onResize(testOne)
-      onResize(testTwo)
+      initViewportWidth = onResize(testOne)
+      initViewportWidth = onResize(testTwo)
       resizeEvent()
     })
   )
@@ -59,8 +86,9 @@ describe('onResize()', () => {
 /* Test removeResize */
 
 describe('removeResize()', () => {
-  beforeEach(() => {
+  afterEach(() => {
     actions.get('resize')?.clear()
+    resetViewport()
   })
 
   it('should run one function on window resize',

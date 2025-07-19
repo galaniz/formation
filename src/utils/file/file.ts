@@ -3,7 +3,7 @@
  */
 
 /**
- * Check if value is a file
+ * Check if value is a file.
  *
  * @param {*} value
  * @return {boolean}
@@ -13,7 +13,7 @@ const isFile = (value: unknown): value is File => {
 }
 
 /**
- * Check if value is a blob
+ * Check if value is a blob.
  *
  * @param {*} value
  * @return {boolean}

@@ -24,7 +24,7 @@ interface TestItems {
 }
 
 /**
- * Create elements and group by type
+ * Create elements and group by type.
  *
  * @param {boolean} [single]
  * @return {TestItems}

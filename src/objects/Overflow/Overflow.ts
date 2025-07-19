@@ -9,7 +9,7 @@ import { getItem } from '../../utils/item/item.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
 
 /**
- * Custom event details
+ * Custom event details.
  */
 declare global {
   interface ElementEventMap {
@@ -19,39 +19,39 @@ declare global {
 }
 
 /**
- * Handles state and direction of overflow
+ * Handles state and direction of overflow.
  */
 class Overflow extends HTMLElement {
   /**
-   * Scrollable element
+   * Scrollable element.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Direction
+   * Scroll direction.
    *
    * @type {'vertical'|'horizontal'}
    */
   direction: 'vertical' | 'horizontal' = 'horizontal'
 
   /**
-   * Overflow state
+   * Overflow state.
    *
    * @type {boolean}
    */
   overflow: boolean = false
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Scroll listener timeout id
+   * Scroll listener timeout id.
    *
    * @private
    * @type {number}
@@ -59,7 +59,7 @@ class Overflow extends HTMLElement {
   #scrollId: number = 0
 
   /**
-   * Difference between track and container dimensions
+   * Difference between track and container dimensions.
    *
    * @private
    * @type {number}
@@ -67,7 +67,7 @@ class Overflow extends HTMLElement {
   #scrollDiff: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -75,12 +75,12 @@ class Overflow extends HTMLElement {
   #resizeHandler = this.#resize.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -91,7 +91,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -121,7 +121,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -162,7 +162,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Update overflow attribute
+   * Update overflow attribute.
    *
    * @private
    * @return {void}
@@ -190,7 +190,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Check if track element is overflowing
+   * Check if track element is overflowing.
    *
    * @private
    * @return {void}
@@ -209,7 +209,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Scroll handler on track element
+   * Scroll handler on track element.
    *
    * @private
    * @return {void}
@@ -232,7 +232,7 @@ class Overflow extends HTMLElement {
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
    * @return {void}

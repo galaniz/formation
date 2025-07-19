@@ -7,7 +7,7 @@
 import { isString } from '../string/string.js'
 
 /**
- * Normalize key names/numbers
+ * Normalize key names/numbers.
  *
  * @private
  * @type {Object<string|number, string>}
@@ -34,7 +34,7 @@ const keys: Record<string | number, string> = {
 }
 
 /**
- * Normalize event key as uppercase code
+ * Normalize event key as uppercase code.
  *
  * @param {KeyboardEvent} event
  * @return {string}

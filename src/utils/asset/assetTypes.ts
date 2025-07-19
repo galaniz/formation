@@ -8,9 +8,7 @@
 export type Asset = HTMLImageElement | HTMLMediaElement | HTMLIFrameElement | null
 
 /**
- * Callback on error or success
- *
- * @typedef {function} AssetDone
+ * @typedef {function} AssetDone - Callback on error or success.
  * @param {Asset[]|boolean} result
  * @param {Event|Error} [error]
  * @return {void}

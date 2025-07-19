@@ -4,38 +4,73 @@
 
 /* Imports */
 
-import { isString, isStringStrict } from '../string/string.js'
+import type { CookieOptions } from './cookieTypes.js'
+import { isStringStrict } from '../string/string.js'
 
 /**
- * Add browser cookie
+ * Add browser cookie.
  *
  * @param {string} name
  * @param {string} value
- * @param {number} [expirationDays=0]
- * @return {boolean}
+ * @param {CookieOptions} [options]
+ * @return {string}
  */
-const setCookie = (name: string, value: string, expirationDays: number = 0): boolean => {
+const setCookie = (name: string, value: string, options?: CookieOptions): string => {
   if (!isStringStrict(name) || !isStringStrict(value)) {
-    return false
+    return ''
   }
 
-  let expires = ''
+  const {
+    expires,
+    maxAge,
+    domain,
+    path = '/',
+    secure = true,
+    httpOnly = false,
+    sameSite
+  } = options || {}
 
-  if (expirationDays > 0) {
+  let cookie = `${name}=${value};`
+
+  if (expires) {
     const date = new Date()
 
-    date.setTime(date.getTime() + expirationDays * 24 * 60 * 60 * 1000)
+    date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000)
 
-    expires = `expires=${date.toUTCString()};`
+    cookie += `expires=${date.toUTCString()};`
   }
 
-  document.cookie = `${name}=${value};${expires}path=/`
+  if (maxAge) {
+    cookie += `max-age=${maxAge};`
+  }
 
-  return true
+  if (domain) {
+    cookie += `domain=${domain};`
+  }
+
+  if (path) {
+    cookie += `path=${path};`
+  }
+
+  if (secure) {
+    cookie += 'Secure;'
+  }
+
+  if (httpOnly) {
+    cookie += 'HttpOnly;'
+  }
+
+  if (sameSite) {
+    cookie += `SameSite=${sameSite};`
+  }
+
+  document.cookie = cookie
+
+  return cookie
 }
 
 /**
- * Retrieve browser cookie
+ * Retrieve browser cookie.
  *
  * @param {string} name
  * @return {string}
@@ -48,14 +83,14 @@ const getCookie = (name: string): string => {
   const cookies = document.cookie.split(';')
 
   for (const cookie of cookies) {
-    const [n, v] = cookie.split('=')
+    const [key, value] = cookie.trim().split('=')
 
-    if (!isStringStrict(n) || !isString(v)) {
+    if (!key || !value) {
       continue
     }
 
-    if (n === name) {
-      return v
+    if (key === name) {
+      return value
     }
   }
 

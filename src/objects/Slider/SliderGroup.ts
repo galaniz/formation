@@ -6,6 +6,7 @@
 
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
+import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
 import { Tabs } from '../Tabs/Tabs.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
@@ -17,67 +18,60 @@ import { config } from '../../config/config.js'
 import { sliderScrollTo } from './sliderUtils.js'
 
 /**
- * Handles scroll based slider with multiple items in panels
+ * Handles scroll based slider with multiple items in panels.
  */
 class SliderGroup extends Tabs {
   /**
-   * Scrollable container element
+   * Scrollable container element.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Elements within panels
+   * Elements within panels.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Target height element
-   *
-   * @type {HTMLElement|null}
-   */
-  heightItem: HTMLElement | null = null
-
-  /**
-   * Previous navigation button element
+   * Previous navigation button element.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element
+   * Next navigation button element.
    *
    * @type {HTMLButtonElement|null}
    */
   next: HTMLButtonElement | null = null
 
   /**
-   * Transition duration on scroll (tab or button click)
+   * Transition duration on scroll (tab or button click).
    *
    * @type {number}
    */
   duration: number = 500
 
   /**
-   * Number of visible items and panels by breakpoint
+   * Number of visible items and panels by breakpoint.
    *
    * @type {Set<Record<string, number>>}
    */
   breakpoints: Set<Record<'low' | 'high' | 'items' | 'panels', number>> = new Set()
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   subInit: boolean = false
 
   /**
-   * Panels parent element
+   * Panels parent element.
    *
    * @private
    * @type {HTMLElement|null}
@@ -85,7 +79,7 @@ class SliderGroup extends Tabs {
   #insert: HTMLElement | null = null
 
   /**
-   * Last panels index
+   * Last panels index.
    *
    * @private
    * @type {number}
@@ -93,7 +87,7 @@ class SliderGroup extends Tabs {
   #endIndex: number = 0
 
   /**
-   * Scroll to animation id
+   * Scroll to animation id.
    *
    * @private
    * @type {SliderAnimRef}
@@ -101,7 +95,7 @@ class SliderGroup extends Tabs {
   #animRef: SliderAnimRef = { id: 0 }
 
   /**
-   * Scroll listener timeout id
+   * Scroll listener timeout id.
    *
    * @private
    * @type {number}
@@ -109,7 +103,7 @@ class SliderGroup extends Tabs {
   #scrollId: number = 0
 
   /**
-   * Left panel offsets to scroll to
+   * Left panel offsets to scroll to.
    *
    * @private
    * @type {number[]}
@@ -117,23 +111,15 @@ class SliderGroup extends Tabs {
   #leftOffsets: number[] = []
 
   /**
-   * Account for track scroll padding
+   * Viewport width to check breakpoint(s).
    *
    * @private
    * @type {number}
    */
-  #offset: number = 0 
+  #viewportWidth: number = 0
 
   /**
-   * Viewport width to check breakpoint(s)
-   *
-   * @private
-   * @type {number}
-   */
-  #viewportWidth: number = window.innerWidth
-
-  /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -147,12 +133,12 @@ class SliderGroup extends Tabs {
   #resizeHandler = this.#resize.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   override connectedCallback (): void {
     /* Inherit */
@@ -175,7 +161,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   override async disconnectedCallback (): Promise<void> {
     /* Inherit */
@@ -212,7 +198,6 @@ class SliderGroup extends Tabs {
 
     this.track = null
     this.items = []
-    this.heightItem = null
     this.prev = null
     this.next = null
     this.breakpoints = new Set()
@@ -225,7 +210,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Init check required items, set variables and activate
+   * Init check required items, set variables and activate.
    *
    * @private
    * @return {boolean}
@@ -235,7 +220,6 @@ class SliderGroup extends Tabs {
 
     const track = getItem('[data-slider-track]', this)
     const items = getItem(['[data-slider-item]'], this)
-    const heightItem = getItem('[data-slider-height]', this)
     const prev = getItem('[data-slider-prev]', this)
     const next = getItem('[data-slider-next]', this)
     const [firstPanel] = this.panels
@@ -256,17 +240,13 @@ class SliderGroup extends Tabs {
       this.items = items
     }
 
-    if (isHtmlElement(heightItem)) {
-      this.heightItem = heightItem
-    }
-
     /* Delays */
 
     this.delay = this.duration + 100
 
     /* Event listeners */
 
-    onResize(this.#resizeHandler)
+    const viewportWidth = onResize(this.#resizeHandler)
 
     if (isHtmlElement(next, HTMLButtonElement) && isHtmlElement(prev, HTMLButtonElement)) {
       this.next = next
@@ -331,7 +311,7 @@ class SliderGroup extends Tabs {
 
     /* Dimension properties */
 
-    this.#setDimensions()
+    this.#setDimensions(viewportWidth)
 
     /* Cap current */
 
@@ -352,27 +332,26 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Offsets and optional height
+   * Offsets and viewport width.
    *
    * @private
+   * @param {number} viewportWidth
    * @return {void}
    */
-  #setDimensions (): void {
-    /* Update height */
+  #setDimensions (viewportWidth: number): void {
+    /* Viewport width */
 
-    if (isHtmlElement(this.heightItem)) {
-      const height = Math.ceil(this.heightItem.clientHeight)
-
-      this.style.setProperty('--sld-height', `${height}px`)
-    }
+    this.#viewportWidth = viewportWidth
 
     /* Track width and offset */
 
+    let offset = 0
+
     if (isHtmlElement(this.track)) {
-      const style = getComputedStyle(this.track)
-      const left = style.getPropertyValue('scroll-padding-left')
-      const leftNum = parseInt(left)
-      this.#offset = isNumber(leftNum) ? leftNum : 0
+      const left = getComputedStyle(this.track).getPropertyValue('scroll-padding-left')
+      const leftNum = parseInt(left, 10)
+
+      offset = isNumber(leftNum) ? leftNum : 0
     }
 
     /* Shift items to different panels */
@@ -388,12 +367,12 @@ class SliderGroup extends Tabs {
         return
       }
 
-      this.#leftOffsets.push(panel.offsetLeft - this.#offset)
+      this.#leftOffsets.push(panel.offsetLeft - offset)
     })
   }
 
   /**
-   * Filter indexes, update track scroll listener and button states
+   * Filter indexes, update track scroll listener and button states.
    *
    * @param {TabsIndexesFilterArgs} args
    * @return {TabsIndexesFilterArgs}
@@ -442,7 +421,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Tabs deactivate handler - manage panel focus
+   * Tabs deactivate handler manages panel focus.
    *
    * @private
    * @param {CustomEvent} e
@@ -457,7 +436,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Tabs activate handler - move panels (click, init or resize)
+   * Tabs activate handler moves panels (click, init or resize).
    *
    * @private
    * @param {CustomEvent} e
@@ -479,7 +458,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Tabs activated handler - add scroll listener after panel activation
+   * Tabs activated handler adds scroll listener after panel activation.
    *
    * @private
    * @param {CustomEvent} e
@@ -496,7 +475,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Move items to corresponding panels by breakpoint
+   * Move items to corresponding panels by breakpoint.
    *
    * @private
    * @return {void}
@@ -584,7 +563,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Click handler on prev button to display previous panel
+   * Click handler on prev button to display previous panel.
    *
    * @private
    * @return {void}
@@ -597,7 +576,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Click handler on next button to display next panel
+   * Click handler on next button to display next panel.
    *
    * @private
    * @return {void}
@@ -610,7 +589,7 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Scroll handler on track element
+   * Scroll handler on track element.
    *
    * @private
    * @return {void}
@@ -656,20 +635,20 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
+   * @param {ResizeActionArgs} args
    * @return {void}
    */
-  #resize (): void {
-    const viewportWidth = window.innerWidth
+  #resize (args: ResizeActionArgs): void {
+    const [oldViewportWidth, newViewportWidth] = args
 
-    if (viewportWidth === this.#viewportWidth) {
+    if (oldViewportWidth === newViewportWidth) {
       return
     }
 
-    this.#viewportWidth = viewportWidth
-    this.#setDimensions()
+    this.#setDimensions(newViewportWidth)
     this.activate({
       current: this.currentIndex,
       source: 'resize'

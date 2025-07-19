@@ -4,6 +4,7 @@
 
 /* Imports */
 
+import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
 import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -21,7 +22,7 @@ import { onEscape, removeEscape } from '../../utils/escape/escape.js'
 import { config } from '../../config/config.js'
 
 /**
- * Custom event details
+ * Custom event details.
  */
 declare global {
   interface ElementEventMap {
@@ -34,88 +35,88 @@ declare global {
 }
 
 /**
- * Handles responsive navigation with modal support
+ * Handles responsive navigation with modal support.
  */
 class Navigation extends HTMLElement {
   /**
-   * Slot elements by name
+   * Slot elements by name.
    *
    * @type {Map<string, HTMLElement>}
    */
   slots: Map<string, HTMLElement> = new Map()
 
   /**
-   * Item elements
+   * Item elements.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Modal element
+   * Modal element.
    *
    * @type {HTMLElement|null}
    */
   modal: HTMLElement | null = null
 
   /**
-   * Slot elements in modal by name
+   * Slot elements in modal by name.
    *
    * @type {Map<string, HTMLElement>}
    */
   modalSlots: Map<string, HTMLElement> = new Map()
 
   /**
-   * Button element opens modal
+   * Button element opens modal.
    *
    * @type {HTMLButtonElement|null}
    */
   opens: HTMLButtonElement | null = null
 
   /**
-   * Element(s) close modal
+   * Element(s) close modal.
    *
    * @type {HTMLElement[]}
    */
   closes: HTMLElement[] = []
 
   /**
-   * Milliseconds to delay show attribute
+   * Milliseconds to delay show attribute.
    *
    * @type {number}
    */
   delay: number = 200
 
   /**
-   * Breakpoint(s) to prompt "overflowing" state
+   * Breakpoint(s) to prompt "overflowing" state.
    *
    * @type {Map<string, number>}
    */
   breakpoints: Map<string, number> = new Map([['0', 0]])
 
   /**
-   * Initialize state
+   * Initialize state.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Open state
+   * Open state.
    *
    * @type {boolean}
    */
   open: boolean = false
 
   /**
-   * Overflow state
+   * Overflow state.
    *
    * @type {boolean}
    */
   overflow: boolean = false
 
   /**
-   * Items by group attribute
+   * Items by group attribute.
    *
    * @private
    * @type {Map<string, Set<HTMLElement>>}
@@ -123,7 +124,7 @@ class Navigation extends HTMLElement {
   #itemGroups: Map<string, Set<HTMLElement>> = new Map()
 
   /**
-   * Groups currently in modal
+   * Groups currently in modal.
    *
    * @private
    * @type {Set<Set<HTMLElement>>}
@@ -131,7 +132,7 @@ class Navigation extends HTMLElement {
   #modalGroups: Set<Set<HTMLElement>> = new Set()
 
   /**
-   * Slot names by group
+   * Slot names by group.
    *
    * @private
    * @type {Map<string, Set<string>>}
@@ -139,7 +140,7 @@ class Navigation extends HTMLElement {
   #slotGroups: Map<string, Set<string>> = new Map()
 
   /**
-   * Item group names
+   * Item group names.
    *
    * @private
    * @type {Set<string>}
@@ -147,7 +148,7 @@ class Navigation extends HTMLElement {
   #groupNames: Set<string> = new Set()
 
   /**
-   * Slot names
+   * Slot names.
    *
    * @private
    * @type {Set<string>}
@@ -155,7 +156,7 @@ class Navigation extends HTMLElement {
   #slotNames: Set<string> = new Set()
 
   /**
-   * First focusable element in modal
+   * First focusable element in modal.
    *
    * @private
    * @type {HTMLElement|null}
@@ -163,15 +164,15 @@ class Navigation extends HTMLElement {
   #firstFocusable: HTMLElement | null = null
 
   /**
-   * Viewport width to check breakpoint(s)
+   * Viewport width to check breakpoint(s).
    *
    * @private
    * @type {number}
    */
-  #viewportWidth: number = window.innerWidth
+  #viewportWidth: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -181,12 +182,12 @@ class Navigation extends HTMLElement {
   #escapeHandler = this.#escape.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -197,7 +198,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -240,7 +241,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Init check required items exist and run set
+   * Init check required items and run set.
    *
    * @private
    * @return {boolean}
@@ -329,7 +330,7 @@ class Navigation extends HTMLElement {
       close.addEventListener('click', this.#closeHandler)
     })
 
-    onResize(this.#resizeHandler)
+    const viewportWidth = onResize(this.#resizeHandler)
     onEscape(this.#escapeHandler)
 
     /* Slots by name */
@@ -378,7 +379,7 @@ class Navigation extends HTMLElement {
 
     /* Check overflow and move elements accordingly */
 
-    this.#set()
+    this.#set(viewportWidth)
 
     /* Init successful */
 
@@ -386,7 +387,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Slot or group name as string
+   * Slot or group name as string.
    *
    * @private
    * @param {string} name
@@ -403,7 +404,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Return items to slots
+   * Return items to slots.
    *
    * @private
    * @return {void}
@@ -461,7 +462,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Check if slots are horizontally overflowing
+   * Check if slots are horizontally overflowing.
    *
    * @private
    * @param {Set<string>|undefined} slotNames
@@ -506,13 +507,18 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Reset, check overflow and move items if overflowing
+   * Reset, check overflow and move items if overflowing.
    *
    * @private
+   * @param {number} viewportWidth
    * @param {boolean} [resize]
    * @return {void}
    */
-  #set (resize: boolean = false): void {
+  #set (viewportWidth: number, resize: boolean = false): void {
+    /* Viewport width */
+
+    this.#viewportWidth = viewportWidth
+
     /* Reset and emit event */
 
     this.#reset()
@@ -595,7 +601,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Open/close modal - handle attributes and toggle focusability
+   * Open/close modal updates attributes and focusability.
    *
    * @private
    * @param {boolean} open
@@ -692,24 +698,24 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
+   * @param {ResizeActionArgs} args
    * @return {void}
    */
-  #resize (): void {
-    const viewportWidth = window.innerWidth
+  #resize (args: ResizeActionArgs): void {
+    const [oldViewportWidth, newViewportWidth] = args
 
-    if (viewportWidth === this.#viewportWidth) {
+    if (oldViewportWidth === newViewportWidth) {
       return
     }
 
-    this.#viewportWidth = viewportWidth
-    this.#set(true)
+    this.#set(newViewportWidth, true)
   }
 
   /**
-   * Escape hook callback
+   * Escape hook callback.
    *
    * @private
    * @return {void}
@@ -721,7 +727,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Click handler on close element(s) to close modal
+   * Click handler on close element(s) to close modal.
    *
    * @private
    * @param {Event} e
@@ -734,7 +740,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Click handler on open button to open modal
+   * Click handler on open button to open modal.
    *
    * @private
    * @param {Event} e

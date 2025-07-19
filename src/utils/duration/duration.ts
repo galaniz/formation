@@ -8,7 +8,7 @@ import { isNumber } from '../number/number.js'
 import { config } from '../../config/config.js'
 
 /**
- * Convert seconds to text (time or words)
+ * Convert seconds to text (time or words).
  *
  * @param {number} [seconds=0]
  * @param {boolean} [words=false]

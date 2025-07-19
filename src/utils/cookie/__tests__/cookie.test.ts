@@ -8,21 +8,7 @@ import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest'
 import { setCookie, getCookie } from '../cookie.js'
 
 /**
- * Test cookie name
- *
- * @type {string}
- */
-const testName = 'test_cookie_name'
-
-/**
- * Test cookie value
- *
- * @type {string}
- */
-const testValue = 'test_cookie_value'
-
-/**
- * Clear document cookies
+ * Clear document cookies.
  *
  * @return {void}
  */
@@ -37,7 +23,10 @@ const testClearCookies = (): void => {
       continue
     }
 
-    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/;Secure;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/admin;Secure;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/admin;`
   }
 }
 
@@ -53,69 +42,100 @@ describe('setCookie()', () => {
     testClearCookies()
   })
 
-  it('should return false if name is empty', () => {
+  it('should return empty string if name is empty', () => {
     const name = ''
     const value = 'test'
     const result = setCookie(name, value)
-    const expectedResult = false
+    const expectedResult = ''
 
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if name is not a string', () => {
+  it('should return empty string if name is not a string', () => {
     const name = 1
     const value = 'test'
     // @ts-expect-error - test invalid name
     const result = setCookie(name, value)
-    const expectedResult = false
+    const expectedResult = ''
 
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if value is empty', () => {
+  it('should return empty string if value is empty', () => {
     const name = 'test'
     const value = ''
     const result = setCookie(name, value)
-    const expectedResult = false
+    const expectedResult = ''
 
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if value is not a string', () => {
+  it('should return empty string if value is not a string', () => {
     const name = 'test'
     const value = false
     // @ts-expect-error - test invalid value
     const result = setCookie(name, value)
-    const expectedResult = false
+    const expectedResult = ''
 
     expect(result).toBe(expectedResult)
   })
 
-  it('should return true and add cookie', () => {
-    const result = setCookie(testName, testValue)
-    const expectedResult = true
-    const cookieResult = getCookie(testName)
+  it('should set cookie', () => {
+    const result = setCookie('test_cookie_name', 'test_cookie_value')
+    const expectedResult = 'test_cookie_name=test_cookie_value;path=/;Secure;'
+    const cookie = document.cookie
 
     expect(result).toBe(expectedResult)
-    expect(cookieResult).toBe(testValue)
+    expect(cookie).toBe('test_cookie_name=test_cookie_value')
   })
 
-  it('should return true, add cookie and expire after one day', () => {
+  it('should set cookie and expire after 2 days', () => {
     const name = 'test_cookie_name_two'
     const value = 'test_cookie_value_two'
-    const expire = 1
-    const result = setCookie(name, value, expire)
-    const expectedResult = true
-    const cookieResult = getCookie(name)
+    const result = setCookie(name, value, { maxAge: 172800 })
+    const expectedResult = 'test_cookie_name_two=test_cookie_value_two;max-age=172800;path=/;Secure;'
+    const cookie = document.cookie
     const date = new Date()
 
-    vi.setSystemTime(date.setDate(date.getDate() + expire))
+    vi.setSystemTime(date.setDate(date.getDate() + 3))
+
+    const expiredCookie = document.cookie
+
+    expect(result).toBe(expectedResult)
+    expect(cookie).toBe(`${name}=${value}`)
+    expect(expiredCookie).toBe('')
+  })
+
+  it('should set cookie and expire after 1 day', () => {
+    const name = 'test_cookie_name_three'
+    const value = 'test_cookie_value_three'
+    setCookie(name, value, { expires: 1 })
+    const cookie = document.cookie
+    const date = new Date()
+
+    vi.setSystemTime(date.setDate(date.getDate() + 2))
 
     const expiredResult = getCookie(name)
 
-    expect(result).toBe(expectedResult)
-    expect(cookieResult).toBe(value)
+    expect(cookie).toBe(`${name}=${value}`)
     expect(expiredResult).toBe('')
+  })
+
+  it('should set cookie with options', () => {
+    const name = 'test_cookie_name_four'
+    const value = 'test_cookie_value_four'
+    const result = setCookie(name, value, {
+      maxAge: 86400,
+      path: '/admin',
+      domain: 'www.test.com',
+      secure: false,
+      httpOnly: true,
+      sameSite: 'Strict'
+    })
+
+    const expectedResult = 'test_cookie_name_four=test_cookie_value_four;max-age=86400;domain=www.test.com;path=/admin;HttpOnly;SameSite=Strict;'
+
+    expect(result).toBe(expectedResult)
   })
 })
 
@@ -151,11 +171,12 @@ describe('getCookie()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return testValue', () => {
-    setCookie(testName, testValue)
+  it('should return cookie value', () => {
+    document.cookie = 'test_cookie_name=test_cookie_value;path=/;Secure;test_cookie_name_two=test_cookie_value_two;path=/;Secure;'
 
-    const result = getCookie(testName)
+    const result = getCookie('test_cookie_name')
+    const expectedResult = 'test_cookie_value'
 
-    expect(result).toBe(testValue)
+    expect(result).toBe(expectedResult)
   })
 })

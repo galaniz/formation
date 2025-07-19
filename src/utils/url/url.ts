@@ -1,5 +1,5 @@
 /**
- * Utils - Url
+ * Utils - URL
  */
 
 /* Imports */
@@ -9,7 +9,7 @@ import { isArray } from '../array/array.js'
 import { config } from '../../config/config.js'
 
 /**
- * Recursively convert object key value pairs into url encoded string
+ * Recursively convert object key value pairs into url encoded string.
  *
  * @param {object} value
  * @return {string}

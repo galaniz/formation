@@ -10,7 +10,7 @@ import { getObjectKeys } from './objectKeys.js'
 import { isObject } from './object.js'
 
 /**
- * Recurse through object if condition met otherwise run callback
+ * Recurse through object if condition met otherwise run callback.
  *
  * @type {ObjectRecurse}
  */

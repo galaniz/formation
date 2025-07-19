@@ -22,8 +22,8 @@ export type RequestSuccessCallback = (result: unknown) => void
  * @prop {string} [url]
  * @prop {Object<string, string>} [headers]
  * @prop {object|FormData} body
- * @prop {string} [encode=json] - url | json | formData
- * @prop {string} [expect=json] - json | text
+ * @prop {'url'|'json'|'formData'} [encode='json']
+ * @prop {'json'|'text'} [expect='json']
  * @prop {RequestErrorCallback} onError
  * @prop {RequestSuccessCallback} onSuccess
  */

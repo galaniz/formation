@@ -9,7 +9,7 @@ import { createEvent } from '@testing-library/dom'
 import { getKey } from '../key.js'
 
 /**
- * Create div and add keydown event to it
+ * Create div and add keydown event to it.
  *
  * @param {string} key
  * @return {KeyboardEvent}

@@ -35,7 +35,7 @@ interface TestHtml {
 }
 
 /**
- * Html elements
+ * Test elements.
  *
  * @return {TestHtml}
  */

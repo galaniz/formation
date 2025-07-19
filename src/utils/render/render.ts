@@ -19,7 +19,7 @@ import { isHtmlElement } from '../html/html.js'
 import { getObjectKeys } from '../object/objectKeys.js'
 
 /**
- * Output single html element with specified attributes and properties
+ * Output single html element with specified attributes and properties.
  *
  * @param {RenderElementArgs} args
  * @return {HTMLElement|null}
@@ -64,7 +64,7 @@ const renderElement = <T extends HTMLElement>(args: RenderElementArgs): T | null
 }
 
 /**
- * Recursively output html element(s) from array or object of data
+ * Recursively output html element(s) from array or object of data.
  *
  * @param {RenderFunctions} functions
  * @param {RenderItems|RenderItems[]} items
@@ -147,7 +147,7 @@ const render = <T extends HTMLElement>(
 }
 
 /**
- * Recursively output html string from array or object of data
+ * Recursively output html string from array or object of data.
  *
  * @param {RenderStringFunctions} functions
  * @param {RenderItems|RenderItems[]} items

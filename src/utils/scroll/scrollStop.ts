@@ -3,12 +3,12 @@
  */
 
 /**
- * Prevent body scroll
+ * Prevent body scroll.
  *
  * @param {boolean} on
  * @return {boolean}
  */
-const stopScroll = (on = true): boolean => {
+const stopScroll = (on: boolean = true): boolean => {
   const html = document.documentElement
 
   if (on) {

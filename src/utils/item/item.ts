@@ -12,7 +12,7 @@ import { isStringStrict } from '../string/string.js'
 import { isHtmlElement } from '../html/html.js'
 
 /**
- * Map selector to DOM element(s)
+ * Map selector to DOM element(s).
  *
  * @param {string|string[]} item
  * @param {Document|Element} [context=document]
@@ -51,7 +51,7 @@ const getItem = <T extends string | string[]>(
 }
 
 /**
- * Map selectors to DOM elements recursively
+ * Map selectors to DOM elements recursively.
  *
  * @param {ItemsStr|ItemsStr[]|string[]} items
  * @param {Document|Element} [context=document]
@@ -135,7 +135,7 @@ const getItems = <T>(
 }
 
 /**
- * First element from content template
+ * First element from content template.
  *
  * @param {string} id
  * @return {HTMLElement|null|undefined}
@@ -147,7 +147,7 @@ const getTemplateItem = <T extends HTMLElement>(id: string): T | null |undefined
 }
 
 /**
- * Clone element and check type
+ * Clone element and check type.
  *
  * @param {HTMLElement|null|undefined} item
  * @return {HTMLElement|null|undefined}

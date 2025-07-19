@@ -10,7 +10,7 @@ import { isFunction } from '../function/function.js'
 import { isSet } from '../set/set.js'
 
 /**
- * Action callbacks by name
+ * Action callbacks by name.
  *
  * @type {Map<string, Set<GenericFunction>>}
  */
@@ -21,7 +21,7 @@ const actions: Map<string, Set<GenericFunction>> = new Map([
 ])
 
 /**
- * Add function to actions map
+ * Add function to actions map.
  *
  * @param {string} name
  * @param {GenericFunction} action
@@ -42,7 +42,7 @@ const addAction = (name: string, action: GenericFunction): boolean => {
 }
 
 /**
- * Remove action from actions map
+ * Remove action from actions map.
  *
  * @param {string} name
  * @param {GenericFunction} action
@@ -63,7 +63,7 @@ const removeAction = (name: string, action: GenericFunction): boolean => {
 }
 
 /**
- * Run callback functions from actions map
+ * Run callback functions from actions map.
  *
  * @param {string} name
  * @param {*} [args]

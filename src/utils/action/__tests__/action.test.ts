@@ -13,14 +13,14 @@ import {
 } from '../action.js'
 
 /**
- * First test action name
+ * First test action name.
  *
  * @type {string}
  */
 const testNameOne = 'testName'
 
 /**
- * Second test action name
+ * Second test action name.
  *
  * @type {string}
  */

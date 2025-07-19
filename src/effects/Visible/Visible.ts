@@ -12,46 +12,53 @@ import { onScroll, removeScroll } from '../../utils/scroll/scroll.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
 
 /**
- * Handles link state based on item visibility
+ * Handles link state based on item visibility.
  */
 class Visible extends HTMLElement {
   /**
-   * Links, corresponding items, state and offsets
+   * Links, corresponding items, state and offsets.
    *
    * @type {Map<string, VisibleItem>}
    */
   items: Map<string, VisibleItem> = new Map()
 
   /**
-   * Top offset (eg. scroll margin)
+   * Top offset (eg. scroll margin).
    *
    * @type {number}
    */
   offset: number = 0
 
   /**
-   * Id of end element
+   * Id of end element.
    *
    * @type {string}
    */
   end: string = ''
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * End element
+   * Scroll position.
+   *
+   * @type {number}
+   */
+  #scrollY: number = 0
+
+  /**
+   * End element.
    *
    * @type {HTMLElement|null}
    */
   #end: HTMLElement | null = null
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -59,12 +66,12 @@ class Visible extends HTMLElement {
   #scrollHandler = this.#scroll.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -75,7 +82,7 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -100,7 +107,7 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -175,6 +182,7 @@ class Visible extends HTMLElement {
 
     /* Offsets and visibiliy */
 
+    this.#setScrollY()
     this.#setOffsets()
     this.#setVisible()
 
@@ -189,18 +197,28 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Top and bottom offsets
+   * Set scroll position.
+   *
+   * @private
+   * @return {void}
+   */
+  #setScrollY (): void {
+    this.#scrollY = window.scrollY
+  }
+
+  /**
+   * Top and bottom offsets.
    *
    * @private
    * @return {void}
    */
   #setOffsets (): void {
+    const scrollY = this.#scrollY
+
     this.items.forEach(entry => {
       const { item, next } = entry
 
       const rect = item.getBoundingClientRect()
-      const scrollY = window.scrollY
-
       const top = rect.top + scrollY
       let bottom = rect.bottom + scrollY
 
@@ -214,13 +232,13 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Check if top/bottom of item reached/exited top of viewport
+   * Check if top/bottom of item reached/exited top of viewport.
    *
    * @private
    * @return {void}
    */
   #setVisible (): void {
-    const scrollY = window.scrollY
+    const scrollY = this.#scrollY
 
     this.items.forEach(entry => {
       const { link, top, bottom } = entry
@@ -238,22 +256,24 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Scroll hook callback
+   * Scroll hook callback.
    *
    * @private
    * @return {void}
    */
   #scroll (): void {
+    this.#setScrollY()
     this.#setVisible()
   }
 
   /**
-   * Resize hook callback
+   * Resize hook callback.
    *
    * @private
    * @return {void}
    */
   #resize (): void {
+    this.#setScrollY()
     this.#setOffsets()
     this.#setVisible()
   }

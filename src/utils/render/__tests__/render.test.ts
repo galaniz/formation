@@ -10,7 +10,7 @@ import { isString } from '../../string/string.js'
 import { render, renderElement, renderString } from '../render.js' 
 
 /**
- * Items to output
+ * Items to output.
  *
  * @type {RenderItems}
  */
@@ -60,7 +60,7 @@ const testItemsDataOne: RenderItems = {
 }
 
 /**
- * Items to output
+ * Items to output.
  *
  * @type {RenderItems}
  */
@@ -110,7 +110,7 @@ const testItemsDataTwo: RenderItems = {
 }
 
 /**
- * Minify string
+ * Minify string.
  *
  * @param {string} str
  * @return {string}
@@ -124,7 +124,7 @@ const testMinify = (str?: string): string => {
 }
 
 /**
- * List item output as string
+ * List item output as string.
  *
  * @type {RenderStringFunction}
  */
@@ -134,7 +134,7 @@ const testListItemString: RenderStringFunction<{ text: string }> = ({ args }) =>
 }
 
 /**
- * List item output as element
+ * List item output as element.
  *
  * @type {RenderFunction}
  */

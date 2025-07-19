@@ -7,7 +7,7 @@
 import type { GenericFunction } from '../../global/globalTypes.js'
 
 /**
- * Check if value is a function
+ * Check if value is a function.
  *
  * @param {*} value
  * @return {boolean}

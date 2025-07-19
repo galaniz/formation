@@ -10,7 +10,7 @@ import { getKey } from '../key/key.js'
 import { isSetStrict } from '../set/set.js'
 
 /**
- * Keydown event callback
+ * Keydown event callback.
  *
  * @private
  * @return {void}
@@ -28,7 +28,7 @@ const keydown = (e: KeyboardEvent): void => {
 }
 
 /**
- * Run actions on escape event
+ * Run actions on escape event.
  *
  * @param {GenericFunction} action
  * @return {void}
@@ -44,7 +44,7 @@ const onEscape = (action: GenericFunction): void => {
 }
 
 /**
- * Remove action from escape set
+ * Remove action from escape set.
  *
  * @param {GenericFunction} action
  * @return {boolean}

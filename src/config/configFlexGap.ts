@@ -7,7 +7,7 @@
 import { config } from './config.js'
 
 /**
- * Browser flexbox gap support
+ * Browser flexbox gap support.
  *
  * @see {@link https://ishadeed.com/article/flexbox-gap/|Source}
  *
@@ -16,6 +16,7 @@ import { config } from './config.js'
 const configFlexGap = (): void => {
   const flex = document.createElement('div')
 
+  flex.style.position = 'absolute'
   flex.style.display = 'flex'
   flex.style.flexDirection = 'column'
   flex.style.rowGap = '1px'

@@ -11,14 +11,14 @@ import { ResponseError } from '../../ResponseError/ResponseError.js'
 import { request } from '../request.js'
 
 /**
- * Fake url
+ * Fake url.
  *
  * @type {string}
  */
 const testUrl: string = 'https://testapi.com'
 
 /**
- * Fake body data
+ * Fake body data.
  *
  * @type {Object<string, string>}
  */

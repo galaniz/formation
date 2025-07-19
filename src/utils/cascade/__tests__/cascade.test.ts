@@ -9,7 +9,7 @@ import { it, expect, describe, beforeEach, vi } from 'vitest'
 import { cascade } from '../cascade.js'
 
 /**
- * Millisecond timestamps
+ * Millisecond timestamps.
  *
  * @type {Array<number[]>}
  */
@@ -24,7 +24,7 @@ let testMs: [
 ]
 
 /**
- * First increment/delay method
+ * First increment/delay method.
  *
  * @return {void}
  */
@@ -33,7 +33,7 @@ const testActionOne = (): void => {
 }
 
 /**
- * Second increment/delay method
+ * Second increment/delay method.
  *
  * @return {void}
  */
@@ -45,7 +45,7 @@ const testActionTwo = (): void => {
 }
 
 /**
- * Third increment/delay method
+ * Third increment/delay method.
  *
  * @return {void}
  */
@@ -57,7 +57,7 @@ const testActionThree = (): void => {
 }
 
 /**
- * Fourth increment/delay method
+ * Fourth increment/delay method.
  *
  * @return {void}
  */
@@ -68,7 +68,7 @@ const testActionFour = (): void => {
 }
 
 /**
- * Round difference between two numbers
+ * Round difference between two numbers.
  *
  * @param {number} first
  * @param {number} second
@@ -80,7 +80,7 @@ const testRoundDiff = (first: number, second: number, nth = 10): number => {
 }
 
 /**
- * Round within range of target (hack to be forgiving if within range)
+ * Round within range of target (hack to be forgiving if within range).
  *
  * @param {number} num
  * @param {number} target
@@ -96,7 +96,7 @@ const testRoundRange = (num: number, target: number, buffer = 100): number => {
 }
 
 /**
- * Check increment matches difference between ms values
+ * Check increment matches difference between ms values.
  *
  * @param {number} [target=10]
  * @return {boolean}
@@ -136,7 +136,7 @@ const testHasIncrement = (target = 10): boolean => {
 }
 
 /**
- * Initial delay
+ * Initial delay.
  *
  * @param {number} initMs
  * @param {number} target

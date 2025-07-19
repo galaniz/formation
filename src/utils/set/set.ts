@@ -3,7 +3,7 @@
  */
 
 /**
- * Check if value is a set
+ * Check if value is a set.
  *
  * @param {*} value
  * @return {boolean}
@@ -13,7 +13,7 @@ const isSet = <T>(value: unknown): value is Set<T> => {
 }
 
 /**
- * Check if value is a set and not empty
+ * Check if value is a set and not empty.
  *
  * @param {*} value
  * @return {boolean}

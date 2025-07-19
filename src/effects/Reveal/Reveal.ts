@@ -10,23 +10,23 @@ import { getItem } from '../../utils/item/item.js'
 import { assetLoaded } from '../../utils/asset/asset.js'
 
 /**
- * Handles reveal based on loaded state of asset
+ * Handles reveal based on loaded state of asset.
  */
 class Reveal extends HTMLElement {
   /**
-   * Load success
+   * Load success.
    *
    * @type {boolean}
    */
   loaded: boolean = false
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   async connectedCallback (): Promise<void> {
     if (this.loaded) {
@@ -37,7 +37,7 @@ class Reveal extends HTMLElement {
   }
 
   /**
-   * Init check required items and listen for load
+   * Init check required items and listen for load.
    *
    * @private
    * @return {boolean}

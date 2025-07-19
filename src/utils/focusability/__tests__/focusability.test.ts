@@ -29,7 +29,7 @@ interface TestHtml {
 }
 
 /**
- * Create elements and group by type
+ * Create elements and group by type.
  *
  * @return {TestHtml}
  */

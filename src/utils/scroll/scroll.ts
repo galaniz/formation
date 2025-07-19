@@ -10,7 +10,7 @@ import { isSetStrict } from '../set/set.js'
 import { config } from '../../config/config.js'
 
 /**
- * Timeout id to clear later
+ * Timeout id to clear later.
  *
  * @private
  * @type {number}
@@ -18,7 +18,15 @@ import { config } from '../../config/config.js'
 let scrollId: number = 0
 
 /**
- * Scroll event callback
+ * Scroll listener flag.
+ *
+ * @private
+ * @type {boolean}
+ */
+let scrollOn: boolean = false
+
+/**
+ * Scroll event callback.
  *
  * @private
  * @return {void}
@@ -28,6 +36,7 @@ const scroll = (): void => {
 
   if (!isSetStrict(actions.get('scroll'))) {
     window.removeEventListener('scroll', scroll)
+    scrollOn = false
   }
 
   scrollId = window.setTimeout(() => {
@@ -36,7 +45,7 @@ const scroll = (): void => {
 }
 
 /**
- * Run actions on scroll event
+ * Run actions on scroll event.
  *
  * @param {GenericFunction} action
  * @return {void}
@@ -48,11 +57,14 @@ const onScroll = (action: GenericFunction): void => {
 
   /* Scroll listener */
 
-  window.addEventListener('scroll', scroll)
+  if (!scrollOn) {
+    window.addEventListener('scroll', scroll)
+    scrollOn = true
+  }
 }
 
 /**
- * Remove action from scroll set
+ * Remove action from scroll set.
  *
  * @param {GenericFunction} action
  * @return {boolean}

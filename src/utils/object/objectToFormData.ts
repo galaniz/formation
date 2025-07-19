@@ -11,9 +11,9 @@ import { isFile, isBlob } from '../file/file.js'
 import { isArray } from '../array/array.js'
 
 /**
- * Recursively convert object key value pairs into form data
+ * Recursively convert object key value pairs into form data.
  *
- * @param {object|string} value - object stringified if toString true
+ * @param {object|string} value - Object stringified if toString true.
  * @param {boolean} [toString=false]
  * @return {FormData}
  */

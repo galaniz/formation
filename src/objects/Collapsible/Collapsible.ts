@@ -16,7 +16,7 @@ import { addAction, doActions } from '../../utils/action/action.js'
 import { getItem } from '../../utils/item/item.js'
 
 /**
- * Custom event details
+ * Custom event details.
  */
 declare global {
   interface ElementEventMap {
@@ -25,60 +25,60 @@ declare global {
 }
 
 /**
- * Handles expansion and collapse of element
+ * Handles expansion and collapse of element.
  */
 class Collapsible extends HTMLElement {
   /**
-   * Element expands and collapses
+   * Element expands and collapses.
    *
    * @type {HTMLElement|null}
    */
   panel: HTMLElement | null = null
 
   /**
-   * Button element initiates open and close
+   * Button element initiates open and close.
    *
    * @type {HTMLButtonElement|null}
    */
   toggle: HTMLButtonElement | null = null
 
   /**
-   * Open state
+   * Open state.
    *
    * @type {boolean}
    */
   expanded: boolean = false
 
   /**
-   * Respond to hover events
+   * Respond to hover events.
    *
    * @type {boolean}
    */
   hoverable: boolean = false
 
   /**
-   * Accordion group name
+   * Accordion group name.
    *
    * @type {string}
    */
   accordion: string = ''
 
   /**
-   * Transition duration on open or close
+   * Transition duration on open or close.
    *
    * @type {number}
    */
   duration: number = 300
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Type of collapsible
+   * Type of collapsible.
    *
    * @private
    * @type {CollapsibleType}
@@ -86,7 +86,7 @@ class Collapsible extends HTMLElement {
   #type: CollapsibleType = 'single'
 
   /**
-   * Source of toggle
+   * Source of toggle.
    *
    * @private
    * @type {string}
@@ -94,7 +94,7 @@ class Collapsible extends HTMLElement {
   #source: string = ''
 
   /**
-   * Id for blur timeout
+   * Id for blur timeout.
    *
    * @private
    * @type {number}
@@ -102,7 +102,7 @@ class Collapsible extends HTMLElement {
   #blurDelayId: number = 0
 
   /**
-   * Id for expand timeout
+   * Id for expand timeout.
    *
    * @private
    * @type {number}
@@ -110,7 +110,7 @@ class Collapsible extends HTMLElement {
   #delayId: number = 0
 
   /**
-   * Id for height timeout
+   * Id for height timeout.
    *
    * @private
    * @type {number}
@@ -118,7 +118,7 @@ class Collapsible extends HTMLElement {
   #autoDelayId: number = 0
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -128,12 +128,12 @@ class Collapsible extends HTMLElement {
   #keyHandler = this.#key.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -144,7 +144,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -177,7 +177,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -277,7 +277,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Handle hover events
+   * Handle hover events.
    *
    * @private
    * @param {boolean} [set=true]
@@ -296,7 +296,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Open or close panel and update attributes
+   * Open or close panel and update attributes.
    *
    * @private
    * @param {boolean} [open=true]
@@ -356,7 +356,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Click handler on container element to toggle
+   * Click handler on container element to toggle.
    *
    * @private
    * @return {void}
@@ -367,7 +367,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Mouse handler on container element to toggle
+   * Mouse handler on container element to toggle.
    *
    * @private
    * @param {MouseEvent} e
@@ -379,7 +379,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Key handler on container element for key source
+   * Key handler on container element for key source.
    *
    * @private
    * @return {void}
@@ -389,7 +389,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Blur handler on container element to close
+   * Blur handler on container element to close.
    *
    * @private
    * @return {void}

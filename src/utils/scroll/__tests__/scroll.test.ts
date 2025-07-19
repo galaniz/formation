@@ -11,7 +11,7 @@ import { onScroll, removeScroll } from '../scroll.js'
 import { config } from '../../../config/config.js'
 
 /**
- * Fire window scroll event
+ * Fire window scroll event.
  *
  * @return {void}
  */

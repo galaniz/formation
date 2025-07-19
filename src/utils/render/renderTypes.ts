@@ -7,12 +7,12 @@
 import type { Generic, GenericStrings, WritableKeys } from '../../global/globalTypes.js'
 
 /**
- * HTMLElement write keys
+ * HTMLElement write keys.
  */
 type WritableHTMLElementKeys = WritableKeys<HTMLElement>
 
 /**
- * HTMLElement write properities
+ * HTMLElement write properities.
  */
 type WritableHTMLElement = {
   [K in WritableHTMLElementKeys]?: string | number | boolean

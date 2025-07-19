@@ -8,7 +8,7 @@ import type { Config } from './configTypes.js'
 import { configDefaultFontSize } from './configDefaultFontSize.js'
 
 /**
- * Attributes and feature support
+ * Attribute and feature support.
  *
  * @type {Config}
  */
@@ -25,7 +25,7 @@ const config: Config = {
 }
 
 /**
- * Check attribute/feature support
+ * Check attribute/feature support.
  *
  * @return {void}
  */

@@ -8,14 +8,14 @@ import { it, expect, describe } from 'vitest'
 import { setLoader } from '../loader.js'
 
 /**
- * Data attribute name
+ * Data attribute name.
  *
  * @type {string}
  */
 const testAttribute = 'data-loader-show'
 
 /**
- * Create div loader
+ * Create div loader.
  *
  * @return {HTMLDivElement}
  */
@@ -33,7 +33,7 @@ const testCreateLoader = (): HTMLDivElement => {
 }
 
 /**
- * Check if loader has attribute
+ * Check if loader has attribute.
  *
  * @param {HTMLElement} loader
  * @return {boolean}
@@ -43,7 +43,7 @@ const testCheckAttribute = (loader: HTMLElement): boolean => {
 }
 
 /**
- * Check if loader focused
+ * Check if loader focused.
  *
  * @param {HTMLElement} loader
  * @return {boolean}

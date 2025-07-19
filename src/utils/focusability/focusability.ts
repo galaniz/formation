@@ -8,7 +8,7 @@ import { isHtmlElement, isHtmlElementArray } from '../html/html.js'
 import { getOuterItems } from '../item/itemOuter.js'
 
 /**
- * Manage focusability of specified elements
+ * Manage focusability of specified elements.
  *
  * @param {boolean} on
  * @param {Element[]} items
@@ -27,7 +27,7 @@ const toggleFocusability = (on: boolean, items: Element[] = []): boolean | undef
 }
 
 /**
- * Selector string to get focusable items
+ * Selector string to get focusable items.
  *
  * @type {string}
  */
@@ -35,7 +35,7 @@ const focusSelector =
   'a, area, input, select, textarea, button, details, iframe, audio, video, [contenteditable], [tabindex]'
 
 /**
- * Check if element is focusable
+ * Check if element is focusable.
  *
  * @param {Element} item
  * @return {boolean}
@@ -66,7 +66,7 @@ const isItemFocusable = (item: Element | null): boolean => {
 }
 
 /**
- * All focusable elements inside item
+ * All focusable elements inside item.
  *
  * @param {Element} item
  * @return {Element[]}
@@ -80,7 +80,7 @@ const getInnerFocusableItems = (item: Element | null): Element[] => {
 }
 
 /**
- * All focusable elements outside item
+ * All focusable elements outside item.
  *
  * @param {Element|null} item
  * @return {Element[]}

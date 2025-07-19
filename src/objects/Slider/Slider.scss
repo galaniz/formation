@@ -15,7 +15,6 @@ $object-fix: fix.get-class-prefix("object");
 /* Containers */
 
 .#{$object-fix}slider {
-  --sld-height: auto;
   --sld-snap: x mandatory;
   --sld-items: var(--sld-items-init, 1);
   --sld-items-s: 1;
@@ -89,7 +88,8 @@ $object-fix: fix.get-class-prefix("object");
   @include breakpoint.breakpoint-min("container") {
     --sld-container: var(--#{con.$n}container-no-padding);
     --sld-item-width: var(--sld-container) / var(--sld-items);
-    --sld-track-scroll: 0 0 0 calc(50vw - (var(--#{con.$n}scrollbar-width, 0px) / 2) - (var(--sld-container) / 2));
+    --sld-track-scroll: 0 0 0 calc(50vw - (var(--sld-container) / 2));
+    --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / 2);
     --sld-track-padding: 0;
 
     &.#{$object-fix}slider-single {
@@ -98,14 +98,11 @@ $object-fix: fix.get-class-prefix("object");
   }
 }
 
-.#{$object-fix}slider-body {
-  height: var(--sld-height);
-}
-
 .#{$object-fix}slider-track {
   padding: var(--sld-track-padding);
   scroll-padding: var(--sld-track-scroll);
   scroll-snap-type: var(--sld-snap);
+  transform: translateX(var(--sld-track-x, 0));
   -webkit-overflow-scrolling: touch;
 }
 

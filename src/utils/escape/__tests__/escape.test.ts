@@ -10,7 +10,7 @@ import { actions } from '../../action/action.js'
 import { onEscape, removeEscape } from '../escape.js'
 
 /**
- * Add keydown event to document
+ * Add keydown event to document.
  *
  * @param {string} key
  * @return {KeyboardEvent}

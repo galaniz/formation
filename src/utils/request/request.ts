@@ -12,7 +12,7 @@ import { isFunction } from '../function/function.js'
 import { ResponseError } from '../ResponseError/ResponseError.js'
 
 /**
- * Handle requests with fetch method
+ * Handle requests with fetch method.
  *
  * @param {RequestArgs} args
  * @return {Promise<void>}

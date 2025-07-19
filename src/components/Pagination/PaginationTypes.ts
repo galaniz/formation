@@ -14,8 +14,3 @@ export type PaginationTemplate =
   'next-text' |
   'current' |
   'item'
-
-/**
- * @typedef {HTMLInputElement|HTMLSelectElement} PaginationFilterInput
- */
-export type PaginationFilterInput = HTMLInputElement | HTMLSelectElement

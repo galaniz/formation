@@ -9,7 +9,7 @@ import { isHtmlElement } from '../html/html.js'
 import { isFunction } from '../function/function.js'
 
 /**
- * Tags to exclude from item siblings
+ * Tags to exclude from item siblings.
  *
  * @private
  * @type {Set<string>}
@@ -17,7 +17,7 @@ import { isFunction } from '../function/function.js'
 const excludedTags: Set<string> = new Set(['SCRIPT', 'STYLE', 'HEAD'])
 
 /**
- * Recursively get elements outside of specified element
+ * Recursively get elements outside of specified element.
  *
  * @type {ItemsOuter}
  */

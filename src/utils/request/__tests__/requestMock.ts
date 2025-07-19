@@ -37,7 +37,7 @@ const mockRequestFetchArgs: {
 }
 
 /**
- * Mock fetch function
+ * Mock fetch function.
  *
  * @param {string} url
  * @param {MockFetchOptions} options
@@ -48,7 +48,7 @@ const mockRequestFetch = vi.fn(async (
   options: MockFetchOptions
 ): Promise<MockFetchResult> => {
   return await new Promise((resolve, reject) => {
-    /* Url check */
+    /* URL check */
 
     if (!isStringStrict(url)) {
       reject(new TypeError(mockFetchErrorMessage.url))

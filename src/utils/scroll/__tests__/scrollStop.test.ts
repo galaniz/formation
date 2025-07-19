@@ -8,14 +8,14 @@ import { it, expect, describe, beforeEach } from 'vitest'
 import { stopScroll } from '../scrollStop.js'
 
 /**
- * Data attribute name
+ * Data attribute name.
  *
  * @type {string}
  */
 const testAttribute = 'data-stop-scroll'
 
 /**
- * Check if html element has attribute
+ * Check if html element has attribute.
  *
  * @return {boolean}
  */

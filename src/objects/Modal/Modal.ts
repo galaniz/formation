@@ -15,7 +15,7 @@ import {
 } from '../../utils/focusability/focusability.js'
 
 /**
- * Custom event details
+ * Custom event details.
  */
 declare global {
   interface ElementEventMap {
@@ -24,39 +24,39 @@ declare global {
 }
 
 /**
- * Handles display of modal
+ * Handles display of modal.
  */
 class Modal extends HTMLElement {
   /**
-   * Button element(s) open modal
+   * Button element(s) open modal.
    *
    * @type {HTMLButtonElement[]}
    */
   opens: HTMLButtonElement[] = []
 
   /**
-   * Element(s) close modal
+   * Element(s) close modal.
    *
    * @type {HTMLElement[]}
    */
   closes: HTMLElement[] = []
 
   /**
-   * Initialize success
+   * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
 
   /**
-   * Open state
+   * Open state.
    *
    * @type {boolean}
    */
   open: boolean = false
 
   /**
-   * Id for focus delay timeout
+   * Id for focus delay timeout.
    *
    * @private
    * @type {number}
@@ -64,7 +64,7 @@ class Modal extends HTMLElement {
   #focusDelayId: number = 0
 
   /**
-   * First focusable element in modal
+   * First focusable element in modal.
    *
    * @private
    * @type {HTMLElement|null}
@@ -72,7 +72,7 @@ class Modal extends HTMLElement {
   #firstFocusable: HTMLElement | null = null
 
   /**
-   * Last button element to open modal
+   * Last button element to open modal.
    *
    * @private
    * @type {HTMLButtonElement|null}
@@ -80,7 +80,7 @@ class Modal extends HTMLElement {
   #lastOpens: HTMLButtonElement | null = null
 
   /**
-   * Bind this to event callbacks
+   * Bind this to event callbacks.
    *
    * @private
    */
@@ -89,12 +89,12 @@ class Modal extends HTMLElement {
   #escapeHandler = this.#escape.bind(this)
 
   /**
-   * Constructor object
+   * Create new instance.
    */
   constructor () { super() } // eslint-disable-line @typescript-eslint/no-useless-constructor
 
   /**
-   * Init after added to DOM
+   * Init after added to DOM.
    */
   connectedCallback (): void {
     if (this.init) {
@@ -105,7 +105,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Clean up after removed from DOM
+   * Clean up after removed from DOM.
    */
   async disconnectedCallback (): Promise<void> {
     /* Wait a tick to let DOM update */
@@ -144,7 +144,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Init check required items and set properties
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -184,7 +184,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Open/close modal - handle attributes and toggle focusability
+   * Open/close modal update attributes and toggle focusability.
    *
    * @private
    * @param {boolean} open
@@ -234,7 +234,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Escape hook callback
+   * Escape hook callback.
    *
    * @private
    * @return {void}
@@ -246,7 +246,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Click handler on close element(s) to close modal
+   * Click handler on close element(s) to close modal.
    *
    * @private
    * @param {Event} e
@@ -259,7 +259,7 @@ class Modal extends HTMLElement {
   }
 
   /**
-   * Click handler on open button to open modal
+   * Click handler on open button to open modal.
    *
    * @private
    * @param {Event} e

@@ -10,7 +10,7 @@ import { isArrayStrict } from '../array/array.js'
 import { isString } from '../string/string.js'
 
 /**
- * Check if single asset is loaded
+ * Check if single asset is loaded.
  *
  * @param {Asset} asset
  * @return {Promise<Asset>}
@@ -48,7 +48,7 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
 }
 
 /**
- * Check if multiple assets are loaded
+ * Check if multiple assets are loaded.
  *
  * @param {Asset[]} assets
  * @param {AssetDone} [done]
