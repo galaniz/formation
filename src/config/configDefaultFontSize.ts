@@ -12,17 +12,9 @@ import { config } from './config.js'
  * @return {void}
  */
 const configDefaultFontSize = (): void => {
-  const element = document.createElement('div')
-
-  element.style.width = '1rem'
-  element.style.position = 'absolute'
-
-  document.body.append(element)
-
-  const width = element.clientWidth
-  const size = width > 0 ? width : 16
-
-  element.remove()
+  const rootStyle = getComputedStyle(document.documentElement)
+  const fontSize = rootStyle.fontSize
+  const size = parseFloat(fontSize)
 
   config.defaultFontSize = size
   config.fontSizeMultiplier = size / 16

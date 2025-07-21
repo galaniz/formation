@@ -283,9 +283,9 @@ test.describe('Navigation', () => {
     expect(navClose.open).toBe('false')
     expect(navClose.showModal).toBe(false)
     expect(navClose.lastActive).toBe('Open')
-    expect(navEvents.reset).toStrictEqual([...expectedIds, ...expectedIds]) // Account for resize
-    expect(navEvents.resetted).toStrictEqual([...expectedIds, ...expectedIds]) // Account for resize
-    expect(navEvents.set).toStrictEqual([...expectedIds, ...expectedIds]) // Account for resize
+    expect(navEvents.reset).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
+    expect(navEvents.resetted).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
+    expect(navEvents.set).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
     expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot'])
     expect(navEvents.toggled).toStrictEqual(['nav-slot'])
   })

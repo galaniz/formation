@@ -20,18 +20,11 @@ describe('configDefaultFontSize()', () => {
   })
 
   it('should return 18', () => {
-    const value = 18
-
-    Object.defineProperty(
-      HTMLElement.prototype,
-      'clientWidth', {
-        configurable: true,
-        value
-      }
-    )
+    document.documentElement.style.fontSize = '18px'
+    const expectedResult = 18
 
     configDefaultFontSize()
 
-    expect(config.defaultFontSize).toBe(value)
+    expect(config.defaultFontSize).toBe(expectedResult)
   })
 })
