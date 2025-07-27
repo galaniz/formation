@@ -56,7 +56,6 @@ export type ItemsOuterType = 'all' | 'prev' | 'next'
  * @param {HTMLElement} item
  * @param {ItemsOuterType} [type]
  * @param {ItemsOuterFilter} [filter]
- * @param {Element[]} [_store]
  * @return {Element[]}
  */
 export type ItemsOuter = (
