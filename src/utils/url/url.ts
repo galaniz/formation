@@ -27,7 +27,7 @@ const urlEncode = (
     }
 
     Object.keys(value).forEach(k => {
-      urlEncode((value as Record<string, unknown>)[k] as object, _key != null ? `${_key.toString()}[${k.toString()}]` : k.toString(), _data)
+      urlEncode((value as Record<string, unknown>)[k] as object, _key != null ? `${_key}[${k}]` : k, _data)
     })
   } else {
     let str = String(value)

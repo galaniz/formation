@@ -239,7 +239,7 @@ test.describe('Navigation', () => {
         show: nav.hasAttribute('show'),
         open: nav.getAttribute('open'),
         showModal: nav.getAttribute('show-modal'),
-        lastActive: document.activeElement?.textContent?.trim()
+        lastActive: document.activeElement?.textContent.trim()
       }
     })
 
@@ -253,7 +253,7 @@ test.describe('Navigation', () => {
         show: nav.hasAttribute('show'),
         open: nav.getAttribute('open'),
         showModal: nav.hasAttribute('show-modal'),
-        lastActive: document.activeElement?.textContent?.trim()
+        lastActive: document.activeElement?.textContent.trim()
       }
     })
 

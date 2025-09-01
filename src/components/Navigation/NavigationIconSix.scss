@@ -74,7 +74,9 @@ $component-fix: fix.get-class-prefix("component");
     --#{con.$n}delay: var(--ico-delay-left);
 
     transform: scaleY(var(--ico-scale-cross)) translateX(var(--ico-cross));
+    top: 0;
     left: 50%;
+    height: 100%;
   }
 
   .#{$component-fix}nav-icon-right {
@@ -82,6 +84,7 @@ $component-fix: fix.get-class-prefix("component");
 
     transform: scaleX(var(--ico-scale-cross)) translateY(var(--ico-cross));
     top: 50%;
+    width: 100%;
   }
 
   /* Transform */

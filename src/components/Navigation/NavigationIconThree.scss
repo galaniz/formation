@@ -25,7 +25,7 @@ $component-fix: fix.get-class-prefix("component");
   transform: rotate(var(--ico-rotate));
 
   .#{$component-fix}nav-icon-top {
-    transform: translateY(var(--ico-y)) rotate(var(--ico-rotate-1));
+    transform: translateY(var(--ico-y));
   }
 
   .#{$component-fix}nav-icon-bottom {

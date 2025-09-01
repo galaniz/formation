@@ -132,7 +132,7 @@ const mockRequestFetch = vi.fn(async (
 
     /* Result */
 
-    const res = expect === 'json' ? JSON.stringify(data) : String(isString(data) ? data : '')
+    const res = expect === 'json' ? JSON.stringify(data) : isString(data) ? data : ''
 
     resolve({
       ok,

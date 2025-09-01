@@ -7,7 +7,6 @@
 import { isObjectStrict } from './object.js'
 import { isStringStrict } from '../string/string.js'
 import { getObjectKeys } from './objectKeys.js'
-import { isFile, isBlob } from '../file/file.js'
 import { isArray } from '../array/array.js'
 
 /**
@@ -29,20 +28,18 @@ const objectToFormData = (
     getObjectKeys(value).forEach(k => {
       const v = value[k]
       const isObj = isObjectStrict(v) || isArray(v)
-      const _k = (k as string).toString()
+      const _k = k as string
 
       objectToFormData(
         toString && isObj ? JSON.stringify(v) : v,
         toString,
-        isKeySet ? `${_key.toString()}[${_k}]` : _k,
+        isKeySet ? `${_key}[${_k}]` : _k,
         _data
       )
     })
   } else {
-    const v = isFile(value) || isBlob(value) ? value : String(value)
-
     if (isKeySet) {
-      _data.append(_key, v)
+      _data.append(_key, value)
     }
   }
 

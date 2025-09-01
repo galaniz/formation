@@ -14,48 +14,57 @@ $component-fix: fix.get-class-prefix("component");
 
 /* Styles */
 
-@keyframes e-nav-icon-collapse {
+@keyframes e-nav-icon-collapse-out {
   0% {
-    transform: translateY(var(--ico-y-0)) rotate(var(--ico-rotate-0));
+    transform: translateY(var(--ico-y-0)) rotate(var(--ico-rotate));
   }
 
-  1% {
-    transform: translateY(var(--ico-y-1)) rotate(var(--ico-rotate-0));
+  50% {
+    transform: translateY(var(--ico-y-0));
   }
 
   100% {
-    transform: translateY(var(--ico-y-100)) rotate(var(--ico-rotate-100));
+    transform: translateY(var(--ico-y-100));
+  }
+}
+
+@keyframes e-nav-icon-collapse-in {
+  0% {
+    transform: translateY(var(--ico-y-0));
+  }
+
+  50% {
+    transform: translateY(var(--ico-y-100));
+  }
+
+  100% {
+    transform: translateY(var(--ico-y-100)) rotate(var(--ico-rotate));
   }
 }
 
 [data-nav-icon="5"] {
   .#{$component-fix}nav-icon-top {
     --ico-y-0: #{icon.$y};
-    --ico-y-1: #{icon.$y};
     --ico-y-100: 0;
-    --ico-rotate-0: 45deg;
-    --ico-rotate-100: 0deg;
+    --ico-rotate: 45deg;
   }
 
   .#{$component-fix}nav-icon-bottom {
     --ico-y-0: #{icon.$y * -1};
-    --ico-y-1: #{icon.$y * -1};
     --ico-y-100: 0;
-    --ico-rotate-0: -45deg;
-    --ico-rotate-100: 0deg;
+    --ico-rotate: -45deg;
   }
 
   .#{$component-fix}nav-icon-top,
   .#{$component-fix}nav-icon-bottom {
-    animation: 300ms ease forwards e-nav-icon-collapse;
+    animation: 300ms ease forwards e-nav-icon-collapse-out;
   }
 
   .#{$component-fix}nav-icon-middle {
     --#{con.$n}duration: 150ms;
     --#{con.$n}delay: 100ms;
-    --ico-op: 1;
 
-    opacity: var(--ico-op);
+    opacity: var(--ico-op, 1);
   }
 
   [show] & {
@@ -65,24 +74,20 @@ $component-fix: fix.get-class-prefix("component");
     }
 
     .#{$component-fix}nav-icon-top {
-      --ico-y-0: #{icon.$y};
-      --ico-y-1: #{icon.$y};
+      --ico-y-0: 0;
       --ico-y-100: #{icon.$y};
-      --ico-rotate-0: 0deg;
-      --ico-rotate-100: 45deg;
+      --ico-rotate: 45deg;
     }
 
     .#{$component-fix}nav-icon-bottom {
       --ico-y-0: 0;
-      --ico-y-1: #{icon.$y * -1};
       --ico-y-100: #{icon.$y * -1};
-      --ico-rotate-0: 0deg;
-      --ico-rotate-100: -45deg;
+      --ico-rotate: -45deg;
     }
 
     .#{$component-fix}nav-icon-top,
     .#{$component-fix}nav-icon-bottom {
-      animation: 300ms ease forwards e-nav-icon-collapse;
+      animation: 300ms ease forwards e-nav-icon-collapse-in;
     }
   }
 }
