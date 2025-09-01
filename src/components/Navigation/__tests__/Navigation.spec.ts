@@ -149,7 +149,9 @@ test.describe('Navigation', () => {
       height: 900
     })
 
-    await page.waitForTimeout(200)
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slots-groups-breakpoints').length === 2
+    })
 
     const navSlots = await page.evaluate(() => {
       const navGroups: Navigation | null = document.querySelector('#nav-slots-groups-breakpoints')
@@ -175,13 +177,15 @@ test.describe('Navigation', () => {
     expect(groupsModalTwo).toBe(5)
   })
 
-  test('should move all items into modal slots if 600px viewport', async ({ page }) => {
+  test('should move all items into modal slots if 620px viewport', async ({ page }) => {
     await page.setViewportSize({
-      width: 600,
-      height: 600
+      width: 620,
+      height: 620
     })
 
-    await page.waitForTimeout(200)
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slots-groups-breakpoints').length === 2
+    })
 
     const navSlots = await page.evaluate(() => {
       const nav: Navigation | null = document.querySelector('#nav-slots-breakpoint')
@@ -224,13 +228,19 @@ test.describe('Navigation', () => {
 
   test('should open and close modal', async ({ page }) => {
     await page.setViewportSize({
-      width: 600,
-      height: 600
+      width: 620,
+      height: 620
     })
 
-    await page.waitForTimeout(200)
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+    })
+
     await page.getByTestId('nav-slot-open').click()
-    await page.waitForTimeout(300)
+    await page.waitForFunction(() => { // Wait for open
+      const nav = document.querySelector('#nav-slot') as Navigation
+      return nav.getAttribute('show-modal') === 'items'
+    })
 
     const navOpen = await page.evaluate(() => {
       const nav = document.querySelector('#nav-slot') as Navigation
@@ -244,7 +254,9 @@ test.describe('Navigation', () => {
     })
 
     await page.getByTestId('nav-slot-close').click()
-    await page.waitForTimeout(400)
+    await page.waitForFunction(() => { // Wait for close
+      return window.testNavToggled.filter(id => id === 'nav-slot').length === 1
+    })
 
     const navClose = await page.evaluate(() => {
       const nav = document.querySelector('#nav-slot') as Navigation
@@ -286,7 +298,7 @@ test.describe('Navigation', () => {
     expect(navEvents.reset).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
     expect(navEvents.resetted).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
     expect(navEvents.set).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
-    expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot'])
+    expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot']) // Twice for resize and click
     expect(navEvents.toggled).toStrictEqual(['nav-slot'])
   })
 })
