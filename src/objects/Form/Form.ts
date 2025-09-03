@@ -870,7 +870,7 @@ class Form extends HTMLElement {
     }
 
     if (hasLegend) {
-      const legendText = getItem('[data-form-legend-text]', legend)
+      const legendText = getItem('[data-form-legend-text]', legend)?.textContent
 
       if (isStringStrict(legendText)) {
         this.#legends.set(name, legendText)
@@ -883,7 +883,7 @@ class Form extends HTMLElement {
     const hasLabel = isHtmlElement(label)
 
     if (hasLabel) {
-      const labelText = getItem('[data-form-label-text]', label)
+      const labelText = getItem('[data-form-label-text]', label)?.textContent
 
       if (isStringStrict(labelText)) {
         this.#labels.set(name, labelText)
