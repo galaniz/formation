@@ -85,7 +85,7 @@ class Tabs extends HTMLElement {
   #endIndex: number = 0
 
   /**
-   * Id for delay timeout.
+   * ID for delay timeout.
    *
    * @private
    * @type {number}

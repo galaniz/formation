@@ -112,7 +112,7 @@ class Form extends HTMLElement {
   #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
-   * Id for change timeout.
+   * ID for change timeout.
    *
    * @private
    * @type {number}

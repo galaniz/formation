@@ -30,7 +30,7 @@ class Visible extends HTMLElement {
   offset: number = 0
 
   /**
-   * Id of end element.
+   * ID of end element.
    *
    * @type {string}
    */

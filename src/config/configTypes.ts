@@ -45,7 +45,6 @@ export interface Config {
  * @prop {string} [volume=Volume]
  * @prop {string} [fullscreen=Fullscreen]
  * @prop {string} [exitFullscreen=Exit Fullscreen]
- * @prop {string} [of=of]
  */
 export interface ConfigLabels extends Generic {
   hours?: string
@@ -61,5 +60,4 @@ export interface ConfigLabels extends Generic {
   volume?: string
   fullscreen?: string
   exitFullscreen?: string
-  of?: string
 }

@@ -56,7 +56,7 @@ class Modal extends HTMLElement {
   open: boolean = false
 
   /**
-   * Id for focus delay timeout.
+   * ID for focus delay timeout.
    *
    * @private
    * @type {number}

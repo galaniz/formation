@@ -133,7 +133,7 @@ export type FormCloneKeys =
   'loader'
 
 /**
- * @typedef {Map<FormCloneKeys, HTMLElement>} FormTemplates
+ * @typedef {Map<FormCloneKeys, HTMLElement>} FormClones
  */
 export type FormClones = Map<FormCloneKeys, HTMLElement>
 

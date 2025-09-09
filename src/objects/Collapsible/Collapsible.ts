@@ -94,7 +94,7 @@ class Collapsible extends HTMLElement {
   #source: string = ''
 
   /**
-   * Id for blur timeout.
+   * ID for blur timeout.
    *
    * @private
    * @type {number}
@@ -102,7 +102,7 @@ class Collapsible extends HTMLElement {
   #blurDelayId: number = 0
 
   /**
-   * Id for expand timeout.
+   * ID for expand timeout.
    *
    * @private
    * @type {number}
@@ -110,7 +110,7 @@ class Collapsible extends HTMLElement {
   #delayId: number = 0
 
   /**
-   * Id for height timeout.
+   * ID for height timeout.
    *
    * @private
    * @type {number}
