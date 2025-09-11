@@ -349,9 +349,11 @@ class Collapsible extends HTMLElement {
     /* Accordion group action */
 
     if (this.#type === 'accordion' && open) {
-      doActions(`collapsible:accordion:${this.accordion}`, {
+      const accordionArgs: CollapsibleAccordionArgs = {
         element: this
-      })
+      }
+
+      doActions(`collapsible:accordion:${this.accordion}`, accordionArgs)
     }
   }
 

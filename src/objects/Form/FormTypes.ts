@@ -7,14 +7,14 @@
 import type { Generic } from '../../global/globalTypes.js'
 
 /**
- * @typedef {'blur'|'submit'|'both'} FormValidateOn
- */
-export type FormValidateOn = 'change' | 'submit' | 'both'
-
-/**
  * @typedef {HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement} FormInput
  */
 export type FormInput = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+
+/**
+ * @typedef {string|number|boolean|File} FormPrimitive
+ */
+export type FormPrimitive = string | number | boolean | File
 
 /**
  * @typedef {object} FormGroup
@@ -24,7 +24,7 @@ export type FormInput = HTMLInputElement | HTMLTextAreaElement | HTMLSelectEleme
  * @prop {string} labelType
  * @prop {boolean} required
  * @prop {string[]} type
- * @prop {string[]} values
+ * @prop {FormPrimitive[]} values
  * @prop {boolean} valid
  * @prop {string} emptyMessage
  * @prop {string} invalidMessage
@@ -36,7 +36,7 @@ export interface FormGroup {
   labelType: 'legend' | 'label'
   required: boolean
   type: string[]
-  values: string[]
+  values: FormPrimitive[]
   valid: boolean
   emptyMessage: string
   invalidMessage: string
@@ -56,13 +56,13 @@ export interface FormErrorListItem {
 
 /**
  * @typedef {Object} FormValidateResult
- * @prop {string[]} values
+ * @prop {FormPrimitive[]} values
  * @prop {string} message
  * @prop {boolean} valid
  * @prop {number[]} ariaInvalid
  */
-export interface FormValidateResult {
-  values: string[]
+export interface FormValidateResult<V = FormPrimitive[]> {
+  values: V
   message: string
   valid: boolean
   ariaInvalid: number[]
@@ -86,13 +86,13 @@ export type FormGroups = Map<string, FormGroup>
 /**
  * @typedef {object} FormValue
  * @extends {Generic}
- * @prop {string|boolean|number|string[]|number[]} value
+ * @prop {FormPrimitive|FormPrimitive[]} value
  * @prop {string|string[]} type
  * @prop {string} [label]
  * @prop {string} [legend]
  */
 export interface FormValue extends Generic {
-  value: string | boolean | number | string[] | number[]
+  value: FormPrimitive | FormPrimitive[]
   type: string | string[]
   label?: string
   legend?: string
@@ -104,6 +104,16 @@ export interface FormValue extends Generic {
  * @prop {FormGroup} group
  */
 export interface FormValueFilterArgs {
+  name: string
+  group: FormGroup
+}
+
+/**
+ * @typedef {object} FormChangeActionArgs
+ * @prop {string} name
+ * @prop {FormGroup} group
+ */
+export interface FormChangeActionArgs {
   name: string
   group: FormGroup
 }
@@ -122,6 +132,11 @@ export interface FormValuesFilterArgs {
 }
 
 /**
+ * @typedef {'change'|'submit'|'both'} FormErrorsOn
+ */
+export type FormErrorsOn = 'change' | 'submit' | 'both'
+
+/**
  * @typedef {'errorSummary'|'errorList'|'errorInline'|'error'|'success'|'loader'} FormCloneKeys
  */
 export type FormCloneKeys =
@@ -133,7 +148,7 @@ export type FormCloneKeys =
   'loader'
 
 /**
- * @typedef {Map<FormCloneKeys, HTMLElement>} FormTemplates
+ * @typedef {Map<FormCloneKeys, HTMLElement>} FormClones
  */
 export type FormClones = Map<FormCloneKeys, HTMLElement>
 
