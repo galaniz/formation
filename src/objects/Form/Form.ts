@@ -851,6 +851,7 @@ class Form extends HTMLElement {
     const groupExists = group != null
 
     if (groupExists) {
+      input.addEventListener('change', this.#changeHandler)
       group.inputs.push(input)
       group.type.push(type)
       return true
@@ -933,8 +934,6 @@ class Form extends HTMLElement {
       emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
       invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
     })
-
-    /* Change */
 
     input.addEventListener('change', this.#changeHandler)
 
