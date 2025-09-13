@@ -1,9 +1,9 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "5.1.0-beta.20",
+  "version": "5.1.0-beta.21",
   "description": "A collection of front end web components and utilities",
   "main": "./lib/config/config.js",
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.15.1",
   "type": "module",
   "files": [
     "./lib"
@@ -52,7 +52,7 @@
     "stylelint-config-standard-scss": "^15.0.1",
     "terser": "5.44.0",
     "typescript": "^5.9.2",
-    "typescript-eslint": "8.42.0",
+    "typescript-eslint": "8.43.0",
     "vitest": "^3.2.4"
   },
   "release-it": {

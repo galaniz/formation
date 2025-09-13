@@ -6,18 +6,20 @@
 
 import type {
   FormInput,
+  FormPrimitive,
   FormGroup,
   FormErrorListItem,
+  FormErrorsOn,
   FormValidateResult,
   FormValidateFilterArgs,
   FormValue,
   FormValueFilterArgs,
   FormValues,
   FormValuesFilterArgs,
+  FormChangeActionArgs,
   FormTemplates,
   FormTemplateKeys,
   FormClones,
-  FormValidateOn,
   FormGroups
 } from './FormTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
@@ -26,6 +28,7 @@ import { isItemFocusable, focusSelector } from '../../utils/focusability/focusab
 import { getOuterItems } from '../../utils/item/itemOuter.js'
 import { cloneItem, getItem, getTemplateItem } from '../../utils/item/item.js'
 import { applyFilters } from '../../utils/filter/filter.js'
+import { doActions } from '../../utils/action/action.js'
 
 /**
  * Handles form validation and retrieval of values.
@@ -46,11 +49,11 @@ class Form extends HTMLElement {
   groups: FormGroups = new Map()
 
   /**
-   * Validate on submit, change or both.
+   * Display errors on submit, change or both.
    *
-   * @type {FormValidateOn}
+   * @type {FormErrorsOn}
    */
-  validateOn: FormValidateOn = 'both'
+  errorsOn: FormErrorsOn = 'both'
 
   /**
    * Track submit state.
@@ -112,12 +115,12 @@ class Form extends HTMLElement {
   #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
-   * ID for change timeout.
+   * ID for focus timeout.
    *
    * @private
    * @type {number}
    */
-  #changeDelayId: number = 0
+  #focusDelayId: number = 0
 
   /**
    * Bind this to event callbacks.
@@ -162,7 +165,6 @@ class Form extends HTMLElement {
 
     this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
     this.clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
-
     this.groups.forEach(group => {
       const { inputs } = group
 
@@ -185,7 +187,7 @@ class Form extends HTMLElement {
 
     /* Clear timeouts */
 
-    clearTimeout(this.#changeDelayId)
+    clearTimeout(this.#focusDelayId)
   }
 
   /**
@@ -241,12 +243,12 @@ class Form extends HTMLElement {
       }
     })
 
-    /* Validate on */
+    /* Errors */
 
-    const validateOn = this.getAttribute('validate-on')
+    const errorsOn = this.getAttribute('errors-on')
 
-    if (isStringStrict(validateOn)) {
-      this.validateOn = validateOn as FormValidateOn
+    if (isStringStrict(errorsOn)) {
+      this.errorsOn = errorsOn as FormErrorsOn
     }
 
     /* Create groups */
@@ -286,7 +288,7 @@ class Form extends HTMLElement {
     required: boolean,
     emptyMessage: string
   ): FormValidateResult {
-    const values: string[] = []
+    let values: FormPrimitive[] = []
     const ariaInvalid: number[] = []
 
     let message = ''
@@ -295,7 +297,7 @@ class Form extends HTMLElement {
     /* Values from inputs */
 
     inputs.forEach((input, i) => {
-      let value: string | undefined
+      let value: FormPrimitive | undefined
       let isControl = false
       let hasValue = false
 
@@ -321,6 +323,14 @@ class Form extends HTMLElement {
             }
           }
 
+          break
+        case 'file':
+          const files = (input as HTMLInputElement).files
+
+          if (files) {
+            hasValue = true
+            values = Array.from(files)
+          }
           break
         default:
           value = input.value.trim()
@@ -357,9 +367,10 @@ class Form extends HTMLElement {
    * @private
    * @param {FormGroup} group
    * @param {string} name
+   * @param {boolean} [quiet=false]
    * @return {boolean}
    */
-  #validateGroup (group: FormGroup, name: string): boolean {
+  #validateGroup (group: FormGroup, name: string, quiet: boolean = false): boolean {
     /* Group data */
 
     const {
@@ -392,6 +403,17 @@ class Form extends HTMLElement {
     const validate = this.#validateInputs(inputs, name, type, required, emptyMessage)
     const { values, valid, ariaInvalid, message } = validate
 
+    /* Save valid state and values in group */
+
+    group.values = values
+    group.valid = valid
+
+    /* Display errors */
+
+    if (quiet) {
+      return valid
+    }
+
     if (!valid) {
       this.#setErrorMessage(field, inputs, name, label, message, ariaInvalid)
 
@@ -414,11 +436,6 @@ class Form extends HTMLElement {
     /* Reset summary list */
 
     this.#setErrorList()
-
-    /* Save valid state and values in group */
-
-    group.values = values
-    group.valid = valid
 
     /* Result */
 
@@ -631,15 +648,7 @@ class Form extends HTMLElement {
   #change (e: Event): void {
     /* Clear timeout */
 
-    clearTimeout(this.#changeDelayId)
-
-    /* Check validation onset */
-
-    const on = this.validateOn
-
-    if (!this.submitted && on === 'both') {
-      return
-    }
+    clearTimeout(this.#focusDelayId)
 
     /* Group required */
 
@@ -650,22 +659,36 @@ class Form extends HTMLElement {
       return
     }
 
-    /* Delay for correct active element */
+    /* Check errors onset */
 
-    this.#changeDelayId = window.setTimeout(() => {
-      /* Validate group */
+    const on = this.errorsOn
+    const quiet = on === 'submit' || (!this.submitted && on === 'both')
 
-      this.#validateGroup(group, name)
+    /* Validate group */
 
-      /* Display error summary */
+    this.#validateGroup(group, name, quiet)
 
-      if (this.#errorList.size) {
-        this.#displayErrorSummary(true)
-        return
-      }
+    const changeArgs: FormChangeActionArgs = {
+      name,
+      group
+    }
 
-      /* Previous focusable element */
+    doActions(`form:change:${this.id}`, changeArgs)
 
+    if (quiet) {
+      return
+    }
+
+    /* Display error summary */
+
+    if (this.#errorList.size) {
+      this.#displayErrorSummary(true)
+      return
+    }
+
+    /* Delay for correct previous active element */
+
+    this.#focusDelayId = window.setTimeout(() => {
       let prevFocusItem: HTMLElement | undefined
 
       getOuterItems(
@@ -822,20 +845,13 @@ class Form extends HTMLElement {
       return true
     }
 
-    /* Change */
-
-    const addChange = this.validateOn !== 'submit'
-
     /* Group data */
 
     const group = this.groups.get(name)
     const groupExists = group != null
 
-    if (addChange && groupExists) {
-      input.addEventListener('change', this.#changeHandler)
-    }
-
     if (groupExists) {
+      input.addEventListener('change', this.#changeHandler)
       group.inputs.push(input)
       group.type.push(type)
       return true
@@ -919,11 +935,7 @@ class Form extends HTMLElement {
       invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
     })
 
-    /* Change to validate after submit */
-
-    if (addChange) {
-      input.addEventListener('change', this.#changeHandler)
-    }
+    input.addEventListener('change', this.#changeHandler)
 
     /* Successfully added */
 
@@ -933,20 +945,23 @@ class Form extends HTMLElement {
   /**
    * Validate form.
    *
+   * @param {boolean} [quiet=false] Display errors.
    * @return {boolean}
    */
-  validate (): boolean {
+  validate (quiet: boolean = false): boolean {
     let valid = true
 
     this.groups.forEach((group, name) => {
-      const validGroup = this.#validateGroup(group, name)
+      const validGroup = this.#validateGroup(group, name, quiet)
 
       if (!validGroup) {
         valid = false
       }
     })
 
-    this.#displayErrorSummary(!valid, true)
+    if (!quiet) {
+      this.#displayErrorSummary(!valid, true)
+    }
 
     return valid
   }
@@ -967,14 +982,14 @@ class Form extends HTMLElement {
       const single = valuesLen === 1
       const empty = !valuesLen
 
-      let newValues: string | string[] = values
+      let newValues: FormPrimitive | FormPrimitive[] = values
 
       if (empty) {
         newValues = ''
       }
 
       if (single) {
-        newValues = values[0] as string
+        newValues = values[0] as FormPrimitive
       }
 
       const formObj: FormValue = {

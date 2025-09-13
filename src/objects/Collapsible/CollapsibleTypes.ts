@@ -2,6 +2,10 @@
  * Objects - Collapsible Types
  */
 
+/* Imports */
+
+import type { Collapsible } from './Collapsible.js'
+
 /**
  * @typedef {'single'|'accordion'} CollapsibleType
  */
@@ -21,8 +25,8 @@ export interface CollapsibleActionArgs {
 
 /**
  * @typedef {object} CollapsibleAccordionArgs
- * @prop {HTMLElement} element
+ * @prop {Collapsible} element
  */
 export interface CollapsibleAccordionArgs {
-  element: HTMLElement
+  element: Collapsible
 }
