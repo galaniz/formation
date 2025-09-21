@@ -1,0 +1,32 @@
+/**
+ * Objects - Media Styles
+ */
+
+/* Imports */
+
+@forward "../../config/config";
+@use "../../../lib/utils/utils" as util;
+
+/* Styles */
+
+.media-progress {
+  touch-action: none;
+  user-select: none;
+  cursor: pointer;
+  width: calc(100% - #{util.calc-rem(8px)});
+}
+
+.media-bar {
+  background: hsla(var(--frm-foreground-dark-hsl), 0.2);
+
+  &::after {
+    background: var(--frm-foreground-dark);
+    transform: scaleX(var(--med-progress-bar, 0));
+    transform-origin: 0 0;
+  }
+}
+
+.media-scrub {
+  transform: translateX(var(--med-progress-scrub, 0));
+  top: #{util.calc-rem(-2px)};
+}

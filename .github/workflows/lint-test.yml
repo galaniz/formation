@@ -40,4 +40,4 @@ jobs:
 
       # Test ts files
       - name: Run tests (ts)
-        run: pnpm test:util
+        run: pnpm test

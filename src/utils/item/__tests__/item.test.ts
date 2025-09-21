@@ -363,7 +363,6 @@ describe('getTemplateItem()', () => {
 
   it('should return first element from template', () => {
     const { template } = testHtml()
-
     const result = getTemplateItem('template-two')
     const expectedResult = template
 
@@ -383,7 +382,6 @@ describe('cloneItem()', () => {
 
   it('should return cloned item', () => {
     const { template } = testHtml()
-
     const result = cloneItem(template)
     const expectedId = template.id
     const expectedTag = template.tagName

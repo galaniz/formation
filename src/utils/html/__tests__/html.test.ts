@@ -1,5 +1,5 @@
 /**
- * Utils - Html Element Test
+ * Utils - Html Test
  */
 
 /* Imports */
@@ -10,7 +10,7 @@ import { isHtmlElement, isHtmlElementArray, isHtmlElementArrayStrict } from '../
 /* Test isHtmlElement */
 
 describe('isHtmlElement()', () => {
-  it('should return true if value is an html element', () => {
+  it('should return true if value is an HTML element', () => {
     const value = document.createElement('div')
     const result = isHtmlElement(value)
     const expectedResult = true
@@ -78,7 +78,7 @@ describe('isHtmlElement()', () => {
 /* Test isHtmlElementArray */
 
 describe('isHtmlElementArray()', () => {
-  it('should return true if value is an array of html elements', () => {
+  it('should return true if value is an array of HTML elements', () => {
     const value = [
       document.createElement('div'),
       document.createElement('div'),
@@ -91,7 +91,7 @@ describe('isHtmlElementArray()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return true if first item in array is an html element', () => {
+  it('should return true if first item in array is an HTML element', () => {
     const value = [
       document.createElement('div'),
       'test',
@@ -105,7 +105,7 @@ describe('isHtmlElementArray()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if first item in array is not an html element', () => {
+  it('should return false if first item in array is not an HTML element', () => {
     const value = [
       'test',
       document.createElement('div'),
@@ -155,7 +155,7 @@ describe('isHtmlElementArray()', () => {
 /* Test isHtmlElementArrayStrict */
 
 describe('isHtmlElementArrayStrict()', () => {
-  it('should return true if value is an array of html elements', () => {
+  it('should return true if value is an array of HTML elements', () => {
     const value = [
       document.createElement('div'),
       document.createElement('div'),
@@ -168,7 +168,7 @@ describe('isHtmlElementArrayStrict()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if value is an array of some html elements', () => {
+  it('should return false if value is an array of some HTML elements', () => {
     const value = [
       document.createElement('div'),
       'test',

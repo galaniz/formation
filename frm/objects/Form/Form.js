@@ -2,7 +2,7 @@ export default /* html */`
   <frm-form id="frm" error-inline="frm-error-inline">
     <form novalidate>
       <div data-form-field="fieldset">
-        <fieldset>
+        <fieldset data-form-required>
           <legend id="frm-legend">
             <span data-form-legend-text>Date of birth</span>
           </legend>
@@ -15,7 +15,6 @@ export default /* html */`
               name="month"
               data-form-input="select"
               data-form-empty="Month is required"
-              data-form-required
             >
               <option value="">Select a month</option>
               <option value="01">January</option>
@@ -45,7 +44,6 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Day is required"
-              data-form-required
             />
           </div>
           <div data-form-field="text">
@@ -62,7 +60,6 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Year is required"
-              data-form-required
             />
           </div>
         </fieldset>

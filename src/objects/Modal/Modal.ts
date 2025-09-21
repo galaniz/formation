@@ -6,7 +6,7 @@
 
 import { isHtmlElementArray, isHtmlElement } from '../../utils/html/html.js'
 import { onEscape, removeEscape } from '../../utils/escape/escape.js'
-import { stopScroll } from '../../utils/scroll/scrollStop.js'
+import { noScroll } from '../../utils/scroll/noScroll.js'
 import { getItem } from '../../utils/item/item.js'
 import {
   toggleFocusability,
@@ -138,7 +138,7 @@ class Modal extends HTMLElement {
     this.#firstFocusable = null
     this.#lastOpens = null
 
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#focusDelayId)
   }
@@ -191,13 +191,13 @@ class Modal extends HTMLElement {
    * @return {void}
    */
   #toggle (open: boolean): void {
+    /* Clear timeout */
+
+    clearTimeout(this.#focusDelayId)
+
     /* Open state */
 
     this.open = open
-
-    /* Clear timeouts */
-
-    clearTimeout(this.#focusDelayId)
 
     /* Emit on event */
 
@@ -226,10 +226,10 @@ class Modal extends HTMLElement {
         this.#firstFocusable?.focus()
       }, 100)
 
-      stopScroll(true)
+      noScroll(true)
     } else {
       this.#lastOpens?.focus()
-      stopScroll(false)
+      noScroll(false)
     }
   }
 

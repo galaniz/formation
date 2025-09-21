@@ -275,7 +275,6 @@ describe('cascade()', () => {
           action (): void {
             const result = testHasIncrement(increment)
             const expectedResult = true
-
             const resultDelay = testDelay(initMs, delay + increment)
             const expectedResultDelay = delay + increment
 
@@ -315,7 +314,6 @@ describe('cascade()', () => {
           action (): void  {
             const result = testHasIncrement(increment)
             const expectedResult = true
-
             const resultDelay = testDelay(initMs, increment)
             const expectedResultDelay = increment
 

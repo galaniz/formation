@@ -96,12 +96,14 @@ export default /* html */`
       </div>
       <button
         class="slider-prev w-8 h-8 t-background-light b-radius-full absolute left-0"
+        type="button"
         aria-label="Previous"
         data-slider-prev
       >
       </button>  
       <button
         class="slider-next w-8 h-8 t-background-light b-radius-full absolute righ-0"
+        type="button"
         aria-label="Next"
         data-slider-next
       >

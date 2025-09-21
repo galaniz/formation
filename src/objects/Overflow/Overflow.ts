@@ -115,7 +115,7 @@ class Overflow extends HTMLElement {
     this.init = false
     this.overflow = false
 
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#scrollId)
   }

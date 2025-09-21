@@ -13,12 +13,12 @@ export default defineConfig({
     cache: false,
     globals: true,
     clearMocks: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     include: [
       'src/**/*.test.ts'
     ],
     coverage: {
-      reportsDirectory: 'util-coverage',
+      reportsDirectory: 'utils-coverage',
       include: [
         'src/config/**/*.ts',
         'src/utils/**/*.ts'

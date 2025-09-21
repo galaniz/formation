@@ -22,7 +22,7 @@ const excludedTags: Set<string> = new Set(['SCRIPT', 'STYLE', 'HEAD'])
  * @type {ItemsOuter}
  */
 const getOuterItems: ItemsOuter = (item, type = 'all', filter, _store = []) => {
-  /* Item must be html element */
+  /* Item must be HTML element */
 
   if (!isHtmlElement(item)) {
     return []

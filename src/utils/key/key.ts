@@ -7,30 +7,28 @@
 import { isString } from '../string/string.js'
 
 /**
- * Normalize key names/numbers.
+ * Normalize key names.
  *
  * @private
- * @type {Object<string|number, string>}
+ * @type {Object<string, string>}
  */
-const keys: Record<string | number, string> = {
-  27: 'ESC',
+const keys: Record<string, string> = {
   Escape: 'ESC',
-  9: 'TAB',
+  Esc: 'ESC',
   Tab: 'TAB',
-  35: 'END',
-  36: 'HOME',
+  End: 'END',
+  Home: 'HOME',
   ArrowLeft: 'LEFT',
-  37: 'LEFT',
+  Left: 'LEFT',
   ArrowUp: 'UP',
-  38: 'UP',
+  Up: 'UP',
   ArrowRight: 'RIGHT',
-  39: 'RIGHT',
+  Right: 'RIGHT',
   ArrowDown: 'DOWN',
-  40: 'DOWN',
-  Space: 'SPACE',
-  32: 'SPACE',
-  Enter: 'ENTER',
-  13: 'ENTER'
+  Down: 'DOWN',
+  ' ': 'SPACE',
+  Spacebar: 'SPACE',
+  Enter: 'ENTER'
 }
 
 /**

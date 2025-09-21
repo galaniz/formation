@@ -17,14 +17,14 @@ import {
  *
  * @type {string}
  */
-const testNameOne = 'testName'
+const testNameOne: string = 'testName'
 
 /**
  * Second test action name.
  *
  * @type {string}
  */
-const testNameTwo = 'testNameTwo'
+const testNameTwo: string = 'testNameTwo'
 
 /* Test actions */
 
@@ -33,7 +33,6 @@ describe('actions', () => {
     const resize = actions.get('resize')
     const escape = actions.get('escape')
     const scroll = actions.get('scroll')
-
     const expectResize = new Set()
     const expectEscape = new Set()
     const expectScroll = new Set()

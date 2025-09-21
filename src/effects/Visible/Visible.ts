@@ -115,7 +115,7 @@ class Visible extends HTMLElement {
   #initialize (): boolean {
     /* Links */
 
-    const links = getItem(['[data-vis-link]'], this)
+    const links = getItem(['[data-visible-link]'], this)
 
     if (!isHtmlElementArray(links, HTMLAnchorElement)) {
       return false

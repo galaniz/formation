@@ -14,6 +14,7 @@ export default /* html */`
     </ul>
     <button
       class="nav-hide"
+      type="button"
       aria-haspopup="true"
       data-nav-open
       data-testid="nav-slot-open"
@@ -28,6 +29,7 @@ export default /* html */`
     >
       <ul data-nav-modal-slot></ul>
       <button
+        type="button"
         data-nav-close
         data-testid="nav-slot-close"
       >

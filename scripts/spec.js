@@ -35,6 +35,10 @@ for await (const entry of glob('src/**/*.json')) {
     componentName = 'SliderGroup'
   }
 
+  if (fileName === 'PaginationFilter.json') {
+    componentName = 'PaginationFilter'
+  }
+
   const data = JSON.parse(json)
   let output = ''
 

@@ -39,7 +39,7 @@ describe('isObject()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return true if value is an html element', () => {
+  it('should return true if value is an HTML element', () => {
     const value = document.createElement('div')
     const result = isObject(value)
     const expectedResult = true
@@ -120,7 +120,7 @@ describe('isObjectStrict()', () => {
     expect(result).toBe(expectedResult)
   })
 
-  it('should return false if value is an html element', () => {
+  it('should return false if value is an HTML element', () => {
     const value = document.createElement('div')
     const result = isObjectStrict(value)
     const expectedResult = false

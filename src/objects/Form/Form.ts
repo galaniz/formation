@@ -9,7 +9,7 @@ import type {
   FormPrimitive,
   FormGroup,
   FormErrorListItem,
-  FormErrorsOn,
+  FormErrorOn,
   FormValidateResult,
   FormValidateFilterArgs,
   FormValue,
@@ -42,7 +42,7 @@ class Form extends HTMLElement {
   form: HTMLFormElement | null = null
 
   /**
-   * Data (state, values, inputs...) by input name.
+   * Data (values, inputs, type) by input name.
    *
    * @type {FormGroups}
    */
@@ -51,9 +51,9 @@ class Form extends HTMLElement {
   /**
    * Display errors on submit, change or both.
    *
-   * @type {FormErrorsOn}
+   * @type {FormErrorOn}
    */
-  errorsOn: FormErrorsOn = 'both'
+  errorOn: FormErrorOn = 'both'
 
   /**
    * Track submit state.
@@ -89,6 +89,13 @@ class Form extends HTMLElement {
    * @type {FormClones}
    */
   clones: FormClones = new Map()
+
+  /**
+   * Track number of instances.
+   *
+   * @type {number}
+   */
+  static #count: number = 0
 
   /**
    * Labels by input name.
@@ -161,6 +168,10 @@ class Form extends HTMLElement {
       return
     }
 
+    /* Count */
+
+    Form.#count -= 1
+
     /* Clear event listeners */
 
     this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
@@ -179,13 +190,17 @@ class Form extends HTMLElement {
     this.groups.clear()
     this.init = false
     this.submitted = false
-    Form.templates.clear()
+
+    if (!Form.#count) { // Clear if last element
+      Form.templates.clear()
+    }
+
     this.clones.clear()
     this.#labels.clear()
     this.#legends.clear()
     this.#errorList.clear()
 
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#focusDelayId)
   }
@@ -243,12 +258,12 @@ class Form extends HTMLElement {
       }
     })
 
-    /* Errors */
+    /* Error display */
 
-    const errorsOn = this.getAttribute('errors-on')
+    const errorOn = this.getAttribute('error-on')
 
-    if (isStringStrict(errorsOn)) {
-      this.errorsOn = errorsOn as FormErrorsOn
+    if (isStringStrict(errorOn)) {
+      this.errorOn = errorOn as FormErrorOn
     }
 
     /* Create groups */
@@ -267,6 +282,8 @@ class Form extends HTMLElement {
     this.form.addEventListener('submit', this.#submitHandler as EventListener)
 
     /* Init successful */
+
+    Form.#count += 1
 
     return true
   }
@@ -622,7 +639,12 @@ class Form extends HTMLElement {
 
       if (!currentItem) {
         currentItem = document.createElement('li')
-        currentItem.innerHTML = `<a href="#${id}">${message}</a>`
+
+        const link = document.createElement('a')
+        link.href = `#${id}`
+        link.textContent = message
+
+        currentItem.append(link)
       }
 
       frag.append(currentItem)
@@ -630,7 +652,7 @@ class Form extends HTMLElement {
       this.#errorList.set(id, { message, item: currentItem })
     })
 
-    errorList.innerHTML = ''
+    errorList.textContent = ''
     errorList.append(frag)
 
     if (focusItem) {
@@ -661,7 +683,7 @@ class Form extends HTMLElement {
 
     /* Check errors onset */
 
-    const on = this.errorsOn
+    const on = this.errorOn
     const quiet = on === 'submit' || (!this.submitted && on === 'both')
 
     /* Validate group */

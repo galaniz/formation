@@ -2,7 +2,7 @@ node_modules/
 lib/
 spec/
 docs/
-util-coverage/
+utils-coverage/
 spec-coverage/
 test-results/
 playwright-report/

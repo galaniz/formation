@@ -1,8 +1,8 @@
 /**
- * Base - Stop Scroll Styles
+ * Utils - No Scroll Styles
  */
 
-html[data-stop-scroll] body {
+html[data-no-scroll] body {
   overflow: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;

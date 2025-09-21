@@ -2,4 +2,19 @@
  * Backgrounds - Styles
  */
 
-@use "Color/Color";
+/* Imports */
+
+@use "../config/config" as con;
+@use "../utils/fix/fix";
+
+/* Class name customization */
+
+$bg-fix: fix.get-class-prefix("background");
+
+/* Styles */
+
+@each $c in con.$background-colors {
+  .#{$bg-fix}#{$c} {
+    background-color: var(--#{con.$n}#{$c});
+  }
+}

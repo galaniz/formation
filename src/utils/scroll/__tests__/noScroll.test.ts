@@ -1,21 +1,21 @@
 /**
- * Utils - Scroll Stop Test
+ * Utils - No Scroll Test
  */
 
 /* Imports */
 
 import { it, expect, describe, beforeEach } from 'vitest'
-import { stopScroll } from '../scrollStop.js'
+import { noScroll } from '../noScroll.js'
 
 /**
  * Data attribute name.
  *
  * @type {string}
  */
-const testAttribute = 'data-stop-scroll'
+const testAttribute: string = 'data-no-scroll'
 
 /**
- * Check if html element has attribute.
+ * Check if HTML element has attribute.
  *
  * @return {boolean}
  */
@@ -25,15 +25,14 @@ const testCheckAttribute = (): boolean => {
 
 /* Tests */
 
-describe('stopScroll()', () => {
+describe('noScroll()', () => {
   beforeEach(() => {
     document.documentElement.removeAttribute(testAttribute)
   })
 
-  it('should add data attribute to html element if on is true', () => {
-    const result = stopScroll()
+  it('should add data attribute to HTML element if on is true', () => {
+    const result = noScroll()
     const attrResult = testCheckAttribute()
-
     const expectedResult = true
     const expectedAttrResult = true
 
@@ -41,11 +40,10 @@ describe('stopScroll()', () => {
     expect(attrResult).toBe(expectedAttrResult)
   })
 
-  it('should add data attribute to html element if on is truthy', () => {
+  it('should add data attribute to HTML element if on is truthy', () => {
     // @ts-expect-error - test truthy on value
-    const result = stopScroll('false')
+    const result = noScroll('false')
     const attrResult = testCheckAttribute()
-
     const expectedResult = true
     const expectedAttrResult = true
 
@@ -53,12 +51,11 @@ describe('stopScroll()', () => {
     expect(attrResult).toBe(expectedAttrResult)
   })
 
-  it('should remove data attribute from html element if on is false', () => {
-    stopScroll()
+  it('should remove data attribute from HTML element if on is false', () => {
+    noScroll()
 
-    const result = stopScroll(false)
+    const result = noScroll(false)
     const attrResult = testCheckAttribute()
-
     const expectedResult = false
     const expectedAttrResult = false
 
@@ -66,13 +63,12 @@ describe('stopScroll()', () => {
     expect(attrResult).toBe(expectedAttrResult)
   })
 
-  it('should remove data attribute from html element if on is falsey', () => {
-    stopScroll()
+  it('should remove data attribute from HTML element if on is falsey', () => {
+    noScroll()
 
     // @ts-expect-error - test falsey on value
-    const result = stopScroll(null)
+    const result = noScroll(null)
     const attrResult = testCheckAttribute()
-
     const expectedResult = false
     const expectedAttrResult = false
 

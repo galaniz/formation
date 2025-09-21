@@ -207,6 +207,7 @@ class Slider extends Tabs {
     this.track = null
     this.prev = null
     this.next = null
+    this.subInit = false
     this.#insert = null
 
     /* Clear timeout and animation */

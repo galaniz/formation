@@ -15,7 +15,7 @@ import { onEscape, removeEscape } from '../escape.js'
  * @param {string} key
  * @return {KeyboardEvent}
  */
-const testMakeEvent = (key = ''): KeyboardEvent => {
+const testMakeEvent = (key: string = ''): KeyboardEvent => {
   return createEvent.keyDown(document, { key }) as KeyboardEvent
 }
 

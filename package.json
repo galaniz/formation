@@ -22,9 +22,9 @@
     "minify": "find lib -name \"*.js\" -exec terser {} -o {} --compress \\;",
     "release": "release-it",
     "release:beta": "release-it --preRelease=beta",
-    "test:util": "vitest --run --reporter verbose --environment happy-dom --coverage",
-    "test:spec": "pnpm build:spec && npx playwright test",
-    "test": "pnpm test:util && pnpm test:spec",
+    "test:utils": "vitest --run --reporter verbose --environment happy-dom --coverage",
+    "test:spec": "pnpm build && pnpm build:spec && npx playwright test",
+    "test": "pnpm test:utils && pnpm test:spec",
     "serve": "npx serve --cors"
   },
   "repository": {

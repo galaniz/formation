@@ -43,6 +43,11 @@ export interface FormGroup {
 }
 
 /**
+ * @typedef {Map<string, FormGroup>} FormGroups
+ */
+export type FormGroups = Map<string, FormGroup>
+
+/**
  * @typedef {object} FormErrorListItem
  * @prop {HTMLLIElement|undefined} item
  * @prop {string} message
@@ -77,11 +82,6 @@ export interface FormValidateFilterArgs {
   name: string
   groups: FormGroups
 }
-
-/**
- * @typedef {Map<string, FormGroup>} FormGroups
- */
-export type FormGroups = Map<string, FormGroup>
 
 /**
  * @typedef {object} FormValue
@@ -132,9 +132,9 @@ export interface FormValuesFilterArgs {
 }
 
 /**
- * @typedef {'change'|'submit'|'both'} FormErrorsOn
+ * @typedef {'change'|'submit'|'both'} FormErrorOn
  */
-export type FormErrorsOn = 'change' | 'submit' | 'both'
+export type FormErrorOn = 'change' | 'submit' | 'both'
 
 /**
  * @typedef {'errorSummary'|'errorList'|'errorInline'|'error'|'success'|'loader'} FormCloneKeys

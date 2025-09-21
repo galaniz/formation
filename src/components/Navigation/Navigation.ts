@@ -15,7 +15,7 @@ import {
   getInnerFocusableItems,
   getOuterFocusableItems
 } from '../../utils/focusability/focusability.js'
-import { stopScroll } from '../../utils/scroll/scrollStop.js'
+import { noScroll } from '../../utils/scroll/noScroll.js'
 import { cascade } from '../../utils/cascade/cascade.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
 import { onEscape, removeEscape } from '../../utils/escape/escape.js'
@@ -637,7 +637,7 @@ class Navigation extends HTMLElement {
       cascade([
         {
           action: () => {
-            stopScroll(true)
+            noScroll(true)
 
             this.setAttribute('show', '')
             this.setAttribute('open', 'true')
@@ -674,7 +674,7 @@ class Navigation extends HTMLElement {
           action: () => {
             this.setAttribute('open', 'false')
 
-            stopScroll(false)
+            noScroll(false)
           }
         },
         {

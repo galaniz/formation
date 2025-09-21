@@ -397,7 +397,7 @@ class Collapsible extends HTMLElement {
    * @return {void}
    */
   #blur (): void {
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#blurDelayId)
 

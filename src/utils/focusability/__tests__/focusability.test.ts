@@ -146,7 +146,6 @@ describe('toggleFocusability()', () => {
   it('should add inert attribute to items if on is false', () => {
     const html = testHtml()
     const { outer } = html
-
     const result = toggleFocusability(false, outer)
     const inertResult = outer.filter(item => !item.inert).length // Filter out if inert
     const expectedResult = false

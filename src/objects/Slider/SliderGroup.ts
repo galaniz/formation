@@ -201,6 +201,7 @@ class SliderGroup extends Tabs {
     this.prev = null
     this.next = null
     this.breakpoints = new Set()
+    this.subInit = false
     this.#insert = null
 
     /* Clear timeout and animation */

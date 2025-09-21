@@ -25,7 +25,7 @@ $object-fix: fix.get-class-prefix("object");
   visibility: var(--ld-vis, hidden);
   opacity: var(--ld-op, 0);
 
-  &[data-loader-show] {
+  &[data-loader="show"] {
     --#{con.$n}delay: #{con.$loader-delay-show};
     --ld-vis: visible;
     --ld-op: 1;

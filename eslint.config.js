@@ -12,7 +12,7 @@ export default tseslint.config(
   {
     ignores: [
       '**/node_modules/*',
-      '**/util-coverage/*',
+      '**/utils-coverage/*',
       '**/spec-coverage/*',
       '**/spec/*',
       '**/lib/*',

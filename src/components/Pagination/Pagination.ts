@@ -4,18 +4,28 @@
 
 /* Imports */
 
-import type { PaginationTemplate } from './PaginationTypes.js'
+import type {
+  PaginationDisplay,
+  PaginationSlots,
+  PaginationTemplateKeys,
+  PaginationTemplates,
+  PaginationState,
+  PaginationSource
+} from './PaginationTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
-import { getItem, getTemplateItem } from '../../utils/item/item.js'
+import { isStringStrict } from '../../utils/string/string.js'
+import { isNumber } from '../../utils/number/number.js'
+import { getItem, getTemplateItem, cloneItem } from '../../utils/item/item.js'
+import { getInnerFocusableItems } from '../../utils/focusability/focusability.js'
+import { setDisplay } from '../../utils/display/display.js'
 
 /**
- * Handles dynamic pagination list.
+ * Handles dynamic pagination navigation and entries.
  */
 class Pagination extends HTMLElement {
   /**
    * Base URL.
    *
-   * @private
    * @type {string}
    */
   url: string = ''
@@ -25,7 +35,7 @@ class Pagination extends HTMLElement {
    *
    * @type {number}
    */
-  current: number = 1
+  page: number = 1
 
   /**
    * Total number of items.
@@ -35,32 +45,39 @@ class Pagination extends HTMLElement {
   total: number = 1
 
   /**
-   * Number of list item links to display.
+   * Number of items to display.
    *
-   * @type {number}
+   * @type {PaginationDisplay}
    */
-  display: number = 5
+  display: PaginationDisplay = new Map()
 
   /**
-   * List element.
+   * Navigation and entry containers.
    *
-   * @type {HTMLUListElement|null}
+   * @type {PaginationSlots}
    */
-  list: HTMLUListElement | null = null
+  slots: PaginationSlots = new Map()
 
   /**
-   * Form element of filter inputs.
+   * Loader and error fragments.
    *
-   * @type {HTMLFormElement|null}
+   * @type {PaginationTemplates}
    */
-  form: HTMLFormElement | null = null
+  templates: PaginationTemplates = new Map()
 
   /**
-   * Filter input values by name.
+   * Clones of templates.
    *
-   * @type {Object<string, string>}
+   * @type {PaginationTemplates}
    */
-  filters: Record<string, string> = {}
+  clones: PaginationTemplates = new Map()
+
+  /**
+   * Params for push state and request.
+   *
+   * @type {Object<string, string|undefined>}
+   */
+  params: Record<string, string | undefined> = {}
 
   /**
    * Initialize state.
@@ -70,20 +87,36 @@ class Pagination extends HTMLElement {
   init: boolean = false
 
   /**
-   * List item fragments.
+   * ID for loader display timeout.
    *
-   * @type {Map<PaginationTemplate, HTMLElement>}
+   * @private
+   * @type {number}
    */
-  static templates: Map<PaginationTemplate, HTMLElement> = new Map()
+  #loaderDelayId: number = 0
+
+  /**
+   * ID for result focus timeout.
+   *
+   * @private
+   * @type {number}
+   */
+  #resultDelayId: number = 0
+
+  /**
+   * ID for item focus timeout.
+   *
+   * @private
+   * @type {number}
+   */
+  #focusDelayId: number = 0
 
   /**
    * Bind this to event callbacks.
    *
    * @private
    */
-  #clickHandler = this.#click.bind(this)
-  #submitHandler = this.submit.bind(this)
-  #resetHandler = this.reset.bind(this)
+  #clickHandler = (e: Event): void => { void this.#click(e) }
+  #popHandler = (e: PopStateEvent): void => { void this.#pop(e) }
 
   /**
    * Create new instance.
@@ -117,18 +150,27 @@ class Pagination extends HTMLElement {
 
     /* Clear event listeners */
 
-    this.list?.removeEventListener('click', this.#clickHandler)
-    this.form?.removeEventListener('submit', this.#submitHandler)
+    this.slots.get('nav')?.removeEventListener('click', this.#clickHandler)
+    window.removeEventListener('popstate', this.#popHandler)
 
     /* Empty props */
 
-    this.list = null
-    this.form = null
+    this.slots.clear()
+    this.display.clear()
+    this.templates.clear()
+    this.clones.clear()
+    this.params = {}
     this.init = false
+
+    /* Clear timeouts */
+
+    clearTimeout(this.#loaderDelayId)
+    clearTimeout(this.#resultDelayId)
+    clearTimeout(this.#focusDelayId)
   }
 
   /**
-   * Init check required items and run set.
+   * Init check required items and set props.
    *
    * @private
    * @return {boolean}
@@ -137,62 +179,60 @@ class Pagination extends HTMLElement {
     /* Items */
 
     const url = this.getAttribute('url')
-    const ellipsis = getTemplateItem(this.getAttribute('ellipsis') || '')
-    const prevLink = getTemplateItem(this.getAttribute('prev-link') || '')
-    const prevText = getTemplateItem(this.getAttribute('prev-text') || '')
-    const nextLink = getTemplateItem(this.getAttribute('next-link') || '')
-    const nextText = getTemplateItem(this.getAttribute('next-text') || '')
-    const current = getTemplateItem(this.getAttribute('current') || '')
-    const item = getTemplateItem(this.getAttribute('item') || '')
-    const list = getItem('[data-pag-list]', this)
-    const form = getItem('[data-pag-form]', this)
+    const loaderId = this.getAttribute('loader')
+    const errorId = this.getAttribute('error')
+    const noneId = this.getAttribute('none')
+    const entry = getItem('[data-pag-slot="entry"]', this)
+    const nav = getItem('[data-pag-slot="nav"]', this)
 
     /* Check required items exist */
 
-    if (!isHtmlElement(list, HTMLUListElement) ||
-      !isHtmlElement(prevLink) ||
-      !isHtmlElement(prevText) ||
-      !isHtmlElement(nextLink) ||
-      !isHtmlElement(nextText) ||
-      !isHtmlElement(current) ||
-      !isHtmlElement(item) ||
-      !url) {
+    if (
+      !isHtmlElement(entry) ||
+      !isHtmlElement(nav) ||
+      !isStringStrict(url) ||
+      !isStringStrict(loaderId) ||
+      !isStringStrict(errorId) ||
+      !isStringStrict(noneId)
+    ) {
       return false
     }
 
-    /* URL */
+    /* Display required */
+
+    const entryDisplay = parseInt(entry.dataset.pagDisplay || '', 10)
+    const navDisplay = parseInt(nav.dataset.pagDisplay || '', 10)
+
+    if (!isNumber(entryDisplay) || !isNumber(navDisplay)) {
+      return false
+    }
+
+    /* Error and loader required */
+
+    const error = getTemplateItem(errorId)
+    const loader = getTemplateItem(loaderId)
+    const none = getTemplateItem(noneId)
+
+    if (!isHtmlElement(error) || !isHtmlElement(loader) || !isHtmlElement(none)) {
+      return false
+    }
+
+    this.templates.set('error', error)
+    this.templates.set('loader', loader)
+    this.templates.set('none', none)
+
+    /* Props */
 
     this.url = url
+    this.slots.set('nav', nav)
+    this.slots.set('entry', entry)
+    this.display.set('nav', navDisplay)
+    this.display.set('entry', entryDisplay)
 
-    /* List */
+    /* Event listeners */
 
-    this.list = list
-    this.list.addEventListener('click', this.#clickHandler)
-
-    /* Templates */
-
-    if (!Pagination.templates.size) {
-      Pagination.templates = new Map([
-        ['prev-link', prevLink],
-        ['prev-text', prevText],
-        ['next-link', nextLink],
-        ['next-text', nextText],
-        ['current', current],
-        ['item', item]
-      ])
-  
-      if (isHtmlElement(ellipsis)) {
-        Pagination.templates.set('ellipsis', ellipsis)
-      }
-    }
-
-    /* Form */
-
-    if (isHtmlElement(form, HTMLFormElement)) {
-      this.form = form
-      this.form.addEventListener('submit', this.#submitHandler)
-      this.form.addEventListener('reset', this.#resetHandler)
-    }
+    this.slots.get('nav')?.addEventListener('click', this.#clickHandler)
+    window.addEventListener('popstate', this.#popHandler)
 
     /* Init successful */
 
@@ -200,47 +240,13 @@ class Pagination extends HTMLElement {
   }
 
   /**
-   * Refresh list element with new items.
-   *
-   * @private
-   * @return {void}
-   */
-   #resetList (): void {
-    if (!isHtmlElement(this.list, HTMLUListElement)) {
-      return
-    }
-
-    /* Clear list */
-
-    this.list.innerHTML = ''
-
-    /* Total must be greater than 1 and base link required */
-
-    if (this.total <= 1 || !this.url) {
-      return
-    }
-
-    /* Update history */
-
-    const state = {
-      total: this.total,
-      current: this.current,
-      filters: this.filters
-    }
-
-    const url = '' // assume page and filters are params
-
-    history.pushState(state, '', url)
-  }
-
-  /**
-   * Click handler on list to listen for link clicks.
+   * Click handler on navigation listens for link clicks.
    *
    * @private
    * @param {Event} e
-   * @return {void}
+   * @return {Promise<void>}
    */
-  #click (e: Event): void {
+  async #click (e: Event): Promise<void> {
     /* Link required */
 
     const target = (e.target as HTMLElement).closest('a') as HTMLAnchorElement
@@ -251,85 +257,217 @@ class Pagination extends HTMLElement {
 
     e.preventDefault()
 
-    /* Current */
+    /* Page */
 
     const url = new URL(target.href)
-    const newCurrent = Number(url.searchParams.get('page')) || 1
+    const newPage = Number(url.searchParams.get('page')) || 1
 
-    if (newCurrent === this.current) {
+    if (newPage === this.page) {
       return
     }
 
-    this.current = newCurrent
+    this.page = newPage
 
-    /* Fetch and update list */
+    /* Request and update items */
 
-    this.fetch()
-    this.#resetList()
+    await this.load('nav')
   }
 
   /**
-   * Submit handler on form element of filter inputs.
+   * Popstate handler on window navigation triggers load.
    *
-   * @param {Event} e
-   * @return {void}
+   * @private
+   * @param {PopStateEvent} e
+   * @return {Promise<void>}
    */
-  submit (e: Event): void {
-    e.preventDefault()
+  async #pop (e: PopStateEvent): Promise<void> {
+    const {
+      total,
+      page,
+      params
+    } = e.state as PaginationState
 
-    /* Filter values */
+    this.total = total
+    this.page = page
+    this.params = params
 
-    if (!isHtmlElement(this.form, HTMLFormElement)) {
-      return
+    await this.load('pop')
+  }
+
+  /**
+   * Clone and return template element.
+   *
+   * @param {PaginationTemplateKeys} type
+   * @return {HTMLElement|null}
+   */
+  getClone (type: PaginationTemplateKeys): HTMLElement | null {
+    /* Check if exists */
+
+    const result = this.clones.get(type)
+
+    if (isHtmlElement(result)) {
+      return result
     }
 
-    const formData = new FormData(this.form)
-    const newFilters: Record<string, string> = {}
-    let diff = false
+    /* Clone template */
 
-    for (const [name, value] of formData.entries()) {
-      newFilters[name] = value as string
+    const clone = cloneItem(this.templates.get(type))
 
-      if (this.filters[name] !== value) {
-        diff = true
+    if (!isHtmlElement(clone)) {
+      return null
+    }
+
+    if (type === 'loader') {
+      this.append(clone)
+    } else {
+      this.insertBefore(clone, this.slots.get('nav') || null)
+    }
+
+    this.clones.set(type, clone)
+
+    /* Return clone */
+
+    return clone
+  }
+
+  /**
+   * Refresh navigation and entry slots with result.
+   *
+   * @param {'error'|'none'|'output'} result
+   * @param {DocumentFragment|string} [nav]
+   * @param {DocumentFragment|string} [entry]
+   * @return {boolean} - Slots and history updated.
+   */
+   update (
+    result: 'error' | 'none' | 'output',
+    nav?: DocumentFragment | string,
+    entry?: DocumentFragment | string
+  ): boolean {
+    /* Loader */
+
+    setDisplay(this.getClone('loader'), 'hide', 'loader')
+
+    /* Error or none */
+
+    if (result === 'error' || result === 'none') {
+      this.getClone(result)
+
+      this.#resultDelayId = setDisplay(this.getClone(result), 'focus')
+
+      return false
+    }
+
+    /* Output */
+
+    const navSlot = this.slots.get('nav')
+    const entrySlot = this.slots.get('entry')
+
+    if (!navSlot || !entrySlot) {
+      return false
+    }
+
+    navSlot.textContent = ''
+    entrySlot.textContent = ''
+
+    let navSet = false
+    let entrySet = false
+
+    if (isStringStrict(nav)) {
+      navSlot.insertAdjacentHTML('afterbegin', nav)
+      navSet = true
+    }
+
+    if (isHtmlElement(nav)) {
+      navSlot.append(nav)
+      navSet = true
+    }
+
+    if (isStringStrict(entry)) {
+      entrySlot.insertAdjacentHTML('afterbegin', entry)
+      entrySet = true
+    }
+
+    if (isHtmlElement(entry)) {
+      entrySlot.append(entry)
+      entrySet = true
+    }
+
+    if (!navSet || !entrySet) {
+      return false
+    }
+
+    this.#focusDelayId = window.setTimeout(() => {
+      const innerFocusable = getInnerFocusableItems(entrySlot)
+      const [firstFocusable] = innerFocusable
+
+      if (isHtmlElement(firstFocusable)) {
+        firstFocusable.focus()
+      }
+    }, 0)
+
+    /* Update history */
+
+    const url = new URL(this.url)
+    const newParams: Record<string, string> = {}
+
+    if (this.page > 1) {
+      url.searchParams.set('page', this.page.toString())
+    } else {
+      url.searchParams.delete('page')
+    }
+
+    for (const [key, value] of Object.entries(this.params)) {
+      if (!value) {
+        url.searchParams.delete(key)
+      } else {
+        url.searchParams.set(key, value)
       }
     }
 
-    if (!diff) {
-      return
+    const state: PaginationState = {
+      total: this.total,
+      page: this.page,
+      params: newParams
     }
 
-    this.filters = newFilters
+    history.pushState(state, '', url.toString())
 
-    /* Fetch and update list */
-
-    this.fetch()
-    this.#resetList()
+    return true
   }
 
   /**
-   * Reset handler on form element of filter inputs.
+   * Fetch data and update slots.
    *
-   * @return {void}
+   * @param {PaginationSource} source
+   * @return {Promise<void>|void}
    */
-  reset (): void {
-    /* Reset */
-
-    this.current = 1
-    this.filters = {}
-
-    /* Fetch and update list */
-
-    this.fetch()
-    this.#resetList()
+  request (source: PaginationSource): Promise<void> | void {
+    void source
   }
 
   /**
-   * Override to fetch data.
+   * Initiate loader and data request.
    *
-   * @return {void}
+   * @param {PaginationSource} source
+   * @return {Promise<void>}
    */
-  fetch (): void {}
+  async load (source: PaginationSource): Promise<void> {
+    clearTimeout(this.#loaderDelayId)
+    clearTimeout(this.#resultDelayId)
+    clearTimeout(this.#focusDelayId)
+
+    if (this.clones.has('error')) {
+      setDisplay(this.getClone('error'), 'hide')
+    }
+
+    if (this.clones.has('none')) {
+      setDisplay(this.getClone('none'), 'hide')
+    }
+
+    this.#loaderDelayId = setDisplay(this.getClone('loader'), 'focus', 'loader')
+
+    await this.request(source)
+  }
 }
 
 /* Exports */

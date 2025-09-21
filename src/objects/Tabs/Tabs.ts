@@ -145,7 +145,7 @@ class Tabs extends HTMLElement {
     this.panels = []
     this.init = false
 
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#delayId)
   }
@@ -252,7 +252,7 @@ class Tabs extends HTMLElement {
    * @return {boolean}
    */
   activate (args: TabsActivateArgs): boolean {
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#delayId)
 

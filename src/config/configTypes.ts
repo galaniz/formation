@@ -40,11 +40,6 @@ export interface Config {
  * @prop {string} [second=second]
  * @prop {string} [play=Play]
  * @prop {string} [pause=Pause]
- * @prop {string} [mute=Mute]
- * @prop {string} [unmute=Unmute]
- * @prop {string} [volume=Volume]
- * @prop {string} [fullscreen=Fullscreen]
- * @prop {string} [exitFullscreen=Exit Fullscreen]
  */
 export interface ConfigLabels extends Generic {
   hours?: string
@@ -55,9 +50,4 @@ export interface ConfigLabels extends Generic {
   second?: string
   play?: string
   pause?: string
-  mute?: string
-  unmute?: string
-  volume?: string
-  fullscreen?: string
-  exitFullscreen?: string
 }

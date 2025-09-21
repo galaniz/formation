@@ -12,7 +12,7 @@ import { getItem, getTemplateItem, cloneItem } from '../../utils/item/item.js'
 import { onResize, removeResize } from '../../utils/resize/resize.js'
 import { getDuration } from '../../utils/duration/duration.js'
 import { getKey } from '../../utils/key/key.js'
-import { setLoader } from '../../utils/loader/loader.js'
+import { setDisplay } from '../../utils/display/display.js'
 import { config } from '../../config/config.js'
 
 /**
@@ -57,7 +57,7 @@ class Media extends HTMLElement {
   controls: HTMLButtonElement[] = []
 
   /**
-   * URL of file to load.
+   * URL of current file.
    *
    * @type {string}
    */
@@ -85,11 +85,11 @@ class Media extends HTMLElement {
   loaded: boolean = false
 
   /**
-   * Open state.
+   * Active state.
    *
    * @type {boolean}
    */
-  open: boolean = false
+  active: boolean = true
 
   /**
    * Initialize success.
@@ -99,7 +99,14 @@ class Media extends HTMLElement {
   init: boolean = false
 
   /**
-   * Loader, error and source fragments.
+   * Player is global.
+   *
+   * @type {boolean}
+   */
+  global: boolean = false
+
+  /**
+   * Loader and error fragments.
    *
    * @type {MediaTemplates}
    */
@@ -127,6 +134,13 @@ class Media extends HTMLElement {
    * @type {string}
    */
   durationText: string = ''
+
+  /**
+   * Track number of instances.
+   *
+   * @type {number}
+   */
+  static #count: number = 0
 
   /**
    * Progress props.
@@ -172,7 +186,7 @@ class Media extends HTMLElement {
    * @private
    */
   #metaHandler = this.#meta.bind(this)
-  #canPlayHandler = (): void => { void this.#canPlay() }
+  #canPlayHandler = this.#canPlay.bind(this)
   #timeHandler = this.#time.bind(this)
   #endHandler = (): void => { void this.#end() }
   #errorHandler = this.#error.bind(this)
@@ -225,6 +239,7 @@ class Media extends HTMLElement {
     this.media?.removeEventListener('timeupdate', this.#timeHandler)
     this.media?.removeEventListener('ended', this.#endHandler)
     this.media?.removeEventListener('error', this.#errorHandler)
+    this.media?.removeEventListener('click', this.#controlHandler)
     this.controls.forEach(control => {
       control.removeEventListener('click', this.#controlHandler)
     })
@@ -243,7 +258,11 @@ class Media extends HTMLElement {
     this.progress = null
     this.time = null
     this.controls = []
-    Media.templates.clear()
+
+    if (!Media.#count) { // Clear if last element
+      Media.templates.clear()
+    }
+
     this.clones.clear()
     this.init = false
 
@@ -263,6 +282,7 @@ class Media extends HTMLElement {
     /* Items */
 
     const type = this.getAttribute('type') || 'video'
+    const global = this.hasAttribute('global')
     const media = getItem(type, this)
     const controls = getItem(['[data-media-control]'], this)
     const progress = getItem('[data-media-progress]', this)
@@ -283,17 +303,7 @@ class Media extends HTMLElement {
       return false
     }
 
-    /* Error and loader required */
-
-    if (!Media.templates.has('error')) {
-      const error = getTemplateItem(errorId)
-
-      if (!isHtmlElement(error)) {
-        return false
-      }
-
-      Media.templates.set('error', error)
-    }
+    /* Loader and error required */
 
     if (!Media.templates.has('loader')) {
       const loader = getTemplateItem(loaderId)
@@ -305,11 +315,22 @@ class Media extends HTMLElement {
       Media.templates.set('loader', loader)
     }
 
+    if (!Media.templates.has('error')) {
+      const error = getTemplateItem(errorId)
+
+      if (!isHtmlElement(error)) {
+        return false
+      }
+
+      Media.templates.set('error', error)
+    }
+
     /* Props */
 
     this.url = url
     this.media = media
     this.controls = controls
+    this.global = global
 
     /* Media */
 
@@ -318,6 +339,7 @@ class Media extends HTMLElement {
     this.media.addEventListener('timeupdate', this.#timeHandler)
     this.media.addEventListener('ended', this.#endHandler)
     this.media.addEventListener('error', this.#errorHandler)
+    this.media.addEventListener('click', this.#controlHandler)
 
     /* Controls */
 
@@ -352,11 +374,30 @@ class Media extends HTMLElement {
 
     /* Init successful */
 
+    Media.#count += 1
+
     return true
   }
 
   /**
-   * Clone and return template element if used.
+   * Player currently active check.
+   *
+   * @return {boolean}
+   */
+  #isActive (): boolean {
+    if (!this.active) {
+      return false
+    }
+
+    if (!this.global && !this.contains(document.activeElement)) {
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * Clone and return template element.
    *
    * @param {MediaTemplateKeys} type
    * @return {HTMLElement|null}
@@ -378,11 +419,19 @@ class Media extends HTMLElement {
       return null
     }
 
+    if (type === 'error') {
+      const cloneLink = getItem('[data-media-link]', clone)
+
+      if (isHtmlElement(cloneLink, HTMLAnchorElement)) {
+        cloneLink.href = this.url
+        cloneLink.textContent = this.title
+      }
+    }
+
+    this.append(clone)
     this.clones.set(type, clone)
 
     /* Return clone */
-
-    this.append(clone)
 
     return clone
   }
@@ -433,7 +482,7 @@ class Media extends HTMLElement {
     const scale = translate / this.#progress.width
 
     this.style.setProperty('--med-progress-bar', `${scale}`)
-    this.style.setProperty('--med-progress-scrub', `${translate}`)
+    this.style.setProperty('--med-progress-scrub', `${translate}px`)
     this.#progress.currentX = scale
 
     /* Time */
@@ -510,7 +559,7 @@ class Media extends HTMLElement {
       return
     }
 
-    const duration = this.media.duration
+    const duration = parseInt(this.media.duration.toFixed())
     this.duration = duration
     this.durationText = getDuration(duration, true)
 
@@ -523,11 +572,10 @@ class Media extends HTMLElement {
    * Play through handler on media element to play when ready.
    *
    * @private
-   * @return {Promise<void>}
+   * @return {void}
    */
-  async #canPlay (): Promise<void> {
-    setLoader(this.#getClone('loader'), false)
-    await this.toggle(true)
+  #canPlay (): void {
+    setDisplay(this.#getClone('loader'), 'hide', 'loader')
     this.loaded = true
   }
 
@@ -563,17 +611,8 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #error (): void {
-    setLoader(this.#getClone('loader'), false)
-
-    const error = this.#getClone('error')
-
-    if (!error) {
-      return
-    }
-
-    this.#errorDelayId = window.setTimeout(() => {
-      error.focus()
-    }, 0)
+    setDisplay(this.#getClone('loader'), 'hide', 'loader')
+    this.#errorDelayId = setDisplay(this.#getClone('error'), 'show')
   }
 
   /**
@@ -584,15 +623,10 @@ class Media extends HTMLElement {
    * @return {Promise<void>}
    */
   async #control (e: Event): Promise<void> {
-    const item = e.currentTarget as HTMLButtonElement
-    const type = item.dataset.mediaControl as MediaControl
-    const play = type === 'play' ? true : type === 'pause' ? false : !this.playing
-
-    if (type === 'toggle') {
-      item.setAttribute('aria-label', config.labels[play ? 'play' : 'pause'] || '')
-    }
+    const control = e.currentTarget as HTMLButtonElement
+    const type = control.dataset.mediaControl as MediaControl
     
-    await this.toggle(play)
+    await this.toggle(type === 'play' ? true : type === 'pause' ? false : !this.playing)
   }
 
   /**
@@ -737,6 +771,10 @@ class Media extends HTMLElement {
    * @return {Promise<void>}
    */
   async #keyDown (e: KeyboardEvent): Promise<void> {
+    if (!this.#isActive()) {
+      return
+    }
+
     let state = 0
     let space = false
 
@@ -758,11 +796,8 @@ class Media extends HTMLElement {
       case 'SPACE': {
         space = true
 
-        if (this.open) {
-          await this.toggle(!this.playing)
-
-          e.preventDefault()
-        }
+        await this.toggle(!this.playing)
+        e.preventDefault()
 
         break
       }
@@ -806,6 +841,10 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #keyUp (e: KeyboardEvent): void {
+    if (!this.#isActive()) {
+      return
+    }
+
     if (getKey(e) === 'SPACE') {
       e.preventDefault()
 
@@ -841,24 +880,18 @@ class Media extends HTMLElement {
    * Load media asset, clear loader and error.
    *
    * @param {string} [url]
+   * @param {string} [title]
    * @return {void}
    */
-  load (url?: string): void {
+  load (url?: string, title?: string): void {
     clearTimeout(this.#loaderDelayId)
     clearTimeout(this.#errorDelayId)
 
     if (this.clones.has('error')) {
-      this.clones.get('error')?.remove()
-      this.clones.delete('error')
+      setDisplay(this.#getClone('error'), 'hide')
     }
 
-    const loader = this.#getClone('loader')
-
-    if (loader) {
-      this.#loaderDelayId = window.setTimeout(() => {
-        setLoader(loader, true, true)
-      }, 0)
-    }
+    this.#loaderDelayId = setDisplay(this.#getClone('loader'), 'show', 'loader')
 
     if (!isHtmlElement(this.media)) {
       return
@@ -867,6 +900,11 @@ class Media extends HTMLElement {
     if (isStringStrict(url)) {
       this.loaded = false
       this.url = url
+      this.setAttribute('url', url)
+    }
+
+    if (isStringStrict(title)) {
+      this.title = title
     }
 
     this.media.src = this.url
@@ -902,6 +940,17 @@ class Media extends HTMLElement {
         this.media.pause()
         this.removeAttribute('playing')
       }
+
+      this.controls.forEach(control => {
+        if (control.dataset.mediaControl as MediaControl !== 'toggle') {
+          return
+        }
+
+        const playLabel = config.labels.play || 'Play'
+        const pauseLabel = config.labels.pause || 'Pause'
+
+        control.setAttribute('aria-label', play ? pauseLabel : playLabel)
+      })
 
       /* Emit toggle event */
 

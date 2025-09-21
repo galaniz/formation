@@ -14,7 +14,7 @@ import { getKey } from '../key.js'
  * @param {string} key
  * @return {KeyboardEvent}
  */
-const testMakeEvent = (key = ''): KeyboardEvent => {
+const testMakeEvent = (key: string = ''): KeyboardEvent => {
   const div = document.createElement('div')
 
   return createEvent.keyDown(div, { key }) as KeyboardEvent
@@ -38,7 +38,7 @@ describe('getKey()', () => {
   })
 
   it('should return SPACE if key is Space', () => {
-    const result = getKey(testMakeEvent('Space'))
+    const result = getKey(testMakeEvent(' '))
     const expectedResult = 'SPACE'
 
     expect(result).toBe(expectedResult)
