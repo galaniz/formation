@@ -2,7 +2,48 @@ export default /* html */`
   <frm-form id="frm" error-inline="frm-error-inline">
     <form novalidate>
       <div data-form-field="fieldset">
-        <fieldset data-form-required>
+        <fieldset  data-form-empty="Option required" data-form-required>
+          <legend id="frm-option-legend">
+            <span data-form-legend-text>Option</span>
+          </legend>
+          <div data-form-field="radio">
+            <input
+              id="frm-lorem"
+              name="option"
+              type="radio"
+              value="L"
+              data-form-input="radio"
+            >
+            <label for="frm-lorem">
+              <span data-form-label-text>Lorem</span>
+            </label>
+          </div>
+          <div data-form-field="radio">
+            <input
+              id="frm-ipsum"
+              name="option"
+              type="radio"
+              value="I"
+              data-form-input="radio"
+            >
+            <label for="frm-ipsum">
+              <span data-form-label-text>Ipsum</span>
+            </label>
+          </div>
+          <div data-form-field="radio">
+            <input
+              id="frm-dolorem"
+              name="option"
+              type="radio"
+              value="D"
+              data-form-input="radio"
+            >
+            <label for="frm-dolorem">
+              <span data-form-label-text>Dolorem</span>
+            </label>
+          </div>
+        </fieldset>
+        <fieldset>
           <legend id="frm-legend">
             <span data-form-legend-text>Date of birth</span>
           </legend>
@@ -15,6 +56,7 @@ export default /* html */`
               name="month"
               data-form-input="select"
               data-form-empty="Month is required"
+              required
             >
               <option value="">Select a month</option>
               <option value="01">January</option>
@@ -44,7 +86,8 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Day is required"
-            />
+              required
+            >
           </div>
           <div data-form-field="text">
             <label for="frm-year">
@@ -60,7 +103,8 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Year is required"
-            />
+              required
+            >
           </div>
         </fieldset>
       </div>
