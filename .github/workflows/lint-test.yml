@@ -34,6 +34,10 @@ jobs:
       - name: Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
+      # Install playwright
+      - name: Install playwright
+        run: pnpm exec playwright install
+
       # Lint ts and scss files
       - name: Run lint (ts and scss)
         run: pnpm lint

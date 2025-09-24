@@ -188,9 +188,9 @@ class Media extends HTMLElement {
   #metaHandler = this.#meta.bind(this)
   #canPlayHandler = this.#canPlay.bind(this)
   #timeHandler = this.#time.bind(this)
-  #endHandler = (): void => { void this.#end() }
+  #endHandler = this.#end.bind(this) as EventListener
   #errorHandler = this.#error.bind(this)
-  #controlHandler = (e: Event): void => { void this.#control(e) }
+  #controlHandler = this.#control.bind(this) as EventListener
   #clickProgressHandler = this.#clickProgress.bind(this)
   #downProgressHandler = this.#downProgress.bind(this)
   #upProgressHandler = this.#upProgress.bind(this)
@@ -198,7 +198,7 @@ class Media extends HTMLElement {
   #startProgressHandler = this.#startProgress.bind(this)
   #endProgressHandler = this.#endProgress.bind(this)
   #touchProgressHandler = this.#touchProgress.bind(this)
-  #keyDownHandler = (e: KeyboardEvent): void => { void this.#keyDown(e) }
+  #keyDownHandler = this.#keyDown.bind(this) as (e: KeyboardEvent) => void
   #keyUpHandler = this.#keyUp.bind(this)
   #resizeHandler = this.#resize.bind(this)
 
@@ -612,7 +612,7 @@ class Media extends HTMLElement {
    */
   #error (): void {
     setDisplay(this.#getClone('loader'), 'hide', 'loader')
-    this.#errorDelayId = setDisplay(this.#getClone('error'), 'show')
+    this.#errorDelayId = setDisplay(this.#getClone('error'), 'focus')
   }
 
   /**

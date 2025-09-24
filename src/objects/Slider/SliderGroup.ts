@@ -147,9 +147,9 @@ class SliderGroup extends Tabs {
 
     /* Event listeners */
 
-    this.addEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
-    this.addEventListener('tabs:activate', this.#activateHandler as EventListener)
-    this.addEventListener('tabs:activated', this.#activatedHandler as EventListener)
+    this.addEventListener('tabs:deactivate', this.#deactivateHandler)
+    this.addEventListener('tabs:activate', this.#activateHandler)
+    this.addEventListener('tabs:activated', this.#activatedHandler)
 
     /* Filters */
 
@@ -180,9 +180,9 @@ class SliderGroup extends Tabs {
 
     /* Clear event listeners */
 
-    this.removeEventListener('tabs:deactivate', this.#deactivateHandler as EventListener)
-    this.removeEventListener('tabs:activate', this.#activateHandler as EventListener)
-    this.removeEventListener('tabs:activated', this.#activatedHandler as EventListener)
+    this.removeEventListener('tabs:deactivate', this.#deactivateHandler)
+    this.removeEventListener('tabs:activate', this.#activateHandler)
+    this.removeEventListener('tabs:activated', this.#activatedHandler)
 
     this.track?.removeEventListener('scroll', this.#scrollHandler)
     this.prev?.removeEventListener('click', this.#prevHandler)

@@ -115,8 +115,8 @@ class Pagination extends HTMLElement {
    *
    * @private
    */
-  #clickHandler = (e: Event): void => { void this.#click(e) }
-  #popHandler = (e: PopStateEvent): void => { void this.#pop(e) }
+  #clickHandler = this.#click.bind(this) as EventListener
+  #popHandler = this.#pop.bind(this) as (e: PopStateEvent) => void
 
   /**
    * Create new instance.

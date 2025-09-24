@@ -136,7 +136,7 @@ class Form extends HTMLElement {
    */
   #changeHandler = this.#change.bind(this)
   #blurSummaryHandler = this.#blurSummary.bind(this)
-  #submitHandler = this.submit.bind(this)
+  #submitHandler = this.submit.bind(this) as (e: SubmitEvent) => void
 
   /**
    * Create new instance.
@@ -174,7 +174,7 @@ class Form extends HTMLElement {
 
     /* Clear event listeners */
 
-    this.form?.removeEventListener('submit', this.#submitHandler as EventListener)
+    this.form?.removeEventListener('submit', this.#submitHandler)
     this.clones.get('errorSummary')?.removeEventListener('blur', this.#blurSummaryHandler)
     this.groups.forEach(group => {
       const { inputs } = group
@@ -279,7 +279,7 @@ class Form extends HTMLElement {
     /* Form */
 
     this.form = form
-    this.form.addEventListener('submit', this.#submitHandler as EventListener)
+    this.form.addEventListener('submit', this.#submitHandler)
 
     /* Init successful */
 

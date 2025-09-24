@@ -52,9 +52,9 @@ class PaginationFilter extends Pagination {
    *
    * @private
    */
-  #changeHandler = (e: Event): void => { void this.#change(e) }
-  #submitHandler = (e: SubmitEvent): void => { void this.#submit(e) }
-  #resetHandler = (): void => { void this.#reset() }
+  #changeHandler = this.#change.bind(this) as EventListener
+  #submitHandler = this.#submit.bind(this) as (e: SubmitEvent) => void
+  #resetHandler = this.#reset.bind(this) as EventListener
 
   /**
    * Create new instance.
