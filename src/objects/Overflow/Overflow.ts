@@ -51,7 +51,7 @@ class Overflow extends HTMLElement {
   init: boolean = false
 
   /**
-   * Scroll listener timeout id.
+   * Scroll listener timeout ID.
    *
    * @private
    * @type {number}

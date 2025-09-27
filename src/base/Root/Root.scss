@@ -12,7 +12,7 @@
 @use "../../utils/fluid/fluid";
 
 /**
- * Root variables
+ * Root variables.
  *
  * @return {void}
  */
@@ -73,8 +73,7 @@
         --#{con.$n}#{$s}: #{calc.calc-rem($v)};
       }
     } @else if $r == "gap" {
-      --#{con.$n}gap: 0rem;
-      --#{con.$n}gap-margin: 0rem;
+      --#{con.$n}gap: 0px;
     } @else if $r == "columns" {
       --#{con.$n}columns: #{con.$columns};
     } @else if $r == "containers" {
@@ -90,8 +89,6 @@
       }
     } @else if $r == "container-padding" {
       --#{con.$n}container-padding: #{calc.calc-rem(con.$container-padding)};
-    } @else if $r == "aspect-ratio-padding" {
-      --#{con.$n}aspect-ratio-padding: 100%;
     } @else if $r == "transitions" {
       --#{con.$n}prop: #{con.$default-prop};
       --#{con.$n}duration: #{con.$default-duration};

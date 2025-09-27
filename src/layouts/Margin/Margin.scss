@@ -51,7 +51,7 @@ $margin-x-fix: fix.get-class-fix("margin-x");
   margin-right: auto;
 }
 
-/* Config vertical margins */
+/* Vertical margins */
 
 @each $m in con.$margin-top {
   $selector: ".#{$layout-fix}#{$margin-top-fix}-#{$m}";
@@ -115,7 +115,7 @@ $margin-x-fix: fix.get-class-fix("margin-x");
   }
 }
 
-/* Config horizontal margins */
+/* Horizontal margins */
 
 @each $m in con.$margin-left {
   $selector: ".#{$layout-fix}#{$margin-left-fix}-#{$m}";

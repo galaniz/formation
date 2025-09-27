@@ -38,7 +38,7 @@ class Masonry extends HTMLElement {
   init: boolean = false
 
   /**
-   * Item ids for margin styles.
+   * Item IDs for margin styles.
    *
    * @private
    * @type {string[]}
@@ -271,7 +271,7 @@ class Masonry extends HTMLElement {
     let newStyles = ''
 
     this.#ids.forEach((id, i) => {
-      const negativeOffset = (newLayout[i] as [number, number, number])[2] // Number as ids length always matches items length
+      const negativeOffset = (newLayout[i] as [number, number, number])[2] // Number as IDs length always matches items length
 
       newStyles += `--msn-${id}-margin:${negativeOffset > 0 ? negativeOffset * -1 : 0}px;`
     })

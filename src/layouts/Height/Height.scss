@@ -28,7 +28,7 @@ $min-height-fix: fix.get-class-fix("min-height");
   min-height: 100vh;
 }
 
-/* Config heights */
+/* Heights */
 
 @each $h in con.$heights {
   .#{$layout-fix}#{$height-fix}-#{$h} {

@@ -71,7 +71,7 @@ class Slider extends Tabs {
   #insert: HTMLElement | null = null
 
   /**
-   * Scroll to animation id.
+   * Scroll to animation ID.
    *
    * @private
    * @type {SliderAnimRef}
@@ -79,7 +79,7 @@ class Slider extends Tabs {
   #animRef: SliderAnimRef = { id: 0 }
 
   /**
-   * Scroll listener timeout id.
+   * Scroll listener timeout ID.
    *
    * @private
    * @type {number}

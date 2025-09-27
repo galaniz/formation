@@ -114,7 +114,7 @@ class Form extends HTMLElement {
   #legends: Map<string, string> = new Map()
 
   /**
-   * Error list item ids, messages and elements.
+   * Error list item IDs, messages and elements.
    *
    * @private
    * @type {Map<string, FormErrorListItem>}
@@ -406,7 +406,7 @@ class Form extends HTMLElement {
       return true
     }
 
-    /* Error id required for list */
+    /* Error ID required for list */
 
     const useLegend = labelType === 'legend'
     const errorId: string | undefined = useLegend ? label.id : inputs[0]?.id
@@ -479,7 +479,7 @@ class Form extends HTMLElement {
     message: string,
     ariaInvalid: number[]
   ): void {
-    /* Error element id */
+    /* Error element ID */
 
     const errorId = name + '-error'
 
@@ -542,7 +542,7 @@ class Form extends HTMLElement {
     name: string,
     label: HTMLElement
   ): void {
-    /* Error element id */
+    /* Error element ID */
 
     const errorId = name + '-error'
 
@@ -833,7 +833,7 @@ class Form extends HTMLElement {
    * @return {boolean}
    */
   appendInput (input: FormInput): boolean {
-    /* Name and id (error list) required */
+    /* Name and ID (error list) required */
 
     const name = input.name
     const id = input.id
@@ -903,7 +903,7 @@ class Form extends HTMLElement {
     const hasLegend = isHtmlElement(legend)
     const legendId = legend?.id
 
-    if (fieldsetRequired && !isStringStrict(legendId)) { // Legend id required for error list
+    if (fieldsetRequired && !isStringStrict(legendId)) { // Legend ID required for error list
       return false
     }
 

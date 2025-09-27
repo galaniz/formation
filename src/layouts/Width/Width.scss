@@ -24,7 +24,7 @@ $max-width-fix: fix.get-class-fix("max-width");
   width: 100vw;
 }
 
-/* Config widths */
+/* Widths */
 
 @each $w in con.$widths {
   .#{$layout-fix}#{$width-fix}-#{$w} {
@@ -42,7 +42,7 @@ $max-width-fix: fix.get-class-fix("max-width");
   }
 }
 
-/* Config percentage widths */
+/* Percentage widths */
 
 @each $w, $v in con.$width-percentages {
   .#{$layout-fix}#{$width-fix}-#{$w} {
@@ -60,7 +60,7 @@ $max-width-fix: fix.get-class-fix("max-width");
   }
 }
 
-/* Config max widths */
+/* Max widths */
 
 @each $w in con.$max-widths {
   .#{$layout-fix}#{$max-width-fix}-#{$w} {

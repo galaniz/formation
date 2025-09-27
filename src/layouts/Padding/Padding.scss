@@ -27,7 +27,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   padding: 0;
 }
 
-/* Config vertical padding */
+/* Vertical padding */
 
 @each $p in con.$padding-top {
   $selector: ".#{$layout-fix}#{$padding-top-fix}-#{$p}";
@@ -83,7 +83,7 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 }
 
-/* Config horizontal padding */
+/* Horizontal padding */
 
 @each $p in con.$padding-left {
   $selector: ".#{$layout-fix}#{$padding-left-fix}-#{$p}";

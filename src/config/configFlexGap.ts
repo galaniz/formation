@@ -10,7 +10,6 @@ import { config } from './config.js'
  * Browser flexbox gap support.
  *
  * @see {@link https://ishadeed.com/article/flexbox-gap/|Source}
- *
  * @return {void}
  */
 const configFlexGap = (): void => {

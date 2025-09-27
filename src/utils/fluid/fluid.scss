@@ -13,7 +13,7 @@
 @use "../calc/calc";
 
 /**
- * Remove unit from number
+ * Remove unit from number.
  *
  * @param {number} $number
  * @return {number}
@@ -27,7 +27,7 @@
 }
 
 /**
- * Fluidly resize between breakpoints
+ * Fluidly resize between breakpoints.
  *
  * @param {string} $prop
  * @param {list} $sizes
@@ -79,9 +79,9 @@
 }
 
 /**
- * Fluidly resize between two values using clamp
+ * Fluidly resize between two values using clamp.
  *
- * @see https://www.aleksandrhovhannisyan.com/blog/fluid-type-scale-with-css-clamp/
+ * @see {@link https://www.aleksandrhovhannisyan.com/blog/fluid-type-scale-with-css-clamp/|Source}
  * @param {list} $sizes
  * @param {list} $breakpoints
  * @param {string} [$type=size]

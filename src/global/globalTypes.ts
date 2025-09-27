@@ -30,18 +30,16 @@ export type GenericStrings = Record<string, string>
 export type GenericNumbers = Record<string, number>
 
 /**
- * Equality check with conditional types
- *
- * Source: https://stackoverflow.com/a/52473108/2887218
+ * Equality check with conditional types.
+ * https://stackoverflow.com/a/52473108/2887218
  */
 type IfEquals<X, Y, A=X, B=never> =
   (<T>() => T extends X ? 1 : 2) extends // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
   (<T>() => T extends Y ? 1 : 2) ? A : B // eslint-disable-line @typescript-eslint/no-unnecessary-type-parameters
 
 /**
- * Filter out readonly properties
- *
- * Source: https://stackoverflow.com/a/52473108/2887218
+ * Filter out readonly properties.
+ * https://stackoverflow.com/a/52473108/2887218
  */
 export type WritableKeys<T> = {
   [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, P>
