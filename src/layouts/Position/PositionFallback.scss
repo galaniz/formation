@@ -30,26 +30,32 @@ $layout-fix: fix.get-class-prefix("layout");
   position: sticky;
 }
 
-.#{$layout-fix}top-0 {
+.#{$layout-fix}top-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   top: 0;
 }
 
-.#{$layout-fix}left-0 {
+.#{$layout-fix}left-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   left: 0;
 }
 
-.#{$layout-fix}right-0 {
+.#{$layout-fix}right-0,
+.#{$layout-fix}all-0,
+.#{$layout-fix}before::before,
+.#{$layout-fix}after::after {
   right: 0;
 }
 
-.#{$layout-fix}bottom-0 {
-  bottom: 0;
-}
-
-.#{$layout-fix}inset-0,
+.#{$layout-fix}bottom-0,
+.#{$layout-fix}all-0,
 .#{$layout-fix}before::before,
 .#{$layout-fix}after::after {
-  inset: 0;
+  bottom: 0;
 }
 
 .#{$layout-fix}before::before,

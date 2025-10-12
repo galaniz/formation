@@ -9,7 +9,6 @@ import { getItem } from '../../utils/item/item.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
-import { isSet } from '../../utils/set/set.js'
 import {
   toggleFocusability,
   getInnerFocusableItems,
@@ -214,7 +213,6 @@ class Navigation extends HTMLElement {
     /* Clear event listeners */
 
     this.opens?.removeEventListener('click', this.#openHandler)
-
     this.closes.forEach(close => {
       close.removeEventListener('click', this.#closeHandler)
     })
@@ -300,18 +298,7 @@ class Navigation extends HTMLElement {
           breakpoint0 = breakpointNum
         }
 
-        const slot = slots[i]
-        let key: string | undefined = '0'
-
-        if (isHtmlElement(slot) && breakpointsLen > 1) {
-          key = slot.dataset.navSlot
-        }
-
-        if (!isStringStrict(key)) {
-          return
-        }
-
-        this.breakpoints.set(key, breakpointNum)
+        this.breakpoints.set(slots[i]?.dataset.navSlot || '0', breakpointNum)
       })
     }
 
@@ -325,7 +312,6 @@ class Navigation extends HTMLElement {
     /* Event listeners */
 
     this.opens.addEventListener('click', this.#openHandler)
-
     this.closes.forEach(close => {
       close.addEventListener('click', this.#closeHandler)
     })
@@ -469,19 +455,13 @@ class Navigation extends HTMLElement {
    * @return {boolean}
    */
   #overflowing (slotNames: Set<string> | undefined): boolean {
-    /* Slot names required */
-
-    if (!isSet(slotNames)) {
-      return false
-    }
-
     /* Assume no overflow */
 
     let overflow = false
 
     /* Check for breakpoint or scroll to determine overflow */
 
-    slotNames.forEach(name => {
+    slotNames?.forEach(name => {
       /* Slot breakpoint check */
 
       const bk = this.breakpoints.get(name)

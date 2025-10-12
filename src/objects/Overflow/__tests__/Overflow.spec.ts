@@ -26,8 +26,8 @@ test.describe('Overflow', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const overflowInit = await page.evaluate(() => {
-      const overflow: Overflow | null = document.querySelector('#ov-empty')
-      return overflow?.init
+      const overflow = document.querySelector('#ov-empty') as Overflow
+      return overflow.init
     })
 
     expect(overflowInit).toBe(false)

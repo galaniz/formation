@@ -26,8 +26,8 @@ test.describe('Reveal', () => {
 
   test('should not load if missing required elements', async ({ page }) => {
     const revealInit = await page.evaluate(() => {
-      const reveal: Reveal | null = document.querySelector('#rev-empty')
-      return reveal?.loaded
+      const reveal = document.querySelector('#rev-empty') as Reveal
+      return reveal.loaded
     })
 
     expect(revealInit).toBe(false)

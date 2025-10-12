@@ -26,8 +26,8 @@ test.describe('Visible', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const visibleInit = await page.evaluate(() => {
-      const visible: Visible | null = document.querySelector('#vis-empty')
-      return visible?.init
+      const visible = document.querySelector('#vis-empty') as Visible
+      return visible.init
     })
 
     expect(visibleInit).toBe(false)

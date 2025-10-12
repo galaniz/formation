@@ -25,7 +25,8 @@ $min-height-fix: fix.get-class-fix("min-height");
 }
 
 .#{$layout-fix}#{$min-height-fix}-full-vh {
-  min-height: 100vh;
+  min-height: 100vh; // Fallback for old browsers
+  min-height: 100dvh;
 }
 
 /* Heights */
