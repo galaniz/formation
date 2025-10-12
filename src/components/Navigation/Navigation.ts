@@ -291,7 +291,7 @@ class Navigation extends HTMLElement {
       const breakpointsLen = breakpointsArr.length
 
       breakpointsArr.forEach((breakpoint, i) => {
-        const breakpointValue = isStringStrict(breakpoint) ? parseInt(breakpoint, 10) : 0
+        const breakpointValue = parseInt(breakpoint, 10)
         const breakpointNum = isNumber(breakpointValue) ? breakpointValue * fontSizeMultiplier : 0
 
         if (breakpointsLen === 1) {

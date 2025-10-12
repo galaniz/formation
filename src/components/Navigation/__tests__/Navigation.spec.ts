@@ -264,16 +264,21 @@ test.describe('Navigation', () => {
   })
 
   test('should not reset if viewport height change', async ({ page }) => {
-    const resizeAction = await page.evaluate(async () => {
+    const resizeDone = page.evaluate(async () => {
       const { actions } = await import('../../../utils/action/action.js')
+      const set = actions.get('resize')
 
-      let action: () => void = () => {}
+      let resolve = () => {}
+      const waitForResize = new Promise<void>(r => (resolve = r))
 
-      actions.get('resize')?.forEach(a => {
-        action = a
-      })
+      const resizeAction = () => {
+        set?.delete(resizeAction)
+        resolve()
+        return true
+      }
 
-      return action
+      set?.add(resizeAction)
+      return waitForResize
     })
 
     await page.setViewportSize({
@@ -281,7 +286,7 @@ test.describe('Navigation', () => {
       height: await page.evaluate(() => window.innerHeight - 100)
     })
 
-    await page.waitForFunction(resizeAction)
+    await resizeDone
 
     const navEvents = await page.evaluate(() => {
       return {
@@ -302,6 +307,34 @@ test.describe('Navigation', () => {
     expect(navEvents.reset).toStrictEqual([...expectedIds])
     expect(navEvents.resetted).toStrictEqual([...expectedIds])
     expect(navEvents.set).toStrictEqual([...expectedIds])
+  })
+
+  test('should not overflow if slots undefined', async ({ page }) => {
+    await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+      nav.slots.clear()
+    })
+
+    await page.setViewportSize({
+      width: 640,
+      height: 640
+    })
+
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+    })
+
+    const navProps = await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+
+      return {
+        overflow: nav.overflow,
+        overflowAttr: nav.getAttribute('overflow')
+      }
+    })
+
+    expect(navProps.overflow).toBe(false)
+    expect(navProps.overflowAttr).toBe('false')
   })
 
   /* Test modal */
@@ -449,7 +482,7 @@ test.describe('Navigation', () => {
       return window.testNavToggled.filter(id => id === 'nav-slot').length === 1
     })
 
-    const navSlots = await page.evaluate(() => {
+    const navProps = await page.evaluate(() => {
       const nav = document.querySelector('#nav-slot') as Navigation
 
       return {
@@ -469,7 +502,7 @@ test.describe('Navigation', () => {
       open,
       showModal,
       lastActive
-    } = navSlots
+    } = navProps
 
     expect(slot).toBe(6)
     expect(modalSlot).toBe(0)
