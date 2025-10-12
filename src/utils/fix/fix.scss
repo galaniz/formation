@@ -8,7 +8,7 @@
 @use "../../config/config" as con;
 
 /**
- * Default or terse infix for class name
+ * Default or terse infix for class name.
  *
  * @param {string} $name
  * @return {string}
@@ -28,7 +28,7 @@
 }
 
 /**
- * Prefix for class name
+ * Prefix for class name.
  *
  * @param {string} $type
  * @return {string}

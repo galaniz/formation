@@ -2,6 +2,10 @@
  * Formation - Config
  */
 
+/* Imports */
+
+@use "sass:list";
+
 /* Vertical sizes */
 
 $vertical-sizes: (
@@ -221,7 +225,8 @@ $horizontal-sizes: (
 
   /* Aspect ratios */
 
-  $aspect-ratio-padding: (
-    "16-9": 56.25%,
+  $aspect-ratios: (
+    "1-1": list.slash(1, 1),
+    "16-9": list.slash(16, 9),
   ),
 );

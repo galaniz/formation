@@ -1,5 +1,5 @@
 /**
- * Layouts - Aspect Ratio Styles
+ * Layouts - Aspect Ratio Padding Styles
  */
 
 /* Imports */
@@ -15,14 +15,18 @@ $aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
 
 /* Styles */
 
-%l-aspect-ratio {
-  aspect-ratio: var(--#{con.$n}aspect-ratio);
+%l-aspect-ratio-padding {
+  &::before {
+    content: "";
+    display: block;
+    padding-top: var(--#{con.$n}aspect-ratio-padding);
+  }
 }
 
-@each $p, $v in con.$aspect-ratios {
+@each $p, $v in con.$aspect-ratio-padding {
   .#{$layout-fix}#{$aspect-ratio-fix}-#{$p} {
-    --#{con.$n}aspect-ratio: #{$v};
+    --#{con.$n}aspect-ratio-padding: #{$v};
 
-    @extend %l-aspect-ratio;
+    @extend %l-aspect-ratio-padding;
   }
 }

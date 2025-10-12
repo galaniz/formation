@@ -40,7 +40,7 @@ export default /* html */`
         <span class="nav-icon-top bg-foreground-dark block e-trans"></span>
         <span class="nav-icon-middle bg-foreground-dark block e-trans"></span>
         <span class="nav-icon-bottom bg-foreground-dark block e-trans"></span>
-        <span class="nav-icon-cross block absolute all-0 m-auto">
+        <span class="nav-icon-cross block absolute inset-0 m-auto">
           <span class="nav-icon-left bg-foreground-dark block absolute e-trans"></span>
           <span class="nav-icon-right bg-foreground-dark block absolute e-trans"></span>
         </span>

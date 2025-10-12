@@ -3,7 +3,7 @@ export default /* html */`
     id="nav-slots-groups-breakpoints"
     class="nav"
     delay="400"
-    breakpoints="620,900"
+    breakpoints="640,960"
     role="navigation"
   >
     <ul data-nav-slot="one">

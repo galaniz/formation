@@ -141,12 +141,51 @@ test.describe('Navigation', () => {
     expect(navEvents.toggled).toStrictEqual([])
   })
 
+  test('should move instance and not reinitialize', async ({ page }) => {
+    const navProps = await page.evaluate(async () => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+
+      nav.parentElement?.insertAdjacentElement('beforeend', nav)
+
+      await Promise.resolve()
+
+      const slotsSize = nav.slots.size
+      const itemsLen = nav.items.length
+      const modalRole = nav.modal?.role
+      const modalSlotsSize = nav.modalSlots.size
+      const breakpoints = Array.from(nav.breakpoints.keys()).join(',')
+      const opensPopup = nav.opens?.ariaHasPopup
+      const closesLen = nav.closes.length
+      const init = nav.init
+
+      return {
+        slotsSize,
+        itemsLen,
+        modalRole,
+        modalSlotsSize,
+        breakpoints,
+        opensPopup,
+        closesLen,
+        init
+      }
+    })
+
+    expect(navProps.slotsSize).toBe(1)
+    expect(navProps.itemsLen).toBe(6)
+    expect(navProps.modalRole).toBe('dialog')
+    expect(navProps.modalSlotsSize).toBe(1)
+    expect(navProps.breakpoints).toBe('0')
+    expect(navProps.opensPopup).toBe('true')
+    expect(navProps.closesLen).toBe(1)
+    expect(navProps.init).toBe(true)
+  })
+
   /* Test resize */
 
-  test('should move some items into modal slots if 900px viewport', async ({ page }) => {
+  test('should move some items into modal slots if 960px viewport', async ({ page }) => {
     await page.setViewportSize({
-      width: 900,
-      height: 900
+      width: 960,
+      height: 960
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -154,13 +193,13 @@ test.describe('Navigation', () => {
     })
 
     const navSlots = await page.evaluate(() => {
-      const navGroups: Navigation | null = document.querySelector('#nav-slots-groups-breakpoints')
+      const navGroups = document.querySelector('#nav-slots-groups-breakpoints') as Navigation
 
       return {
-        groupsOne: navGroups?.slots.get('one')?.children.length,
-        groupsTwo: navGroups?.slots.get('two')?.children.length,
-        groupsModalOne: navGroups?.modalSlots.get('one')?.children.length,
-        groupsModalTwo: navGroups?.modalSlots.get('two')?.children.length
+        groupsOne: navGroups.slots.get('one')?.children.length,
+        groupsTwo: navGroups.slots.get('two')?.children.length,
+        groupsModalOne: navGroups.modalSlots.get('one')?.children.length,
+        groupsModalTwo: navGroups.modalSlots.get('two')?.children.length
       }
     })
 
@@ -177,10 +216,10 @@ test.describe('Navigation', () => {
     expect(groupsModalTwo).toBe(5)
   })
 
-  test('should move all items into modal slots if 620px viewport', async ({ page }) => {
+  test('should move all items into modal slots if 640px viewport', async ({ page }) => {
     await page.setViewportSize({
-      width: 620,
-      height: 620
+      width: 640,
+      height: 640
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -188,18 +227,18 @@ test.describe('Navigation', () => {
     })
 
     const navSlots = await page.evaluate(() => {
-      const nav: Navigation | null = document.querySelector('#nav-slots-breakpoint')
-      const navGroups: Navigation | null = document.querySelector('#nav-slots-groups-breakpoints')
+      const nav = document.querySelector('#nav-slots-breakpoint') as Navigation
+      const navGroups = document.querySelector('#nav-slots-groups-breakpoints') as Navigation
 
       return {
-        one: nav?.slots.get('one')?.children.length,
-        two: nav?.slots.get('two')?.children.length,
-        modalOne: nav?.modalSlots.get('one')?.children.length,
-        modalTwo: nav?.modalSlots.get('two')?.children.length,
-        groupsOne: navGroups?.slots.get('one')?.children.length,
-        groupsTwo: navGroups?.slots.get('two')?.children.length,
-        groupsModalOne: navGroups?.modalSlots.get('one')?.children.length,
-        groupsModalTwo: navGroups?.modalSlots.get('two')?.children.length
+        one: nav.slots.get('one')?.children.length,
+        two: nav.slots.get('two')?.children.length,
+        modalOne: nav.modalSlots.get('one')?.children.length,
+        modalTwo: nav.modalSlots.get('two')?.children.length,
+        groupsOne: navGroups.slots.get('one')?.children.length,
+        groupsTwo: navGroups.slots.get('two')?.children.length,
+        groupsModalOne: navGroups.modalSlots.get('one')?.children.length,
+        groupsModalTwo: navGroups.modalSlots.get('two')?.children.length
       }
     })
 
@@ -224,12 +263,86 @@ test.describe('Navigation', () => {
     expect(groupsModalTwo).toBe(5)
   })
 
+  test('should not reset if viewport height change', async ({ page }) => {
+    const resizeDone = page.evaluate(async () => {
+      const { actions } = await import('../../../utils/action/action.js')
+      const set = actions.get('resize')
+
+      let resolve = () => {}
+      const waitForResize = new Promise<void>(r => (resolve = r))
+
+      const resizeAction = () => {
+        set?.delete(resizeAction)
+        resolve()
+        return true
+      }
+
+      set?.add(resizeAction)
+      return waitForResize
+    })
+
+    await page.setViewportSize({
+      width: await page.evaluate(() => window.innerWidth),
+      height: await page.evaluate(() => window.innerHeight - 100)
+    })
+
+    await resizeDone
+
+    const navEvents = await page.evaluate(() => {
+      return {
+        reset: window.testNavReset,
+        resetted: window.testNavResetted,
+        set: window.testNavSet
+      }
+    })
+
+    const expectedIds = [
+      'nav-slot',
+      'nav-slots',
+      'nav-slots-breakpoint',
+      'nav-slots-groups',
+      'nav-slots-groups-breakpoints'
+    ]
+
+    expect(navEvents.reset).toStrictEqual([...expectedIds])
+    expect(navEvents.resetted).toStrictEqual([...expectedIds])
+    expect(navEvents.set).toStrictEqual([...expectedIds])
+  })
+
+  test('should not overflow if slots undefined', async ({ page }) => {
+    await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+      nav.slots.clear()
+    })
+
+    await page.setViewportSize({
+      width: 640,
+      height: 640
+    })
+
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+    })
+
+    const navProps = await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+
+      return {
+        overflow: nav.overflow,
+        overflowAttr: nav.getAttribute('overflow')
+      }
+    })
+
+    expect(navProps.overflow).toBe(false)
+    expect(navProps.overflowAttr).toBe('false')
+  })
+
   /* Test modal */
 
   test('should open and close modal', async ({ page }) => {
     await page.setViewportSize({
-      width: 620,
-      height: 620
+      width: 640,
+      height: 640
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -300,5 +413,161 @@ test.describe('Navigation', () => {
     expect(navEvents.set).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
     expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot']) // Twice for resize and click
     expect(navEvents.toggled).toStrictEqual(['nav-slot'])
+  })
+
+  test('should close modal on escape', async ({ page }) => {
+    await page.setViewportSize({
+      width: 640,
+      height: 640
+    })
+
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slots').length === 2
+    })
+
+    await page.getByTestId('nav-slots-open').click()
+    await page.waitForFunction(() => { // Wait for open
+      const nav = document.querySelector('#nav-slots') as Navigation
+      return nav.getAttribute('show-modal') === 'items'
+    })
+
+    await page.keyboard.press('Escape')
+    await page.waitForFunction(() => { // Wait for close
+      return window.testNavToggled.filter(id => id === 'nav-slots').length === 1
+    })
+
+    const navClose = await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slots') as Navigation
+
+      return {
+        show: nav.hasAttribute('show'),
+        open: nav.getAttribute('open'),
+        showModal: nav.hasAttribute('show-modal'),
+        lastActive: document.activeElement?.textContent.trim()
+      }
+    })
+
+    expect(navClose.show).toBe(false)
+    expect(navClose.open).toBe('false')
+    expect(navClose.showModal).toBe(false)
+    expect(navClose.lastActive).toBe('Open')
+  })
+
+  test('should close modal on resize', async ({ page }) => {
+    await page.setViewportSize({
+      width: 640,
+      height: 640
+    })
+
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+    })
+
+    await page.getByTestId('nav-slot-open').click()
+    await page.waitForFunction(() => { // Wait for open
+      const nav = document.querySelector('#nav-slot') as Navigation
+      return nav.getAttribute('show-modal') === 'items'
+    })
+
+    await page.setViewportSize({
+      width: 1280,
+      height: 1280
+    })
+
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavSet.filter(id => id === 'nav-slot').length === 3
+    })
+
+    await page.waitForFunction(() => { // Wait for close
+      return window.testNavToggled.filter(id => id === 'nav-slot').length === 1
+    })
+
+    const navProps = await page.evaluate(() => {
+      const nav = document.querySelector('#nav-slot') as Navigation
+
+      return {
+        slot: nav.slots.get('0')?.children.length,
+        modalSlot: nav.modalSlots.get('0')?.children.length,
+        show: nav.hasAttribute('show'),
+        open: nav.getAttribute('open'),
+        showModal: nav.hasAttribute('show-modal'),
+        lastActive: document.activeElement?.tagName
+      }
+    })
+
+    const {
+      slot,
+      modalSlot,
+      show,
+      open,
+      showModal,
+      lastActive
+    } = navProps
+
+    expect(slot).toBe(6)
+    expect(modalSlot).toBe(0)
+    expect(show).toBe(false)
+    expect(open).toBe('false')
+    expect(showModal).toBe(false)
+    expect(lastActive).toBe('BODY')
+  })
+
+  /* Test clean up */
+
+  test('should remove instance and event listeners', async ({ page }) => {
+    const navProps = await page.evaluate(async () => {
+      const { actions } = await import('../../../utils/action/action.js')
+
+      const nav = document.querySelector('#nav-slot') as Navigation
+      const navOpens = nav.opens
+      const navCloses = nav.closes[0]
+      const resizeActionsLen = actions.get('resize')?.size || 1
+      const escapeActionsLen = actions.get('escape')?.size || 1
+
+      nav.remove()
+
+      await Promise.resolve()
+
+      navOpens?.style.setProperty('display', 'block')
+      navOpens?.click()
+      navCloses?.style.setProperty('display', 'block')
+      navCloses?.click()
+
+      const slotsSize = nav.slots.size
+      const itemsLen = nav.items.length
+      const modal = nav.modal
+      const modalSlotsSize = nav.modalSlots.size
+      const breakpointsSize = nav.breakpoints.size
+      const opens = nav.opens
+      const closesLen = nav.closes.length
+      const toggleLen = window.testNavToggle.length
+      const init = nav.init
+      const actionsRemoved =
+        actions.get('resize')?.size === resizeActionsLen - 1 && actions.get('escape')?.size === escapeActionsLen - 1
+
+      return {
+        slotsSize,
+        itemsLen,
+        modal,
+        modalSlotsSize,
+        breakpointsSize,
+        opens,
+        closesLen,
+        toggleLen,
+        actionsRemoved,
+        init
+      }
+    })
+
+    expect(navProps.slotsSize).toBe(0)
+    expect(navProps.itemsLen).toBe(0)
+    expect(navProps.modal).toBe(null)
+    expect(navProps.modalSlotsSize).toBe(0)
+    expect(navProps.breakpointsSize).toBe(0)
+    expect(navProps.opens).toBe(null)
+    expect(navProps.closesLen).toBe(0)
+    expect(navProps.toggleLen).toBe(0)
+    expect(navProps.init).toBe(false)
+    expect(navProps.actionsRemoved).toBe(true)
   })
 })

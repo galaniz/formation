@@ -23,6 +23,7 @@ export default /* html */`
       type="button"
       aria-haspopup="true"
       data-nav-open
+      data-testid="nav-slots-open"
     >
       Open
     </button>
@@ -31,6 +32,7 @@ export default /* html */`
       role="dialog"
       aria-modal="true"
       data-nav-modal
+      data-testid="nav-slots-close"
     >
       <ul data-nav-modal-slot="one"></ul>
       <ul data-nav-modal-slot="two"></ul>

@@ -26,8 +26,8 @@ test.describe('PaginationFilter', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const pagInit = await page.evaluate(() => {
-      const pag: PaginationFilter | null = document.querySelector('#pag-filter-partial')
-      return pag?.subInit
+      const pag = document.querySelector('#pag-filter-partial') as PaginationFilter
+      return pag.subInit
     })
 
     expect(pagInit).toBe(false)

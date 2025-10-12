@@ -26,8 +26,8 @@ test.describe('Collapsible', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const collapsibleInit = await page.evaluate(() => {
-      const collapsible: Collapsible | null = document.querySelector('#clp-empty')
-      return collapsible?.init
+      const collapsible = document.querySelector('#clp-empty') as Collapsible
+      return collapsible.init
     })
 
     expect(collapsibleInit).toBe(false)

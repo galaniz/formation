@@ -19,29 +19,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Install pnpm
-      - name: Install pnpm
+      # Install PNPM
+      - name: Install PNPM
         uses: pnpm/action-setup@v4
 
-      # Set up node.js for pnpm
-      - name: Setup node.js
+      # Set up Node.js for PNPM
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23'
           cache: 'pnpm'
 
-      # Install pnpm dependencies
-      - name: Install pnpm dependencies
+      # Install PNPM dependencies
+      - name: Install PNPM dependencies
         run: pnpm install --frozen-lockfile
 
-      # Install playwright
-      - name: Install playwright
+      # Install Playwright
+      - name: Install Playwright
         run: pnpm exec playwright install
 
-      # Lint ts and scss files
-      - name: Run lint (ts and scss)
+      # Lint TS and SCSS files
+      - name: Run lint (TS and SCSS)
         run: pnpm lint
 
-      # Test ts files
-      - name: Run tests (ts)
+      # Test TS files
+      - name: Run tests (TS)
         run: pnpm test

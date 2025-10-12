@@ -32,7 +32,6 @@ $root: (
   "columns",
   "containers",
   "container-padding",
-  "aspect-ratio-padding",
   "transitions",
   "outline",
   "borders",
@@ -349,15 +348,10 @@ $align-breakpoints: () !default;
 $block-breakpoints: () !default;
 $none-breakpoints: () !default;
 
-/* Aspect ratio padding */
+/* Aspect ratios */
 
-$aspect-ratio-padding: () !default;
-$aspect-ratio-padding: maps.map-recursive-merge(
-  (
-    "1-1": 100%
-  ),
-  $aspect-ratio-padding
-);
+$aspect-ratios: () !default; // ( "1-1": 1 / 1 )
+$aspect-ratio-padding: () !default; // ( "1-1": 100% )
 
 /* Transitions */
 

@@ -26,8 +26,8 @@ test.describe('Form', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const formInit = await page.evaluate(() => {
-      const form: Form | null = document.querySelector('#frm-empty')
-      return form?.init
+      const form = document.querySelector('#frm-empty') as Form
+      return form.init
     })
 
     expect(formInit).toBe(false)

@@ -10,7 +10,7 @@ import { isNumber } from '../../utils/number/number.js'
 import { config } from '../../config/config.js'
 
 /**
- * Sine ease in out
+ * Sine ease in out.
  *
  * @private
  * @param {number} elapsed
@@ -24,7 +24,7 @@ const sliderEase = (elapsed: number, from: number, change: number, duration: num
 }
 
 /**
- * Move track immediately or smoothly
+ * Move track immediately or smoothly.
  *
  * @param {number} to
  * @param {string} source

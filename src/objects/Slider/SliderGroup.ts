@@ -87,7 +87,7 @@ class SliderGroup extends Tabs {
   #endIndex: number = 0
 
   /**
-   * Scroll to animation id.
+   * Scroll to animation ID.
    *
    * @private
    * @type {SliderAnimRef}
@@ -95,7 +95,7 @@ class SliderGroup extends Tabs {
   #animRef: SliderAnimRef = { id: 0 }
 
   /**
-   * Scroll listener timeout id.
+   * Scroll listener timeout ID.
    *
    * @private
    * @type {number}

@@ -15,28 +15,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set git user identity
-      - name: Set git user identity
+      # Set GitHub user
+      - name: Set GitHub user
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      # Install pnpm
-      - name: Install pnpm
+      # Install PNPM
+      - name: Install PNPM
         uses: pnpm/action-setup@v4
 
-      # Set up node.js for pnpm
-      - name: Setup node.js
+      # Set up Node.js for PNPM
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23'
           cache: 'pnpm'
 
-      # Npm authentication
-      - name: Set npm auth token
+      # NPM authentication
+      - name: Set NPM auth token
         run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
 
-      # Install pnpm dependencies
+      # Install PNPM dependencies
       - name: Install dependencies
         run: pnpm install
 
@@ -58,28 +58,28 @@ jobs:
         with:
           ref: beta
 
-      # Set git user identity
-      - name: Set git user identity
+      # GitHub user
+      - name: GitHub user
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      # Install pnpm
-      - name: Install pnpm
+      # Install PNPM
+      - name: Install PNPM
         uses: pnpm/action-setup@v4
 
-      # Set up node.js for pnpm
-      - name: Setup node.js
+      # Set up Node.js for PNPM
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23'
           cache: 'pnpm'
 
-      # Npm authentication
-      - name: Set npm auth token
+      # NPM authentication
+      - name: Set NPM auth token
         run: pnpm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
 
-      # Install pnpm dependencies
+      # Install PNPM dependencies
       - name: Install dependencies
         run: pnpm install
 

@@ -9,9 +9,9 @@
 @use "../calc/calc";
 
 /**
- * Min width media query
+ * Min width media query.
  *
- * @param {string|number} $min - Prop in $breakpoints map
+ * @param {string|number} $min - Prop in $breakpoints map.
  * @return {void}
  */
 @mixin breakpoint-min($min) {
@@ -27,9 +27,9 @@
 }
 
 /**
- * Max width media query
+ * Max width media query.
  *
- * @param {string|number} $max - Prop in $breakpoints map
+ * @param {string|number} $max - Prop in $breakpoints map.
  * @return {void}
  */
 @mixin breakpoint-max($max) {
@@ -45,10 +45,10 @@
 }
 
 /**
- * Min/max width media query
+ * Min/max width media query.
  *
- * @param {string|number} $min - Prop in $breakpoints map
- * @param {string|number} $max - Prop in $breakpoints map
+ * @param {string|number} $min - Prop in $breakpoints map.
+ * @param {string|number} $max - Prop in $breakpoints map.
  * @return {void}
  */
 @mixin breakpoint-min-max($min, $max) {
@@ -65,9 +65,9 @@
 }
 
 /**
- * Add to breakpoints batch
+ * Add to breakpoints batch.
  *
- * @param {string|number} $b - Prop in $breakpoints map
+ * @param {string|number} $b - Prop in $breakpoints map.
  * @param {map} $declarations
  * @return {void}
  */
@@ -87,7 +87,7 @@
 }
 
 /**
- * Output breakpoint batches
+ * Output breakpoint batches.
  *
  * @return {void}
  */

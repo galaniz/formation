@@ -26,8 +26,8 @@ test.describe('Media', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const mediaInit = await page.evaluate(() => {
-      const media: Media | null = document.querySelector('#med-empty')
-      return media?.init
+      const media = document.querySelector('#med-empty') as Media
+      return media.init
     })
 
     expect(mediaInit).toBe(false)

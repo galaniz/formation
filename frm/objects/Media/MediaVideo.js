@@ -24,7 +24,7 @@ export default /* html */`
       aria-valuetext=""
       data-media-progress
     >
-      <div class="media-bar absolute all-0 after"></div>
+      <div class="media-bar absolute inset-0 after"></div>
       <div class="media-scrub absolute w-2 h-2 bg-foreground-dark b-radius-full"></div>
     </div>
   </frm-media>

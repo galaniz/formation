@@ -8,7 +8,7 @@
 @use "sass:meta";
 
 /**
- * Recursively merge two maps
+ * Recursively merge two maps.
  *
  * @param {map} $original
  * @param {map} $overrides
@@ -34,7 +34,7 @@
 }
 
 /**
- * Convert map to one level map
+ * Convert map to one level map.
  *
  * @param {map} $map
  * @param {map} $new-map

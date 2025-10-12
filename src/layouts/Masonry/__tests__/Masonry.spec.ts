@@ -26,8 +26,8 @@ test.describe('Masonry', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const masonryInit = await page.evaluate(() => {
-      const masonry: Masonry | null = document.querySelector('#msn-empty')
-      return masonry?.init
+      const masonry = document.querySelector('#msn-empty') as Masonry
+      return masonry.init
     })
 
     expect(masonryInit).toBe(false)

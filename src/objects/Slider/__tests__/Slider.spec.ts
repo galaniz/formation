@@ -26,8 +26,8 @@ test.describe('Slider', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
-      const slider: Slider | null = document.querySelector('#sld-empty')
-      return slider?.init
+      const slider = document.querySelector('#sld-empty') as Slider
+      return slider.init
     })
 
     expect(sliderInit).toBe(false)

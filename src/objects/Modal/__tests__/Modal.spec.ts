@@ -26,8 +26,8 @@ test.describe('Modal', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const modalInit = await page.evaluate(() => {
-      const modal: Modal | null = document.querySelector('#mod-empty')
-      return modal?.init
+      const modal = document.querySelector('#mod-empty') as Modal
+      return modal.init
     })
 
     expect(modalInit).toBe(false)

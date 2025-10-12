@@ -26,8 +26,8 @@ test.describe('Tabs', () => {
 
   test('should not initialize if missing required elements', async ({ page }) => {
     const tabsInit = await page.evaluate(() => {
-      const tabs: Tabs | null = document.querySelector('#tabs-empty')
-      return tabs?.init
+      const tabs = document.querySelector('#tabs-empty') as Tabs
+      return tabs.init
     })
 
     expect(tabsInit).toBe(false)
