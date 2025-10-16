@@ -24,7 +24,7 @@ jobs:
         uses: pnpm/action-setup@v4
 
       # Set up Node.js for PNPM
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23'
@@ -36,12 +36,12 @@ jobs:
 
       # Install Playwright
       - name: Install Playwright
-        run: pnpm exec playwright install
+        run: pnpm exec playwright install --with-deps
 
       # Lint TS and SCSS files
-      - name: Run lint (TS and SCSS)
+      - name: Lint files (TS and SCSS)
         run: pnpm lint
 
       # Test TS files
-      - name: Run tests (TS)
+      - name: Test files (TS)
         run: pnpm test

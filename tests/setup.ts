@@ -7,7 +7,7 @@
 import { setCoverageConfig } from '@alanizcreative/formation-coverage/coverageConfig.js'
 import { setupCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
-/* Setup */
+/* Set up */
 
 export default async function (): Promise<void> {
   await setCoverageConfig({
