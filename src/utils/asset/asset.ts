@@ -5,9 +5,7 @@
 /* Imports */
 
 import type { Asset, AssetDone } from './assetTypes.js'
-import { isHtmlElement } from '../html/html.js'
 import { isArrayStrict } from '../array/array.js'
-import { isString } from '../string/string.js'
 
 /**
  * Check if single asset is loaded.
@@ -17,32 +15,54 @@ import { isString } from '../string/string.js'
  */
 const assetLoaded = async (asset: Asset): Promise<Asset> => {
   return await new Promise((resolve, reject) => {
-    const result = (): void => {
-      resolve(asset)
-    }
+    const isImage = asset instanceof HTMLImageElement
+    const isVideo = asset instanceof HTMLVideoElement
+    const isAudio = asset instanceof HTMLAudioElement
+    const isIframe = asset instanceof HTMLIFrameElement
 
-    const error = (err: string | Event): void => {
-      reject(isString(err) ? new Error(err) : err) // eslint-disable-line @typescript-eslint/prefer-promise-reject-errors
-    }
-
-    if (!isHtmlElement(asset)) {
-      error('Asset is not an HTML element')
+    if (!isImage && !isVideo && !isAudio && !isIframe) {
+      reject(new Error('Asset is not a media element'))
       return
     }
 
-    if (asset instanceof HTMLImageElement && asset.complete) {
-      result()
+    const load = () => {
+      cleanUp()
+      resolve(asset)
     }
 
-    const isVideo = asset instanceof HTMLVideoElement
-    const isAudio = asset instanceof HTMLAudioElement
+    const error = (err: Event) => {
+      cleanUp()
+      reject(err) // eslint-disable-line @typescript-eslint/prefer-promise-reject-errors
+    }
 
-    asset.onerror = error
+    const cleanUp = () => {
+      if (isImage) {
+        asset.removeEventListener('load', load)
+      }
+
+      if (isVideo || isAudio) {
+        asset.removeEventListener('canplay', load)
+      }
+
+      asset.removeEventListener('error', error)
+    }
+
+    if (isImage || isIframe) {
+      asset.addEventListener('load', load, { once: true })
+    }
 
     if (isVideo || isAudio) {
-      asset.oncanplay = result
-    } else {
-      asset.onload = result
+      asset.addEventListener('canplay', load, { once: true })
+    }
+
+    asset.addEventListener('error', error, { once: true })
+
+    if (isImage && asset.complete) {
+      if (asset.naturalWidth > 0) {
+        load()
+      } else {
+        reject(new Error('Image failed to load'))
+      }
     }
   })
 }

@@ -34,9 +34,9 @@ const testAssets = (): TestItems => {
   const audio = document.createElement('audio')
   const iframe = document.createElement('iframe')
 
-  img.src = '../../../static/img/test.webp'
-  video.innerHTML = '<source src="../../../static/video/test.mp4" type="video/mp4">'
-  audio.innerHTML = '<source src="../../../static/audio/test.mp3" type="audio/mpeg">'
+  img.src = '../../../../static/img/test.webp'
+  video.innerHTML = '<source src="../../../../static/video/test.mp4" type="video/mp4">'
+  audio.innerHTML = '<source src="../../../../static/audio/test.mp3" type="audio/mpeg">'
   iframe.title = 'Wikipedia page for Avocados'
   iframe.src = 'https://en.wikipedia.org/wiki/Avocado/'
 
@@ -82,75 +82,78 @@ describe('assetLoaded()', () => {
   it('should throw an error if asset is null', async () => {
     const asset = null
 
-    await expect(async () => { await assetLoaded(asset) }).rejects.toThrowError()
+    await expect(async () => { await assetLoaded(asset) }).rejects.toThrowError('Asset is not a media element')
   })
 
-  it(
-    'should resolve to asset if asset is image',
-    async () => {
-      const { img: asset } = testAssets()
-      const timeoutId = testLoadAssets([asset], ['img'])
-      const result = await assetLoaded(asset)
+  it('should resolve to asset if asset is image', async () => {
+    const { img: asset } = testAssets()
+    const timeoutId = testLoadAssets([asset], ['img'])
+    const result = await assetLoaded(asset)
 
-      expect(result).toBe(asset)
-      expect(asset).toBeInstanceOf(HTMLImageElement)
-      clearTimeout(timeoutId)
-    }
-  )
+    expect(result).toBe(asset)
+    expect(asset).toBeInstanceOf(HTMLImageElement)
+    clearTimeout(timeoutId)
+  })
 
-  it(
-    'should resolve to complete image',
-    async () => {
-      const image = document.createElement('img')
+  it('should resolve to complete image', async () => {
+    const image = document.createElement('img')
 
-      Object.defineProperty(image, 'complete', { // Override complete property to return true
-        get: () => true
-      })
+    Object.defineProperty(image, 'complete', { // Override complete property
+      get: () => true
+    })
 
-      const result = await assetLoaded(image)
+    Object.defineProperty(image, 'naturalWidth', { // Override natural property
+      get: () => 1245
+    })
 
-      expect(result).toBe(image)
-    }
-  )
+    const result = await assetLoaded(image)
 
-  it(
-    'should resolve to asset if asset is video',
-    async () => {
-      const { video: asset } = testAssets()
-      const timeoutId = testLoadAssets([asset], ['video'])
-      const result = await assetLoaded(asset)
+    expect(result).toBe(image)
+  })
 
-      expect(result).toBe(asset)
-      expect(asset).toBeInstanceOf(HTMLVideoElement)
-      clearTimeout(timeoutId)
-    }
-  )
+  it('should not resolve broken image', async () => {
+    const image = document.createElement('img')
 
-  it(
-    'should resolve to asset if asset is audio',
-    async () => {
-      const { audio: asset } = testAssets()
-      const timeoutId = testLoadAssets([asset], ['audio'])
-      const result = await assetLoaded(asset)
+    Object.defineProperty(image, 'complete', { // Override complete property
+      get: () => true
+    })
 
-      expect(result).toBe(asset)
-      expect(asset).toBeInstanceOf(HTMLAudioElement)
-      clearTimeout(timeoutId)
-    }
-  )
+    Object.defineProperty(image, 'naturalWidth', { // Override natural property
+      get: () => 0
+    })
 
-  it(
-    'should resolve to asset if asset is iframe',
-    async () => {
-      const { iframe: asset } = testAssets()
-      const timeoutId = testLoadAssets([asset], ['iframe'])
-      const result = await assetLoaded(asset)
+    await expect(async () => { await assetLoaded(image) }).rejects.toThrowError('Image failed to load')
+  })
 
-      expect(result).toBe(asset)
-      expect(asset).toBeInstanceOf(HTMLIFrameElement)
-      clearTimeout(timeoutId)
-    }
-  )
+  it('should resolve to asset if asset is video', async () => {
+    const { video: asset } = testAssets()
+    const timeoutId = testLoadAssets([asset], ['video'])
+    const result = await assetLoaded(asset)
+
+    expect(result).toBe(asset)
+    expect(asset).toBeInstanceOf(HTMLVideoElement)
+    clearTimeout(timeoutId)
+  })
+
+  it('should resolve to asset if asset is audio', async () => {
+    const { audio: asset } = testAssets()
+    const timeoutId = testLoadAssets([asset], ['audio'])
+    const result = await assetLoaded(asset)
+
+    expect(result).toBe(asset)
+    expect(asset).toBeInstanceOf(HTMLAudioElement)
+    clearTimeout(timeoutId)
+  })
+
+  it('should resolve to asset if asset is iframe', async () => {
+    const { iframe: asset } = testAssets()
+    const timeoutId = testLoadAssets([asset], ['iframe'])
+    const result = await assetLoaded(asset)
+
+    expect(result).toBe(asset)
+    expect(asset).toBeInstanceOf(HTMLIFrameElement)
+    clearTimeout(timeoutId)
+  })
 })
 
 /* Test assetsLoaded */
