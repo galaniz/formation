@@ -21,41 +21,42 @@ for await (const entry of glob('src/**/*.json')) {
     encoding: 'utf8'
   })
 
-  const fileName = basename(entry)
-  const parentPath = entry.replace(`/__tests__/${fileName}`, '')
-  const componentDir = parentPath.replace('src/', '')
+  const path = entry
+    .replace('src/', '')
+    .replace('__tests__/', '')
+    .replace('.json', '')
 
-  let componentName = componentDir.split('/').pop()
+  const pathArr = path.split('/')
+  const name = pathArr.pop()
+  const newPath = pathArr.join('/')
+  const parent = pathArr.pop()
 
-  const componentStyles = sass.compile(`frm/${componentDir}/${componentName}.scss`, {
+  const componentStyles = sass.compile(`frm/${newPath}/${parent}.scss`, {
     style: 'compressed'
   })
 
-  if (fileName === 'SliderGroup.json') {
-    componentName = 'SliderGroup'
-  }
-
-  if (fileName === 'PaginationFilter.json') {
-    componentName = 'PaginationFilter'
-  }
-
   const data = JSON.parse(json)
+  let sectionClasses = 'py-32'
   let output = ''
 
-  for (const instanceName of data) {
-    const instance = await import(`../frm/${componentDir}/${instanceName}.js`)
+  if (parent !== 'Slider') {
+    sectionClasses += ' container'
+  }
 
-    output += /* html */`<div class="py-32">${instance.default}</div>`
+  for (const instanceName of data) {
+    const instance = await import(`../frm/${newPath}/${instanceName}.js`)
+
+    output += /* html */`<section class="${sectionClasses}">${instance.default}</section>`
   }
 
   await writeFile(
-    `spec/${componentDir}/__tests__/${componentName}.html`,
+    `spec/${newPath}/__tests__/${name}.html`,
     /* html */`
     <!DOCTYPE html>
       <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${componentName?.replace(/([A-Z])/g, ' $1').trim()} Test</title>
+        <title>${name?.replace(/([A-Z])/g, ' $1').trim()} Test</title>
         <style>
           ${globalStyles.css || ''}
           ${componentStyles.css || ''}
@@ -64,7 +65,7 @@ for await (const entry of glob('src/**/*.json')) {
       <body>
         ${output}
       </body>
-      <script type="module" src="/spec/${componentDir}/${componentName}Register.js"></script>
+      <script type="module" src="/spec/${newPath}/${name}Register.js"></script>
     </html>
     `
   )

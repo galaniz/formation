@@ -6,3 +6,23 @@
 
 @forward "../../config/config";
 @use "../../../lib/objects/Collapsible/Collapsible";
+
+/* Styles */
+
+#clp-single .collapsible-panel {
+  --frm-duration: 0ms, 200ms;
+}
+
+#clp-hover {
+  .collapsible-panel {
+    --frm-prop: visibility, opacity;
+    --clp-ht: auto;
+
+    white-space: nowrap;
+    opacity: var(--clp-opacity, 0);
+  }
+
+  &[expanded="true"] {
+    --clp-opacity: 1;
+  }
+}

@@ -3,10 +3,9 @@ export default /* html */`
     id="clp-accordion-1"
     class="collapsible"
     accordion="one"
-    expanded="true"
   >
     <button type="button" data-collapsible-toggle>
-      Toggle One
+      Accordion one
     </button>
     <div class="collapsible-panel e-trans" data-collapsible-panel>
       <p>
@@ -20,7 +19,7 @@ export default /* html */`
     accordion="one"
   >
     <button type="button" data-collapsible-toggle>
-      Toggle Two
+      Accordion two
     </button>
     <div class="collapsible-panel e-trans" data-collapsible-panel>
       <p>

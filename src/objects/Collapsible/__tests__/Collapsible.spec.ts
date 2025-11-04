@@ -25,25 +25,27 @@ test.describe('Collapsible', () => {
   /* Test init */
 
   test('should not initialize if missing required elements', async ({ page }) => {
-    const collapsibleInit = await page.evaluate(() => {
-      const collapsible = document.querySelector('#clp-empty') as Collapsible
-      return collapsible.init
+    const clpInit = await page.evaluate(() => {
+      const clp = document.querySelector('#clp-empty') as Collapsible
+      return clp.init
     })
 
-    expect(collapsibleInit).toBe(false)
+    expect(clpInit).toBe(false)
   })
 
   test('should initialize if contains required elements', async ({ page }) => {
-    const collapsibleInit = await page.evaluate(() => {
-      const collapsibles: Collapsible[] = Array.from(document.querySelectorAll('frm-collapsible'))
-      return collapsibles.map(collapsible => collapsible.init)
+    const clpInit = await page.evaluate(() => {
+      const clps: Collapsible[] = Array.from(document.querySelectorAll('frm-collapsible'))
+      return clps.map(collapsible => collapsible.init)
     })
 
-    expect(collapsibleInit).toStrictEqual([
+    expect(clpInit).toStrictEqual([
       false, // #clp-empty
       true,  // #clp-single
+      true,  // #clp-hover
       true,  // #clp-accordion-1
-      true   // #clp-hoverable-2
+      true,  // #clp-accordion-2
+      true   // #clp-action
     ])
   })
 })
