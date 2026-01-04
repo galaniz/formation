@@ -62,6 +62,10 @@
     },
     "github": {
       "release": true
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
     }
   },
   "publishConfig": {
