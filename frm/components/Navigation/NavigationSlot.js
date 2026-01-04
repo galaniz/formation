@@ -2,7 +2,7 @@ export default /* html */`
   <frm-navigation
     id="nav-slot"
     class="nav nav-scrollable"
-    role="navigation",
+    role="navigation"
     breakpoints="NaN"
   >
     <ul data-nav-slot>

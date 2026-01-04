@@ -6,7 +6,6 @@
 
 /* Imports */
 
-import { basename } from 'node:path'
 import { readFile, writeFile, glob } from 'node:fs/promises'
 import * as sass from 'sass'
 
@@ -62,8 +61,8 @@ for await (const entry of glob('src/**/*.json')) {
           ${componentStyles.css || ''}
         </style>
       </head>
-      <body>
-        ${output}
+      <body class="flex col">
+        <main>${output}</main>
       </body>
       <script type="module" src="/spec/${newPath}/${name}Register.js"></script>
     </html>

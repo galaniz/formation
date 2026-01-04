@@ -11,7 +11,7 @@ import { isFunction } from '../function/function.js'
 import { isNumber } from '../number/number.js'
 
 /**
- * More precise set timeout with requestAnimationFrame.
+ * More precise set timeout with request animation.
  *
  * @private
  * @param {GenericFunction} action
