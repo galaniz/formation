@@ -18,8 +18,8 @@ jobs:
       # Set GitHub user
       - name: Set GitHub user
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
       # Install PNPM
       - name: Install PNPM
@@ -47,6 +47,8 @@ jobs:
       # Release
       - name: Publish release
         run: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-release-beta:
     if: github.ref == 'refs/heads/beta'
@@ -61,8 +63,8 @@ jobs:
       # Set GitHub user
       - name: Set GitHub user
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
       # Install PNPM
       - name: Install PNPM
