@@ -5,19 +5,27 @@
 /* Imports */
 
 import type {
-  PaginationDisplay,
   PaginationSlots,
   PaginationTemplateKeys,
   PaginationTemplates,
   PaginationState,
-  PaginationSource
+  PaginationSource,
+  PaginationEventDetail
 } from './PaginationTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
-import { isNumber } from '../../utils/number/number.js'
-import { getItem, getTemplateItem, cloneItem } from '../../utils/item/item.js'
-import { getInnerFocusableItems } from '../../utils/focusability/focusability.js'
+import { getItem, getTemplateItem, cloneItem } from '../../items/items.js'
+import { getInnerFocusableItems } from '../../items/itemsFocusability.js'
 import { setDisplay } from '../../utils/display/display.js'
+
+/**
+ * Custom event details.
+ */
+declare global {
+  interface ElementEventMap {
+    'pag:load': CustomEvent<PaginationEventDetail>
+  }
+}
 
 /**
  * Handles dynamic pagination navigation and entries.
@@ -36,20 +44,6 @@ class Pagination extends HTMLElement {
    * @type {number}
    */
   page: number = 1
-
-  /**
-   * Total number of items.
-   *
-   * @type {number}
-   */
-  total: number = 1
-
-  /**
-   * Number of items to display.
-   *
-   * @type {PaginationDisplay}
-   */
-  display: PaginationDisplay = new Map()
 
   /**
    * Navigation and entry containers.
@@ -115,8 +109,8 @@ class Pagination extends HTMLElement {
    *
    * @private
    */
-  #clickHandler = this.#click.bind(this) as EventListener
-  #popHandler = this.#pop.bind(this) as (e: PopStateEvent) => void
+  #clickHandler = (e: Event): void => { void this.#click(e) }
+  #popHandler = (e: PopStateEvent): void => { void this.#pop(e) }
 
   /**
    * Create new instance.
@@ -156,11 +150,14 @@ class Pagination extends HTMLElement {
     /* Empty props */
 
     this.slots.clear()
-    this.display.clear()
     this.templates.clear()
     this.clones.clear()
     this.params = {}
     this.init = false
+
+    /* History */
+
+    history.scrollRestoration = 'auto'
 
     /* Clear timeouts */
 
@@ -178,10 +175,8 @@ class Pagination extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const url = this.getAttribute('url')
     const loaderId = this.getAttribute('loader')
     const errorId = this.getAttribute('error')
-    const noneId = this.getAttribute('none')
     const entry = getItem('[data-pag-slot="entry"]', this)
     const nav = getItem('[data-pag-slot="nav"]', this)
 
@@ -190,20 +185,9 @@ class Pagination extends HTMLElement {
     if (
       !isHtmlElement(entry) ||
       !isHtmlElement(nav) ||
-      !isStringStrict(url) ||
       !isStringStrict(loaderId) ||
-      !isStringStrict(errorId) ||
-      !isStringStrict(noneId)
+      !isStringStrict(errorId)
     ) {
-      return false
-    }
-
-    /* Display required */
-
-    const entryDisplay = parseInt(entry.dataset.pagDisplay || '', 10)
-    const navDisplay = parseInt(nav.dataset.pagDisplay || '', 10)
-
-    if (!isNumber(entryDisplay) || !isNumber(navDisplay)) {
       return false
     }
 
@@ -211,28 +195,28 @@ class Pagination extends HTMLElement {
 
     const error = getTemplateItem(errorId)
     const loader = getTemplateItem(loaderId)
-    const none = getTemplateItem(noneId)
 
-    if (!isHtmlElement(error) || !isHtmlElement(loader) || !isHtmlElement(none)) {
+    if (!isHtmlElement(error) || !isHtmlElement(loader)) {
       return false
     }
 
     this.templates.set('error', error)
     this.templates.set('loader', loader)
-    this.templates.set('none', none)
-
-    /* Props */
-
-    this.url = url
     this.slots.set('nav', nav)
     this.slots.set('entry', entry)
-    this.display.set('nav', navDisplay)
-    this.display.set('entry', entryDisplay)
+
+    /* Params and page */
+
+    this.setState()
 
     /* Event listeners */
 
     this.slots.get('nav')?.addEventListener('click', this.#clickHandler)
     window.addEventListener('popstate', this.#popHandler)
+
+    /* History */
+
+    history.scrollRestoration = 'manual'
 
     /* Init successful */
 
@@ -281,17 +265,46 @@ class Pagination extends HTMLElement {
    * @return {Promise<void>}
    */
   async #pop (e: PopStateEvent): Promise<void> {
+    const state = e.state as PaginationState | null
+
+    if (!state) {
+      this.setState()
+    }
+
     const {
-      total,
       page,
       params
-    } = e.state as PaginationState
+    } = (e.state as PaginationState | null) || {}
 
-    this.total = total
-    this.page = page
-    this.params = params
+    this.page = page || this.page
+    this.params = params || this.params
 
     await this.load('pop')
+  }
+
+  /**
+   * Current URL, page and params.
+   *
+   * @return {void}
+   */
+  setState (): void {
+    const { origin, pathname, search } = window.location
+    const url = origin + pathname
+    const currentParams = new URLSearchParams(search)
+    const params: Record<string, string> = {}
+    let page = 1
+
+    for (const [key, value] of currentParams.entries()) {
+      if (key === 'page') {
+        page = Number(value)
+      }
+
+      params[key] = value
+    }
+
+    this.url = url
+    this.params = params
+    this.page = page
   }
 
   /**
@@ -333,13 +346,15 @@ class Pagination extends HTMLElement {
   /**
    * Refresh navigation and entry slots with result.
    *
-   * @param {'error'|'none'|'output'} result
+   * @param {'error'|'success'} result
+   * @param {PaginationSource} source
    * @param {DocumentFragment|string} [nav]
    * @param {DocumentFragment|string} [entry]
-   * @return {boolean} - Slots and history updated.
+   * @return {boolean} - Slots and/or history updated.
    */
-   update (
-    result: 'error' | 'none' | 'output',
+  update (
+    result: 'error' | 'success',
+    source: PaginationSource,
     nav?: DocumentFragment | string,
     entry?: DocumentFragment | string
   ): boolean {
@@ -347,9 +362,9 @@ class Pagination extends HTMLElement {
 
     setDisplay(this.getClone('loader'), 'hide', 'loader')
 
-    /* Error or none */
+    /* Error */
 
-    if (result === 'error' || result === 'none') {
+    if (result === 'error') {
       this.getClone(result)
 
       this.#resultDelayId = setDisplay(this.getClone(result), 'focus')
@@ -369,31 +384,20 @@ class Pagination extends HTMLElement {
     navSlot.textContent = ''
     entrySlot.textContent = ''
 
-    let navSet = false
-    let entrySet = false
-
     if (isStringStrict(nav)) {
       navSlot.insertAdjacentHTML('afterbegin', nav)
-      navSet = true
     }
 
     if (isHtmlElement(nav)) {
       navSlot.append(nav)
-      navSet = true
     }
 
     if (isStringStrict(entry)) {
       entrySlot.insertAdjacentHTML('afterbegin', entry)
-      entrySet = true
     }
 
     if (isHtmlElement(entry)) {
       entrySlot.append(entry)
-      entrySet = true
-    }
-
-    if (!navSet || !entrySet) {
-      return false
     }
 
     this.#focusDelayId = window.setTimeout(() => {
@@ -406,6 +410,10 @@ class Pagination extends HTMLElement {
     }, 0)
 
     /* Update history */
+
+    if (source === 'pop') {
+      return true
+    }
 
     const url = new URL(this.url)
     const newParams: Record<string, string> = {}
@@ -421,11 +429,11 @@ class Pagination extends HTMLElement {
         url.searchParams.delete(key)
       } else {
         url.searchParams.set(key, value)
+        newParams[key] = value
       }
     }
 
     const state: PaginationState = {
-      total: this.total,
       page: this.page,
       params: newParams
     }
@@ -452,16 +460,15 @@ class Pagination extends HTMLElement {
    * @return {Promise<void>}
    */
   async load (source: PaginationSource): Promise<void> {
+    const onLoad = new CustomEvent('pag:load', { detail: { source } })
+    this.dispatchEvent(onLoad)
+
     clearTimeout(this.#loaderDelayId)
     clearTimeout(this.#resultDelayId)
     clearTimeout(this.#focusDelayId)
 
     if (this.clones.has('error')) {
       setDisplay(this.getClone('error'), 'hide')
-    }
-
-    if (this.clones.has('none')) {
-      setDisplay(this.getClone('none'), 'hide')
     }
 
     this.#loaderDelayId = setDisplay(this.getClone('loader'), 'focus', 'loader')

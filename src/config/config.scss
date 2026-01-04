@@ -5,8 +5,6 @@
 /* Imports */
 
 @use "sass:map";
-@use "sass:list";
-@use "sass:string";
 @use "../utils/map/map" as maps;
 
 /* Namespace */
@@ -71,11 +69,13 @@ $names-default: (
   "overscroll": "overscroll",
   "column": "column",
   "columns": "columns",
+  "flex": "flex",
   "justify": "justify",
   "align": "align",
   "container": "container",
   "transition": "transition",
   "visually": "visually",
+  "z-index": "z-index",
   "border-radius": "radius",
   "border-width": "width",
   "font": "font",
@@ -114,11 +114,13 @@ $names-terse: (
   "overscroll": "overscroll",
   "column": "col",
   "columns": "cols",
+  "flex": "",
   "justify": "justify",
   "align": "align",
   "container": "container",
   "transition": "trans",
   "visually": "vis",
+  "z-index": "z",
   "border-radius": "radius",
   "border-width": "stroke",
   "font": "font",
@@ -131,10 +133,6 @@ $names-terse: (
 /* Terse class name opt in */
 
 $terse: true !default;
-
-/* X and y in padding and margin classes */
-
-$xy: true !default;
 
 /* Prefixes */
 
@@ -149,10 +147,6 @@ $prefixes: (
   "text": "",
   "color": "",
 ) !default;
-
-/* Custom variables */
-
-$vars: () !default;
 
 /* Colors  */
 
@@ -176,10 +170,6 @@ $colors: (
 ) !default;
 
 /* Flatten colors to one level map */
-
-$colors-map-prefix: maps.map-flatten($colors, (), "color");
-
-/* Flatten colors to one level map without prefix */
 
 $colors-map: maps.map-flatten($colors, (), "");
 
@@ -263,7 +253,7 @@ $container-padding: 20px !default;
   }
 
   $breakpoints: map.merge($breakpoints, ( "container#{$suffix}": $width ));
-  $breakpoints: map.merge($breakpoints, ( "container#{$suffix}-no-padding": $width - ($container-padding * 2) ));
+  $breakpoints: map.merge($breakpoints, ( "container#{$suffix}-content": $width - ($container-padding * 2) ));
 }
 
 /* Sizes */
@@ -350,7 +340,7 @@ $none-breakpoints: () !default;
 
 /* Aspect ratios */
 
-$aspect-ratios: () !default; // ( "1-1": 1 / 1 )
+$aspect-ratios: () !default; // ( "1-1": list.slash(1, 1) )
 $aspect-ratio-padding: () !default; // ( "1-1": 100% )
 
 /* Transitions */

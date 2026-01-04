@@ -5,12 +5,12 @@
 /* Imports */
 
 import type { TabsActivateArgs, TabsIndexesFilterArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
-import { getItem } from '../../utils/item/item.js'
+import { getItem } from '../../items/items.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
 import { getKey } from '../../utils/key/key.js'
-import { applyFilters } from '../../utils/filter/filter.js'
+import { applyFilters } from '../../filters/filters.js'
 
 /**
  * Custom event details.
@@ -259,7 +259,7 @@ class Tabs extends HTMLElement {
     /* Args */
 
     const {
-      current = 0,
+      current,
       raw = current,
       source = ''
     } = args

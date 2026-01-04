@@ -4,20 +4,20 @@
 
 /* Imports */
 
-import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
-import { getItem } from '../../utils/item/item.js'
+import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
+import { cascade } from '../../utils/cascade/cascade.js'
+import { getItem } from '../../items/items.js'
 import {
   toggleFocusability,
   getInnerFocusableItems,
   getOuterFocusableItems
-} from '../../utils/focusability/focusability.js'
-import { noScroll } from '../../utils/scroll/noScroll.js'
-import { cascade } from '../../utils/cascade/cascade.js'
-import { onResize, removeResize } from '../../utils/resize/resize.js'
-import { onEscape, removeEscape } from '../../utils/escape/escape.js'
+} from '../../items/itemsFocusability.js'
+import { onResize, removeResize } from '../../actions/actionResize.js'
+import { onEscape, removeEscape } from '../../actions/actionEscape.js'
+import { scroll } from '../../utils/scroll/scroll.js'
 import { config } from '../../config/config.js'
 
 /**
@@ -617,7 +617,7 @@ class Navigation extends HTMLElement {
       cascade([
         {
           action: () => {
-            noScroll(true)
+            scroll(false)
 
             this.setAttribute('show', '')
             this.setAttribute('open', 'true')
@@ -654,7 +654,7 @@ class Navigation extends HTMLElement {
           action: () => {
             this.setAttribute('open', 'false')
 
-            noScroll(false)
+            scroll(true)
           }
         },
         {
@@ -678,13 +678,13 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Resize hook callback.
+   * Resize action callback.
    *
    * @private
-   * @param {ResizeActionArgs} args
+   * @param {ActionResizeArgs} args
    * @return {void}
    */
-  #resize (args: ResizeActionArgs): void {
+  #resize (args: ActionResizeArgs): void {
     const [oldViewportWidth, newViewportWidth] = args
 
     if (oldViewportWidth === newViewportWidth) {
@@ -695,7 +695,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Escape hook callback.
+   * Escape action callback.
    *
    * @private
    * @return {void}

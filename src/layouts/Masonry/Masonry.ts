@@ -4,12 +4,12 @@
 
 /* Imports */
 
-import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
+import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
-import { getItem } from '../../utils/item/item.js'
-import { onResize, removeResize } from '../../utils/resize/resize.js'
+import { getItem } from '../../items/items.js'
+import { onResize, removeResize } from '../../actions/actionResize.js'
 import { config } from '../../config/config.js'
 
 /**
@@ -281,13 +281,13 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Resize hook callback.
+   * Resize action callback.
    *
    * @private
-   * @param {ResizeActionArgs} args
+   * @param {ActionResizeArgs} args
    * @return {void}
    */
-  #resize (args: ResizeActionArgs): void {
+  #resize (args: ActionResizeArgs): void {
     const [oldViewportWidth, newViewportWidth] = args
 
     if (oldViewportWidth === newViewportWidth) {

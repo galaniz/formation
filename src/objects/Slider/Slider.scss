@@ -63,7 +63,7 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-contain {
-  @include breakpoint.breakpoint-min("container-no-padding") {
+  @include breakpoint.breakpoint-min("container-content") {
     --sld-spacer: var(--sld-gap);
     --sld-track-padding: 0;
     --sld-track-scroll: 0;
@@ -86,7 +86,7 @@ $object-fix: fix.get-class-prefix("object");
 
 .#{$object-fix}slider-contain-full {
   @include breakpoint.breakpoint-min("container") {
-    --sld-container: var(--#{con.$n}container-no-padding);
+    --sld-container: var(--#{con.$n}container-content);
     --sld-item-width: var(--sld-container) / var(--sld-items);
     --sld-track-scroll: 0 0 0 calc(50vw - (var(--sld-container) / 2));
     --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / 2);

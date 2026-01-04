@@ -38,11 +38,11 @@
  *
  * @param {map} $map
  * @param {map} $new-map
- * @param {string} $prefix
- * @param {null|string} $new-prefix
+ * @param {string} [$prefix=""]
+ * @param {null|string} [$new-prefix=null]
  * @return {map}
  */
- @function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {
+@function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {
   @each $key, $value in $map {
     @if meta.type-of($value) == map {
       $n-prefix: "#{$key}";

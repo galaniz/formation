@@ -12,27 +12,28 @@
 
 $layout-fix: fix.get-class-prefix("layout");
 $column-fix: fix.get-class-fix("column");
+$flex-fix: fix.get-class-fix("flex", true);
 
 /* Styles */
 
-.#{$layout-fix}#{$column-fix} {
+.#{$layout-fix}#{$flex-fix}#{$column-fix} {
   flex-direction: column;
 }
 
-.#{$layout-fix}row {
+.#{$layout-fix}#{$flex-fix}row {
   flex-direction: row;
 }
 
-.#{$layout-fix}shrink-0 {
+.#{$layout-fix}#{$flex-fix}shrink-0 {
   flex-shrink: 0;
 }
 
-.#{$layout-fix}grow-1 {
+.#{$layout-fix}#{$flex-fix}grow-1 {
   flex-grow: 1;
 }
 
 @each $b in con.$flex-column-breakpoints {
-  .#{$layout-fix}#{$column-fix}-#{$b} {
+  .#{$layout-fix}#{$flex-fix}#{$column-fix}-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
       flex-direction: column
     ));
@@ -40,7 +41,7 @@ $column-fix: fix.get-class-fix("column");
 }
 
 @each $b in con.$flex-row-breakpoints {
-  .#{$layout-fix}row-#{$b} {
+  .#{$layout-fix}#{$flex-fix}row-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
       flex-direction: row
     ));

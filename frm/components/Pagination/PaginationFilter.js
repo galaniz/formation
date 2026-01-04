@@ -49,7 +49,7 @@ export default /* html */`
       <button type="submit">Apply filters</button>
       <button type="reset">Clear filters</button>
     </form>
-    <ul data-pag-slot="entry" data-pag-display="5">
+    <ul data-pag-slot="entry">
       <li data-pag-entry>
         <a href="http://localhost:3000/blog/post-1/">Post 1</a>
       </li>
@@ -67,7 +67,7 @@ export default /* html */`
       </li>
     </ul>
     <nav aria-label="Pagination">
-      <ol data-pag-slot="nav" data-pag-display="5">
+      <ol data-pag-slot="nav">
         <li data-pag-nav="prev-text">
           <span>&larr;</span>
         </li>

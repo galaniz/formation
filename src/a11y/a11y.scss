@@ -20,7 +20,7 @@ $visually-fix: fix.get-class-fix("visually");
   width: 0.0625rem;
   height: 0.0625rem;
   margin: -0.0625rem;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(0 0 100% 100%);
 }
 
 .#{$a11y-fix}hide-input {

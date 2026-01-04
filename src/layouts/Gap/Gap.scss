@@ -20,7 +20,7 @@ $gap-fix: fix.get-class-fix("gap");
 }
 
 .#{$layout-fix}#{$gap-fix}-0 {
-  --gap: 0px;
+  --#{con.$n}gap: 0px;
 
   @extend %l-gap;
 }

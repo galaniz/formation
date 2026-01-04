@@ -6,14 +6,14 @@
 
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
-import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
+import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { Tabs } from '../Tabs/Tabs.js'
-import { getItem } from '../../utils/item/item.js'
+import { getItem } from '../../items/items.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
-import { onResize, removeResize } from '../../utils/resize/resize.js'
-import { addFilter, removeFilter } from '../../utils/filter/filter.js'
+import { onResize, removeResize } from '../../actions/actionResize.js'
+import { addFilter, removeFilter } from '../../filters/filters.js'
 import { config } from '../../config/config.js'
 import { sliderScrollTo } from './sliderUtils.js'
 
@@ -636,13 +636,13 @@ class SliderGroup extends Tabs {
   }
 
   /**
-   * Resize hook callback.
+   * Resize action callback.
    *
    * @private
-   * @param {ResizeActionArgs} args
+   * @param {ActionResizeArgs} args
    * @return {void}
    */
-  #resize (args: ResizeActionArgs): void {
+  #resize (args: ActionResizeArgs): void {
     const [oldViewportWidth, newViewportWidth] = args
 
     if (oldViewportWidth === newViewportWidth) {

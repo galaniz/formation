@@ -3,19 +3,14 @@
  */
 
 /**
- * @typedef {Map<'nav'|'entry', number>} PaginationDisplay
- */
-export type PaginationDisplay = Map<'nav' | 'entry', number>
-
-/**
  * @typedef {Map<'nav'|'entry', HTMLElement>} PaginationSlots
  */
 export type PaginationSlots = Map<'nav' | 'entry', HTMLElement>
 
 /**
- * @typedef {'error'|'loader'|'none'} PaginationTemplateKeys
+ * @typedef {'error'|'loader'} PaginationTemplateKeys
  */
-export type PaginationTemplateKeys = 'error' | 'loader' | 'none'
+export type PaginationTemplateKeys = 'error' | 'loader'
 
 /**
  * @typedef {Map<PaginationTemplateKeys, HTMLElement>} PaginationTemplates
@@ -29,14 +24,20 @@ export type PaginationSource = 'nav' | 'pop' | 'form'
 
 /**
  * @typedef {object} PaginationState
- * @prop {number} total
  * @prop {number} page
  * @prop {Object<string, string>} params
  */
 export interface PaginationState {
-  total: number
   page: number
   params: Record<string, string>
+}
+
+/**
+ * @typedef {object} PaginationEventDetail
+ * @prop {PaginationSource} source
+ */
+export interface PaginationEventDetail {
+  source: PaginationSource
 }
 
 /**

@@ -24,7 +24,7 @@ const setCookie = (name: string, value: string, options?: CookieOptions): string
     expires,
     maxAge,
     domain,
-    path = '/',
+    path,
     secure = true,
     httpOnly = false,
     sameSite

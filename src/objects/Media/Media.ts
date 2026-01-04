@@ -5,13 +5,13 @@
 /* Imports */
 
 import type { MediaTemplates, MediaTemplateKeys, MediaProgress, MediaControl } from './MediaTypes.js'
-import type { ResizeActionArgs } from '../../utils/resize/resizeTypes.js'
+import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
-import { getItem, getTemplateItem, cloneItem } from '../../utils/item/item.js'
-import { onResize, removeResize } from '../../utils/resize/resize.js'
 import { getDuration } from '../../utils/duration/duration.js'
 import { getKey } from '../../utils/key/key.js'
+import { getItem, getTemplateItem, cloneItem } from '../../items/items.js'
+import { onResize, removeResize } from '../../actions/actionResize.js'
 import { setDisplay } from '../../utils/display/display.js'
 import { config } from '../../config/config.js'
 
@@ -859,13 +859,13 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Resize hook callback.
+   * Resize action callback.
    *
    * @private
-   * @param {ResizeActionArgs} args
+   * @param {ActionResizeArgs} args
    * @return {void}
    */
-  #resize (args: ResizeActionArgs): void {
+  #resize (args: ActionResizeArgs): void {
     const [oldViewportWidth, newViewportWidth] = args
 
     if (oldViewportWidth === newViewportWidth) {

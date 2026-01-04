@@ -22,6 +22,18 @@ describe('setConfig()', () => {
     config.labels = {}
 
     document.body.className = 'no-js'
+
+    // @ts-expect-error - test well formed
+    delete String.prototype.toWellFormed
+
+    vi.spyOn(document, 'createElement').mockImplementation(() => {
+      return {
+        style: {},
+        append: vi.fn(),
+        scrollHeight: 1,
+        remove: vi.fn()
+      } as unknown as HTMLElement
+    })
   })
 
   it('should remove no js class and add js class to body', () => {
@@ -34,7 +46,7 @@ describe('setConfig()', () => {
   it('should set inert to true', () => {
     vi.spyOn(document, 'createElement').mockImplementation(() => {
       return {
-        inert: true,
+        inert: undefined,
         style: {},
         append: vi.fn(),
         scrollHeight: 1,
@@ -58,7 +70,8 @@ describe('setConfig()', () => {
   })
 
   it('should set well formed to true', () => {
-    vi.spyOn(String.prototype, 'normalize').mockReturnValue('wellFormed')
+    // @ts-expect-error - test well formed
+    String.prototype.toWellFormed = ''
 
     setConfig()
 

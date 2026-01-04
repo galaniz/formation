@@ -34,6 +34,10 @@
 
 @use "../../lib/effects/Transition/Transition";
 
+/* Utils */
+
+@use "../../lib/utils/scroll/scroll";
+
 /* Breakpoints */
 
 @use "../../lib/utils/utils" as util;

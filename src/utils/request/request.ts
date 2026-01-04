@@ -24,17 +24,14 @@ const request = async (args: RequestArgs): Promise<void> => {
 
   const {
     method = 'GET',
-    url = '',
+    url,
     headers,
-    body = '',
+    body,
     encode = 'json',
     expect = 'json'
   } = argsObj
 
-  let {
-    onError = undefined,
-    onSuccess = undefined
-  } = argsObj
+  let { onError, onSuccess } = argsObj
 
   /* Error and success must be functions */
 

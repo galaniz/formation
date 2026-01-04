@@ -11,8 +11,8 @@ import { vi } from 'vitest'
 
 /**
  * @typedef {object} MockRequestFetchArgs
- * @prop {string} [encode=json]
- * @prop {string} [expect=json]
+ * @prop {string} [encode='json']
+ * @prop {string} [expect='json']
  * @prop {number} [status=200]
  * @prop {string|object} [data]
  * @prop {Function} reset
@@ -64,13 +64,13 @@ const mockRequestFetch = vi.fn(async (
     /* Request options to compare against */
   
     const {
-      encode = 'json',
-      expect = 'json'
+      encode,
+      expect
     } = mockRequestFetchArgs
 
     let {
-      status = 200,
-      data = undefined
+      status,
+      data
     } = mockRequestFetchArgs
 
     /* Error message */

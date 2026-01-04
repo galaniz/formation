@@ -6,8 +6,8 @@
 
 import type { Asset } from '../../utils/asset/assetTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
-import { getItem } from '../../utils/item/item.js'
 import { assetLoaded } from '../../utils/asset/asset.js'
+import { getItem } from '../../items/items.js'
 
 /**
  * Handles reveal based on loaded state of asset.

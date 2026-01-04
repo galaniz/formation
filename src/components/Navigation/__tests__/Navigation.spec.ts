@@ -265,7 +265,7 @@ test.describe('Navigation', () => {
 
   test('should not reset if viewport height change', async ({ page }) => {
     const resizeDone = page.evaluate(async () => {
-      const { actions } = await import('../../../utils/action/action.js')
+      const { actions } = await import('../../../actions/actions.js')
       const set = actions.get('resize')
 
       let resolve = () => {}
@@ -516,7 +516,7 @@ test.describe('Navigation', () => {
 
   test('should remove instance and event listeners', async ({ page }) => {
     const navProps = await page.evaluate(async () => {
-      const { actions } = await import('../../../utils/action/action.js')
+      const { actions } = await import('../../../actions/actions.js')
 
       const nav = document.querySelector('#nav-slot') as Navigation
       const navOpens = nav.opens

@@ -71,10 +71,10 @@ const assetLoaded = async (asset: Asset): Promise<Asset> => {
  * Check if multiple assets are loaded.
  *
  * @param {Asset[]} assets
- * @param {AssetDone} [done]
+ * @param {AssetDone} done
  * @return {void}
  */
-const assetsLoaded = (assets: Asset[], done: AssetDone = () => {}): void => {
+const assetsLoaded = (assets: Asset[], done: AssetDone): void => {
   if (!isArrayStrict(assets)) {
     done(false, new Error('Assets empty'))
     return

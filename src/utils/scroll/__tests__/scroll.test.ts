@@ -4,103 +4,75 @@
 
 /* Imports */
 
-import { it, expect, describe, beforeEach, vi } from 'vitest'
-import { fireEvent } from '@testing-library/dom'
-import { actions } from '../../action/action.js'
-import { onScroll, removeScroll } from '../scroll.js'
-import { config } from '../../../config/config.js'
+import { it, expect, describe, beforeEach } from 'vitest'
+import { scroll } from '../scroll.js'
 
 /**
- * Fire window scroll event.
+ * Data attribute name.
  *
- * @return {void}
+ * @type {string}
  */
-const scrollEvent = (): void => {
-  window.scrollTo(0, 800)
-  fireEvent(window, new Event('scroll'))
+const testAttribute: string = 'data-scroll'
+
+/**
+ * Check if HTML element has attribute.
+ *
+ * @return {boolean}
+ */
+const testCheckAttribute = (): boolean => {
+  return document.documentElement.getAttribute(testAttribute) === 'off'
 }
 
-/* Test onScroll */
+/* Tests */
 
-describe('onScroll()', () => {
+describe('scroll()', () => {
   beforeEach(() => {
-    actions.get('scroll')?.clear()
+    document.documentElement.removeAttribute(testAttribute)
   })
 
-  it('should run function on window scroll',
-    async () => await new Promise(resolve => {
-      const testOne = vi.fn(() => {
-        expect(testOne).toHaveBeenCalledTimes(1)
-        resolve('')
-      })
+  it('should add data attribute to HTML element if on is false', () => {
+    const result = scroll()
+    const attrResult = testCheckAttribute()
+    const expectedResult = true
+    const expectedAttrResult = true
 
-      onScroll(testOne)
-      scrollEvent()
-    })
-  )
-
-  it(
-    'should run two functions on window scroll',
-    async () => await new Promise(resolve => {
-      const testOne = vi.fn()
-      const testTwo = vi.fn(() => {
-        expect(testOne).toHaveBeenCalledTimes(1)
-        expect(testTwo).toHaveBeenCalledTimes(1)
-        resolve('')
-      })
-
-      onScroll(testOne)
-      onScroll(testTwo)
-      scrollEvent()
-    })
-  )
-})
-
-/* Test removeScroll */
-
-describe('removeScroll()', () => {
-  beforeEach(() => {
-    actions.get('scroll')?.clear()
+    expect(result).toBe(expectedResult)
+    expect(attrResult).toBe(expectedAttrResult)
   })
 
-  it('should run one function on window scroll',
-    async () => await new Promise(resolve => {
-      const testOne = vi.fn()
-      const testTwo = vi.fn(() => {
-        expect(testOne).not.toHaveBeenCalled()
-        expect(testTwo).toHaveBeenCalledTimes(1)
-        resolve('')
-      })
+  it('should add data attribute to HTML element if on is falsey', () => {
+    // @ts-expect-error - test falsey on value
+    const result = scroll(null)
+    const attrResult = testCheckAttribute()
+    const expectedResult = true
+    const expectedAttrResult = true
 
-      onScroll(testOne)
-      onScroll(testTwo)
-      removeScroll(testOne)
-      scrollEvent()
-    })
-  )
+    expect(result).toBe(expectedResult)
+    expect(attrResult).toBe(expectedAttrResult)
+  })
 
-  it('should not run any functions on window scroll',
-    async () => await new Promise(resolve => {
-      let timeoutId = 0
+  it('should remove data attribute from HTML element if on is true', () => {
+    scroll()
 
-      const testOne = vi.fn()
-      const testTwo = vi.fn()
+    const result = scroll(true)
+    const attrResult = testCheckAttribute()
+    const expectedResult = false
+    const expectedAttrResult = false
 
-      window.addEventListener('scroll', () => {
-        clearTimeout(timeoutId)
+    expect(result).toBe(expectedResult)
+    expect(attrResult).toBe(expectedAttrResult)
+  })
 
-        timeoutId = window.setTimeout(() => {
-          expect(testTwo).not.toHaveBeenCalled()
-          expect(testTwo).not.toHaveBeenCalled()
-          resolve('')
-        }, config.scrollDelay + 100)
-      })
+  it('should remove data attribute from HTML element if on is truthy', () => {
+    scroll()
 
-      onScroll(testOne)
-      onScroll(testTwo)
-      removeScroll(testOne)
-      removeScroll(testTwo)
-      scrollEvent()
-    })
-  )
+    // @ts-expect-error - test truthy on value
+    const result = scroll('true')
+    const attrResult = testCheckAttribute()
+    const expectedResult = false
+    const expectedAttrResult = false
+
+    expect(result).toBe(expectedResult)
+    expect(attrResult).toBe(expectedAttrResult)
+  })
 })

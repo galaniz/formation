@@ -7,9 +7,9 @@
 import type { VisibleItem } from './VisibleTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
-import { getItem } from '../../utils/item/item.js'
-import { onScroll, removeScroll } from '../../utils/scroll/scroll.js'
-import { onResize, removeResize } from '../../utils/resize/resize.js'
+import { getItem } from '../../items/items.js'
+import { onScroll, removeScroll } from '../../actions/actionScroll.js'
+import { onResize, removeResize } from '../../actions/actionResize.js'
 
 /**
  * Handles link state based on item visibility.
@@ -256,7 +256,7 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Scroll hook callback.
+   * Scroll action callback.
    *
    * @private
    * @return {void}
@@ -267,7 +267,7 @@ class Visible extends HTMLElement {
   }
 
   /**
-   * Resize hook callback.
+   * Resize action callback.
    *
    * @private
    * @return {void}

@@ -8,11 +8,12 @@ import type {
   PaginationFilterInput,
   PaginationFilterGroup,
   PaginationFilterGroups,
-  PaginationFilterLoadOn
+  PaginationFilterLoadOn,
+  PaginationEventDetail
 } from './PaginationTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
-import { getItem } from '../../utils/item/item.js'
+import { getItem } from '../../items/items.js'
 import { Pagination } from './Pagination.js'
 
 /**
@@ -52,9 +53,10 @@ class PaginationFilter extends Pagination {
    *
    * @private
    */
-  #changeHandler = this.#change.bind(this) as EventListener
-  #submitHandler = this.#submit.bind(this) as (e: SubmitEvent) => void
-  #resetHandler = this.#reset.bind(this) as EventListener
+  #changeHandler = (e: Event): void => { void this.#change(e) }
+  #submitHandler = (e: SubmitEvent): void => { void this.#submit(e) }
+  #resetHandler = (): void => { void this.#reset() }
+  #loadHandler = this.#load.bind(this)
 
   /**
    * Create new instance.
@@ -68,6 +70,10 @@ class PaginationFilter extends Pagination {
     /* Inherit */
 
     super.connectedCallback()
+
+    /* Event listeners */
+
+    this.addEventListener('pag:load', this.#loadHandler as EventListener)
 
     /* Initialize */
 
@@ -94,6 +100,7 @@ class PaginationFilter extends Pagination {
 
     /* Clear event listeners */
 
+    this.removeEventListener('pag:load', this.#loadHandler as EventListener)
     this.form?.removeEventListener('submit', this.#submitHandler)
     this.groups.forEach(group => {
       group.inputs.forEach(input => {
@@ -133,9 +140,11 @@ class PaginationFilter extends Pagination {
     this.loadOn = loadOn as PaginationFilterLoadOn
 
     /* Inputs */
-    
+
     inputs.forEach(input => {
       const name = input.name
+      const tagName = input.tagName.toLowerCase()
+      const type = tagName === 'input' ? input.type : tagName
 
       if (loadOn === 'change') {
         input.addEventListener('change', this.#changeHandler)
@@ -146,11 +155,9 @@ class PaginationFilter extends Pagination {
         return
       }
 
-      const type = input.tagName.toLowerCase()
-
       this.groups.set(name, {
         inputs: [input],
-        type: type === 'input' ? input.type : type,
+        type,
         values: []
       })
     })
@@ -245,6 +252,7 @@ class PaginationFilter extends Pagination {
     }
 
     this.#setGroup(group, name)
+    this.page = 1
 
     await this.load('form')
   }
@@ -268,6 +276,8 @@ class PaginationFilter extends Pagination {
       return
     }
 
+    this.page = 1
+
     await this.load('form')
   }
 
@@ -281,6 +291,43 @@ class PaginationFilter extends Pagination {
     this.params = {}
 
     await this.load('form')
+  }
+
+  /**
+   * Load handler on pop state event.
+   *
+   * @private
+   * @param {CustomEvent} e
+   * @return {void}
+   */
+  #load (e: CustomEvent): void {
+    const { source } = e.detail as PaginationEventDetail
+
+    if (source !== 'pop') {
+      return
+    }
+
+    this.groups.forEach((group, name) => {
+      const paramValue = this.params[name]
+      const values = paramValue?.split(',') || []
+      const { type, inputs } = group
+
+      inputs.forEach(input => {
+        switch (type) {
+          case 'checkbox':
+          case 'radio':
+            (input as HTMLInputElement).checked = values.includes((input as HTMLInputElement).value)
+            break
+          case 'select':
+            for (const option of (input as HTMLSelectElement).options) {
+              option.selected = values.includes(option.value)
+            }
+            break
+          default:
+            input.value = paramValue || ''
+        }
+      })
+    })
   }
 }
 

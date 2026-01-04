@@ -5,7 +5,6 @@
 /* Imports */
 
 @use "sass:list";
-@use "sass:string";
 @use "../../config/config" as con;
 @use "../../utils/fix/fix";
 @use "../../utils/breakpoint/breakpoint";
@@ -30,38 +29,23 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 /* Vertical padding */
 
 @each $p in con.$padding-top {
-  $selector: ".#{$layout-fix}#{$padding-top-fix}-#{$p}";
-
-  @if con.$xy {
-    $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}";
-  }
-
-  #{string.quote($selector)} {
+  .#{$layout-fix}#{$padding-top-fix}-#{$p},
+  .#{$layout-fix}#{$padding-y-fix}-#{$p} {
     padding-top: var(--#{con.$n}#{$p});
   }
 }
 
 @each $p in con.$padding-bottom {
-  $selector: ".#{$layout-fix}#{$padding-bottom-fix}-#{$p}";
-
-  @if con.$xy {
-    $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}";
-  }
-
-  #{string.quote($selector)} {
+  .#{$layout-fix}#{$padding-bottom-fix}-#{$p},
+  .#{$layout-fix}#{$padding-y-fix}-#{$p} {
     padding-bottom: var(--#{con.$n}#{$p});
   }
 }
 
 @each $b in con.$padding-vertical-breakpoints {
   @each $p in con.$padding-top {
-    $selector: ".#{$layout-fix}#{$padding-top-fix}-#{$p}-#{$b}";
-
-    @if con.$xy {
-      $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b}";
-    }
-
-    #{string.quote($selector)} {
+    .#{$layout-fix}#{$padding-top-fix}-#{$p}-#{$b},
+    .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b} {
       @include breakpoint.breakpoint-batch-add($b, (
         padding-top: var(--#{con.$n}#{$p})
       ));
@@ -69,13 +53,8 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   @each $p in con.$padding-bottom {
-    $selector: ".#{$layout-fix}#{$padding-bottom-fix}-#{$p}-#{$b}";
-
-    @if con.$xy {
-      $selector: "#{$selector}, .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b}";
-    }
-
-    #{string.quote($selector)} {
+    .#{$layout-fix}#{$padding-bottom-fix}-#{$p}-#{$b},
+    .#{$layout-fix}#{$padding-y-fix}-#{$p}-#{$b} {
       @include breakpoint.breakpoint-batch-add($b, (
         padding-bottom: var(--#{con.$n}#{$p})
       ));
@@ -86,38 +65,23 @@ $padding-x-fix: fix.get-class-fix("padding-x");
 /* Horizontal padding */
 
 @each $p in con.$padding-left {
-  $selector: ".#{$layout-fix}#{$padding-left-fix}-#{$p}";
-
-  @if con.$xy {
-    $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}";
-  }
-
-  #{string.quote($selector)} {
+  .#{$layout-fix}#{$padding-left-fix}-#{$p},
+  .#{$layout-fix}#{$padding-x-fix}-#{$p} {
     padding-left: var(--#{con.$n}#{$p});
   }
 }
 
 @each $p in con.$padding-right {
-  $selector: ".#{$layout-fix}#{$padding-right-fix}-#{$p}";
-
-  @if con.$xy {
-    $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}";
-  }
-
-  #{string.quote($selector)} {
+  .#{$layout-fix}#{$padding-right-fix}-#{$p},
+  .#{$layout-fix}#{$padding-x-fix}-#{$p} {
     padding-right: var(--#{con.$n}#{$p});
   }
 }
 
 @each $b in con.$padding-horizontal-breakpoints {
   @each $p in con.$padding-left {
-    $selector: ".#{$layout-fix}#{$padding-left-fix}-#{$p}-#{$b}";
-
-    @if con.$xy {
-      $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b}";
-    }
-
-    #{string.quote($selector)} {
+    .#{$layout-fix}#{$padding-left-fix}-#{$p}-#{$b},
+    .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b} {
       @include breakpoint.breakpoint-batch-add($b, (
         padding-left: var(--#{con.$n}#{$p})
       ));
@@ -125,13 +89,8 @@ $padding-x-fix: fix.get-class-fix("padding-x");
   }
 
   @each $p in con.$padding-right {
-    $selector: ".#{$layout-fix}#{$padding-right-fix}-#{$p}-#{$b}";
-
-    @if con.$xy {
-      $selector: "#{$selector}, .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b}";
-    }
-
-    #{string.quote($selector)} {
+    .#{$layout-fix}#{$padding-right-fix}-#{$p}-#{$b},
+    .#{$layout-fix}#{$padding-x-fix}-#{$p}-#{$b} {
       @include breakpoint.breakpoint-batch-add($b, (
         padding-right: var(--#{con.$n}#{$p})
       ));

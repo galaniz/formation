@@ -5,14 +5,14 @@
 /* Imports */
 
 import { isHtmlElementArray, isHtmlElement } from '../../utils/html/html.js'
-import { onEscape, removeEscape } from '../../utils/escape/escape.js'
-import { noScroll } from '../../utils/scroll/noScroll.js'
-import { getItem } from '../../utils/item/item.js'
+import { onEscape, removeEscape } from '../../actions/actionEscape.js'
+import { scroll } from '../../utils/scroll/scroll.js'
+import { getItem } from '../../items/items.js'
 import {
   toggleFocusability,
   getInnerFocusableItems,
   getOuterFocusableItems
-} from '../../utils/focusability/focusability.js'
+} from '../../items/itemsFocusability.js'
 
 /**
  * Custom event details.
@@ -208,7 +208,7 @@ class Modal extends HTMLElement {
 
     toggleFocusability(!this.open, getOuterFocusableItems(this))
 
-    if (! (this.#firstFocusable)) {
+    if (!this.#firstFocusable) {
       const innerFocusable = getInnerFocusableItems(this)
       const [firstFocusable] = innerFocusable
 
@@ -226,15 +226,15 @@ class Modal extends HTMLElement {
         this.#firstFocusable?.focus()
       }, 100)
 
-      noScroll(true)
+      scroll(false)
     } else {
       this.#lastOpens?.focus()
-      noScroll(false)
+      scroll(true)
     }
   }
 
   /**
-   * Escape hook callback.
+   * Escape action callback.
    *
    * @private
    * @return {void}

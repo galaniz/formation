@@ -9,6 +9,7 @@
 /* Class name customization */
 
 $layout-fix: fix.get-class-prefix("layout");
+$z-index-fix: fix.get-class-fix("z-index");
 
 /* Styles */
 
@@ -57,11 +58,11 @@ $layout-fix: fix.get-class-prefix("layout");
   content: "";
 }
 
-.#{$layout-fix}z-index-1 {
+.#{$layout-fix}#{$z-index-fix}-1 {
   z-index: 1;
 }
 
-.#{$layout-fix}z-index--1 {
+.#{$layout-fix}#{$z-index-fix}--1 {
   z-index: -1;
 }
 

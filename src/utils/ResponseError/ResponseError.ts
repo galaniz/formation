@@ -17,12 +17,12 @@ class ResponseError extends Error {
    * Create new instance with given message and response.
    *
    * @param {string} message
-   * @param {Response} res
+   * @param {Response} resp
    */
-  constructor (message: string, res: Response) {
+  constructor (message: string, resp: Response) {
     super(message)
     this.message = message
-    this.response = res
+    this.response = resp
   }
 }
 

@@ -12,8 +12,8 @@ import type {
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
-import { addAction, doActions } from '../../utils/action/action.js'
-import { getItem } from '../../utils/item/item.js'
+import { addAction, doActions } from '../../actions/actions.js'
+import { getItem } from '../../items/items.js'
 
 /**
  * Custom event details.

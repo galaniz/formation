@@ -6,7 +6,6 @@
 
 @use "sass:map";
 @use "sass:meta";
-@use "sass:string";
 @use "../../config/config" as con;
 @use "../../utils/calc/calc";
 @use "../../utils/fluid/fluid";
@@ -85,7 +84,7 @@
         }
 
         --#{con.$n}container#{$suffix}: #{calc.calc-rem($v)};
-        --#{con.$n}container#{$suffix}-no-padding: #{calc.calc-rem($v - (con.$container-padding * 2))};
+        --#{con.$n}container#{$suffix}-content: #{calc.calc-rem($v - (con.$container-padding * 2))};
       }
     } @else if $r == "container-padding" {
       --#{con.$n}container-padding: #{calc.calc-rem(con.$container-padding)};

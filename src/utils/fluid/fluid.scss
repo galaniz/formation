@@ -81,10 +81,10 @@
 /**
  * Fluidly resize between two values using clamp.
  *
- * @see {@link https://www.aleksandrhovhannisyan.com/blog/fluid-type-scale-with-css-clamp/|Source}
+ * @see {@link https://www.aleksandrhovhannisyan.com/blog/fluid-type-scale-with-css-clamp/|Aleksandr Hovhannisyan} for source.
  * @param {list} $sizes
  * @param {list} $breakpoints
- * @param {string} [$type=size]
+ * @param {string} [$type="size"]
  * @return {string}
  */
 @function fluid-size-clamp($sizes, $breakpoints, $type: "size") {
@@ -94,8 +94,13 @@
   $max-bk: list.nth($breakpoints, 2);
 
   @if meta.type-of($min-px) == "string" {
-    $min-px: if($type == "font-size", map.get(con.$font-sizes, $min-px), map.get(con.$sizes, $min-px));
-    $max-px: if($type == "font-size", map.get(con.$font-sizes, $max-px), map.get(con.$sizes, $max-px));
+    @if $type == "font-size" {
+      $min-px: map.get(con.$font-sizes, $min-px);
+      $max-px: map.get(con.$font-sizes, $max-px);
+    } @else {
+      $min-px: map.get(con.$sizes, $min-px);
+      $max-px: map.get(con.$sizes, $max-px);
+    }
   }
 
   @if meta.type-of($min-bk) == "string" {

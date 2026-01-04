@@ -24,11 +24,11 @@ import type {
 } from './FormTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
-import { isItemFocusable, focusSelector } from '../../utils/focusability/focusability.js'
-import { getOuterItems } from '../../utils/item/itemOuter.js'
-import { cloneItem, getItem, getTemplateItem } from '../../utils/item/item.js'
-import { applyFilters } from '../../utils/filter/filter.js'
-import { doActions } from '../../utils/action/action.js'
+import { cloneItem, getItem, getTemplateItem } from '../../items/items.js'
+import { isItemFocusable, focusSelector } from '../../items/itemsFocusability.js'
+import { getOuterItems } from '../../items/itemsOuter.js'
+import { applyFilters } from '../../filters/filters.js'
+import { doActions } from '../../actions/actions.js'
 
 /**
  * Handles form validation and retrieval of values.

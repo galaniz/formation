@@ -4,13 +4,12 @@
 
 /* Imports */
 
-import { setCoverageConfig } from '@alanizcreative/formation-coverage/coverageConfig.js'
 import { setupCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Set up */
 
 export default async function (): Promise<void> {
-  await setCoverageConfig({
+  await setupCoverage({
     dir: 'spec-coverage',
     file: 'spec-coverage.json',
     url: 'http://localhost:3000',
@@ -32,6 +31,4 @@ export default async function (): Promise<void> {
       'spec/**/*Types.js'
     ]
   })
-
-  await setupCoverage()
 }

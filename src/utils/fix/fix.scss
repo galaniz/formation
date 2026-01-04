@@ -10,10 +10,11 @@
 /**
  * Default or terse infix for class name.
  *
- * @param {string} $name
+ * @param {string} [$name="container"]
+ * @param {boolean} [$dash=false]
  * @return {string}
  */
- @function get-class-fix($name: "container") {
+@function get-class-fix($name: "container", $dash: false) {
   $fix: "";
 
   @if map.has-key(con.$names-default, $name) {
@@ -24,16 +25,20 @@
     $fix: map.get(con.$names-terse, $name);
   }
 
+  @if $fix != "" and $dash {
+    $fix: "#{$fix}-";
+  }
+
   @return $fix;
 }
 
 /**
  * Prefix for class name.
  *
- * @param {string} $type
+ * @param {string} [$type="layout"]
  * @return {string}
  */
- @function get-class-prefix($type: "layout") {
+@function get-class-prefix($type: "layout") {
   @if not map.has-key(con.$prefixes, $type) {
     @return "";
   }

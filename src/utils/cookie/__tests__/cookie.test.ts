@@ -23,10 +23,10 @@ const testClearCookies = (): void => {
       continue
     }
 
-    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/;Secure;`
-    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/admin;Secure;`
-    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;Secure;`
     document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/admin;`
+    document.cookie = `${n}=;expires=Thu, 21 Sep 1979 00:00:01 UTC;path=/admin;Secure;`
   }
 }
 
@@ -82,7 +82,7 @@ describe('setCookie()', () => {
 
   it('should set cookie', () => {
     const result = setCookie('test_cookie_name', 'test_cookie_value')
-    const expectedResult = 'test_cookie_name=test_cookie_value;path=/;Secure;'
+    const expectedResult = 'test_cookie_name=test_cookie_value;Secure;'
     const cookie = document.cookie
 
     expect(result).toBe(expectedResult)
@@ -93,7 +93,7 @@ describe('setCookie()', () => {
     const name = 'test_cookie_name_two'
     const value = 'test_cookie_value_two'
     const result = setCookie(name, value, { maxAge: 172800 })
-    const expectedResult = 'test_cookie_name_two=test_cookie_value_two;max-age=172800;path=/;Secure;'
+    const expectedResult = 'test_cookie_name_two=test_cookie_value_two;max-age=172800;Secure;'
     const cookie = document.cookie
     const date = new Date()
 
@@ -164,6 +164,8 @@ describe('getCookie()', () => {
   })
 
   it('should return empty string if name does not exist', () => {
+    document.cookie = 'test_cookie_name=test_cookie_value;'
+
     const name = 'not_exists'
     const result = getCookie(name)
     const expectedResult = ''
