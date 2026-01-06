@@ -61,11 +61,13 @@ $margin-x-fix: fix.get-class-fix("margin-x");
 }
 
 @each $m in con.$margin-bottom {
-  $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}, .#{$layout-fix}#{$margin-y-fix}-#{$m}";
+  $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
 
   @if list.index(con.$margin-bottom-all, $m) {
     $selector: "#{$selector}, #{$selector}-all > :not(:last-child)";
   }
+
+  $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}";
 
   #{string.unquote($selector)} {
     margin-bottom: var(--#{con.$n}#{$m});
@@ -83,12 +85,14 @@ $margin-x-fix: fix.get-class-fix("margin-x");
   }
 
   @each $m in con.$margin-bottom {
-    $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}-#{$b}, .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b}";
-  
+    $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
+
     @if list.index(con.$margin-bottom-all, $m) {
-      $selector: "#{$selector}, #{$selector}-all-#{$b} > :not(:last-child)";
+      $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > :not(:last-child)";
     }
-  
+
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b}";
+
     #{string.unquote($selector)} {
       @include breakpoint.breakpoint-batch-add($b, (
         margin-bottom: var(--#{con.$n}#{$m})

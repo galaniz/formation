@@ -297,6 +297,7 @@ class Pagination extends HTMLElement {
     for (const [key, value] of currentParams.entries()) {
       if (key === 'page') {
         page = Number(value)
+        continue
       }
 
       params[key] = value
@@ -330,12 +331,7 @@ class Pagination extends HTMLElement {
       return null
     }
 
-    if (type === 'loader') {
-      this.append(clone)
-    } else {
-      this.insertBefore(clone, this.slots.get('nav') || null)
-    }
-
+    this.append(clone)
     this.clones.set(type, clone)
 
     /* Return clone */
@@ -358,21 +354,9 @@ class Pagination extends HTMLElement {
     nav?: DocumentFragment | string,
     entry?: DocumentFragment | string
   ): boolean {
-    /* Loader */
+    /* Clear loader, nav and entry slots */
 
     setDisplay(this.getClone('loader'), 'hide', 'loader')
-
-    /* Error */
-
-    if (result === 'error') {
-      this.getClone(result)
-
-      this.#resultDelayId = setDisplay(this.getClone(result), 'focus')
-
-      return false
-    }
-
-    /* Output */
 
     const navSlot = this.slots.get('nav')
     const entrySlot = this.slots.get('entry')
@@ -383,6 +367,18 @@ class Pagination extends HTMLElement {
 
     navSlot.textContent = ''
     entrySlot.textContent = ''
+
+    /* Error output */
+
+    if (result === 'error') {
+      this.getClone(result)
+
+      this.#resultDelayId = setDisplay(this.getClone(result), 'focus')
+
+      return false
+    }
+
+    /* Success output */
 
     if (isStringStrict(nav)) {
       navSlot.insertAdjacentHTML('afterbegin', nav)
