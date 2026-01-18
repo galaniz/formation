@@ -17,6 +17,7 @@ declare global {
     testNavSet: string[]
     testNavToggle: string[]
     testNavToggled: string[]
+    testNavResize: boolean
   }
 }
 
@@ -34,6 +35,7 @@ test.describe('Navigation', () => {
       window.testNavSet = []
       window.testNavToggle = []
       window.testNavToggled = []
+      window.testNavResize = false
 
       requestAnimationFrame(() => {
         const ids = [
@@ -87,6 +89,7 @@ test.describe('Navigation', () => {
       window.testNavSet = []
       window.testNavToggle = []
       window.testNavToggled = []
+      window.testNavResize = false
     })
   })
 
@@ -149,27 +152,19 @@ test.describe('Navigation', () => {
 
       await Promise.resolve()
 
-      const slotsSize = nav.slots.size
-      const itemsLen = nav.items.length
-      const modalRole = nav.modal?.role
-      const modalSlotsSize = nav.modalSlots.size
-      const breakpoints = Array.from(nav.breakpoints.keys()).join(',')
-      const opensPopup = nav.opens?.ariaHasPopup
-      const closesLen = nav.closes.length
-      const init = nav.init
-
       return {
-        slotsSize,
-        itemsLen,
-        modalRole,
-        modalSlotsSize,
-        breakpoints,
-        opensPopup,
-        closesLen,
-        init
+        init: nav.init,
+        slotsSize: nav.slots.size,
+        itemsLen: nav.items.length,
+        modalRole: nav.modal?.role,
+        modalSlotsSize: nav.modalSlots.size,
+        breakpoints: Array.from(nav.breakpoints.keys()).join(','),
+        opensPopup: nav.opens?.ariaHasPopup,
+        closesLen: nav.closes.length
       }
     })
 
+    expect(navProps.init).toBe(true)
     expect(navProps.slotsSize).toBe(1)
     expect(navProps.itemsLen).toBe(6)
     expect(navProps.modalRole).toBe('dialog')
@@ -177,7 +172,6 @@ test.describe('Navigation', () => {
     expect(navProps.breakpoints).toBe('0')
     expect(navProps.opensPopup).toBe('true')
     expect(navProps.closesLen).toBe(1)
-    expect(navProps.init).toBe(true)
   })
 
   /* Test resize */
@@ -264,29 +258,24 @@ test.describe('Navigation', () => {
   })
 
   test('should not reset if viewport height change', async ({ page }) => {
-    const resizeDone = page.evaluate(async () => {
-      const { actions } = await import('../../../actions/actions.js')
-      const set = actions.get('resize')
+    await page.evaluate(async () => {
+      const { onResize } = await import('../../../actions/actionResize.js')
 
-      let resolve = () => {}
-      const waitForResize = new Promise<void>(r => (resolve = r))
-
-      const resizeAction = () => {
-        set?.delete(resizeAction)
-        resolve()
-        return true
-      }
-
-      set?.add(resizeAction)
-      return waitForResize
+      onResize(() => {
+        window.testNavResize = true
+      })
     })
+
+    const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: await page.evaluate(() => window.innerWidth),
-      height: await page.evaluate(() => window.innerHeight - 100)
+      width: viewport.width,
+      height: viewport.height - 100
     })
 
-    await resizeDone
+    await page.waitForFunction(() => { // Wait for resize
+      return window.testNavResize
+    })
 
     const navEvents = await page.evaluate(() => {
       return {
@@ -519,8 +508,6 @@ test.describe('Navigation', () => {
       const { actions } = await import('../../../actions/actions.js')
 
       const nav = document.querySelector('#nav-slot') as Navigation
-      const navOpens = nav.opens
-      const navCloses = nav.closes[0]
       const resizeActionsLen = actions.get('resize')?.size || 1
       const escapeActionsLen = actions.get('escape')?.size || 1
 
@@ -528,37 +515,25 @@ test.describe('Navigation', () => {
 
       await Promise.resolve()
 
-      navOpens?.style.setProperty('display', 'block')
-      navOpens?.click()
-      navCloses?.style.setProperty('display', 'block')
-      navCloses?.click()
-
-      const slotsSize = nav.slots.size
-      const itemsLen = nav.items.length
-      const modal = nav.modal
-      const modalSlotsSize = nav.modalSlots.size
-      const breakpointsSize = nav.breakpoints.size
-      const opens = nav.opens
-      const closesLen = nav.closes.length
-      const toggleLen = window.testNavToggle.length
-      const init = nav.init
-      const actionsRemoved =
-        actions.get('resize')?.size === resizeActionsLen - 1 && actions.get('escape')?.size === escapeActionsLen - 1
+      nav.opens?.click()
+      nav.closes[0]?.click()
 
       return {
-        slotsSize,
-        itemsLen,
-        modal,
-        modalSlotsSize,
-        breakpointsSize,
-        opens,
-        closesLen,
-        toggleLen,
-        actionsRemoved,
-        init
+        init: nav.init,
+        slotsSize: nav.slots.size,
+        itemsLen: nav.items.length,
+        modal: nav.modal,
+        modalSlotsSize: nav.modalSlots.size,
+        breakpointsSize: nav.breakpoints.size,
+        opens: nav.opens,
+        closesLen: nav.closes.length,
+        toggleLen: window.testNavToggle.length,
+        actionsRemoved:
+          actions.get('resize')?.size === resizeActionsLen - 1 && actions.get('escape')?.size === escapeActionsLen - 1
       }
     })
 
+    expect(navProps.init).toBe(false)
     expect(navProps.slotsSize).toBe(0)
     expect(navProps.itemsLen).toBe(0)
     expect(navProps.modal).toBe(null)
@@ -567,7 +542,6 @@ test.describe('Navigation', () => {
     expect(navProps.opens).toBe(null)
     expect(navProps.closesLen).toBe(0)
     expect(navProps.toggleLen).toBe(0)
-    expect(navProps.init).toBe(false)
     expect(navProps.actionsRemoved).toBe(true)
   })
 })

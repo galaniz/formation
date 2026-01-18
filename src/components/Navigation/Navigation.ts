@@ -664,8 +664,7 @@ class Navigation extends HTMLElement {
             }
 
             this.opens?.focus()
-          },
-          delay: 100
+          }
         },
         {
           action: () => {

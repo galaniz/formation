@@ -62,8 +62,8 @@ const sliderScrollTo = (
   let start: DOMHighResTimeStamp | undefined
   let done = false
 
-  track.style.scrollSnapType = 'none'
-  track.style.overscrollBehavior = 'none'
+  track.style.setProperty('scroll-snap-type', 'none')
+  track.style.setProperty('overscroll-behavior', 'none')
 
   const from = track.scrollLeft
   const dir = to > from ? 'right' : 'left'
@@ -96,8 +96,8 @@ const sliderScrollTo = (
     }
 
     if (done) {
-      track.style.scrollSnapType = ''
-      track.style.overscrollBehavior = ''
+      track.style.removeProperty('scroll-snap-type')
+      track.style.removeProperty('overscroll-behavior')
     } else {
       animRef.id = requestAnimationFrame(animate)
     }

@@ -1,5 +1,5 @@
 export default /* html */`
-  <div class="flex gap-8 align-start">
+  <div class="flex wrap gap-8 align-start">
     <button class="flex" type="button" id="nav-icon-1">
       <span class="nav-icon block relative e-trans" data-nav-icon="1">
         <span class="nav-icon-top bg-foreground-dark block e-trans"></span>

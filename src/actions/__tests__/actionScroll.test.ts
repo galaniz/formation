@@ -93,7 +93,7 @@ describe('removeScroll()', () => {
           expect(testTwo).not.toHaveBeenCalled()
           expect(testTwo).not.toHaveBeenCalled()
           resolve('')
-        }, config.scrollDelay + 100)
+        }, config.scrollDelay + 10)
       })
 
       onScroll(testOne)

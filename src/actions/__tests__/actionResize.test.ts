@@ -121,7 +121,7 @@ describe('removeResize()', () => {
           expect(testOne).not.toHaveBeenCalled()
           expect(testTwo).not.toHaveBeenCalled()
           resolve('')
-        }, config.resizeDelay + 100)
+        }, config.resizeDelay + 10)
       })
 
       onResize(testOne)

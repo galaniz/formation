@@ -600,7 +600,7 @@ class Form extends HTMLElement {
       return
     }
 
-    errorSummary.style.display = display ? 'block' : 'none'
+    errorSummary.style.display = !display ? 'none' : ''
 
     if (focus) {
       errorSummary.setAttribute('role', 'alert')
@@ -745,7 +745,7 @@ class Form extends HTMLElement {
       if (focusInErrorSummary && prevFocusItem) {
         prevFocusItem.focus()
       }
-    }, 10)
+    }, 0)
   }
 
   /**

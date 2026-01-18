@@ -9,14 +9,23 @@
 
 /* Styles */
 
-#clp-single .collapsible-panel {
-  --frm-duration: 0ms, 200ms;
+#clp-single {
+  --clp-delay: 200ms, 0ms;
+
+  .collapsible-panel {
+    --frm-duration: 0ms, 200ms;
+  }
+
+  &[expanded="true"] {
+    --clp-delay: 0ms, 0ms;
+  }
 }
 
 #clp-hover {
+  --clp-ht: auto;
+
   .collapsible-panel {
     --frm-prop: visibility, opacity;
-    --clp-ht: auto;
 
     white-space: nowrap;
     opacity: var(--clp-opacity, 0);

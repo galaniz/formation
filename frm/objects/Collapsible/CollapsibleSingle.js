@@ -5,7 +5,12 @@ export default /* html */`
     expanded="true"
     duration="200"
   >
-    <button type="button" data-collapsible-toggle>
+    <button
+      type="button"
+      aria-expanded="true"
+      data-collapsible-toggle
+      data-testid="clp-single-toggle"
+    >
       Single
     </button>
     <div class="collapsible-panel e-trans" data-collapsible-panel>

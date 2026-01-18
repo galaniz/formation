@@ -221,16 +221,11 @@ class Modal extends HTMLElement {
 
     this.setAttribute('open', this.open.toString())
 
-    if (open) {
-      this.#focusDelayId = window.setTimeout(() => {
-        this.#firstFocusable?.focus()
-      }, 100)
+    this.#focusDelayId = window.setTimeout(() => {
+      (open ? this.#firstFocusable : this.#lastOpens)?.focus()
+    }, 0)
 
-      scroll(false)
-    } else {
-      this.#lastOpens?.focus()
-      scroll(true)
-    }
+    scroll(!open)
   }
 
   /**

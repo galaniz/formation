@@ -2,9 +2,13 @@ export default /* html */`
   <frm-collapsible
     id="clp-action"
     class="collapsible relative"
-    action="test-action"
+    action="action"
   >
-    <button type="button" data-collapsible-toggle>
+    <button
+      type="button"
+      data-collapsible-toggle
+      data-testid="clp-action-toggle"
+    >
       Action
     </button>
     <div class="collapsible-panel e-trans" data-collapsible-panel>

@@ -4,15 +4,11 @@
 
 /* Imports */
 
-import type {
-  CollapsibleAccordionArgs,
-  CollapsibleActionArgs,
-  CollapsibleType
-} from './CollapsibleTypes.js'
+import type { CollapsibleAccordionArgs, CollapsibleActionArgs } from './CollapsibleTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
-import { addAction, doActions } from '../../actions/actions.js'
+import { addAction, doActions, removeAction } from '../../actions/actions.js'
 import { getItem } from '../../items/items.js'
 
 /**
@@ -57,11 +53,18 @@ class Collapsible extends HTMLElement {
   hoverable: boolean = false
 
   /**
-   * Accordion group name.
+   * Accordion group action name.
    *
    * @type {string}
    */
   accordion: string = ''
+
+  /**
+   * Custom action name.
+   *
+   * @type {string}
+   */
+  action: string = ''
 
   /**
    * Transition duration on open or close.
@@ -76,22 +79,6 @@ class Collapsible extends HTMLElement {
    * @type {boolean}
    */
   init: boolean = false
-
-  /**
-   * Type of collapsible.
-   *
-   * @private
-   * @type {CollapsibleType}
-   */
-  #type: CollapsibleType = 'single'
-
-  /**
-   * Source of toggle.
-   *
-   * @private
-   * @type {string}
-   */
-  #source: string = ''
 
   /**
    * ID for blur timeout.
@@ -125,7 +112,8 @@ class Collapsible extends HTMLElement {
   #clickHandler = this.#click.bind(this)
   #hoverHandler = this.#hover.bind(this)
   #blurHandler = this.#blur.bind(this)
-  #keyHandler = this.#key.bind(this)
+  #actionHandler = this.#action.bind(this)
+  #accordionHandler = this.#accordion.bind(this)
 
   /**
    * Create new instance.
@@ -160,8 +148,10 @@ class Collapsible extends HTMLElement {
     /* Clear event listeners */
 
     this.toggle?.removeEventListener('click', this.#clickHandler)
-    this.removeEventListener('keydown', this.#keyHandler)
     this.#setHover(false)
+
+    removeAction(this.action, this.#actionHandler)
+    removeAction(this.accordion, this.#accordionHandler)
 
     /* Empty props */
 
@@ -199,6 +189,10 @@ class Collapsible extends HTMLElement {
     this.toggle = toggle
     this.panel = panel
 
+    /* Expanded */
+
+    this.expanded = this.getAttribute('expanded') === 'true'
+
     /* Duration */
 
     const duration = this.getAttribute('duration')
@@ -216,14 +210,9 @@ class Collapsible extends HTMLElement {
     const accordion = this.getAttribute('accordion')
 
     if (isStringStrict(accordion)) {
-      this.accordion = accordion
-      this.#type = 'accordion'
+      this.accordion = `collapsible:accordion:${accordion}`
 
-      addAction(`collapsible:accordion:${accordion}`, (args: CollapsibleAccordionArgs) => {
-        if (args.element !== this && this.expanded) {
-          this.#toggle(false)
-        }
-      })
+      addAction(this.accordion, this.#accordionHandler)
     }
 
     /* Hoverable */
@@ -240,36 +229,14 @@ class Collapsible extends HTMLElement {
     const action = this.getAttribute('action')
 
     if (isStringStrict(action)) {
-      addAction(`collapsible:${action}`, (args: CollapsibleActionArgs) => {
-        const { hoverable, expanded, type } = args
+      this.action = `collapsible:${action}`
 
-        if (hoverable != null) {
-          this.hoverable = hoverable
-          this.#setHover(hoverable)
-        }
-
-        if (expanded != null) {
-          this.#toggle(expanded)
-        }
-
-        if (isStringStrict(type)) {
-          this.#type = type
-        }
-      })
+      addAction(this.action, this.#actionHandler)
     }
 
     /* Event listeners */
 
     this.toggle.addEventListener('click', this.#clickHandler)
-    this.addEventListener('keydown', this.#keyHandler)
-
-    /* Open if expanded */
-
-    const expanded = this.getAttribute('expanded')
-
-    if (expanded === 'true') {
-      this.#toggle(true)
-    }
 
     /* Init successful */
 
@@ -308,9 +275,9 @@ class Collapsible extends HTMLElement {
     clearTimeout(this.#autoDelayId)
     clearTimeout(this.#delayId)
 
-    /* Panel and different state required */
+    /* Different state required */
 
-    if (!isHtmlElement(this.panel) || open === this.expanded) {
+    if (open === this.expanded) {
       return
     }
 
@@ -319,18 +286,20 @@ class Collapsible extends HTMLElement {
     let height = 'auto'
 
     if (!this.hoverable) { // Skip height setting if hoverable
-      this.panel.style.height = 'auto'
-      height = `${this.panel.clientHeight}px`
-      this.panel.style.height = ''
+      this.panel?.style.setProperty('height', 'auto')
+      height = `${this.panel?.clientHeight}px`
+      this.panel?.style.removeProperty('height')
     }
 
-    /* Update attributes */
+    /* Update attributes and emit event */
 
     this.#delayId = window.setTimeout(() => {
       this.toggle?.setAttribute('aria-expanded', open.toString())
-      this.setAttribute('source', this.#source)
       this.setAttribute('expanded', open.toString())
       this.expanded = open
+
+      const onToggle = new CustomEvent('collapsible:toggle')
+      this.dispatchEvent(onToggle)
     }, 0)
 
     /* Height */
@@ -341,19 +310,14 @@ class Collapsible extends HTMLElement {
       this.style.setProperty('--clp-height', 'auto')
     }, this.duration)
 
-    /* Emit toggle event */
-
-    const onToggle = new CustomEvent('collapsible:toggle')
-    this.dispatchEvent(onToggle)
-
     /* Accordion group action */
 
-    if (this.#type === 'accordion' && open) {
+    if (this.accordion && open) {
       const accordionArgs: CollapsibleAccordionArgs = {
         element: this
       }
 
-      doActions(`collapsible:accordion:${this.accordion}`, accordionArgs)
+      doActions(this.accordion, accordionArgs)
     }
   }
 
@@ -364,7 +328,6 @@ class Collapsible extends HTMLElement {
    * @return {void}
    */
   #click (): void {
-    this.#source = 'tap'
     this.#toggle(!this.expanded)
   }
 
@@ -376,18 +339,7 @@ class Collapsible extends HTMLElement {
    * @return {void}
    */
   #hover (e: MouseEvent): void {
-    this.#source = 'hover'
     this.#toggle(e.type === 'mouseenter')
-  }
-
-  /**
-   * Key handler on container element for key source.
-   *
-   * @private
-   * @return {void}
-   */
-  #key (): void {
-    this.#source = 'key'
   }
 
   /**
@@ -407,7 +359,40 @@ class Collapsible extends HTMLElement {
       if (!this.contains(document.activeElement)) {
         this.#toggle(false)
       }
-    }, 100)
+    }, 0)
+  }
+
+  /**
+   * Custom action callback.
+   *
+   * @private
+   * @param {CollapsibleActionArgs} args
+   * @return {void}
+   */
+  #action (args: CollapsibleActionArgs): void {
+    const { hoverable, expanded } = args
+
+    if (hoverable != null) {
+      this.hoverable = hoverable
+      this.#setHover(hoverable)
+    }
+
+    if (expanded != null) {
+      this.#toggle(expanded)
+    }
+  }
+
+  /**
+   * Accordion action callback.
+   *
+   * @private
+   * @param {CollapsibleAccordionArgs} args
+   * @return {void}
+   */
+  #accordion (args: CollapsibleAccordionArgs): void {
+    if (args.element !== this && this.expanded) {
+      this.#toggle(false)
+    }
   }
 }
 

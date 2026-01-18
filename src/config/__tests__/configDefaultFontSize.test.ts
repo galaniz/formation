@@ -20,7 +20,7 @@ describe('configDefaultFontSize()', () => {
   })
 
   it('should return 18', () => {
-    document.documentElement.style.fontSize = '18px'
+    document.documentElement.style.setProperty('font-size', '18px')
     const expectedResult = 18
 
     configDefaultFontSize()

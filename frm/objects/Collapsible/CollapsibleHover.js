@@ -3,8 +3,13 @@ export default /* html */`
     id="clp-hover"
     class="collapsible relative"
     hoverable
+    data-testid="clp-hover"
   >
-    <button type="button" data-collapsible-toggle>
+    <button
+      type="button"
+      data-collapsible-toggle
+      data-testid="clp-hover-toggle"
+    >
       Hover
     </button>
     <div class="collapsible-panel absolute left-0 mt-5 e-trans" data-collapsible-panel>
