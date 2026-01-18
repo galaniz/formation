@@ -24,11 +24,11 @@ $justify-fix: fix.get-class-fix("justify");
 }
 
 .#{$layout-fix}#{$justify-fix}-start {
-  justify-content: flex-start;
+  justify-content: start;
 }
 
 .#{$layout-fix}#{$justify-fix}-end {
-  justify-content: flex-end;
+  justify-content: end;
 }
 
 @each $b in con.$justify-breakpoints {
@@ -46,13 +46,13 @@ $justify-fix: fix.get-class-fix("justify");
 
   .#{$layout-fix}#{$justify-fix}-start-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
-      justify-content: flex-start
+      justify-content: start
     ));
   }
 
   .#{$layout-fix}#{$justify-fix}-end-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
-      justify-content: flex-end
+      justify-content: end
     ));
   }
 }

@@ -20,11 +20,11 @@ $align-fix: fix.get-class-fix("align");
 }
 
 .#{$layout-fix}#{$align-fix}-start {
-  align-items: flex-start;
+  align-items: start;
 }
 
 .#{$layout-fix}#{$align-fix}-end {
-  align-items: flex-end;
+  align-items: end;
 }
 
 @each $b in con.$align-breakpoints {
@@ -36,13 +36,13 @@ $align-fix: fix.get-class-fix("align");
 
   .#{$layout-fix}#{$align-fix}-start-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
-      align-items: flex-start
+      align-items: start
     ));
   }
 
   .#{$layout-fix}#{$align-fix}-end-#{$b} {
     @include breakpoint.breakpoint-batch-add($b, (
-      align-items: flex-end
+      align-items: end
     ));
   }
 }
