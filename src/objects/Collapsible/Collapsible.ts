@@ -283,11 +283,11 @@ class Collapsible extends HTMLElement {
 
     /* Height */
 
-    let height = 'auto'
+    let height: number | undefined
 
     if (!this.hoverable) { // Skip height setting if hoverable
       this.panel?.style.setProperty('height', 'auto')
-      height = `${this.panel?.clientHeight}px`
+      height = this.panel?.clientHeight
       this.panel?.style.removeProperty('height')
     }
 
@@ -304,7 +304,7 @@ class Collapsible extends HTMLElement {
 
     /* Height */
 
-    this.style.setProperty('--clp-height', height)
+    this.style.setProperty('--clp-height', height ? `${height}px` : 'auto')
 
     this.#autoDelayId = window.setTimeout(() => {
       this.style.setProperty('--clp-height', 'auto')
