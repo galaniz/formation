@@ -322,7 +322,7 @@ class Collapsible extends HTMLElement {
   }
 
   /**
-   * Click handler on container element to toggle.
+   * Click handler on button element to toggle.
    *
    * @private
    * @return {void}

@@ -224,7 +224,7 @@ class Pagination extends HTMLElement {
   }
 
   /**
-   * Click handler on navigation listens for link clicks.
+   * Click handler on navigation element to listen for link clicks.
    *
    * @private
    * @param {Event} e
@@ -258,7 +258,7 @@ class Pagination extends HTMLElement {
   }
 
   /**
-   * Popstate handler on window navigation triggers load.
+   * Pop state handler on window navigation to trigger load.
    *
    * @private
    * @param {PopStateEvent} e

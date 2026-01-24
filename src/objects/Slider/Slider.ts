@@ -217,7 +217,7 @@ class Slider extends Tabs {
   }
 
   /**
-   * Init check required items, set variables and activate.
+   * Init check required items, set props and activate.
    *
    * @private
    * @return {boolean}

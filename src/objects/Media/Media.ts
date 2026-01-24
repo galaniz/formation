@@ -549,7 +549,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Meta handler on media element updates duration.
+   * Meta handler on media element to update duration.
    *
    * @private
    * @return {void}
@@ -580,7 +580,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Time update handler on media element updates time and progress.
+   * Time update handler on media element to update time and progress.
    *
    * @private
    * @return {void}
@@ -595,7 +595,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Ended handler on media element updates play state.
+   * Ended handler on media element to update play state.
    *
    * @private
    * @return {Promise<void>}
@@ -605,7 +605,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Error handler on media element displays error element.
+   * Error handler on media element to display error element.
    *
    * @private
    * @return {void}
@@ -616,7 +616,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Click handler on control element toggles play.
+   * Click handler on control element to toggle play.
    *
    * @private
    * @param {Event} e
@@ -625,12 +625,12 @@ class Media extends HTMLElement {
   async #control (e: Event): Promise<void> {
     const control = e.currentTarget as HTMLButtonElement
     const type = control.dataset.mediaControl as MediaControl
-    
+
     await this.toggle(type === 'play' ? true : type === 'pause' ? false : !this.playing)
   }
 
   /**
-   * Click handler on progress element updates bar, scrub and time.
+   * Click handler on progress element to update bar, scrub and time.
    *
    * @private
    * @param {MouseEvent} e
@@ -651,7 +651,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Mousedown handler on progress element adds mouse listeners.
+   * Mouse down handler on progress element to add mouse listeners.
    *
    * @private
    * @param {MouseEvent} e
@@ -669,7 +669,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Mouseup handler on document element resets and removes mouse listeners.
+   * Mouse up handler on document element to reset and remove mouse listeners.
    *
    * @private
    * @param {MouseEvent} e
@@ -690,7 +690,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Mousemove handler on document element updates progress bar, scrub and time.
+   * Mouse move handler on document element to update progress bar, scrub and time.
    *
    * @private
    * @param {MouseEvent} e
@@ -705,7 +705,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Touchstart handler on progress element adds touch listeners.
+   * Touch start handler on progress element to add touch listeners.
    * 
    * @private
    * @param {TouchEvent} e
@@ -722,7 +722,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Touchend handler on document element resets and removes touch listeners.
+   * Touch end handler on document element to reset and remove touch listeners.
    *
    * @private
    * @param {TouchEvent} e
@@ -743,7 +743,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Touchmove handler on document element updates progress bar, scrub and time.
+   * Touch move handler on document element to update progress bar, scrub and time.
    *
    * @private
    * @param {TouchEvent} e
@@ -764,7 +764,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Keydown handler on document element toggles play and updates scrub.
+   * Key down handler on document element to toggle play and update scrub.
    *
    * @private
    * @param {KeyboardEvent} e
@@ -834,7 +834,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Keyup handler on document element updates time instead of on keydown.
+   * Key up handler on document element to update time instead of on keydown.
    *
    * @private
    * @param {KeyboardEvent} e
@@ -879,11 +879,9 @@ class Media extends HTMLElement {
   /**
    * Load media asset, clear loader and error.
    *
-   * @param {string} [url]
-   * @param {string} [title]
    * @return {void}
    */
-  load (url?: string, title?: string): void {
+  load (): void {
     clearTimeout(this.#loaderDelayId)
     clearTimeout(this.#errorDelayId)
 
@@ -894,19 +892,10 @@ class Media extends HTMLElement {
     this.#loaderDelayId = setDisplay(this.#getClone('loader'), 'show', 'loader')
 
     if (!isHtmlElement(this.media)) {
-      return
+      throw new Error('No media')
     }
 
-    if (isStringStrict(url)) {
-      this.loaded = false
-      this.url = url
-      this.setAttribute('url', url)
-    }
-
-    if (isStringStrict(title)) {
-      this.title = title
-    }
-
+    this.setAttribute('url', this.url)
     this.media.src = this.url
     this.media.load()
   }
@@ -915,7 +904,7 @@ class Media extends HTMLElement {
    * Play and pause media element.
    *
    * @param {boolean} [play=true]
-   * @return {void}
+   * @return {Promise<void>}
    */
   async toggle (play: boolean = true): Promise<void> {
     try {

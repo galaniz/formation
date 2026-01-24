@@ -239,7 +239,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Init check required items and run set.
+   * Init check required items, set props and run set.
    *
    * @private
    * @return {boolean}
@@ -719,7 +719,7 @@ class Navigation extends HTMLElement {
   }
 
   /**
-   * Click handler on open button to open modal.
+   * Click handler on open button element to open modal.
    *
    * @private
    * @param {Event} e
