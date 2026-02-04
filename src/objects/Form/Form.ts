@@ -25,8 +25,6 @@ import type {
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { cloneItem, getItem, getTemplateItem } from '../../items/items.js'
-import { isItemFocusable, focusSelector } from '../../items/itemsFocusability.js'
-import { getOuterItems } from '../../items/itemsOuter.js'
 import { applyFilters } from '../../filters/filters.js'
 import { doActions } from '../../actions/actions.js'
 
@@ -122,14 +120,6 @@ class Form extends HTMLElement {
   #errorList: Map<string, FormErrorListItem> = new Map()
 
   /**
-   * ID for focus timeout.
-   *
-   * @private
-   * @type {number}
-   */
-  #focusDelayId: number = 0
-
-  /**
    * Bind this to event callbacks.
    *
    * @private
@@ -199,10 +189,6 @@ class Form extends HTMLElement {
     this.#labels.clear()
     this.#legends.clear()
     this.#errorList.clear()
-
-    /* Clear timeout */
-
-    clearTimeout(this.#focusDelayId)
   }
 
   /**
@@ -668,10 +654,6 @@ class Form extends HTMLElement {
    * @return {void}
    */
   #change (e: Event): void {
-    /* Clear timeout */
-
-    clearTimeout(this.#focusDelayId)
-
     /* Group required */
 
     const name = (e.currentTarget as HTMLInputElement).name
@@ -705,47 +687,7 @@ class Form extends HTMLElement {
 
     if (this.#errorList.size) {
       this.#displayErrorSummary(true)
-      return
     }
-
-    /* Delay for correct previous active element */
-
-    this.#focusDelayId = window.setTimeout(() => {
-      let prevFocusItem: HTMLElement | undefined
-
-      getOuterItems(
-        this,
-        'prev',
-        (store) => {
-          let stop = false
-
-          for (const item of store) {
-            if (isItemFocusable(item)) {
-              stop = true
-              prevFocusItem = item as HTMLElement
-              break
-            }
-
-            const innerFocusable = item.querySelectorAll(focusSelector)
-            const [firstItem] = innerFocusable
-
-            if (isHtmlElement(firstItem)) {
-              stop = true
-              prevFocusItem = firstItem
-              break
-            }
-          }
-
-          return { store, stop }
-        }
-      )
-
-      const focusInErrorSummary = this.clones.get('errorSummary')?.contains(document.activeElement)
-
-      if (focusInErrorSummary && prevFocusItem) {
-        prevFocusItem.focus()
-      }
-    }, 0)
   }
 
   /**
@@ -802,12 +744,6 @@ class Form extends HTMLElement {
 
     this.clones.set(type, clone)
 
-    /* Append to element */
-
-    if (isHtmlElement(appendTo)) {
-      appendTo.append(clone)
-    }
-
     /* Error summary and list */
 
     if (type === 'errorSummary') {
@@ -819,7 +755,13 @@ class Form extends HTMLElement {
       if (isHtmlElement(errorList, HTMLUListElement)) {
         this.clones.set('errorList', errorList)
       }
+
+      return clone
     }
+
+    /* Append to element */
+
+    (isHtmlElement(appendTo) ? appendTo : this.form)?.append(clone)
 
     /* Return clone */
 

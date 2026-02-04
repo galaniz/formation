@@ -482,31 +482,37 @@ test.describe('Collapsible', () => {
       'clp-accordion-3',
       'clp-accordion-2'
     ])
+
     expect(clp1Open.ariaExpanded).toStrictEqual([
       ['true', 'true'],
       [null, null],
       [null, null]
     ])
+
     expect(clp1Open.expanded).toStrictEqual([
       [true, 'true'],
       [false, null],
       [false, null]
     ])
+
     expect(clp2Open.ariaExpanded).toStrictEqual([
       ['false', 'false'],
       ['true', 'true'],
       [null, null]
     ])
+
     expect(clp2Open.expanded).toStrictEqual([
       [false, 'false'],
       [true, 'true'],
       [false, null]
     ])
+
     expect(clp3Open.ariaExpanded).toStrictEqual([
       ['false', 'false'],
       ['false', 'false'],
       ['true', 'true']
     ])
+
     expect(clp3Open.expanded).toStrictEqual([
       [false, 'false'],
       [false, 'false'],

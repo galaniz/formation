@@ -4,7 +4,6 @@ export default /* html */`
     url="http://localhost:3000/blog/"
     loader="pag-loader"
     error="pag-error"
-    none="pag-none"
   >
     <form novalidate></form>
     <ul data-pag-slot="entry">
@@ -56,17 +55,4 @@ export default /* html */`
       </ol>
     </nav>
   </frm-pagination-filter>
-  <template id="pag-loader">
-    <div tabindex="-1">Pagination loader</div>
-  </template>
-  <template id="pag-error">
-    <div tabindex="-1">
-      <p>Sorry, there is a problem with the service.</p>
-    </div>
-  </template>
-  <template id="pag-none">
-    <div tabindex="-1">
-      <p>Looks like no posts were found.</p>
-    </div>
-  </template>
 `

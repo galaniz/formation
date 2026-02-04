@@ -28,12 +28,4 @@ export default /* html */`
       <div class="media-scrub absolute w-2 h-2 bg-foreground-dark b-radius-full"></div>
     </div>
   </frm-media>
-  <template id="med-loader">
-    <div tabindex="-1">Media loader</div>
-  </template>
-  <template id="med-error">
-    <div tabindex="-1">
-      <p>Sorry, there is a problem with the service. Open <a data-media-link></a></p>
-    </div>
-  </template>
 `

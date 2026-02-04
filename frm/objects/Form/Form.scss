@@ -2,10 +2,15 @@
  * Objects - Form Styles
  */
 
-select {
+select,
+input[type="text"],
+input[type="email"] {
   border: 1px solid black;
 }
 
-input[type="text"] {
-  border: 1px solid black;
+input[type="radio"],
+input[type="checkbox"] {
+  width: var(--frm-5);
+  height: var(--frm-5);
+  appearance: auto;
 }

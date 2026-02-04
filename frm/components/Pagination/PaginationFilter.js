@@ -4,7 +4,6 @@ export default /* html */`
     url="http://localhost:3000/blog/"
     loader="pag-loader"
     error="pag-error"
-    none="pag-none"
   >
     <form novalidate>
       <div>

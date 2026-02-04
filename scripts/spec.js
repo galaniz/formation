@@ -7,6 +7,7 @@
 /* Imports */
 
 import { readFile, writeFile, glob } from 'node:fs/promises'
+import { dirname } from 'node:path'
 import * as sass from 'sass'
 
 /* Recurse src json files to generate spec test files and clear coverage */
@@ -14,6 +15,15 @@ import * as sass from 'sass'
 const globalStyles = sass.compile('frm/global/global.scss', {
   style: 'compressed'
 })
+
+/** @type {Record<string, string>} */
+const templates = {}
+
+for await (const entry of glob('frm/**/*Templates.js')) {
+  const template = await import(`../${entry}`)
+
+  templates[dirname(entry).replace('frm/', '')] = template.default
+}
 
 for await (const entry of glob('src/**/*.json')) {
   const json = await readFile(entry, {
@@ -63,8 +73,9 @@ for await (const entry of glob('src/**/*.json')) {
       </head>
       <body class="flex col">
         <main>${output}</main>
+        ${templates[newPath] || ''}
+        <script type="module" src="/spec/${newPath}/${name}Register.js"></script>
       </body>
-      <script type="module" src="/spec/${newPath}/${name}Register.js"></script>
     </html>
     `
   )

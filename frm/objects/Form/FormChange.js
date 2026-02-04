@@ -1,39 +1,36 @@
 export default /* html */`
   <frm-form
-    id="frm"
+    id="frm-change"
     error-inline="frm-error-inline"
-    error-summary="frm-error-summary"
-    error="frm-error"
-    success="frm-success"
-    loader="frm-loader"
+    error-on="change"
   >
     <form novalidate>
       <div data-form-field="text">
-        <label for="frm-name">
+        <label for="frm-change-name">
           <span data-form-label-text>Name</span>
         </label>
         <input
-          id="frm-name"
+          id="frm-change-name"
           name="name"
           type="text"
           data-form-input="text"
           data-form-empty="Name is required"
-          data-testid="frm-name"
+          data-testid="frm-change-name"
           required
         >
       </div>
       <div data-form-field="email">
-        <label for="frm-email">
+        <label for="frm-change-email">
           <span data-form-label-text>Email</span>
         </label>
         <input
-          id="frm-email"
+          id="frm-change-email"
           name="email"
           type="email"
           data-form-input="email"
           data-form-empty="Email is required"
           data-form-invalid="Email is invalid"
-          data-testid="frm-email"
+          data-testid="frm-change-email"
           required
         >
       </div>
@@ -43,45 +40,45 @@ export default /* html */`
           data-form-invalid="Privacy is invalid"
           data-form-required
         >
-          <legend id="frm-privacy">
+          <legend id="frm-change-privacy">
             <span data-form-legend-text>Privacy</span>
           </legend>
           <div data-form-field="radio">
             <input
-              id="frm-public"
+              id="frm-change-public"
               name="privacy"
               type="radio"
               value="public"
               data-form-input="radio"
-              data-testid="frm-public"
+              data-testid="frm-change-public"
             >
-            <label for="frm-public">
+            <label for="frm-change-public">
               <span data-form-label-text>Public</span>
             </label>
           </div>
           <div data-form-field="radio">
             <input
-              id="frm-contacts"
+              id="frm-change-contacts"
               name="privacy"
               type="radio"
               value="contacts"
               data-form-input="radio"
-              data-testid="frm-contacts"
+              data-testid="frm-change-contacts"
             >
-            <label for="frm-contacts">
+            <label for="frm-change-contacts">
               <span data-form-label-text>Contacts</span>
             </label>
           </div>
           <div data-form-field="radio">
             <input
-              id="frm-private"
+              id="frm-change-private"
               name="privacy"
               type="radio"
               value="private"
               data-form-input="radio"
-              data-testid="frm-private"
+              data-testid="frm-change-private"
             >
-            <label for="frm-private">
+            <label for="frm-change-private">
               <span data-form-label-text>Private</span>
             </label>
           </div>
@@ -89,19 +86,19 @@ export default /* html */`
       </div>
       <div data-form-field="fieldset">
         <fieldset>
-          <legend id="frm-dob">
+          <legend id="frm-change-dob">
             <span data-form-legend-text>Date of birth</span>
           </legend>
           <div data-form-field="select">
-            <label for="frm-month">
+            <label for="frm-change-month">
               <span data-form-label-text>Month</span>
             </label>
             <select
-              id="frm-month"
+              id="frm-change-month"
               name="month"
               data-form-input="select"
               data-form-empty="Month is required"
-              data-testid="frm-month"
+              data-testid="frm-change-month"
               required
             >
               <option value="">Select a month</option>
@@ -120,11 +117,11 @@ export default /* html */`
             </select>
           </div>
           <div data-form-field="text">
-            <label for="frm-day">
+            <label for="frm-change-day">
               <span data-form-label-text>Day</span>
             </label>
             <input
-              id="frm-day"
+              id="frm-change-day"
               name="day"
               type="text"
               maxlength="2"
@@ -132,16 +129,16 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Day is required"
-              data-testid="frm-day"
+              data-testid="frm-change-day"
               required
             >
           </div>
           <div data-form-field="text">
-            <label for="frm-year">
+            <label for="frm-change-year">
               <span data-form-label-text>Year</span>
             </label>
             <input
-              id="frm-year"
+              id="frm-change-year"
               name="year"
               type="text"
               minlength="4"
@@ -150,47 +147,47 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Year is required"
-              data-testid="frm-year"
+              data-testid="frm-change-year"
               required
             >
           </div>
         </fieldset>
       </div>
       <div data-form-field="file">
-        <label for="frm-profile">
+        <label for="frm-change-profile">
           <span data-form-label-text>Profile</span>
         </label>
         <input
-          id="frm-profile"
+          id="frm-change-profile"
           name="profile"
           type="file"
           accept="image/png, image/jpeg"
           data-form-input="file"
-          data-testid="frm-profile"
+          data-testid="frm-change-profile"
         >
       </div>
       <div data-form-field="checkbox">
         <input
-          id="frm-notifications"
+          id="frm-change-notifications"
           type="checkbox"
           name="notifications"
           value="1"
           data-form-input="checkbox"
-          data-testid="frm-notifications"
+          data-testid="frm-change-notifications"
         >
-        <label for="frm-notifications">
+        <label for="frm-change-notifications">
           <span data-form-label-text>Notifications</span>
         </label>
       </div>
       <input
-        id="frm-hidden"
+        id="frm-change-hidden"
         type="hidden"
         name="hidden"
         value="hidden"
         data-form-input="hidden"
       >
       <div data-form-field="submit">
-        <button type="submit" data-testid="frm-submit">Update</button>
+        <button type="submit">Update</button>
       </div>
     </form>
   </frm-form>

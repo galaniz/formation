@@ -1,39 +1,30 @@
 export default /* html */`
   <frm-form
-    id="frm"
+    id="frm-partial"
     error-inline="frm-error-inline"
-    error-summary="frm-error-summary"
-    error="frm-error"
-    success="frm-success"
-    loader="frm-loader"
   >
     <form novalidate>
       <div data-form-field="text">
-        <label for="frm-name">
+        <label>
           <span data-form-label-text>Name</span>
         </label>
         <input
-          id="frm-name"
-          name="name"
           type="text"
           data-form-input="text"
           data-form-empty="Name is required"
-          data-testid="frm-name"
+          data-testid="frm-partial-name"
           required
         >
       </div>
-      <div data-form-field="email">
-        <label for="frm-email">
-          <span data-form-label-text>Email</span>
-        </label>
+      <div>
         <input
-          id="frm-email"
+          id="frm-partial-email"
           name="email"
           type="email"
           data-form-input="email"
           data-form-empty="Email is required"
           data-form-invalid="Email is invalid"
-          data-testid="frm-email"
+          data-testid="frm-partial-email"
           required
         >
       </div>
@@ -43,65 +34,50 @@ export default /* html */`
           data-form-invalid="Privacy is invalid"
           data-form-required
         >
-          <legend id="frm-privacy">
+          <legend>
             <span data-form-legend-text>Privacy</span>
           </legend>
           <div data-form-field="radio">
             <input
-              id="frm-public"
+              id="frm-partial-public"
               name="privacy"
               type="radio"
               value="public"
               data-form-input="radio"
-              data-testid="frm-public"
+              data-testid="frm-partial-public"
             >
-            <label for="frm-public">
-              <span data-form-label-text>Public</span>
-            </label>
           </div>
           <div data-form-field="radio">
             <input
-              id="frm-contacts"
+              id="frm-partial-contacts"
               name="privacy"
               type="radio"
               value="contacts"
               data-form-input="radio"
-              data-testid="frm-contacts"
+              data-testid="frm-partial-contacts"
             >
-            <label for="frm-contacts">
-              <span data-form-label-text>Contacts</span>
-            </label>
           </div>
           <div data-form-field="radio">
             <input
-              id="frm-private"
+              id="frm-partial-private"
               name="privacy"
               type="radio"
               value="private"
               data-form-input="radio"
-              data-testid="frm-private"
+              data-testid="frm-partial-private"
             >
-            <label for="frm-private">
-              <span data-form-label-text>Private</span>
-            </label>
           </div>
         </fieldset>
       </div>
       <div data-form-field="fieldset">
         <fieldset>
-          <legend id="frm-dob">
-            <span data-form-legend-text>Date of birth</span>
-          </legend>
           <div data-form-field="select">
-            <label for="frm-month">
-              <span data-form-label-text>Month</span>
-            </label>
             <select
-              id="frm-month"
+              id="frm-partial-month"
               name="month"
               data-form-input="select"
               data-form-empty="Month is required"
-              data-testid="frm-month"
+              data-testid="frm-partial-month"
               required
             >
               <option value="">Select a month</option>
@@ -120,11 +96,8 @@ export default /* html */`
             </select>
           </div>
           <div data-form-field="text">
-            <label for="frm-day">
-              <span data-form-label-text>Day</span>
-            </label>
             <input
-              id="frm-day"
+              id="frm-partial-day"
               name="day"
               type="text"
               maxlength="2"
@@ -132,16 +105,13 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Day is required"
-              data-testid="frm-day"
+              data-testid="frm-partial-day"
               required
             >
           </div>
           <div data-form-field="text">
-            <label for="frm-year">
-              <span data-form-label-text>Year</span>
-            </label>
             <input
-              id="frm-year"
+              id="frm-partial-year"
               name="year"
               type="text"
               minlength="4"
@@ -150,47 +120,14 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Year is required"
-              data-testid="frm-year"
+              data-testid="frm-partial-year"
               required
             >
           </div>
         </fieldset>
       </div>
-      <div data-form-field="file">
-        <label for="frm-profile">
-          <span data-form-label-text>Profile</span>
-        </label>
-        <input
-          id="frm-profile"
-          name="profile"
-          type="file"
-          accept="image/png, image/jpeg"
-          data-form-input="file"
-          data-testid="frm-profile"
-        >
-      </div>
-      <div data-form-field="checkbox">
-        <input
-          id="frm-notifications"
-          type="checkbox"
-          name="notifications"
-          value="1"
-          data-form-input="checkbox"
-          data-testid="frm-notifications"
-        >
-        <label for="frm-notifications">
-          <span data-form-label-text>Notifications</span>
-        </label>
-      </div>
-      <input
-        id="frm-hidden"
-        type="hidden"
-        name="hidden"
-        value="hidden"
-        data-form-input="hidden"
-      >
       <div data-form-field="submit">
-        <button type="submit" data-testid="frm-submit">Update</button>
+        <button type="submit" data-testid="frm-partial-submit">Update</button>
       </div>
     </form>
   </frm-form>

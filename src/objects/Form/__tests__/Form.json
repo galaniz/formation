@@ -1,4 +1,6 @@
 [
   "FormEmpty",
+  "FormPartial",
+  "FormChange",
   "Form"
 ]
