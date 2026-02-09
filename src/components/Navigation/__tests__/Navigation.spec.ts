@@ -155,23 +155,23 @@ test.describe('Navigation', () => {
       return {
         init: nav.init,
         slotsSize: nav.slots.size,
-        itemsLen: nav.items.length,
+        itemsCount: nav.items.length,
         modalRole: nav.modal?.role,
         modalSlotsSize: nav.modalSlots.size,
         breakpoints: Array.from(nav.breakpoints.keys()).join(','),
         opensPopup: nav.opens?.ariaHasPopup,
-        closesLen: nav.closes.length
+        closesCount: nav.closes.length
       }
     })
 
     expect(navProps.init).toBe(true)
     expect(navProps.slotsSize).toBe(1)
-    expect(navProps.itemsLen).toBe(6)
+    expect(navProps.itemsCount).toBe(6)
     expect(navProps.modalRole).toBe('dialog')
     expect(navProps.modalSlotsSize).toBe(1)
     expect(navProps.breakpoints).toBe('0')
     expect(navProps.opensPopup).toBe('true')
-    expect(navProps.closesLen).toBe(1)
+    expect(navProps.closesCount).toBe(1)
   })
 
   /* Test resize */
@@ -508,8 +508,8 @@ test.describe('Navigation', () => {
       const { actions } = await import('../../../actions/actions.js')
 
       const nav = document.querySelector('#nav-slot') as Navigation
-      const resizeActionsLen = actions.get('resize')?.size || 1
-      const escapeActionsLen = actions.get('escape')?.size || 1
+      const resizeActionsCount = actions.get('resize')?.size || 1
+      const escapeActionsCount = actions.get('escape')?.size || 1
 
       nav.remove()
 
@@ -521,27 +521,27 @@ test.describe('Navigation', () => {
       return {
         init: nav.init,
         slotsSize: nav.slots.size,
-        itemsLen: nav.items.length,
+        itemsCount: nav.items.length,
         modal: nav.modal,
         modalSlotsSize: nav.modalSlots.size,
         breakpointsSize: nav.breakpoints.size,
         opens: nav.opens,
-        closesLen: nav.closes.length,
-        toggleLen: window.testNavToggle.length,
+        closesCount: nav.closes.length,
+        toggleCount: window.testNavToggle.length,
         actionsRemoved:
-          actions.get('resize')?.size === resizeActionsLen - 1 && actions.get('escape')?.size === escapeActionsLen - 1
+          actions.get('resize')?.size === resizeActionsCount - 1 && actions.get('escape')?.size === escapeActionsCount - 1
       }
     })
 
     expect(navProps.init).toBe(false)
     expect(navProps.slotsSize).toBe(0)
-    expect(navProps.itemsLen).toBe(0)
+    expect(navProps.itemsCount).toBe(0)
     expect(navProps.modal).toBe(null)
     expect(navProps.modalSlotsSize).toBe(0)
     expect(navProps.breakpointsSize).toBe(0)
     expect(navProps.opens).toBe(null)
-    expect(navProps.closesLen).toBe(0)
-    expect(navProps.toggleLen).toBe(0)
+    expect(navProps.closesCount).toBe(0)
+    expect(navProps.toggleCount).toBe(0)
     expect(navProps.actionsRemoved).toBe(true)
   })
 })

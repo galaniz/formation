@@ -223,7 +223,7 @@ class Masonry extends HTMLElement {
 
     /* Items */
 
-    const newLength = this.items.length
+    const newCount = this.items.length
 
     /* Columns and margin */
 
@@ -241,7 +241,7 @@ class Masonry extends HTMLElement {
 
     /* Layout */
 
-    const newLayout = Array.from({ length: newLength }, (_, i): [number, number, number] => {
+    const newLayout = Array.from({ length: newCount }, (_, i): [number, number, number] => {
       const item = this.items[i] as HTMLElement
       const rect = item.getBoundingClientRect()
       const top = rect.top + scrollY

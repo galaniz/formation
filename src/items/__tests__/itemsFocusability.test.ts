@@ -55,8 +55,7 @@ const testHtml = (): TestHtml => {
   const button = document.createElement('button')
   const body = document.body
 
-  body.innerHTML = ''
-
+  body.textContent = ''
   iframe.id = 'hidden-test'
   divTab.id = 'tabindex-test'
   divEdit.id = 'editable-text'

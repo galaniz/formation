@@ -43,7 +43,7 @@ export default /* html */`
           <legend id="frm-change-privacy">
             <span data-form-legend-text>Privacy</span>
           </legend>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-change-public"
               name="privacy"
@@ -56,7 +56,7 @@ export default /* html */`
               <span data-form-label-text>Public</span>
             </label>
           </div>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-change-contacts"
               name="privacy"
@@ -69,7 +69,7 @@ export default /* html */`
               <span data-form-label-text>Contacts</span>
             </label>
           </div>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-change-private"
               name="privacy"
@@ -80,6 +80,52 @@ export default /* html */`
             >
             <label for="frm-change-private">
               <span data-form-label-text>Private</span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      <div data-form-field="fieldset">
+        <fieldset>
+          <legend id="frm-change-cookies">
+            <span data-form-legend-text>Cookies</span>
+          </legend>
+          <div>
+            <input
+              id="frm-change-functional"
+              name="cookies"
+              type="checkbox"
+              value="functional"
+              data-form-input="checkbox"
+              data-testid="frm-change-functional"
+            >
+            <label for="frm-change-functional">
+              <span data-form-label-text>Functional</span>
+            </label>
+          </div>
+          <div>
+            <input
+              id="frm-change-analytics"
+              name="cookies"
+              type="checkbox"
+              value="analytics"
+              data-form-input="checkbox"
+              data-testid="frm-change-analytics"
+            >
+            <label for="frm-change-analytics">
+              <span data-form-label-text>Analytics</span>
+            </label>
+          </div>
+          <div>
+            <input
+              id="frm-change-performance"
+              name="cookies"
+              type="checkbox"
+              value="performance"
+              data-form-input="checkbox"
+              data-testid="frm-change-performance"
+            >
+            <label for="frm-change-performance">
+              <span data-form-label-text>Performance</span>
             </label>
           </div>
         </fieldset>
@@ -187,7 +233,7 @@ export default /* html */`
         data-form-input="hidden"
       >
       <div data-form-field="submit">
-        <button type="submit">Update</button>
+        <button type="submit" data-testid="frm-change-submit">Update</button>
       </div>
     </form>
   </frm-form>

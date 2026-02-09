@@ -116,7 +116,7 @@ class Slider extends Tabs {
    * @private
    * @type {number}
    */
-  #loopInitLength: number = 0
+  #loopInitCount: number = 0
 
   /**
    * Number of panels in loop including cloned panels.
@@ -124,7 +124,7 @@ class Slider extends Tabs {
    * @private
    * @type {number}
    */
-  #loopLength: number = 0
+  #loopCount: number = 0
 
   /**
    * Bind this to event callbacks.
@@ -268,7 +268,7 @@ class Slider extends Tabs {
     /* Clone panels for loop */
 
     if (this.loop) {
-      this.#loopInitLength = this.panels.length
+      this.#loopInitCount = this.panels.length
 
       const panelsFrag = new DocumentFragment()
       panelsFrag.append(...this.panels)
@@ -287,9 +287,9 @@ class Slider extends Tabs {
 
       this.#insert.append(panelsFrag)
       this.panels = [...this.#insert.children] as HTMLElement[]
-      this.#loopLength = this.panels.length
+      this.#loopCount = this.panels.length
 
-      current = this.currentIndex + this.#loopInitLength
+      current = this.currentIndex + this.#loopInitCount
     }
 
     /* Dimension properties */
@@ -365,23 +365,23 @@ class Slider extends Tabs {
     panelIndex = rawIndex
 
     if (source === 'click') {
-      currentIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
+      currentIndex = currentIndex + (this.#loopInitCount * this.#loopCurrentIndex)
     }
 
-    lastPanelIndex = lastIndex + (this.#loopInitLength * this.#loopCurrentIndex)
+    lastPanelIndex = lastIndex + (this.#loopInitCount * this.#loopCurrentIndex)
 
     if (lastIndex === 0) {
       lastPanelIndex = 0
     }
 
-    this.#loopCurrentIndex = Math.floor(currentIndex / this.#loopInitLength)
-    currentIndex = currentIndex - (this.#loopInitLength * this.#loopCurrentIndex)
+    this.#loopCurrentIndex = Math.floor(currentIndex / this.#loopInitCount)
+    currentIndex = currentIndex - (this.#loopInitCount * this.#loopCurrentIndex)
 
     if (source === 'init' || moved) {
       this.#loopCurrentIndex = 1
     }
 
-    panelIndex = currentIndex + (this.#loopInitLength * this.#loopCurrentIndex)
+    panelIndex = currentIndex + (this.#loopInitCount * this.#loopCurrentIndex)
 
     return {
       currentIndex,
@@ -556,7 +556,7 @@ class Slider extends Tabs {
     /* First and last offsets */
 
     const startBuffer = offsets[1]
-    const endBuffer = offsets[this.#loopLength - 1]
+    const endBuffer = offsets[this.#loopCount - 1]
 
     /* Move elements from end to start */
 
@@ -574,9 +574,9 @@ class Slider extends Tabs {
 
     if (move) {
       const panelsFrag = new DocumentFragment()
-      const start = this.#loopLength - this.#loopInitLength
+      const start = this.#loopCount - this.#loopInitCount
 
-      for (let i = start; i < this.#loopLength; i += 1) {
+      for (let i = start; i < this.#loopCount; i += 1) {
         const panel = this.panels[i]
 
         if (!isHtmlElement(panel)) {
@@ -589,7 +589,7 @@ class Slider extends Tabs {
       this.#insert.prepend(panelsFrag)
       this.panels = [...this.#insert.children] as HTMLElement[]
 
-      newIndex = currentIndex + this.#loopInitLength
+      newIndex = currentIndex + this.#loopInitCount
       diff = source === 'click' ? lastIndex - currentIndex : 0
     }
 

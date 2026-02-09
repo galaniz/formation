@@ -46,7 +46,7 @@ export default /* html */`
           <legend id="frm-privacy">
             <span data-form-legend-text>Privacy</span>
           </legend>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-public"
               name="privacy"
@@ -59,7 +59,7 @@ export default /* html */`
               <span data-form-label-text>Public</span>
             </label>
           </div>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-contacts"
               name="privacy"
@@ -72,7 +72,7 @@ export default /* html */`
               <span data-form-label-text>Contacts</span>
             </label>
           </div>
-          <div data-form-field="radio">
+          <div>
             <input
               id="frm-private"
               name="privacy"
@@ -83,6 +83,52 @@ export default /* html */`
             >
             <label for="frm-private">
               <span data-form-label-text>Private</span>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+      <div data-form-field="fieldset">
+        <fieldset>
+          <legend id="frm-cookies">
+            <span data-form-legend-text>Cookies</span>
+          </legend>
+          <div>
+            <input
+              id="frm-functional"
+              name="cookies"
+              type="checkbox"
+              value="functional"
+              data-form-input="checkbox"
+              data-testid="frm-functional"
+            >
+            <label for="frm-functional">
+              <span data-form-label-text>Functional</span>
+            </label>
+          </div>
+          <div>
+            <input
+              id="frm-analytics"
+              name="cookies"
+              type="checkbox"
+              value="analytics"
+              data-form-input="checkbox"
+              data-testid="frm-analytics"
+            >
+            <label for="frm-analytics">
+              <span data-form-label-text>Analytics</span>
+            </label>
+          </div>
+          <div>
+            <input
+              id="frm-performance"
+              name="cookies"
+              type="checkbox"
+              value="performance"
+              data-form-input="checkbox"
+              data-testid="frm-performance"
+            >
+            <label for="frm-performance">
+              <span data-form-label-text>Performance</span>
             </label>
           </div>
         </fieldset>

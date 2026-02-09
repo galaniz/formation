@@ -8,7 +8,6 @@ import type {
   FormInput,
   FormPrimitive,
   FormGroup,
-  FormErrorListItem,
   FormErrorOn,
   FormValidateResult,
   FormValidateFilterArgs,
@@ -112,12 +111,20 @@ class Form extends HTMLElement {
   #legends: Map<string, string> = new Map()
 
   /**
-   * Error list item IDs, messages and elements.
+   * Error list item IDs and messages.
    *
    * @private
-   * @type {Map<string, FormErrorListItem>}
+   * @type {Map<string, string>}
    */
-  #errorList: Map<string, FormErrorListItem> = new Map()
+  #errorList: Map<string, string> = new Map()
+
+  /**
+   * Error IDs following initial DOM order.
+   *
+   * @private
+   * @type {string[]}
+   */
+  #errorOrder: string[] = []
 
   /**
    * Bind this to event callbacks.
@@ -189,6 +196,7 @@ class Form extends HTMLElement {
     this.#labels.clear()
     this.#legends.clear()
     this.#errorList.clear()
+    this.#errorOrder = []
   }
 
   /**
@@ -255,7 +263,7 @@ class Form extends HTMLElement {
     /* Create groups */
 
     for (const input of inputs) {
-      this.appendInput(input)
+      this.#appendInput(input)
     }
 
     if (!this.groups.size) {
@@ -270,6 +278,152 @@ class Form extends HTMLElement {
     /* Init successful */
 
     Form.#count += 1
+
+    return true
+  }
+
+  /**
+   * Add input and field info to groups.
+   *
+   * @private
+   * @param {FormInput} input
+   * @return {boolean}
+   */
+  #appendInput (input: FormInput): boolean {
+    /* Name and ID required */
+
+    const name = input.name
+    const id = input.id
+
+    if (!isStringStrict(name) || !isStringStrict(id)) {
+      return false
+    }
+
+    /* Type */
+
+    let type = input.tagName.toLowerCase()
+
+    if (type === 'input') {
+      type = input.type
+    }
+
+    if (type === 'hidden') {
+      this.groups.set(name, {
+        field: input,
+        inputs: [input],
+        label: input,
+        labelType: 'label',
+        required: false,
+        type: [type],
+        values: [],
+        valid: true,
+        emptyMessage: '',
+        invalidMessage: '',
+        id
+      })
+
+      return true
+    }
+
+    /* Group data */
+
+    const group = this.groups.get(name)
+    const groupExists = group != null
+
+    if (groupExists) {
+      input.addEventListener('change', this.#changeHandler)
+      group.inputs.push(input)
+      group.type.push(type)
+      return true
+    }
+
+    /* Field required */
+
+    const field = input.closest('[data-form-field]')
+
+    if (!isHtmlElement(field)) {
+      return false
+    }
+
+    /* Fieldset check */
+
+    const fieldset = input.closest('fieldset')
+    const hasFieldset = isHtmlElement(fieldset)
+    const fieldsetRequired = hasFieldset ? fieldset.hasAttribute('data-form-required') : false
+
+    /* Required */
+
+    const required = input.required || input.ariaRequired === 'true' || fieldsetRequired
+
+    /* Legend */
+
+    const legend = fieldset?.querySelector('legend')
+    const hasLegend = isHtmlElement(legend)
+    const legendId = legend?.id
+
+    if (fieldsetRequired && !isStringStrict(legendId)) { // Legend ID required
+      return false
+    }
+
+    if (hasLegend) {
+      const legendText = getItem('[data-form-legend-text]', legend)?.textContent
+
+      if (isStringStrict(legendText)) {
+        this.#legends.set(name, legendText)
+      }
+    }
+
+    /* Label */
+
+    const label = field.querySelector('label')
+    const hasLabel = isHtmlElement(label)
+
+    if (hasLabel) {
+      const labelText = getItem('[data-form-label-text]', label)?.textContent
+
+      if (isStringStrict(labelText)) {
+        this.#labels.set(name, labelText)
+      }
+    }
+
+    /* Group label required */
+
+    const groupLabel = fieldsetRequired ? legend : label
+    const groupLabelType = fieldsetRequired ? 'legend' : 'label'
+
+    if (!groupLabel) {
+      return false
+    }
+
+    /* Empty and invalid messages */
+
+    const emptyMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formEmpty
+    const invalidMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formInvalid
+
+    /* Error order */
+
+    const groupId = (fieldsetRequired ? legendId : id) as string // Cast as IDs required
+    this.#errorOrder.push(groupId)
+
+    /* Group data */
+
+    this.groups.set(name, {
+      field,
+      inputs: [input],
+      label: groupLabel,
+      labelType: groupLabelType,
+      required,
+      type: [type],
+      values: [],
+      valid: false,
+      emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
+      invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : '',
+      id: groupId
+    })
+
+    input.addEventListener('change', this.#changeHandler)
+
+    /* Successfully added */
 
     return true
   }
@@ -313,10 +467,6 @@ class Form extends HTMLElement {
         case 'select':
           const selected = (input as HTMLSelectElement).selectedOptions
 
-          if (!selected) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-            break
-          }
-
           for (const option of selected) {
             const optValue = option.value.trim()
 
@@ -334,6 +484,7 @@ class Form extends HTMLElement {
             hasValue = true
             values = Array.from(files)
           }
+
           break
         default:
           value = input.value.trim()
@@ -381,25 +532,10 @@ class Form extends HTMLElement {
       inputs,
       type,
       label,
-      labelType,
       required,
-      emptyMessage
+      emptyMessage,
+      id
     } = group
-
-    /* Label required */
-
-    if (!isHtmlElement(label)) {
-      return true
-    }
-
-    /* Error ID required for list */
-
-    const useLegend = labelType === 'legend'
-    const errorId: string | undefined = useLegend ? label.id : inputs[0]?.id
-
-    if (!isStringStrict(errorId)) {
-      return true
-    }
 
     /* Validate input group */
 
@@ -418,22 +554,25 @@ class Form extends HTMLElement {
     }
 
     if (!valid) {
-      this.#setErrorMessage(field, inputs, name, label, message, ariaInvalid)
+      this.#setErrorMessage(id, message, field, inputs, label, ariaInvalid)
+      this.#errorList.set(id, message)
 
-      const existing = this.#errorList.get(errorId)
-      const existingItem = existing?.item
-      const existingMessage = existing?.message
-      const changed = existingItem && existingMessage === message
+      const newErrorList = new Map<string, string>()
+      this.#errorOrder.forEach(id => {
+        const message = this.#errorList.get(id)
 
-      this.#errorList.set(errorId, {
-        message: isStringStrict(message) ? message : '',
-        item: existingItem, changed
+        if (!message) {
+          return
+        }
+
+        newErrorList.set(id, message)
       })
 
+      this.#errorList = newErrorList
       this.getClone('errorSummary')
     } else {
-      this.#removeErrorMessage(field, inputs, name, label)
-      this.#errorList.delete(errorId)
+      this.#removeErrorMessage(id, field, inputs, label)
+      this.#errorList.delete(id)
     }
 
     /* Reset summary list */
@@ -449,29 +588,27 @@ class Form extends HTMLElement {
    * Field error message.
    *
    * @private
+   * @param {string} id
+   * @param {string} message
    * @param {HTMLElement} field
    * @param {FormInput[]} inputs
-   * @param {string} name
    * @param {HTMLElement} label
-   * @param {string} message
    * @param {number[]} ariaInvalid
    * @return {void}
    */
   #setErrorMessage (
+    id: string,
+    message: string,
     field: HTMLElement,
     inputs: FormInput[],
-    name: string,
     label: HTMLElement,
-    message: string,
     ariaInvalid: number[]
   ): void {
-    /* Error element ID */
-
-    const errorId = name + '-error'
-
     /* Check if error element exists */
 
-    const error = document.getElementById(`${errorId}-text`)
+    const errorId = `${id}-error`
+    const errorTextId = `${errorId}-text`
+    const error = document.getElementById(errorTextId)
 
     /* Output */
 
@@ -491,10 +628,10 @@ class Form extends HTMLElement {
       }
 
       clone.id = errorId
-      cloneText.id = `${errorId}-text`
+      cloneText.id = errorTextId
       cloneText.textContent = message
 
-      label.insertAdjacentElement('beforeend', clone)
+      label.append(clone)
     }
 
     /* Update field */
@@ -516,24 +653,21 @@ class Form extends HTMLElement {
    * Remove field error message.
    *
    * @private
+   * @param {string} id
    * @param {HTMLElement} field
    * @param {FormInput[]} inputs
-   * @param {string} name
    * @param {HTMLElement} label
    * @return {void}
    */
   #removeErrorMessage (
+    id: string,
     field: HTMLElement,
     inputs: FormInput[],
-    name: string,
     label: HTMLElement
   ): void {
-    /* Error element ID */
-
-    const errorId = name + '-error'
-
     /* Check if error element exists */
 
+    const errorId = `${id}-error`
     const error = document.getElementById(errorId)
 
     if (isHtmlElement(error)) {
@@ -552,37 +686,23 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clear error messages and hide error summary.
-   *
-   * @private
-   * @return {void}
-   */
-  #clearErrorMessages (): void {
-    this.groups.forEach((group, name) => {
-      const { field, inputs, label } = group
-
-      if (!isHtmlElement(label)) {
-        return
-      }
-
-      this.#removeErrorMessage(field, inputs, name, label)
-    })
-
-    this.#displayErrorSummary(false)
-  }
-
-  /**
-   * Handle error summary element display and focus.
+   * Update error summary display and focus or first error focus.
    *
    * @private
    * @param {boolean} display
    * @param {boolean} [focus]
    * @return {void}
    */
-  #displayErrorSummary (display: boolean, focus: boolean = false): void {
+  #displayErrors (display: boolean, focus: boolean = false): void {
     const errorSummary = this.getClone('errorSummary')
 
     if (!errorSummary) {
+      if (display && focus) {
+        const id = this.#errorList.keys().next().value as string // Cast as error exists if display true 
+
+        document.getElementById(id)?.focus()
+      }
+
       return
     }
 
@@ -602,7 +722,7 @@ class Form extends HTMLElement {
    */
   #setErrorList (): void {
     if (!this.#errorList.size) {
-      this.#displayErrorSummary(false)
+      this.#displayErrors(false)
     }
 
     const errorList = this.clones.get('errorList')
@@ -612,38 +732,20 @@ class Form extends HTMLElement {
     }
 
     const frag = new window.DocumentFragment()
-    let focusItem: HTMLElement | undefined
 
-    this.#errorList.forEach((listItem, id) => {
-      const { message, item, changed } = listItem
+    this.#errorList.forEach((message, id) => {
+      const item = document.createElement('li')
+      const link = document.createElement('a')
 
-      let currentItem = changed ? item : null
+      link.href = `#${id}`
+      link.textContent = message
 
-      if (changed && currentItem?.firstElementChild === document.activeElement) {
-        focusItem = document.activeElement as HTMLElement
-      }
-
-      if (!currentItem) {
-        currentItem = document.createElement('li')
-
-        const link = document.createElement('a')
-        link.href = `#${id}`
-        link.textContent = message
-
-        currentItem.append(link)
-      }
-
-      frag.append(currentItem)
-
-      this.#errorList.set(id, { message, item: currentItem })
+      item.append(link)
+      frag.append(item)
     })
 
     errorList.textContent = ''
     errorList.append(frag)
-
-    if (focusItem) {
-      focusItem.focus()
-    }
   }
 
   /**
@@ -656,7 +758,8 @@ class Form extends HTMLElement {
   #change (e: Event): void {
     /* Group required */
 
-    const name = (e.currentTarget as HTMLInputElement).name
+    const target = (e.currentTarget as HTMLInputElement)
+    const name = target.name
     const group = this.groups.get(name)
 
     if (!group) {
@@ -674,7 +777,8 @@ class Form extends HTMLElement {
 
     const changeArgs: FormChangeActionArgs = {
       name,
-      group
+      group,
+      target
     }
 
     doActions(`form:change:${this.id}`, changeArgs)
@@ -686,7 +790,7 @@ class Form extends HTMLElement {
     /* Display error summary */
 
     if (this.#errorList.size) {
-      this.#displayErrorSummary(true)
+      this.#displayErrors(true)
     }
   }
 
@@ -715,7 +819,7 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clone and return template element if used.
+   * Clone, return and optionally append template element.
    *
    * @param {FormTemplateKeys} type
    * @param {HTMLElement|null} [appendTo]
@@ -761,149 +865,13 @@ class Form extends HTMLElement {
 
     /* Append to element */
 
-    (isHtmlElement(appendTo) ? appendTo : this.form)?.append(clone)
+    if (isHtmlElement(appendTo)) {
+      appendTo.append(clone)
+    }
 
     /* Return clone */
 
     return clone
-  }
-
-  /**
-   * Add input to groups.
-   *
-   * @param {FormInput} input
-   * @return {boolean}
-   */
-  appendInput (input: FormInput): boolean {
-    /* Name and ID (error list) required */
-
-    const name = input.name
-    const id = input.id
-
-    if (!isStringStrict(name) || !isStringStrict(id)) {
-      return false
-    }
-
-    /* Type */
-
-    let type = input.tagName.toLowerCase()
-
-    if (type === 'input') {
-      type = input.type
-    }
-
-    if (type === 'hidden') {
-      this.groups.set(name, {
-        field: input,
-        inputs: [input],
-        label: input,
-        labelType: 'label',
-        required: false,
-        type: [type],
-        values: [],
-        valid: true,
-        emptyMessage: '',
-        invalidMessage: ''
-      })
-
-      return true
-    }
-
-    /* Group data */
-
-    const group = this.groups.get(name)
-    const groupExists = group != null
-
-    if (groupExists) {
-      input.addEventListener('change', this.#changeHandler)
-      group.inputs.push(input)
-      group.type.push(type)
-      return true
-    }
-
-    /* Field required */
-
-    const field = input.closest('[data-form-field]')
-
-    if (!isHtmlElement(field)) {
-      return false
-    }
-
-    /* Fieldset check */
-
-    const fieldset = input.closest('fieldset')
-    const hasFieldset = isHtmlElement(fieldset)
-    const fieldsetRequired = hasFieldset ? fieldset.hasAttribute('data-form-required') : false
-
-    /* Required */
-
-    const required = input.required || input.ariaRequired === 'true' || fieldsetRequired
-
-    /* Legend */
-
-    const legend = fieldset?.querySelector('legend')
-    const hasLegend = isHtmlElement(legend)
-    const legendId = legend?.id
-
-    if (fieldsetRequired && !isStringStrict(legendId)) { // Legend ID required for error list
-      return false
-    }
-
-    if (hasLegend) {
-      const legendText = getItem('[data-form-legend-text]', legend)?.textContent
-
-      if (isStringStrict(legendText)) {
-        this.#legends.set(name, legendText)
-      }
-    }
-
-    /* Label */
-
-    const label = field.querySelector('label')
-    const hasLabel = isHtmlElement(label)
-
-    if (hasLabel) {
-      const labelText = getItem('[data-form-label-text]', label)?.textContent
-
-      if (isStringStrict(labelText)) {
-        this.#labels.set(name, labelText)
-      }
-    }
-
-    /* Group label required */
-
-    const groupLabel = fieldsetRequired ? legend : label
-    const groupLabelType = fieldsetRequired ? 'legend' : 'label'
-
-    if (!groupLabel) {
-      return false
-    }
-
-    /* Empty and invalid messages */
-
-    const emptyMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formEmpty
-    const invalidMessage = (fieldsetRequired ? fieldset as HTMLElement : input).dataset.formInvalid
-
-    /* Group data */
-
-    this.groups.set(name, {
-      field,
-      inputs: [input],
-      label: groupLabel,
-      labelType: groupLabelType,
-      required,
-      type: [type],
-      values: [],
-      valid: false,
-      emptyMessage: isStringStrict(emptyMessage) ? emptyMessage : '',
-      invalidMessage: isStringStrict(invalidMessage) ? invalidMessage : ''
-    })
-
-    input.addEventListener('change', this.#changeHandler)
-
-    /* Successfully added */
-
-    return true
   }
 
   /**
@@ -924,7 +892,7 @@ class Form extends HTMLElement {
     })
 
     if (!quiet) {
-      this.#displayErrorSummary(!valid, true)
+      this.#displayErrors(!valid, true)
     }
 
     return valid
@@ -940,11 +908,11 @@ class Form extends HTMLElement {
 
     this.groups.forEach((group, name) => {
       const { values, type } = group
-      const valuesLen = values.length
+      const valuesCount = values.length
       const legend = this.#legends.get(name)
       const label = this.#labels.get(name)
-      const single = valuesLen === 1
-      const empty = !valuesLen
+      const single = valuesCount === 1
+      const empty = !valuesCount
 
       let newValues: FormPrimitive | FormPrimitive[] = values
 
@@ -980,13 +948,20 @@ class Form extends HTMLElement {
   }
 
   /**
-   * Clear form values and error messages.
+   * Clear form values, error messages and summary.
    *
    * @return {void}
    */
   clear (): void {
     this.form?.reset()
-    this.#clearErrorMessages()
+    this.groups.forEach(group => {
+      const { id, field, inputs, label } = group
+
+      this.#removeErrorMessage(id, field, inputs, label)
+    })
+
+    this.#errorList.clear()
+    this.#setErrorList()
   }
 }
 

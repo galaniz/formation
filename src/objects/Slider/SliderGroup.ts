@@ -266,7 +266,7 @@ class SliderGroup extends Tabs {
     if (isStringStrict(breakpoints) && isStringStrict(visible)) {
       const breakpointsArr = breakpoints.split(',')
       const visibleArr = visible.split(',')
-      const panelsLen = this.panels.length
+      const panelsCount = this.panels.length
 
       breakpointsArr.forEach((b, i) => {
         const v = visibleArr[i]
@@ -293,7 +293,7 @@ class SliderGroup extends Tabs {
           low: low * fontSizeMultiplier,
           high: high * fontSizeMultiplier,
           items,
-          panels: Math.ceil(panelsLen / items)
+          panels: Math.ceil(panelsCount / items)
         })
       })
     }
@@ -526,13 +526,13 @@ class SliderGroup extends Tabs {
     const panelsFrag = new DocumentFragment()
     panelsFrag.append(...this.panels)
 
-    const panelsLen = this.panels.length
+    const panelsCount = this.panels.length
     const panelsMap: number[][] = Array.from({ length: numberOfPanels }).map((_, i) => {
       const start = i * perPanel
       const panel = []
 
       for (let j = start; j < start + perPanel; j += 1) {
-        if (j < panelsLen) {
+        if (j < panelsCount) {
           panel.push(j)
         }
       }

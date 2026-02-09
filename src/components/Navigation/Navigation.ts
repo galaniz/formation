@@ -288,13 +288,13 @@ class Navigation extends HTMLElement {
 
     if (isStringStrict(breakpoints)) {
       const breakpointsArr = breakpoints.split(',')
-      const breakpointsLen = breakpointsArr.length
+      const breakpointsCount = breakpointsArr.length
 
       breakpointsArr.forEach((breakpoint, i) => {
         const breakpointValue = parseInt(breakpoint, 10)
         const breakpointNum = isNumber(breakpointValue) ? breakpointValue * fontSizeMultiplier : 0
 
-        if (breakpointsLen === 1) {
+        if (breakpointsCount === 1) {
           breakpoint0 = breakpointNum
         }
 
@@ -561,8 +561,8 @@ class Navigation extends HTMLElement {
 
     /* Update overflow state */
 
-    const modalGroupsLen = this.#modalGroups.size
-    const overflow = modalGroupsLen > 0
+    const modalGroupsCount = this.#modalGroups.size
+    const overflow = modalGroupsCount > 0
 
     if (overflow) {
       this.setAttribute('overflow', 'true')

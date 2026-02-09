@@ -1,7 +1,7 @@
 export default /* html */`
   <frm-form
-    id="frm-partial"
-    error-inline="frm-error-inline"
+    id="frm-partial-none"
+    error-inline="frm-error-inline-none"
   >
     <form novalidate>
       <div data-form-field="text">
@@ -12,19 +12,19 @@ export default /* html */`
           type="text"
           data-form-input="text"
           data-form-empty="Name is required"
-          data-testid="frm-partial-name"
+          data-testid="frm-partial-none-name"
           required
         >
       </div>
       <div>
         <input
-          id="frm-partial-email"
+          id="frm-partial-none-email"
           name="email"
           type="email"
           data-form-input="email"
           data-form-empty="Email is required"
           data-form-invalid="Email is invalid"
-          data-testid="frm-partial-email"
+          data-testid="frm-partial-none-email"
           required
         >
       </div>
@@ -39,32 +39,32 @@ export default /* html */`
           </legend>
           <div>
             <input
-              id="frm-partial-public"
+              id="frm-partial-none-public"
               name="privacy"
               type="radio"
               value="public"
               data-form-input="radio"
-              data-testid="frm-partial-public"
+              data-testid="frm-partial-none-public"
             >
           </div>
           <div>
             <input
-              id="frm-partial-contacts"
+              id="frm-partial-none-contacts"
               name="privacy"
               type="radio"
               value="contacts"
               data-form-input="radio"
-              data-testid="frm-partial-contacts"
+              data-testid="frm-partial-none-contacts"
             >
           </div>
           <div>
             <input
-              id="frm-partial-private"
+              id="frm-partial-none-private"
               name="privacy"
               type="radio"
               value="private"
               data-form-input="radio"
-              data-testid="frm-partial-private"
+              data-testid="frm-partial-none-private"
             >
           </div>
         </fieldset>
@@ -73,11 +73,11 @@ export default /* html */`
         <fieldset>
           <div data-form-field="select">
             <select
-              id="frm-partial-month"
+              id="frm-partial-none-month"
               name="month"
               data-form-input="select"
               data-form-empty="Month is required"
-              data-testid="frm-partial-month"
+              data-testid="frm-partial-none-month"
               required
             >
               <option value="">Select a month</option>
@@ -97,7 +97,7 @@ export default /* html */`
           </div>
           <div data-form-field="text">
             <input
-              id="frm-partial-day"
+              id="frm-partial-none-day"
               name="day"
               type="text"
               maxlength="2"
@@ -105,13 +105,13 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Day is required"
-              data-testid="frm-partial-day"
+              data-testid="frm-partial-none-day"
               required
             >
           </div>
           <div data-form-field="text">
             <input
-              id="frm-partial-year"
+              id="frm-partial-none-year"
               name="year"
               type="text"
               minlength="4"
@@ -120,14 +120,14 @@ export default /* html */`
               inputmode="numeric"
               data-form-input="text"
               data-form-empty="Year is required"
-              data-testid="frm-partial-year"
+              data-testid="frm-partial-none-year"
               required
             >
           </div>
         </fieldset>
       </div>
       <div data-form-field="submit">
-        <button type="submit" data-testid="frm-partial-submit">Update</button>
+        <button type="submit" data-testid="frm-partial-none-submit">Update</button>
       </div>
     </form>
   </frm-form>

@@ -20,7 +20,7 @@ export type FormPrimitive = string | number | boolean | File
  * @typedef {object} FormGroup
  * @prop {HTMLElement} field
  * @prop {FormInput[]} inputs
- * @prop {HTMLElement|null} label
+ * @prop {HTMLElement} label
  * @prop {string} labelType
  * @prop {boolean} required
  * @prop {string[]} type
@@ -28,11 +28,12 @@ export type FormPrimitive = string | number | boolean | File
  * @prop {boolean} valid
  * @prop {string} emptyMessage
  * @prop {string} invalidMessage
+ * @prop {string} id
  */
 export interface FormGroup {
   field: HTMLElement
   inputs: FormInput[]
-  label: HTMLElement | null
+  label: HTMLElement
   labelType: 'legend' | 'label'
   required: boolean
   type: string[]
@@ -40,24 +41,13 @@ export interface FormGroup {
   valid: boolean
   emptyMessage: string
   invalidMessage: string
+  id: string
 }
 
 /**
  * @typedef {Map<string, FormGroup>} FormGroups
  */
 export type FormGroups = Map<string, FormGroup>
-
-/**
- * @typedef {object} FormErrorListItem
- * @prop {HTMLLIElement|undefined} item
- * @prop {string} message
- * @prop {boolean} [changed]
- */
-export interface FormErrorListItem {
-  item: HTMLLIElement | undefined
-  message: string
-  changed?: boolean
-}
 
 /**
  * @typedef {Object} FormValidateResult
@@ -112,10 +102,12 @@ export interface FormValueFilterArgs {
  * @typedef {object} FormChangeActionArgs
  * @prop {string} name
  * @prop {FormGroup} group
+ * @prop {FormInput} target
  */
 export interface FormChangeActionArgs {
   name: string
   group: FormGroup
+  target: FormInput
 }
 
 /**

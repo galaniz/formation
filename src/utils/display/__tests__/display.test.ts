@@ -29,7 +29,7 @@ const testItem = (none: boolean = false, attr: boolean = false): HTMLDivElement 
     div.dataset.attr = 'show'
   }
 
-  body.innerHTML = ''
+  body.textContent = ''
   body.append(div)
 
   return div

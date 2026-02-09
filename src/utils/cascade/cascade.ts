@@ -62,7 +62,7 @@ const requestTimeout = (action: GenericFunction, delay: number): void => {
 const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
   /* Number of events */
 
-  const eventsLength = events.length - 1
+  const eventsCount = events.length - 1
 
   /* Increment */
 
@@ -73,14 +73,14 @@ const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
   const recurse = (i: number, j: number): void => {
     /* Repeat */
 
-    if (i === eventsLength && j < repeat) {
+    if (i === eventsCount && j < repeat) {
       i = 0
       j += 1
     }
 
     /* No more events */
 
-    if (i > eventsLength) {
+    if (i > eventsCount) {
       return
     }
 

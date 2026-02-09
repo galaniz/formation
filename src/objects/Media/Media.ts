@@ -397,7 +397,7 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Clone and return template element.
+   * Clone, return and append template element.
    *
    * @param {MediaTemplateKeys} type
    * @return {HTMLElement|null}

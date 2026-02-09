@@ -353,7 +353,7 @@ class Collapsible extends HTMLElement {
 
     clearTimeout(this.#blurDelayId)
 
-    /* Wait for correct activeElement */
+    /* Wait for correct active element */
 
     this.#blurDelayId = window.setTimeout(() => {
       if (!this.contains(document.activeElement)) {

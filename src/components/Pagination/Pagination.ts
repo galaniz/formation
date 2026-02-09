@@ -309,7 +309,7 @@ class Pagination extends HTMLElement {
   }
 
   /**
-   * Clone and return template element.
+   * Clone, return and append template element.
    *
    * @param {PaginationTemplateKeys} type
    * @return {HTMLElement|null}

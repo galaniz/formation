@@ -88,7 +88,7 @@ const testHtml = (): TestHtml => {
   footer.append(divSix)
   templateTwo.append(template)
 
-  body.innerHTML = ''
+  body.textContent = ''
   body.append(nav)
   body.append(main)
   body.append(footer)

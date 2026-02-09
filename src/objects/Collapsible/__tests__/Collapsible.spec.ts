@@ -92,7 +92,7 @@ test.describe('Collapsible', () => {
     ])
   })
 
-  test('should move single instance and not reinitialize', async ({ page }) => {
+  test('should move instance and not reinitialize', async ({ page }) => {
     const clpProps = await page.evaluate(async () => {
       const clp = document.querySelector('#clp-single') as Collapsible
 
@@ -729,7 +729,7 @@ test.describe('Collapsible', () => {
           clpAction.panel,
           clpHover.panel
         ],
-        toggleLen: window.testCollapsibleToggle.length,
+        toggleCount: window.testCollapsibleToggle.length,
         actionsRemoved:
           actions.get(accordion)?.size === 2 && actions.get(action)?.size === 0
       }
@@ -739,7 +739,7 @@ test.describe('Collapsible', () => {
     expect(clpProps.expanded).toStrictEqual([false, false, false])
     expect(clpProps.toggle).toStrictEqual([null, null, null])
     expect(clpProps.panel).toStrictEqual([null, null, null])
-    expect(clpProps.toggleLen).toBe(0)
+    expect(clpProps.toggleCount).toBe(0)
     expect(clpProps.actionsRemoved).toBe(true)
   })
 })
