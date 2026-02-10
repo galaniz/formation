@@ -180,11 +180,11 @@ test.describe('Navigation', () => {
 
   /* Test resize */
 
-  test('should move some items into modal slots if 960px viewport', async ({ page }) => {
+  test('should move some items into modal slots if 900px viewport', async ({ page }) => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 960,
+      width: 900,
       height: viewport.height
     })
 
@@ -216,11 +216,11 @@ test.describe('Navigation', () => {
     expect(groupsModalTwo).toBe(5)
   })
 
-  test('should move all items into modal slots if 640px viewport', async ({ page }) => {
+  test('should move all items into modal slots if 600px viewport', async ({ page }) => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 640,
+      width: 600,
       height: viewport.height
     })
 
@@ -315,7 +315,7 @@ test.describe('Navigation', () => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 640,
+      width: 600,
       height: viewport.height
     })
 
@@ -342,7 +342,7 @@ test.describe('Navigation', () => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 640,
+      width: 600,
       height: viewport.height
     })
 
@@ -420,7 +420,7 @@ test.describe('Navigation', () => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 640,
+      width: 600,
       height: viewport.height
     })
 
@@ -460,7 +460,7 @@ test.describe('Navigation', () => {
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
-      width: 640,
+      width: 600,
       height: viewport.height
     })
 

@@ -2,7 +2,7 @@ export default /* html */`
   <frm-navigation
     id="nav-slots-breakpoint"
     class="nav"
-    breakpoints="960"
+    breakpoints="900"
     role="navigation"
   >
     <ul data-nav-slot="one">
