@@ -102,7 +102,7 @@ export default /* html */`
       >
       </button>  
       <button
-        class="slider-next w-8 h-8 t-background-light b-radius-full absolute righ-0"
+        class="slider-next w-8 h-8 t-background-light b-radius-full absolute right-0"
         type="button"
         aria-label="Next"
         data-slider-next

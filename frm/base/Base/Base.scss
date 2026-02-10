@@ -27,3 +27,7 @@ p {
 main :target {
   scroll-margin-top: var(--frm-scroll-margin);
 }
+
+button:disabled {
+  opacity: 0.3;
+}

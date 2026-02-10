@@ -401,7 +401,7 @@ class Slider extends Tabs {
   #indexes (args: TabsIndexesFilterArgs): TabsIndexesFilterArgs {
     const {
       currentIndex,
-      lastIndex,
+      endIndex,
       source
     } = args
 
@@ -423,7 +423,7 @@ class Slider extends Tabs {
         prevDisabled = true
       }
 
-      if (currentIndex === lastIndex) {
+      if (currentIndex === endIndex) {
         nextDisabled = true
       }
 

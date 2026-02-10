@@ -26,7 +26,7 @@ $object-fix: fix.get-class-prefix("object");
   --sld-track-scroll: 0 0 0 var(--sld-padding); 
   --sld-gap: var(--sld-gap-init, var(--#{con.$n}4));
   --sld-gap-l: var(--#{con.$n}6);
-  --sld-spacer: var(--sld-padding) + (var(--sld-gap) * 2);
+  --sld-spacer: var(--sld-padding);
   --sld-nav-fill: currentcolor;
   --sld-tab-fill: currentcolor;
 
@@ -52,19 +52,17 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-single {
-  --sld-spacer-add: (var(--sld-width)) * (var(--sld-items) - 1);
   --sld-width:
     var(--sld-item-width) - ((var(--sld-padding) + (var(--sld-gap) * var(--sld-items))) / var(--sld-items));
 }
 
 .#{$object-fix}slider-group {
   --sld-width: 100% - (var(--sld-padding) + var(--sld-gap));
-  --sld-spacer: var(--sld-padding);
 }
 
 .#{$object-fix}slider-contain {
   @include breakpoint.breakpoint-min("container-content") {
-    --sld-spacer: var(--sld-gap);
+    --sld-spacer-display: none;
     --sld-track-padding: 0;
     --sld-track-scroll: 0;
 
@@ -78,8 +76,6 @@ $object-fix: fix.get-class-prefix("object");
 
     &.#{$object-fix}slider-group {
       --sld-width: 100%;
-      --sld-spacer: 0px;
-      --sld-spacer-width: 0px;
     }
   }
 }
@@ -89,7 +85,7 @@ $object-fix: fix.get-class-prefix("object");
     --sld-container: var(--#{con.$n}container-content);
     --sld-item-width: var(--sld-container) / var(--sld-items);
     --sld-track-scroll: 0 0 0 calc(50vw - (var(--sld-container) / 2));
-    --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / 2);
+    --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / -2);
     --sld-track-padding: 0;
 
     &.#{$object-fix}slider-single {
@@ -102,7 +98,7 @@ $object-fix: fix.get-class-prefix("object");
   padding: var(--sld-track-padding);
   scroll-padding: var(--sld-track-scroll);
   scroll-snap-type: var(--sld-snap);
-  transform: translateX(var(--sld-track-x, 0));
+  margin-left: var(--sld-track-x, 0);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -114,12 +110,12 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-spacer {
-  margin-left: calc(var(--sld-spacer-add, 0px) + var(--sld-spacer));
-  min-width: var(--sld-spacer-width, 0.0625rem);
+  width: var(--sld-spacer);
+  display: var(--sld-spacer-display);
 }
 
 .#{$object-fix}slider-item {
-  width: calc(var(--sld-item-width));
+  width: calc(var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items)));
 }
 
 /* Navigation */

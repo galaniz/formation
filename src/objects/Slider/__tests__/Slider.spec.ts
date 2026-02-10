@@ -41,7 +41,7 @@ test.describe('Slider', () => {
 
     expect(sliderInit).toStrictEqual([
       false, // #sld-empty
-      false, // #sld-single
+      true,  // #sld-single
       true   // #sld-loop
     ])
   })
