@@ -25,6 +25,15 @@ for await (const entry of glob('frm/**/*Templates.js')) {
   templates[dirname(entry).replace('frm/', '')] = template.default
 }
 
+/** @type {Record<string, string>} */
+const scripts = {}
+
+for await (const entry of glob('frm/**/*Scripts.js')) {
+  const script = await import(`../${entry}`)
+
+  scripts[dirname(entry).replace('frm/', '')] = script.default
+}
+
 for await (const entry of glob('src/**/*.json')) {
   const json = await readFile(entry, {
     encoding: 'utf8'
@@ -74,6 +83,7 @@ for await (const entry of glob('src/**/*.json')) {
       <body class="flex col">
         <main>${output}</main>
         ${templates[newPath] || ''}
+        ${scripts[newPath] || ''}
         <script type="module" src="/spec/${newPath}/${name}Register.js"></script>
       </body>
     </html>

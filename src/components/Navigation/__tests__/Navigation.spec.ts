@@ -110,6 +110,10 @@ test.describe('Navigation', () => {
       return navs.map(nav => nav.init)
     })
 
+    await page.waitForFunction(() => { // Wait for set
+      return window.testNavSet
+    })
+
     const navEvents = await page.evaluate(() => {
       return {
         reset: window.testNavReset,
@@ -177,9 +181,11 @@ test.describe('Navigation', () => {
   /* Test resize */
 
   test('should move some items into modal slots if 960px viewport', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 960,
-      height: 960
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -211,9 +217,11 @@ test.describe('Navigation', () => {
   })
 
   test('should move all items into modal slots if 640px viewport', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 640,
-      height: 640
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -304,9 +312,11 @@ test.describe('Navigation', () => {
       nav.slots.clear()
     })
 
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 640,
-      height: 640
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -329,9 +339,11 @@ test.describe('Navigation', () => {
   /* Test modal */
 
   test('should open and close modal', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 640,
-      height: 640
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -405,9 +417,11 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on escape', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 640,
-      height: 640
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -443,9 +457,11 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on resize', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 640,
-      height: 640
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
@@ -458,9 +474,11 @@ test.describe('Navigation', () => {
       return nav.getAttribute('show-modal') === 'items'
     })
 
+    const newViewport = page.viewportSize() as { width: number, height: number }
+
     await page.setViewportSize({
       width: 1280,
-      height: 1280
+      height: newViewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
