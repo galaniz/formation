@@ -1,10 +1,9 @@
 export default /* html */`
-  <frm-pagination-filter
-    id="pag-filter-partial"
-    loader="pag-loader"
-    error="pag-error"
+  <frm-pagination
+    id="pag-partial"
+    loader="pag-loader-none"
+    error="pag-error-none"
   >
-    <form novalidate></form>
     <ul data-pag-slot="entry">
       <li>
         <a href="/blog/post-1/">Post 1</a>
@@ -22,7 +21,7 @@ export default /* html */`
     <nav aria-label="Pagination">
       <ol data-pag-slot="nav">
         <li>
-          <span>&larr;</span>
+          <span aria-hidden="true">&larr;</span>
         </li>
         <li>
           <span>
@@ -47,5 +46,5 @@ export default /* html */`
         </li>
       </ol>
     </nav>
-  </frm-pagination-filter>
+  </frm-pagination>
 `

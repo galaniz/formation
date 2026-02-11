@@ -15,82 +15,80 @@ export default /* html */`
   >
     <div class="slider-body overflow-hidden relative">
       <div
-        class="slider-track overflow-x-auto overflow-y-hidden"
+        class="slider-track flex gap-4 gap-6-l overflow-x-auto overflow-y-hidden"
         data-slider-track
       >
-        <div class="flex gap-4 gap-6-l">
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-1"
+          role="tabpanel"
+          aria-label="Panel 1"
+        >
           <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-1"
-            role="tabpanel"
-            aria-label="Panel 1"
+            class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full"
+            data-slider-offset
           >
-            <div
-              class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full"
-              data-slider-offset
-            >
-              <a href="#">1</a>
-            </div>
+            <a href="#">1</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-2"
-            role="tabpanel"
-            aria-label="Panel 2"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-accent-hot-light w-full">
-              <a href="#">2</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-2"
+          role="tabpanel"
+          aria-label="Panel 2"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-accent-hot-light w-full">
+            <a href="#">2</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-3"
-            role="tabpanel"
-            aria-label="Panel 3"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-primary-light w-full">
-              <a href="#">3</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-3"
+          role="tabpanel"
+          aria-label="Panel 3"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-primary-light w-full">
+            <a href="#">3</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-4"
-            role="tabpanel"
-            aria-label="Panel 4"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-accent-cool-light w-full">
-              <a href="#">4</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-4"
+          role="tabpanel"
+          aria-label="Panel 4"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-accent-cool-light w-full">
+            <a href="#">4</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-5"
-            role="tabpanel"
-            aria-label="Panel 5"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-accent-warm-light w-full">
-              <a href="#">5</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-5"
+          role="tabpanel"
+          aria-label="Panel 5"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-accent-warm-light w-full">
+            <a href="#">5</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-6"
-            role="tabpanel"
-            aria-label="Panel 6"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full">
-              <a href="#">6</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-6"
+          role="tabpanel"
+          aria-label="Panel 6"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full">
+            <a href="#">6</a>
           </div>
-          <div
-            class="slider-panel flex shrink-0"
-            id="sld-loop-panel-7"
-            role="tabpanel"
-            aria-label="Panel 7"
-          >
-            <div class="flex align-center justify-center ar-16-9 bg-primary-light w-full">
-              <a href="#">7</a>
-            </div>
+        </div>
+        <div
+          class="slider-panel flex shrink-0"
+          id="sld-loop-panel-7"
+          role="tabpanel"
+          aria-label="Panel 7"
+        >
+          <div class="flex align-center justify-center ar-16-9 bg-primary-light w-full">
+            <a href="#">7</a>
           </div>
         </div>
       </div>
