@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Extendable TS web components and utilities, and SCSS generated utility classes",
   "main": "./lib/config/config.js",
   "packageManager": "pnpm@10.29.1",
