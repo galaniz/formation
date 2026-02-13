@@ -1,7 +1,7 @@
 {
   "name": "@alanizcreative/formation",
   "version": "5.1.0-beta.27",
-  "description": "A collection of front end web components and utilities",
+  "description": "Extendable TS web components and utilities, and SCSS generated utility classes",
   "main": "./lib/config/config.js",
   "packageManager": "pnpm@10.29.1",
   "type": "module",

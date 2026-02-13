@@ -111,12 +111,12 @@ class Form extends HTMLElement {
   #legends: Map<string, string> = new Map()
 
   /**
-   * Error list item IDs and messages.
+   * Error list item IDs, messages and focus ID.
    *
    * @private
-   * @type {Map<string, string>}
+   * @type {Map<string, string[]>}
    */
-  #errorList: Map<string, string> = new Map()
+  #errorList: Map<string, [string, string]> = new Map()
 
   /**
    * Error IDs following initial DOM order.
@@ -555,17 +555,17 @@ class Form extends HTMLElement {
 
     if (!valid) {
       this.#setErrorMessage(id, message, field, inputs, label, ariaInvalid)
-      this.#errorList.set(id, message)
+      this.#errorList.set(id, [message, inputs[0]?.id as string]) // Cast as input ID required in append
 
-      const newErrorList = new Map<string, string>()
+      const newErrorList = new Map<string, [string, string]>()
       this.#errorOrder.forEach(id => {
-        const message = this.#errorList.get(id)
+        const value = this.#errorList.get(id)
 
-        if (!message) {
+        if (!value) {
           return
         }
 
-        newErrorList.set(id, message)
+        newErrorList.set(id, value)
       })
 
       this.#errorList = newErrorList
@@ -698,7 +698,7 @@ class Form extends HTMLElement {
 
     if (!errorSummary) {
       if (display && focus) {
-        const id = this.#errorList.keys().next().value as string // Cast as error exists if display true 
+        const [, id] = this.#errorList.values().next().value as [string, string] // Cast as error exists if display true
 
         document.getElementById(id)?.focus()
       }
@@ -733,7 +733,7 @@ class Form extends HTMLElement {
 
     const frag = new window.DocumentFragment()
 
-    this.#errorList.forEach((message, id) => {
+    this.#errorList.forEach(([message], id) => {
       const item = document.createElement('li')
       const link = document.createElement('a')
 

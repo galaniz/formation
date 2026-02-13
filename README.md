@@ -1,6 +1,6 @@
 # Formation  
 
-Reusable TS web components and utilities, and SCSS generated utility classes.
+Extendable TS web components and utilities, and SCSS generated utility classes.
 
 ## Installation
 
