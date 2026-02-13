@@ -12,7 +12,7 @@ import type {
   PaginationEventDetail
 } from './PaginationTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
-import { isStringStrict } from '../../utils/string/string.js'
+import { isStringSafe, isStringStrict } from '../../utils/string/string.js'
 import { getItem } from '../../items/items.js'
 import { Pagination } from './Pagination.js'
 
@@ -191,6 +191,10 @@ class PaginationFilter extends Pagination {
    * @return {boolean} - True if values different from current params. 
    */
   #setGroup (group: PaginationFilterGroup, name: string): boolean {
+    if (!isStringSafe(name)) {
+      return false
+    }
+
     const { inputs, type } = group
     const values: string[] = []
     const paramValue = this.params[name]

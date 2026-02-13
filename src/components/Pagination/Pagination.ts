@@ -13,7 +13,7 @@ import type {
   PaginationEventDetail
 } from './PaginationTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
-import { isStringStrict } from '../../utils/string/string.js'
+import { isStringSafe, isStringStrict } from '../../utils/string/string.js'
 import { getItem, getTemplateItem, cloneItem } from '../../items/items.js'
 import { getInnerFocusableItems } from '../../items/itemsFocusability.js'
 import { setDisplay } from '../../utils/display/display.js'
@@ -295,6 +295,10 @@ class Pagination extends HTMLElement {
     let page = 1
 
     for (const [key, value] of currentParams.entries()) {
+      if (!isStringSafe(key)) {
+        continue
+      }
+
       if (key === 'page') {
         page = Number(value)
         continue
@@ -421,6 +425,10 @@ class Pagination extends HTMLElement {
     }
 
     for (const [key, value] of Object.entries(this.params)) {
+      if (!isStringSafe(key)) {
+        continue
+      }
+
       if (!value) {
         url.searchParams.delete(key)
       } else {

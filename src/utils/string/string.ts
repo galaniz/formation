@@ -22,9 +22,20 @@ const isStringStrict = (value: unknown): value is string => {
   return isString(value) && value !== ''
 }
 
+/**
+ * Check if value is string and not a prototype key.
+ *
+ * @param {*} value
+ * @return {boolean}
+ */
+const isStringSafe = (value: unknown): value is string => {
+  return isStringStrict(value) && value !== '__proto__' && value !== 'constructor' && value !== 'prototype'
+}
+
 /* Exports */
 
 export {
   isString,
-  isStringStrict
+  isStringStrict,
+  isStringSafe
 }

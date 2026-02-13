@@ -776,6 +776,21 @@ test.describe('Form', () => {
       })
 
       const form = document.querySelector('#frm') as Form
+
+      form.groups.set('__proto__', { // Test invalid name
+        field: document.createElement('div'),
+        inputs: [document.createElement('input')],
+        label: document.createElement('label'),
+        labelType: 'label',
+        required: false,
+        type: ['text'],
+        values: [],
+        valid: true,
+        emptyMessage: '',
+        invalidMessage: '',
+        id: '1234'
+      })
+
       return form.getValues()
     })
 
@@ -846,7 +861,7 @@ test.describe('Form', () => {
         type: 'hidden'
       },
       test: {
-        value: 'name-email-privacy-cookies-month-day-year-profile-notifications-hidden',
+        value: 'name-email-privacy-cookies-month-day-year-profile-notifications-hidden-__proto__',
         type: 'text'
       }
     })

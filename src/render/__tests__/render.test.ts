@@ -299,6 +299,23 @@ describe('renderElement()', () => {
     expect(result).toEqual(expectedResult)
   })
 
+  it('should return div without invalid props or attributes', () => {
+    const result = renderElement({
+      tag: 'div',
+      props: {
+        // @ts-expect-error - test invalid prop
+        __proto__: 'test'
+      },
+      attrs: {
+        prototype: 'test'
+      }
+    })
+
+    const expectedResult = document.createElement('div')
+
+    expect(result).toEqual(expectedResult)
+  })
+
   it('should return div with data attribute and inert property', () => {
     const result = renderElement({
       tag: 'div',

@@ -22,7 +22,7 @@ import type {
   FormGroups
 } from './FormTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
-import { isStringStrict } from '../../utils/string/string.js'
+import { isStringSafe, isStringStrict } from '../../utils/string/string.js'
 import { cloneItem, getItem, getTemplateItem } from '../../items/items.js'
 import { applyFilters } from '../../filters/filters.js'
 import { doActions } from '../../actions/actions.js'
@@ -907,6 +907,10 @@ class Form extends HTMLElement {
     const formValues: FormValues = {}
 
     this.groups.forEach((group, name) => {
+      if (!isStringSafe(name)) {
+        return
+      }
+
       const { values, type } = group
       const valuesCount = values.length
       const legend = this.#legends.get(name)

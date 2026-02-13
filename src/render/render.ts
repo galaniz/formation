@@ -13,7 +13,7 @@ import type {
 } from './renderTypes.js'
 import { isObjectStrict } from '../utils/object/object.js'
 import { isArray, isArrayStrict } from '../utils/array/array.js'
-import { isString, isStringStrict } from '../utils/string/string.js'
+import { isString, isStringSafe, isStringStrict } from '../utils/string/string.js'
 import { isFunction } from '../utils/function/function.js'
 import { isHtmlElement } from '../utils/html/html.js'
 import { getObjectKeys } from '../utils/object/objectKeys.js'
@@ -43,6 +43,10 @@ const renderElement = <T extends HTMLElement>(args: RenderElementArgs): T | null
 
   if (isObjectStrict(props)) {
     getObjectKeys(props).forEach(prop => {
+      if (!isStringSafe(prop)) {
+        return
+      }
+
       // @ts-expect-error - flexible property setting
       el[prop] = props[prop]
     })
@@ -52,7 +56,7 @@ const renderElement = <T extends HTMLElement>(args: RenderElementArgs): T | null
     Object.keys(attrs).forEach(attr => {
       const value = attrs[attr]
 
-      if (!isString(value)) {
+      if (!isStringSafe(attr) || !isString(value)) {
         return
       }
 

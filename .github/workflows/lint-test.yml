@@ -1,19 +1,15 @@
-name: Lint and Test
+name: Lint Test
 
 on:
-  push:
-    branches:
-      - beta
-      - main
   pull_request:
     branches:
-      - beta
       - main
 
 jobs:
-  lint-and-test:
+  lint-test:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       # Checkout the repository
       - name: Checkout code

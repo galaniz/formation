@@ -8,7 +8,7 @@ import type { Items, ItemsRes, Items0, Item } from './itemsTypes.js'
 import { getObjectKeys } from '../utils/object/objectKeys.js'
 import { isObject, isObjectStrict } from '../utils/object/object.js'
 import { isArray, isArrayStrict } from '../utils/array/array.js'
-import { isStringStrict } from '../utils/string/string.js'
+import { isStringSafe, isStringStrict } from '../utils/string/string.js'
 import { isHtmlElement } from '../utils/html/html.js'
 
 /**
@@ -101,6 +101,10 @@ const getItems = <T>(
     const newItems: ItemsRes = {}
 
     getObjectKeys(items).forEach(prop => {
+      if (!isStringSafe(prop)) {
+        return
+      }
+
       const item = items[prop]
 
       if (prop === 'context') {

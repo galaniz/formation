@@ -193,6 +193,13 @@ describe('getItems()', () => {
     expect(result).toEqual(expectedResult)
   })
 
+  it('should return empty object if invalid property', () => {
+    const result = getItems({ __proto__: 'nav' })
+    const expectedResult = {}
+
+    expect(result).toEqual(expectedResult)
+  })
+
   it('should return object of null element and empty array', () => {
     const { root } = testHtml()
     const result = getItems(

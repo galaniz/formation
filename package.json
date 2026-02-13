@@ -1,6 +1,6 @@
 {
   "name": "@alanizcreative/formation",
-  "version": "5.1.0-beta.27",
+  "version": "0.0.0",
   "description": "Extendable TS web components and utilities, and SCSS generated utility classes",
   "main": "./lib/config/config.js",
   "packageManager": "pnpm@10.29.1",
@@ -21,7 +21,6 @@
     "lint": "pnpm lint:ts && pnpm lint:scss",
     "minify": "find lib -name \"*.js\" -exec terser {} -o {} --compress \\;",
     "release": "release-it",
-    "release:beta": "release-it --preRelease=beta",
     "test:utils": "vitest --run --reporter verbose --environment happy-dom --coverage",
     "test:spec": "pnpm build && pnpm build:spec && npx playwright test",
     "test": "pnpm test:utils && pnpm test:spec",
@@ -58,7 +57,9 @@
   "release-it": {
     "git": {
       "requireCommits": true,
-      "commitMessage": "chore: release ${version} [ci skip]"
+      "commitMessage": "chore: release ${version} [ci skip]",
+      "tag": true,
+      "push": true
     },
     "github": {
       "release": true
@@ -69,7 +70,8 @@
     }
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "browserslist": [
     "> 0.5%"

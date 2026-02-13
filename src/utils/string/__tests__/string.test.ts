@@ -5,7 +5,7 @@
 /* Imports */
 
 import { it, expect, describe } from 'vitest'
-import { isString, isStringStrict } from '../string.js'
+import { isString, isStringStrict, isStringSafe } from '../string.js'
 
 /* Test isString */
 
@@ -132,5 +132,41 @@ describe('isStringStrict()', () => {
     const expectedResult = false
 
     expect(result).toBe(expectedResult)
+  })
+})
+
+/* Test isStringSafe */
+
+describe('isStringSafe()', () => {
+  it('should return false if value proto key', () => {
+    const protoVal = isStringSafe('__proto__')
+    const prototypeVal = isStringSafe('prototype')
+    const constructorVal = isStringSafe('constructor')
+    const expectedResult = false
+
+    expect(protoVal).toBe(expectedResult)
+    expect(prototypeVal).toBe(expectedResult)
+    expect(constructorVal).toBe(expectedResult)
+  })
+
+  it('should return false if value is empty string', () => {
+    const value = isStringSafe('')
+    const expectedResult = false
+
+    expect(value).toBe(expectedResult)
+  })
+
+  it('should return false if value is a null', () => {
+    const value = isStringSafe(null)
+    const expectedResult = false
+
+    expect(value).toBe(expectedResult)
+  })
+
+  it('should return true if value is a random string', () => {
+    const value = isStringSafe('abc123')
+    const expectedResult = true
+
+    expect(value).toBe(expectedResult)
   })
 })
