@@ -1,0 +1,39 @@
+/**
+ * Components - Navigation Icon Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/calc/calc";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
+
+/* Styles */
+
+$y: calc.calc-rem(map.get(con.$nav-icon, "margin") + map.get(con.$nav-icon, "line-width"));
+
+.#{$component-fix}nav-icon {
+  --#{con.$n}easing: ease;
+
+  width: calc.calc-rem(map.get(con.$nav-icon, "width"));
+}
+
+.#{$component-fix}nav-icon-top,
+.#{$component-fix}nav-icon-middle,
+.#{$component-fix}nav-icon-bottom {
+  height: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
+  margin: calc.calc-rem(map.get(con.$nav-icon, "margin")) auto;
+}
+
+.#{$component-fix}nav-icon-top {
+  margin-top: 0;
+}
+
+.#{$component-fix}nav-icon-bottom {
+  margin-bottom: 0;
+}

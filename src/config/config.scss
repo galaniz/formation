@@ -1,0 +1,448 @@
+/**
+ * Config - Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../utils/map/map" as maps;
+
+/* Namespace */
+
+$namespace: "" !default;
+$n: "";
+
+@if $namespace != "" {
+  $n: "#{$namespace}-";
+}
+
+/* Root */
+
+$root: (
+  "colors",
+  "fonts",
+  "font-sizes",
+  "font-weights",
+  "letter-spacing",
+  "line-heights",
+  "sizes",
+  "gap",
+  "columns",
+  "containers",
+  "container-padding",
+  "transitions",
+  "outline",
+  "borders",
+  "border-radius",
+) !default;
+
+/* Rem context */
+
+$context: 16px !default;
+
+/* Default class names */
+
+$names-default: (
+  "aspect-ratio": "aspect-ratio",
+  "gap": "gap",
+  "gap-margin": "gap-margin",
+  "width": "width",
+  "max-width": "max-width",
+  "height": "height",
+  "min-height": "min-height",
+  "padding": "padding",
+  "padding-top": "padding-top",
+  "padding-bottom": "padding-bottom",
+  "padding-y": "padding-y",
+  "padding-left": "padding-left",
+  "padding-right": "padding-right",
+  "padding-x": "padding-x",
+  "margin": "margin",
+  "margin-top": "margin-top",
+  "margin-bottom": "margin-bottom",
+  "margin-y": "margin-y",
+  "margin-left": "margin-left",
+  "margin-right": "margin-right",
+  "margin-x": "margin-x",
+  "object": "object",
+  "overflow": "overflow",
+  "overscroll": "overscroll",
+  "column": "column",
+  "columns": "columns",
+  "flex": "flex",
+  "justify": "justify",
+  "align": "align",
+  "container": "container",
+  "transition": "transition",
+  "visually": "visually",
+  "z-index": "z-index",
+  "border-radius": "radius",
+  "border-width": "width",
+  "font": "font",
+  "font-weight": "weight",
+  "line-height": "leading",
+  "letter-spacing": "tracking",
+  "text-align": "text",
+) !default;
+
+/* Terse class names */
+
+$names-terse: (
+  "aspect-ratio": "ar",
+  "gap": "gap",
+  "gap-margin": "gm",
+  "width": "w",
+  "max-width": "mw",
+  "height": "h",
+  "min-height": "mh",
+  "padding": "p",
+  "padding-top": "pt",
+  "padding-bottom": "pb",
+  "padding-y": "py",
+  "padding-left": "pl",
+  "padding-right": "pr",
+  "padding-x": "px",
+  "margin": "m",
+  "margin-top": "mt",
+  "margin-bottom": "mb",
+  "margin-y": "my",
+  "margin-left": "ml",
+  "margin-right": "mr",
+  "margin-x": "mx",
+  "object": "object",
+  "overflow": "overflow",
+  "overscroll": "overscroll",
+  "column": "col",
+  "columns": "cols",
+  "flex": "",
+  "justify": "justify",
+  "align": "align",
+  "container": "container",
+  "transition": "trans",
+  "visually": "vis",
+  "z-index": "z",
+  "border-radius": "radius",
+  "border-width": "stroke",
+  "font": "font",
+  "font-weight": "wt",
+  "line-height": "lead",
+  "letter-spacing": "track",
+  "text-align": "text",
+) !default;
+
+/* Terse class name opt in */
+
+$terse: true !default;
+
+/* Prefixes */
+
+$prefixes: (
+  "a11y": "a",
+  "background": "bg",
+  "border": "b",
+  "component": "",
+  "effect": "e",
+  "layout": "",
+  "object": "",
+  "text": "",
+  "color": "",
+) !default;
+
+/* Colors  */
+
+$colors-type: "hex" !default;
+$colors: (
+  "primary": (
+    "base": #888,
+    "light": #aaa,
+    "dark": #666,
+  ),
+  "foreground": (
+    "base": #222,
+    "light": #444,
+    "dark": #000,
+  ),
+  "background": (
+    "base": #f8f8f8,
+    "light": #fff,
+    "dark": #eee,
+  ),
+) !default;
+
+/* Flatten colors to one level map */
+
+$colors-map: maps.map-flatten($colors, (), "");
+
+/* Text colors */
+
+$text-colors: () !default;
+
+/* Background colors */
+
+$background-colors: () !default;
+
+/* Fonts  */
+
+$fonts: (
+  "primary": (
+    helvetica,
+    arial,
+    sans-serif,
+  ),
+) !default;
+
+/* Font weights */
+
+$font-weights: (
+  "normal": 400,
+) !default;
+
+/* Font sizes and breakpoints */
+
+$font-sizes: () !default;
+$font-breakpoints: () !default;
+
+/* Line heights */
+
+$line-heights: () !default;
+
+/* Letter spacing */
+
+$letter-spacing: () !default;
+
+/* Nav */
+
+$nav-icon: (
+  "width": 40px,
+  "line-width": 2px,
+  "margin": 8px,
+) !default;
+
+/* Breakpoints */
+
+$breakpoints: (
+  "0": 0px,
+  "xs": 300px,
+  "s": 600px,
+  "m": 900px,
+  "l": 1200px,
+) !default;
+
+/* Batch breakpoints */
+
+$breakpoints-batch: ();
+
+@each $b, $breakpoint in $breakpoints {
+  @if $b != "0" {
+    $breakpoints-batch: map.merge($breakpoints-batch, ( #{$b}: () ));
+  }
+}
+
+/* Containers and padding */
+
+$containers: ( "default": 1300px ) !default;
+$container-padding: 20px !default;
+
+/* Append containers to breakpoints */
+
+@each $c, $width in $containers {
+  $suffix: "";
+
+  @if $c != "default" {
+    $suffix: "-#{$c}";
+  }
+
+  $breakpoints: map.merge($breakpoints, ( "container#{$suffix}": $width ));
+  $breakpoints: map.merge($breakpoints, ( "container#{$suffix}-content": $width - ($container-padding * 2) ));
+}
+
+/* Sizes */
+
+$sizes: (
+  "s": 8px,
+  "m": 16px,
+  "l": 24px,
+) !default;
+
+/* Columns */
+
+$columns: 0 !default;
+$columns-grid: 0 !default;
+$columns-type: "width";
+$columns-breakpoints: () !default;
+
+/* Width percentages */
+
+$width-percentages: () !default;
+$width-percentage-breakpoints: () !default;
+
+/* Widths */
+
+$widths: () !default;
+$width-breakpoints: () !default;
+
+/* Max widths */
+
+$max-widths: () !default;
+$max-width-breakpoints: () !default;
+
+/* Heights */
+
+$heights: () !default;
+$height-breakpoints: () !default;
+
+/* Padding */
+
+$padding-top: () !default;
+$padding-bottom: () !default;
+$padding-vertical-breakpoints: () !default;
+$padding-left: () !default;
+$padding-right: () !default;
+$padding-horizontal-breakpoints: () !default;
+
+/* Margin */
+
+$margin-top: () !default;
+$margin-bottom: () !default;
+$margin-bottom-all: () !default;
+$margin-vertical-breakpoints: () !default;
+$margin-left: () !default;
+$margin-right: () !default;
+$margin-horizontal-breakpoints: () !default;
+
+/* Gap */
+
+$gaps: () !default;
+$gap-breakpoints: () !default;
+
+/* Flex */
+
+$flex-row-breakpoints: () !default;
+$flex-column-breakpoints: () !default;
+$flex-wrap-breakpoints: () !default;
+
+/* Order */
+
+$order-breakpoints: () !default;
+
+/* Justify */
+
+$justify-breakpoints: () !default;
+
+/* Align */
+
+$align-breakpoints: () !default;
+
+/* Display */
+
+$block-breakpoints: () !default;
+$none-breakpoints: () !default;
+
+/* Aspect ratios */
+
+$aspect-ratios: () !default; // ( "1-1": list.slash(1, 1) )
+$aspect-ratio-padding: () !default; // ( "1-1": 100% )
+
+/* Transitions */
+
+$transitions: () !default;
+$transitions: maps.map-recursive-merge(
+  (
+    "default": (
+      "prop": (color, background, border-color, opacity, transform),
+      "duration": 300ms,
+      "easing": "ease-in-out",
+      "delay": 0ms,
+    ),
+  ),
+  $transitions
+);
+
+/* Default transition */
+
+$default-prop: map.get($transitions, "default", "prop");
+$default-duration: map.get($transitions, "default", "duration");
+$default-easing: map.get($transitions, "default", "easing");
+$default-delay: map.get($transitions, "default", "delay");
+
+/* Collapsible transition */
+
+$collapsible-prop: visibility, height;
+$collapsible-duration: 0ms, #{$default-duration};
+$collapsible-delay: #{$default-duration}, 0ms;
+$collapsible-delay-expanded: 0ms, 0ms;
+
+/* Loader transition */
+
+$loader-prop: visibility, opacity;
+$loader-duration: 0ms, #{$default-duration};
+$loader-delay: #{$default-duration}, 0ms;
+$loader-delay-show: 0ms, 0ms;
+
+/* Modal transition */
+
+$modal-prop: visibility;
+$modal-duration: 0ms;
+$modal-delay: #{$default-duration};
+$modal-delay-open: 0ms;
+
+/* Z index */
+
+$z-index: () !default;
+$z-index: maps.map-recursive-merge(
+  (
+    "skip-link": 100,
+    "modal": 90,
+    "header": 85,
+    "loader": 80,
+  ),
+  $z-index
+);
+
+/* Outline */
+
+$outline: () !default;
+$outline: maps.map-recursive-merge(
+  (
+    "widths": (
+      "default": 4px
+    ),
+    "colors": (
+      "default": currentcolor
+    ),
+    "offsets": (
+      "default": 4px,
+      "snug": 0px,
+      "tight": -4px
+    ),
+    "none": false,
+  ),
+  $outline
+);
+
+/* Borders */
+
+$borders: () !default;
+$borders: maps.map-recursive-merge(
+  (
+    "sides": (
+      "all",
+      "top",
+      "left",
+      "right",
+      "bottom",
+    ),
+    "colors": (
+      "default": currentcolor,
+    ),
+    "widths": (
+      "default": 1px,
+    ),
+  ),
+  $borders
+);
+
+/* Border radius */
+
+$border-radius: () !default;
+$border-radius-breakpoints: () !default;

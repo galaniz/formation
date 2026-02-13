@@ -1,0 +1,30 @@
+/**
+ * Base - Fonts Styles
+ */
+
+@font-face {
+  font-family: CyGrotesk;
+  src:
+    url("/static/fonts/cy-grotesk-bold.woff2") format("woff2"),
+    url("/static/fonts/cy-grotesk-bold.woff") format("woff");
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    url("/static/fonts/neue-haas-grotesk-regular.woff2") format("woff2"),
+    url("/static/fonts/neue-haas-grotesk-regular.woff") format("woff");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    url("/static/fonts/neue-haas-grotesk-bold.woff2") format("woff2"),
+    url("/static/fonts/neue-haas-grotesk-bold.woff") format("woff");
+  font-weight: 700;
+  font-display: swap;
+}

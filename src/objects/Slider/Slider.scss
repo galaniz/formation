@@ -1,0 +1,146 @@
+/**
+ * Objects - Slider Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoint/breakpoint";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
+
+/* Containers */
+
+.#{$object-fix}slider {
+  --sld-snap: x mandatory;
+  --sld-items: var(--sld-items-init, 1);
+  --sld-items-s: 1;
+  --sld-items-m: 1;
+  --sld-items-l: 1;
+  --sld-item-width: 100% / var(--sld-items);
+  --sld-padding: var(--#{con.$n}container-padding);
+  --sld-track-padding: 0 0 0 var(--sld-padding);
+  --sld-track-scroll: 0 0 0 var(--sld-padding); 
+  --sld-gap: var(--sld-gap-init, var(--#{con.$n}4));
+  --sld-gap-l: var(--#{con.$n}6);
+  --sld-spacer: var(--sld-padding);
+  --sld-nav-fill: currentcolor;
+  --sld-tab-fill: currentcolor;
+
+  @include breakpoint.breakpoint-min("s") {
+    --sld-items: var(--sld-items-s);
+  }
+
+  @include breakpoint.breakpoint-min("m") {
+    --sld-items: var(--sld-items-m);
+  }
+
+  @include breakpoint.breakpoint-min("l") {
+    --sld-items: var(--sld-items-l);
+    --sld-gap: var(--sld-gap-l);
+  }
+}
+
+.#{$object-fix}slider-contain,
+.#{$object-fix}slider-contain-full {
+  @include breakpoint.breakpoint-min("container") {
+    --sld-nav-display: block;
+  }
+}
+
+.#{$object-fix}slider-single {
+  --sld-width:
+    var(--sld-item-width) - ((var(--sld-padding) + (var(--sld-gap) * var(--sld-items))) / var(--sld-items));
+}
+
+.#{$object-fix}slider-group {
+  --sld-width: 100% - (var(--sld-padding) + var(--sld-gap));
+}
+
+.#{$object-fix}slider-contain {
+  @include breakpoint.breakpoint-min("container-content") {
+    --sld-spacer-display: none;
+    --sld-track-padding: 0;
+    --sld-track-scroll: 0;
+
+    max-width: var(--#{con.$n}container);
+    padding-left: var(--sld-padding);
+    padding-right: var(--sld-padding);
+
+    &.#{$object-fix}slider-single {
+      --sld-width: var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items));
+    }
+
+    &.#{$object-fix}slider-group {
+      --sld-width: 100%;
+    }
+  }
+}
+
+.#{$object-fix}slider-contain-full {
+  @include breakpoint.breakpoint-min("container") {
+    --sld-container: var(--#{con.$n}container-content);
+    --sld-item-width: var(--sld-container) / var(--sld-items);
+    --sld-track-scroll: 0 0 0 calc(50vw - (var(--sld-container) / 2));
+    --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / -2);
+    --sld-track-padding: 0;
+
+    &.#{$object-fix}slider-single {
+      --sld-width: var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items));
+    }
+  }
+}
+
+.#{$object-fix}slider-track {
+  padding: var(--sld-track-padding);
+  scroll-padding: var(--sld-track-scroll);
+  scroll-snap-type: var(--sld-snap);
+  margin-left: var(--sld-track-x, 0);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Slides */
+
+.#{$object-fix}slider-panel {
+  scroll-snap-align: start;
+  width: calc(var(--sld-width));
+}
+
+.#{$object-fix}slider-spacer {
+  width: var(--sld-spacer);
+  display: var(--sld-spacer-display);
+}
+
+.#{$object-fix}slider-item {
+  width: calc(var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items)));
+}
+
+/* Navigation */
+
+.#{$object-fix}slider-tab {
+  &[aria-selected="true"] {
+    --sld-dot-bg: var(--sld-tab-fill);
+  }
+}
+
+.#{$object-fix}slider-dot {
+  background: var(--sld-dot-bg, transparent);
+}
+
+.#{$object-fix}slider-prev,
+.#{$object-fix}slider-next {
+  top: 50%;
+  display: var(--sld-nav-display, none);
+  background: var(--sld-nav-fill);
+}
+
+.#{$object-fix}slider-prev {
+  transform: translate(100%, -50%);
+}
+
+.#{$object-fix}slider-next {
+  transform: translate(-100%, -50%);
+}

@@ -1,0 +1,25 @@
+/**
+ * Effects - Reveal Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
+
+/* Styles */
+
+.#{$object-fix}reveal {
+  --#{con.$n}duration: 200ms;
+  --rv-op: 0;
+
+  opacity: var(--rv-op);
+
+  &[data-reveal="loaded"] {
+    --rv-op: 1;
+  }
+}

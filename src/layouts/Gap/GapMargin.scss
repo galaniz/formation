@@ -1,0 +1,42 @@
+/**
+ * Layouts - Gap Margin Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$gap-margin-fix: fix.get-class-fix("gap-margin");
+
+/* Styles */
+
+%l-gap-margin {
+  margin: calc(var(--#{con.$n}gap-margin) * -1) 0 0 calc(var(--#{con.$n}gap-margin) * -1);
+
+  & > * {
+    padding: var(--#{con.$n}gap-margin) 0 0 var(--#{con.$n}gap-margin);
+  }
+}
+
+@each $g in con.$gaps {
+  .#{$layout-fix}#{$gap-margin-fix}-#{$g} {
+    --#{con.$n}gap-margin: var(--#{con.$n}#{$g});
+
+    @extend %l-gap-margin;
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @each $g in con.$gaps {
+    .#{$layout-fix}#{$gap-margin-fix}-#{$g}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}gap-margin: var(--#{con.$n}#{$g})
+      ));
+    }
+  }
+}

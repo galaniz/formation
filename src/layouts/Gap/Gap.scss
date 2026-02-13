@@ -1,0 +1,48 @@
+/**
+ * Layouts - Gap Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$gap-fix: fix.get-class-fix("gap");
+
+/* Styles */
+
+%l-gap {
+  gap: var(--#{con.$n}gap);
+}
+
+.#{$layout-fix}#{$gap-fix}-0 {
+  --#{con.$n}gap: 0px;
+
+  @extend %l-gap;
+}
+
+.#{$layout-fix}#{$gap-fix} {
+  @extend %l-gap;
+}
+
+@each $g in con.$gaps {
+  .#{$layout-fix}#{$gap-fix}-#{$g} {
+    --#{con.$n}gap: var(--#{con.$n}#{$g});
+
+    @extend %l-gap;
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @each $g in con.$gaps {
+    .#{$layout-fix}#{$gap-fix}-#{$g}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}gap: var(--#{con.$n}#{$g})
+      ));
+    }
+  }
+}

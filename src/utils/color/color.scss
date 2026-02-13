@@ -1,0 +1,18 @@
+/**
+ * Utils - Color Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+
+/**
+ * Color value from name in $colors-map.
+ *
+ * @param {string} [$color="background-light"]
+ * @return {string}
+ */
+@function get-color($color: "background-light") {
+  @return map.get(con.$colors-map, $color);
+}

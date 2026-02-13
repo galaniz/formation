@@ -1,0 +1,28 @@
+/**
+ * Layouts - Aspect Ratio Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$aspect-ratio-fix: fix.get-class-fix("aspect-ratio");
+
+/* Styles */
+
+%l-aspect-ratio {
+  aspect-ratio: var(--#{con.$n}aspect-ratio);
+}
+
+@each $p, $v in con.$aspect-ratios {
+  .#{$layout-fix}#{$aspect-ratio-fix}-#{$p} {
+    --#{con.$n}aspect-ratio: #{$v};
+
+    @extend %l-aspect-ratio;
+  }
+}

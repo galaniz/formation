@@ -1,0 +1,32 @@
+/**
+ * Layouts - Gap Fallback Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$gap-fix: fix.get-class-fix("gap");
+
+/* Styles */
+
+@each $g in con.$gaps {
+  .no-flex-gap .#{$layout-fix}#{$gap-fix}-#{$g} > * {
+    margin: calc(var(--#{con.$n}gap) / 4);
+  }
+}
+
+@each $b in con.$gap-breakpoints {
+  @each $g in con.$gaps {
+    .no-flex-gap .#{$layout-fix}#{$gap-fix}-#{$g}-#{$b} > * {
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin: calc(var(--#{con.$n}gap) / 4),
+      ));
+    }
+  }
+}

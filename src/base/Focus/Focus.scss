@@ -1,0 +1,53 @@
+/**
+ * Base - Focus Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/calc/calc";
+
+/* Global */
+
+:focus {
+  outline: var(--#{con.$n}outline-width) solid var(--#{con.$n}outline-color);
+  outline-offset: var(--#{con.$n}outline-offset);
+}
+
+@supports selector(:focus-visible) {
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible,
+  button:focus-visible,
+  [type="button"]:focus-visible,
+  [type="reset"]:focus-visible,
+  [type="submit"]:focus-visible {
+    outline: var(--#{con.$n}outline-width) solid var(--#{con.$n}outline-color);
+    outline-offset: var(--#{con.$n}outline-offset);
+  }
+}
+
+/* Offsets */
+
+$outline-offsets: map.get(con.$outline, "offsets");
+
+@each $o, $v in $outline-offsets {
+  @if $o != "default" {
+    .outline-#{$o} {
+      --#{con.$n}outline-offset: #{calc.calc-rem($v)};
+    }
+  }
+}
+
+/* None */
+
+$outline-none: map.get(con.$outline, "none");
+
+@if $outline-none != false {
+  .outline-none:focus {
+    outline: none;
+  }
+}

@@ -1,0 +1,48 @@
+/**
+ * Layouts - Height Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$height-fix: fix.get-class-fix("height");
+$min-height-fix: fix.get-class-fix("min-height");
+
+/* Relative units */
+
+.#{$layout-fix}#{$height-fix}-full {
+  height: 100%;
+}
+
+.#{$layout-fix}#{$height-fix}-full-vh {
+  height: 100vh;
+}
+
+.#{$layout-fix}#{$min-height-fix}-full-vh {
+  min-height: 100vh; // Fallback for old browsers
+  min-height: 100dvh;
+}
+
+/* Heights */
+
+@each $h in con.$heights {
+  .#{$layout-fix}#{$height-fix}-#{$h} {
+    height: var(--#{con.$n}#{$h});
+  }
+}
+
+@each $b in con.$height-breakpoints {
+  @each $h in con.$heights {
+    .#{$layout-fix}#{$height-fix}-#{$h}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        height: var(--#{con.$n}#{$h})
+      ));
+    }
+  }
+}

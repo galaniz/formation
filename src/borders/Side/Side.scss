@@ -1,0 +1,33 @@
+/**
+ * Borders - Side Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$border-fix: fix.get-class-prefix("border");
+
+/* Styles */
+
+$sides: map.get(con.$borders, "sides");
+
+@each $s in $sides {
+  .#{$border-fix}#{$s} {
+    @if $s == "all" {
+      border: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
+    } @else if $s == "left" {
+      border-left: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
+    } @else if $s == "right" {
+      border-right: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
+    } @else if $s == "top" {
+      border-top: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
+    } @else if $s == "bottom" {
+      border-bottom: var(--#{con.$n}border-width) solid var(--#{con.$n}border-color);
+    }
+  }
+}

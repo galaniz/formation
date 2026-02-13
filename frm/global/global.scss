@@ -1,0 +1,45 @@
+/**
+ * Formation - Global
+ */
+
+/* Config */
+
+@forward "../config/config";
+
+/* Base */
+
+@use "../base/base";
+
+/* A11y */
+
+@use "../../lib/a11y/a11y";
+
+/* Layouts */
+
+@use "../../lib/layouts/layouts";
+
+/* Text */
+
+@use "../text/text";
+
+/* Backgrounds */
+
+@use "../../lib/backgrounds/backgrounds";
+
+/* Borders */
+
+@use "../../lib/borders/borders";
+
+/* Effects */
+
+@use "../../lib/effects/Transition/Transition";
+
+/* Utils */
+
+@use "../../lib/utils/scroll/scroll";
+
+/* Breakpoints */
+
+@use "../../lib/utils/utils" as util;
+
+@include util.breakpoint-batch;

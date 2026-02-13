@@ -1,0 +1,33 @@
+/**
+ * Objects - Loader Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
+
+/* Styles */
+
+.#{$object-fix}loader {
+  --#{con.$n}prop: #{con.$loader-prop};
+  --#{con.$n}duration: #{con.$loader-duration};
+  --#{con.$n}delay: #{con.$loader-delay};
+
+  background-color: var(--ld-bg, inherit);
+  color: var(--ld-color, inherit);
+  z-index: #{map.get(con.$z-index, "loader")};
+  visibility: var(--ld-vis, hidden);
+  opacity: var(--ld-op, 0);
+
+  &[data-loader="show"] {
+    --#{con.$n}delay: #{con.$loader-delay-show};
+    --ld-vis: visible;
+    --ld-op: 1;
+  }
+}

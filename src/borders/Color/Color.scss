@@ -1,0 +1,25 @@
+/**
+ * Borders - Color Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$border-fix: fix.get-class-prefix("border");
+
+/* Styles */
+
+$colors: map.get(con.$borders, "colors");
+
+@each $c, $v in $colors {
+  @if $c != "default" {
+    .#{$border-fix}#{$c} {
+      --#{con.$n}border-color: #{$v};
+    }
+  }
+}

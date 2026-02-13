@@ -1,0 +1,93 @@
+/**
+ * Layouts - Column Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$column-fix: fix.get-class-fix("column");
+$columns-fix: fix.get-class-fix("columns");
+
+/* Width type */
+
+%l-width-column {
+  --#{con.$n}col-width:
+    ((var(--#{con.$n}column) / var(--#{con.$n}columns)) * 100%) - var(--#{con.$n}gap) + (var(--#{con.$n}gap) / (var(--#{con.$n}columns) / var(--#{con.$n}column)));
+
+  width: calc(var(--#{con.$n}col-width));
+}
+
+@if con.$columns-type == "width" {
+  @for $i from 1 through con.$columns {
+    .#{$layout-fix}#{$column-fix}-#{$i} {
+      --#{con.$n}column: #{$i};
+
+      @extend %l-width-column;
+    }
+  }
+}
+
+/* Grid type */
+
+%l-grid-column {
+  grid-column: var(--#{con.$n}column-start, auto) / span var(--#{con.$n}column);
+}
+
+%l-grid-columns {
+  grid-template-columns: repeat(var(--#{con.$n}columns), minmax(var(--#{con.$n}columns-min, 0), 1fr));
+}
+
+@if con.$columns-type == "grid" {
+  .#{$layout-fix}#{$columns-fix} {
+    --#{con.$n}columns: #{con.$columns-grid};
+
+    @extend %l-grid-columns;
+  }
+
+  @each $b in con.$columns-breakpoints {
+    .#{$layout-fix}#{$columns-fix}-#{b} {
+      --#{con.$n}columns: 1;
+
+      @extend %l-grid-columns;
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}columns: #{con.$columns-grid}
+      ));
+    }
+  }
+
+  @for $i from 1 through con.$columns {
+    .#{$layout-fix}#{$column-fix}-start-#{$i} {
+      --#{con.$n}column-start: #{$i + 1};
+    }
+
+    .#{$layout-fix}#{$column-fix}-#{$i} {
+      --#{con.$n}column: #{$i};
+
+      @extend %l-grid-column;
+    }
+  }
+}
+
+/* Breakpoints */
+
+@each $b in con.$columns-breakpoints {
+  @for $i from 1 through con.$columns {
+    @if con.$columns-type == "grid" {
+      .#{$layout-fix}#{$column-fix}-start-#{$i}-#{$b} {
+        --#{con.$n}column-start: #{$i + 1};
+      }
+    }
+
+    .#{$layout-fix}#{$column-fix}-#{$i}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        --#{con.$n}column: #{$i}
+      ));
+    }
+  }
+}

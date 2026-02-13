@@ -1,0 +1,116 @@
+/**
+ * Base - Root Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:meta";
+@use "../../config/config" as con;
+@use "../../utils/calc/calc";
+@use "../../utils/fluid/fluid";
+
+/**
+ * Root variables.
+ *
+ * @return {void}
+ */
+@mixin set-root() {
+  $props: ();
+
+  @each $r in con.$root {
+    @if $r == "colors" {
+      @each $c, $v in con.$colors-map {
+        @if con.$colors-type == "rgb" {
+          --#{con.$n}#{$c}-rgb: #{$v};
+          --#{con.$n}#{$c}: #{rgb(var(--#{con.$n}#{$c}-rgb))};
+        } @else if con.$colors-type == "hsl" {
+          --#{con.$n}#{$c}-hsl: #{$v};
+          --#{con.$n}#{$c}: #{hsl(var(--#{con.$n}#{$c}-hsl))};
+        } @else if con.$colors-type == "rgba" {
+          --#{con.$n}#{$c}-rgb: #{$v};
+          --#{con.$n}#{$c}: #{rgba(var(--#{con.$n}#{$c}-rgb), 1)};
+        } @else if con.$colors-type == "hsla" {
+          --#{con.$n}#{$c}-hsl: #{$v};
+          --#{con.$n}#{$c}: #{hsla(var(--#{con.$n}#{$c}-hsl), 1)};
+        } @else {
+          --#{con.$n}#{$c}: #{$v};
+        }
+      }
+    } @else if $r == "fonts" {
+      @each $f, $v in con.$fonts {
+        --#{con.$n}font-#{$f}: #{$v};
+      }
+    } @else if $r == "font-sizes" {
+      @each $f, $v in con.$font-sizes {
+        $font-size: $v;
+
+        @if meta.type-of($v) == "number" {
+          $font-size: #{calc.calc-rem($v)};
+        }
+
+        @if meta.type-of($v) == "list" {
+          $font-size: fluid.fluid-size-clamp($v, con.$font-breakpoints, "font-size");
+        }
+
+        --#{con.$n}font-#{$f}: #{$font-size};
+      }
+    } @else if $r == "font-weights" {
+      @each $f, $v in con.$font-weights {
+        --#{con.$n}font-weight-#{$f}: #{$v};
+      }
+    } @else if $r == "letter-spacing" {
+      @each $l, $v in con.$letter-spacing {
+        --#{con.$n}letter-spacing-#{$l}: #{$v};
+      }
+    } @else if $r == "line-heights" {
+      @each $l, $v in con.$line-heights {
+        --#{con.$n}line-height-#{$l}: #{$v};
+      }
+    } @else if $r == "sizes" {
+      @each $s, $v in con.$sizes {
+        --#{con.$n}#{$s}: #{calc.calc-rem($v)};
+      }
+    } @else if $r == "gap" {
+      --#{con.$n}gap: 0px;
+    } @else if $r == "columns" {
+      --#{con.$n}columns: #{con.$columns};
+    } @else if $r == "containers" {
+      @each $c, $v in con.$containers {
+        $suffix: "";
+
+        @if $c != "default" {
+          $suffix: "-#{$c}";
+        }
+
+        --#{con.$n}container#{$suffix}: #{calc.calc-rem($v)};
+        --#{con.$n}container#{$suffix}-content: #{calc.calc-rem($v - (con.$container-padding * 2))};
+      }
+    } @else if $r == "container-padding" {
+      --#{con.$n}container-padding: #{calc.calc-rem(con.$container-padding)};
+    } @else if $r == "transitions" {
+      --#{con.$n}prop: #{con.$default-prop};
+      --#{con.$n}duration: #{con.$default-duration};
+      --#{con.$n}easing: #{con.$default-easing};
+      --#{con.$n}delay: #{con.$default-delay};
+    } @else if $r == "outline" {
+      $default-color: map.get(con.$outline, "colors", "default");
+      $default-width: map.get(con.$outline, "widths", "default");
+      $default-offset: map.get(con.$outline, "offsets", "default");
+
+      --#{con.$n}outline-color: #{$default-color};
+      --#{con.$n}outline-width: #{calc.calc-rem($default-width)};
+      --#{con.$n}outline-offset: #{calc.calc-rem($default-offset)};
+    } @else if $r == "borders" {
+      $default-color: map.get(con.$borders, "colors", "default");
+      $default-width: map.get(con.$borders, "widths", "default");
+
+      --#{con.$n}border-color: #{$default-color};
+      --#{con.$n}border-width: #{calc.calc-rem($default-width)};
+    } @else if $r == "border-radius" {
+      @each $b, $v in con.$border-radius {
+        --#{con.$n}border-radius-#{$b}: #{$v};
+      }
+    }
+  }
+}

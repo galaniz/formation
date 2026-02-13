@@ -1,0 +1,13 @@
+/**
+ * Base - Root Styles
+ */
+
+/* Imports */
+
+@use "../../../lib/base/Root/Root" as root;
+
+/* Styles */
+
+:root {
+  @include root.set-root;
+}

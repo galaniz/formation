@@ -1,0 +1,48 @@
+/**
+ * Layouts - Align Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$align-fix: fix.get-class-fix("align");
+
+/* Styles */
+
+.#{$layout-fix}#{$align-fix}-center {
+  align-items: center;
+}
+
+.#{$layout-fix}#{$align-fix}-start {
+  align-items: start;
+}
+
+.#{$layout-fix}#{$align-fix}-end {
+  align-items: end;
+}
+
+@each $b in con.$align-breakpoints {
+  .#{$layout-fix}#{$align-fix}-center-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: center
+    ));
+  }
+
+  .#{$layout-fix}#{$align-fix}-start-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: start
+    ));
+  }
+
+  .#{$layout-fix}#{$align-fix}-end-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      align-items: end
+    ));
+  }
+}

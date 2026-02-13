@@ -1,0 +1,58 @@
+/**
+ * Layouts - Justify Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$justify-fix: fix.get-class-fix("justify");
+
+/* Styles */
+
+.#{$layout-fix}#{$justify-fix}-between {
+  justify-content: space-between;
+}
+
+.#{$layout-fix}#{$justify-fix}-center {
+  justify-content: center;
+}
+
+.#{$layout-fix}#{$justify-fix}-start {
+  justify-content: start;
+}
+
+.#{$layout-fix}#{$justify-fix}-end {
+  justify-content: end;
+}
+
+@each $b in con.$justify-breakpoints {
+  .#{$layout-fix}#{$justify-fix}-between-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: space-between
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-center-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: center
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-start-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: start
+    ));
+  }
+
+  .#{$layout-fix}#{$justify-fix}-end-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      justify-content: end
+    ));
+  }
+}

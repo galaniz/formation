@@ -1,0 +1,198 @@
+/**
+ * Text - Size Styles
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading-4xl,
+.heading-3xl,
+.heading-2xl,
+.heading-xl,
+.heading-l,
+.heading-m,
+.heading-s,
+.heading-xs,
+.heading-2xs {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-normal);
+  color: var(--sharp-color);
+}
+
+h1,
+h2,
+h3,
+.heading-5xl,
+.heading-3xl,
+.heading-3xl,
+.heading-2xl,
+.heading-xl,
+.heading-l,
+.heading-m {
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.heading-s,
+.heading-xs {
+  letter-spacing: var(--letter-spacing-snug);
+}
+
+h1,
+.heading-5xl {
+  font-size: var(--font-size-64-flex);
+  line-height: var(--line-height-tight);
+}
+
+.heading-4xl {
+  font-size: var(--font-size-56-flex);
+}
+
+h2,
+h3,
+.heading-4xl,
+.heading-3xl,
+.heading-2xl,
+.heading-xl {
+  line-height: var(--line-height-snug);
+}
+
+h2,
+.heading-3xl {
+  font-size: var(--font-size-48-flex);
+}
+
+h3,
+.heading-2xl {
+  font-size: var(--font-size-40-flex);
+}
+
+.heading-xl {
+  font-size: var(--font-size-36-flex);
+}
+
+.heading-l,
+.heading-m,
+.heading-s,
+.heading-xs,
+.heading-2xs {
+  line-height: var(--line-height-close);
+}
+
+.heading-l {
+  font-size: var(--font-size-32-flex);
+}
+
+.heading-m {
+  font-size: var(--font-size-28-flex);
+}
+
+.heading-s {
+  font-size: var(--font-size-24-flex);
+}
+
+.heading-xs {
+  font-size: var(--font-size-20-flex);
+}
+
+.heading-2xs {
+  font-size: var(--font-size-16);
+}
+
+h4,
+h5,
+h6,
+.label-2xl,
+.label-xl,
+.label-l,
+.label-m,
+.label-s,
+.label-xs,
+.label-2xs,
+.text-quote,
+.text-2xl,
+.text-xl,
+.text-l,
+.text-m,
+.text-s,
+.text-xs,
+.text-2xs {
+  font-family: var(--font-secondary);
+}
+
+h4,
+h5,
+h6,
+.label-2xl,
+.label-xl,
+.label-l,
+.label-m,
+.label-s,
+.label-xs,
+.label-2xs {
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing-open);
+  font-weight: var(--font-weight-medium);
+}
+
+h4,
+.label-2xl,
+.text-2xl {
+  font-size: var(--font-size-24-flex);
+}
+
+p,
+.label-xl,
+.text-xl {
+  font-size: var(--font-size-22-flex);
+}
+
+h5,
+.label-l,
+.text-l {
+  font-size: var(--font-size-20-flex);
+}
+
+h6,
+.label-m,
+.text-quote,
+.text-m {
+  font-size: var(--font-size-18-flex);
+}
+
+.label-s,
+.text-s {
+  font-size: var(--font-size-16);
+}
+
+.text-s-flex {
+  font-size: var(--font-size-16-flex);
+}
+
+.label-xs,
+.text-xs {
+  font-size: var(--font-size-14);
+}
+
+.text-xs-flex {
+  font-size: var(--font-size-14-flex);
+}
+
+.label-2xs,
+.text-2xs {
+  font-size: var(--font-size-12);
+}
+
+p,
+.text-quote,
+.text-2xl,
+.text-xl,
+.text-l,
+.text-m,
+.text-s,
+.text-xs,
+.text-2xs {
+  line-height: var(--line-height-loose);
+}

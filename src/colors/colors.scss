@@ -1,0 +1,20 @@
+/**
+ * Colors - Styles
+ */
+
+/* Imports */
+
+@use "../config/config" as con;
+@use "../utils/fix/fix";
+
+/* Class name customization */
+
+$color-fix: fix.get-class-prefix("color");
+
+/* Styles */
+
+@each $c in con.$text-colors {
+  .#{$color-fix}#{$c} {
+    color: var(--#{con.$n}#{$c});
+  }
+}

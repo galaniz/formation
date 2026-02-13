@@ -1,0 +1,36 @@
+/**
+ * Layouts - Container Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$container-fix: fix.get-class-fix("container");
+
+/* Styles */
+
+%l-container {
+  padding-left: var(--#{con.$n}container-padding);
+  padding-right: var(--#{con.$n}container-padding);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@each $c, $v in con.$containers {
+  $suffix: "";
+
+  @if $c != "default" {
+    $suffix: "-#{$c}";
+  }
+
+  .#{$layout-fix}#{$container-fix}#{$suffix} {
+    @extend %l-container;
+
+    max-width: var(--#{con.$n}container#{$suffix});
+  }
+}

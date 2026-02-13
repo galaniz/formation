@@ -1,0 +1,101 @@
+/**
+ * Components - Navigation Icon Six Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/calc/calc";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
+
+/* Styles */
+
+.#{$component-fix}nav-icon-right {
+  height: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
+}
+
+.#{$component-fix}nav-icon-left {
+  width: calc.calc-rem(map.get(con.$nav-icon, "line-width"));
+}
+
+[data-nav-icon="6"] {
+  --#{con.$n}duration: 200ms;
+  --ico-delay-top: 500ms;
+  --ico-delay-middle: 625ms;
+  --ico-delay-bottom: 750ms;
+  --ico-delay-left: 0ms;
+  --ico-delay-right: 250ms;
+  --ico-scale-lines: 1;
+  --ico-scale-cross: 0;
+  --ico-cross: -50%;
+
+  /* Lines */
+
+  .#{$component-fix}nav-icon-top,
+  .#{$component-fix}nav-icon-middle,
+  .#{$component-fix}nav-icon-bottom {
+    transform: scaleX(var(--ico-scale-lines));
+    transform-origin: 0 50%;
+  }
+
+  .#{$component-fix}nav-icon-top {
+    --#{con.$n}delay: var(--ico-delay-top);
+  }
+
+  .#{$component-fix}nav-icon-middle {
+    --#{con.$n}delay: var(--ico-delay-middle);
+  }
+
+  .#{$component-fix}nav-icon-bottom {
+    --#{con.$n}delay: var(--ico-delay-bottom);
+  }
+
+  /* Cross */
+
+  .#{$component-fix}nav-icon-cross {
+    $w: calc.calc-rem(map.get(con.$nav-icon, "width") * 0.9);
+
+    transform: rotate(45deg);
+    height: $w;
+    width: $w;
+  }
+
+  .#{$component-fix}nav-icon-left,
+  .#{$component-fix}nav-icon-right {
+    transform-origin: 0 0;
+  }
+
+  .#{$component-fix}nav-icon-left {
+    --#{con.$n}delay: var(--ico-delay-left);
+
+    transform: scaleY(var(--ico-scale-cross)) translateX(var(--ico-cross));
+    top: 0;
+    left: 50%;
+    height: 100%;
+  }
+
+  .#{$component-fix}nav-icon-right {
+    --#{con.$n}delay: var(--ico-delay-right);
+
+    transform: scaleX(var(--ico-scale-cross)) translateY(var(--ico-cross));
+    top: 50%;
+    width: 100%;
+  }
+
+  /* Transform */
+
+  [show] & {
+    --ico-delay-top: 0ms;
+    --ico-delay-middle: 125ms;
+    --ico-delay-bottom: 250ms;
+    --ico-delay-left: 625ms;
+    --ico-delay-right: 375ms;
+    --ico-scale-lines: 0;
+    --ico-scale-cross: 1;
+  }
+}

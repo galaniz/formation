@@ -1,0 +1,138 @@
+/**
+ * Layouts - Margin Styles
+ */
+
+/* Imports */
+
+@use "sass:list";
+@use "sass:string";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$margin-fix: fix.get-class-fix("margin");
+$margin-top-fix: fix.get-class-fix("margin-top");
+$margin-bottom-fix: fix.get-class-fix("margin-bottom");
+$margin-y-fix: fix.get-class-fix("margin-y");
+$margin-left-fix: fix.get-class-fix("margin-left");
+$margin-right-fix: fix.get-class-fix("margin-right");
+$margin-x-fix: fix.get-class-fix("margin-x");
+
+/* Defaults */
+
+.#{$layout-fix}#{$margin-fix}-0 {
+  margin: 0;
+}
+
+.#{$layout-fix}#{$margin-fix}-auto {
+  margin: auto;
+}
+
+.#{$layout-fix}#{$margin-top-fix}-auto,
+.#{$layout-fix}#{$margin-y-fix}-auto {
+  margin-top: auto;
+}
+
+.#{$layout-fix}#{$margin-bottom-fix}-auto,
+.#{$layout-fix}#{$margin-y-fix}-auto {
+  margin-bottom: auto;
+}
+
+.#{$layout-fix}#{$margin-left-fix}-auto,
+.#{$layout-fix}#{$margin-x-fix}-auto {
+  margin-left: auto;
+}
+
+.#{$layout-fix}#{$margin-right-fix}-auto,
+.#{$layout-fix}#{$margin-x-fix}-auto {
+  margin-right: auto;
+}
+
+/* Vertical margins */
+
+@each $m in con.$margin-top {
+  .#{$layout-fix}#{$margin-top-fix}-#{$m},
+  .#{$layout-fix}#{$margin-y-fix}-#{$m} {
+    margin-top: var(--#{con.$n}#{$m});
+  }
+}
+
+@each $m in con.$margin-bottom {
+  $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
+
+  @if list.index(con.$margin-bottom-all, $m) {
+    $selector: "#{$selector}, #{$selector}-all > :not(:last-child)";
+  }
+
+  $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}";
+
+  #{string.unquote($selector)} {
+    margin-bottom: var(--#{con.$n}#{$m});
+  }
+}
+
+@each $b in con.$margin-vertical-breakpoints {
+  @each $m in con.$margin-top {
+    .#{$layout-fix}#{$margin-top-fix}-#{$m}-#{$b},
+    .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-top: var(--#{con.$n}#{$m})
+      ));
+    }
+  }
+
+  @each $m in con.$margin-bottom {
+    $selector: ".#{$layout-fix}#{$margin-bottom-fix}-#{$m}";
+
+    @if list.index(con.$margin-bottom-all, $m) {
+      $selector: "#{$selector}-#{$b}, #{$selector}-all-#{$b} > :not(:last-child)";
+    }
+
+    $selector: "#{$selector}, .#{$layout-fix}#{$margin-y-fix}-#{$m}-#{$b}";
+
+    #{string.unquote($selector)} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-bottom: var(--#{con.$n}#{$m})
+      ));
+    }
+  }
+}
+
+/* Horizontal margins */
+
+@each $m in con.$margin-left {
+  .#{$layout-fix}#{$margin-left-fix}-#{$m},
+  .#{$layout-fix}#{$margin-x-fix}-#{$m} {
+    margin-left: var(--#{con.$n}#{$m});
+  }
+}
+
+@each $m in con.$margin-right {
+  .#{$layout-fix}#{$margin-right-fix}-#{$m},
+  .#{$layout-fix}#{$margin-x-fix}-#{$m} {
+    margin-right: var(--#{con.$n}#{$m});
+  }
+}
+
+@each $b in con.$margin-horizontal-breakpoints {
+  @each $m in con.$margin-left {  
+    .#{$layout-fix}#{$margin-left-fix}-#{$m}-#{$b},
+    .#{$layout-fix}#{$margin-x-fix}-#{$m}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-left: var(--#{con.$n}#{$m})
+      ));
+    }
+  }
+
+  @each $m in con.$margin-right {
+    .#{$layout-fix}#{$margin-right-fix}-#{$m}-#{$b},
+    .#{$layout-fix}#{$margin-x-fix}-#{$m}-#{$b} {
+      @include breakpoint.breakpoint-batch-add($b, (
+        margin-right: var(--#{con.$n}#{$m})
+      ));
+    }
+  }
+}

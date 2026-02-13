@@ -1,0 +1,35 @@
+/**
+ * Components - Navigation Styles
+ */
+
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
+
+/* Styles */
+
+.#{$component-fix}nav {
+  --nav-hide: block;
+  --nav-vis: hidden;
+
+  &[open="true"] {
+    --nav-vis: visible;
+  }
+
+  &[overflow="false"] {
+    --nav-hide: none;
+  }
+}
+
+.#{$component-fix}nav-hide {
+  display: var(--nav-hide);
+}
+
+.#{$component-fix}nav-modal,
+.#{$component-fix}nav-overlay {
+  visibility: var(--nav-vis);
+}

@@ -1,0 +1,59 @@
+/**
+ * Effects - Transition
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:list";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$effect-fix: fix.get-class-prefix("effect");
+$transition-fix: fix.get-class-fix("transition");
+
+/* Styles */
+
+$transition-classes: ();
+$transition-classes-store: ();
+
+@each $t, $v in con.$transitions {
+  $suffix: "";
+
+  @if $t != "default" {
+    $suffix: "-#{$t}";
+  }
+
+  $class: ".#{$effect-fix}#{$transition-fix}#{$suffix}";
+  $transition-classes-store: map.merge($transition-classes-store, (#{$t}: $class));
+  $transition-classes: list.append($transition-classes, $class, $separator: comma);
+}
+
+#{$transition-classes} {
+  transition-property: var(--#{con.$n}prop); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-duration: var(--#{con.$n}duration); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-timing-function: var(--#{con.$n}easing); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+  transition-delay: var(--#{con.$n}delay); // stylelint-disable-line declaration-block-no-redundant-longhand-properties
+}
+
+@each $t, $v in con.$transitions {
+  @if $t != "default" {
+    $class: map.get($transition-classes-store, $t);
+
+    #{$class} {
+      @each $tt, $vv in $v {
+        @if $tt == "prop" {
+          --#{con.$n}prop: #{$vv};
+        } @else if $tt == "easing" {
+          --#{con.$n}easing: #{$vv};
+        } @else if $tt == "duration" {
+          --#{con.$n}duration: #{$vv};
+        } @else if $tt == "delay" {
+          --#{con.$n}delay: #{$vv};
+        }
+      }
+    }
+  }
+}

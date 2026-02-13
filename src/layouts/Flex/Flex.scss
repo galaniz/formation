@@ -1,0 +1,49 @@
+/**
+ * Layouts - Flex Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "../../utils/breakpoint/breakpoint";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$column-fix: fix.get-class-fix("column");
+$flex-fix: fix.get-class-fix("flex", true);
+
+/* Styles */
+
+.#{$layout-fix}#{$flex-fix}#{$column-fix} {
+  flex-direction: column;
+}
+
+.#{$layout-fix}#{$flex-fix}row {
+  flex-direction: row;
+}
+
+.#{$layout-fix}#{$flex-fix}shrink-0 {
+  flex-shrink: 0;
+}
+
+.#{$layout-fix}#{$flex-fix}grow-1 {
+  flex-grow: 1;
+}
+
+@each $b in con.$flex-column-breakpoints {
+  .#{$layout-fix}#{$flex-fix}#{$column-fix}-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      flex-direction: column
+    ));
+  }
+}
+
+@each $b in con.$flex-row-breakpoints {
+  .#{$layout-fix}#{$flex-fix}row-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      flex-direction: row
+    ));
+  }
+}

@@ -1,0 +1,87 @@
+/**
+ * Utils - Map Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:meta";
+
+/**
+ * Recursively merge two maps.
+ *
+ * @param {map} $original
+ * @param {map} $overrides
+ * @return {map}
+ */
+@function map-recursive-merge($original, $overrides) {
+  $result: $original;
+
+  @each $key, $value in $overrides {
+    $has-key: map.has-key($result, $key);
+    $res: map.get($result, $key);
+    $type-res: meta.type-of($res);
+    $type-val: meta.type-of($value);
+
+    @if not $has-key or meta.type-of($res) != $type-val or not ($type-res == map and $type-val == map) {
+      $result: map.merge($result, ($key: $value));
+    } @else {
+      $result: map.merge($result, ($key: map-recursive-merge(map.get($result, $key), $value)));
+    }
+  }
+
+  @return $result;
+}
+
+/**
+ * Convert map to one level map.
+ *
+ * @param {map} $map
+ * @param {map} $new-map
+ * @param {string} [$prefix=""]
+ * @param {null|string} [$new-prefix=null]
+ * @return {map}
+ */
+@function map-flatten($map, $new-map, $prefix: "", $new-prefix: null) {
+  @each $key, $value in $map {
+    @if meta.type-of($value) == map {
+      $n-prefix: "#{$key}";
+
+      @if $new-prefix {
+        $k: "#{$key}";
+
+        @if $key != "" {
+          $k: "-#{$key}";
+        }
+
+        @if $key == def {
+          $k: "";
+        }
+
+        $n-prefix: "#{$new-prefix}#{$k}";
+      }
+
+      $new-map: map-flatten($value, $new-map, $prefix, $n-prefix);
+    } @else {
+      $new-key: "#{$key}";
+
+      @if $prefix != "" {
+        $new-key: "#{$prefix}-#{$key}";
+      }
+
+      @if $new-prefix {
+        @if $prefix != "" {
+          $new-key: "#{$prefix}-#{$new-prefix}-#{$key}";
+        } @else {
+          $new-key: "#{$new-prefix}-#{$key}";
+        }
+      }
+
+      $new-map: map.merge($new-map, ($new-key: $value));
+    }
+  }
+
+  $new-map: map.merge($new-map, $new-map);
+
+  @return $new-map;
+}

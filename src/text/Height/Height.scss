@@ -1,0 +1,21 @@
+/**
+ * Text - Line Height Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
+$height-fix: fix.get-class-fix("line-height");
+
+/* Styles */
+
+@each $l, $v in con.$line-heights {
+  .#{$text-fix}#{$height-fix}-#{$l} {
+    line-height: var(--#{con.$n}line-height-#{$l});
+  }
+}

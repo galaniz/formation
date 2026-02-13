@@ -1,0 +1,232 @@
+/**
+ * Formation - Config
+ */
+
+/* Imports */
+
+@use "sass:list";
+
+/* Vertical sizes */
+
+$vertical-sizes: (
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "8",
+  "10",
+  "12",
+  "16",
+  "20",
+  "24",
+  "28",
+  "32",
+);
+
+/* Horizontal sizes */
+
+$horizontal-sizes: (
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "8",
+  "10",
+);
+
+/* Style options */
+
+@use "../../lib/config/config" with (
+  /* Namespace */
+
+  $namespace: "frm",
+
+  /* Colors */
+
+  $colors-type: "hsl",
+  $colors: (
+    "primary": (
+      "light": "129, 80%, 86%", // #bff8c8
+      "dark": "155, 89%, 25%", // #077949
+    ),
+    "accent-warm": (
+      "light": "29, 100%, 90%", // #ffe6ce
+      "dark": "29, 100%, 33%", // #a85100
+    ),
+    "accent-hot": (
+      "light": "0, 100%, 92%", // #ffd4d4
+      "dark": "0, 66%, 47%", // #c92929
+    ),
+    "accent-cool": (
+      "light": "271, 100%, 90%", // #e7ceff
+      "dark": "270, 41%, 52%", // #8451b7
+    ),
+    "accent-cold": (
+      "light": "194, 100%, 92%", // #d4f5ff
+      "dark": "195, 85%, 31%", // #0c7293
+    ),
+    "foreground": (
+      "light": "0, 0%, 21%", // #363636
+      "dark": "0, 0%, 13%", // #202020
+    ),
+    "background": (
+      "light": "43, 100%, 99%", // #fffdf8
+      "dark": "43, 24%, 94%", // #f4f2ed
+    ),
+  ),
+
+  $text-colors: (
+    "foreground-dark",
+  ),
+
+  $background-colors: (
+    "primary-light",
+    "accent-warm-light",
+    "accent-hot-light",
+    "accent-cool-light",
+    "accent-cold-light",
+    "foreground-dark",
+    "background-light",
+  ),
+
+  /* Fonts */
+
+  $fonts: (
+    "primary": (
+      "Neue Haas Grotesk",
+      Helvetica,
+      Arial,
+      sans-serif,
+    ),
+    "secondary": (
+      "CyGrotesk",
+      Verdana,
+      Arial,
+      sans-serif,
+    ),
+  ),
+
+  /* Font sizes */
+
+  $font-breakpoints: ("s", "l"),
+  $font-sizes: (
+    "48": 48px,
+    "40": 40px,
+    "36": 36px,
+    "32": 32px,
+    "28": 28px,
+    "24": 24px,
+    "20": 20px,
+    "18": 18px,
+    "16": 16px,
+    "14": 14px,
+    "12": 12px,
+    "48-flex": ("40", "48"),
+    "40-flex": ("36", "40"),
+    "36-flex": ("32", "36"),
+    "32-flex": ("28", "32"),
+    "28-flex": ("24", "28"),
+    "24-flex": ("20", "24"),
+    "20-flex": ("18", "20"),
+    "18-flex": ("16", "18"),
+  ),
+
+  /* Line heights */
+
+  $line-heights: (
+    "tight": 1,
+    "snug": 1.1,
+    "close": 1.2,
+    "base": 1.3,
+    "open": 1.4,
+    "loose": 1.5,
+  ),
+
+  /* Letter spacing */
+
+  $letter-spacing: (
+    "open": 0.01em,
+    "loose": 0.02em,
+  ),
+
+  /* Sizes */
+
+  $sizes: (
+    "1": 4px,
+    "2": 8px,
+    "3": 12px,
+    "4": 16px,
+    "5": 20px,
+    "6": 24px,
+    "8": 32px,
+    "10": 40px,
+    "12": 48px,
+    "16": 64px,
+    "20": 80px,
+    "24": 96px,
+    "28": 112px,
+    "32": 128px,
+  ),
+
+  /* Padding */
+
+  $padding-top: $vertical-sizes,
+  $padding-bottom: $vertical-sizes,
+  $padding-vertical-breakpoints: (
+    "s",
+    "m",
+    "l"
+  ),
+
+  /* Widths */
+
+  $width-percentage-breakpoints: (
+    "s",
+    "m",
+    "l",
+  ),
+
+  $widths: (
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "8",
+    "10",
+  ),
+
+  /* Heights */
+
+  $heights: (
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "8",
+    "10",
+  ),
+
+  /* Gaps */
+
+  $gaps: $horizontal-sizes,
+  $gap-breakpoints: (
+    "s",
+    "m",
+    "l"
+  ),
+
+  /* Aspect ratios */
+
+  $aspect-ratios: (
+    "1-1": list.slash(1, 1),
+    "16-9": list.slash(16, 9),
+  ),
+);

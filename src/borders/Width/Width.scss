@@ -1,0 +1,26 @@
+/**
+ * Borders - Width Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$border-fix: fix.get-class-prefix("border");
+$width-fix: fix.get-class-fix("border-width");
+
+/* Styles */
+
+$widths: map.get(con.$borders, "widths");
+
+@each $w, $v in $widths {
+  @if $w != "default" {
+    .#{$border-fix}#{$width-fix}-#{$w} {
+      --#{con.$n}border-width: #{$v};
+    }
+  }
+}

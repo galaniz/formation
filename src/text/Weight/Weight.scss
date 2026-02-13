@@ -1,0 +1,21 @@
+/**
+ * Text - Font Weight Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
+$weight-fix: fix.get-class-fix("font-weight");
+
+/* Styles */
+
+@each $w, $v in con.$font-weights {
+  .#{$text-fix}#{$weight-fix}-#{$w} {
+    font-weight: var(--#{con.$n}font-weight-#{$w});
+  }
+}

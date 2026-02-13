@@ -1,0 +1,118 @@
+/**
+ * Utils - Fluid Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "sass:math";
+@use "../../config/config" as con;
+@use "../breakpoint/breakpoint";
+@use "../calc/calc";
+
+/**
+ * Remove unit from number.
+ *
+ * @param {number} $number
+ * @return {number}
+ */
+@function strip-unit($number) {
+  @if meta.type-of($number) == number and not math.is-unitless($number) {
+    @return math.div($number, $number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+/**
+ * Fluidly resize between breakpoints.
+ *
+ * @param {string} $prop
+ * @param {list} $sizes
+ * @param {list} $breakpoints
+ * @param {list} $other
+ * @param {boolean} $important
+ * @return {void}
+ */
+@mixin fluid-size($prop, $sizes, $breakpoints, $important: false, $other: null) {
+  $last-index: list.length($sizes);
+
+  @each $size in $sizes {
+    $i: list.index($sizes, $size);
+    $bk: list.nth($breakpoints, $i);
+    $bk-rem: calc.calc-rem(map.get(con.$breakpoints, $bk));
+    $oth: null;
+    $imp: null;
+
+    @if meta.type-of($other) == "list" {
+      $oth: $bk;
+    }
+
+    @if $important {
+      $imp: #{"!important"};
+    }
+
+    @if $i == 1 {
+      #{$prop}: $size $oth $imp;
+    }
+
+    @if $i == $last-index {
+      @include breakpoint.breakpoint-batch-add($bk, (
+        #{$prop}: $size $oth $imp
+      ));
+    } @else {
+      $new-size: strip-unit(list.nth($sizes, $i + 1));
+      $new-bk: list.nth($breakpoints, $i + 1);
+      $new-bk-abs: strip-unit(calc.calc-rem(map.get(con.$breakpoints, $new-bk)));
+      $bk-abs: strip-unit($bk-rem);
+
+      @include breakpoint.breakpoint-batch-add($bk, (
+        #{$prop}:
+          calc(#{$size} + ((100vw - #{$bk-rem}) / (#{$new-bk-abs} - #{$bk-abs})) * (#{$new-size} - #{strip-unit($size)}))
+          $oth
+          $imp
+      ));
+    }
+  }
+}
+
+/**
+ * Fluidly resize between two values using clamp.
+ *
+ * @see {@link https://www.aleksandrhovhannisyan.com/blog/fluid-type-scale-with-css-clamp/|Aleksandr Hovhannisyan} for source.
+ * @param {list} $sizes
+ * @param {list} $breakpoints
+ * @param {string} [$type="size"]
+ * @return {string}
+ */
+@function fluid-size-clamp($sizes, $breakpoints, $type: "size") {
+  $min-px: list.nth($sizes, 1);
+  $max-px: list.nth($sizes, 2);
+  $min-bk: list.nth($breakpoints, 1);
+  $max-bk: list.nth($breakpoints, 2);
+
+  @if meta.type-of($min-px) == "string" {
+    @if $type == "font-size" {
+      $min-px: map.get(con.$font-sizes, $min-px);
+      $max-px: map.get(con.$font-sizes, $max-px);
+    } @else {
+      $min-px: map.get(con.$sizes, $min-px);
+      $max-px: map.get(con.$sizes, $max-px);
+    }
+  }
+
+  @if meta.type-of($min-bk) == "string" {
+    $min-bk: map.get(con.$breakpoints, $min-bk);
+    $max-bk: map.get(con.$breakpoints, $max-bk);
+  }
+
+  $slope: math.div($max-px - $min-px, $max-bk - $min-bk);
+  $slope-vw: $slope * 100;
+  $intercept-rem: calc.calc-rem($min-px - $slope * $min-bk);
+  $min-rem: calc.calc-rem($min-px);
+  $max-rem: calc.calc-rem($max-px);
+
+  @return clamp(#{$min-rem}, #{$slope-vw}vw + #{$intercept-rem}, #{$max-rem});
+}

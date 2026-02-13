@@ -1,0 +1,89 @@
+/**
+ * Base - Reset Styles
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased; // stylelint-disable-line property-no-vendor-prefix
+  -webkit-text-size-adjust: 100%; // stylelint-disable-line property-no-vendor-prefix
+  -moz-osx-font-smoothing: grayscale; // stylelint-disable-line property-no-vendor-prefix
+  font-size: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+p,
+dl,
+dd,
+th,
+td,
+hr,
+body,
+input,
+textarea,
+button,
+select,
+fieldset,
+legend,
+blockquote,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+img,
+main,
+time,
+label,
+legend,
+picture {
+  display: block;
+}
+
+address,
+cite {
+  font-style: normal;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+input,
+textarea,
+button,
+select,
+fieldset,
+iframe,
+hr {
+  border: 0;
+  background: transparent;
+}
+
+input,
+textarea,
+button,
+select {
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  border-radius: 0;
+}

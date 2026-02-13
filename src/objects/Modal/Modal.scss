@@ -1,0 +1,34 @@
+/**
+ * Objects - Modal Styles
+ */
+
+/* Imports */
+
+@use "sass:map";
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$object-fix: fix.get-class-prefix("object");
+
+/* Styles */
+
+.#{$object-fix}modal {
+  --#{con.$n}prop: #{con.$modal-prop};
+  --#{con.$n}duration: #{con.$modal-duration};
+  --#{con.$n}delay: #{con.$modal-delay};
+  --mod-vis: hidden;
+
+  z-index: map.get(con.$z-index, "modal");
+
+  &[open="true"] {
+    --#{con.$n}delay: #{con.$modal-delay-open};
+    --mod-vis: visible;
+  }
+}
+
+.#{$object-fix}modal,
+.#{$object-fix}modal-overlay {
+  visibility: var(--mod-vis);
+}

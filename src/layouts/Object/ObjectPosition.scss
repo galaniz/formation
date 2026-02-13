@@ -1,0 +1,50 @@
+/**
+ * Layouts - Object Position Styles
+ */
+
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$object-fix: fix.get-class-fix("object");
+
+/* Styles */
+
+.#{$layout-fix}#{$object-fix}-left-top {
+  object-position: left top;
+}
+
+.#{$layout-fix}#{$object-fix}-left-center {
+  object-position: left center;
+}
+
+.#{$layout-fix}#{$object-fix}-left-bottom {
+  object-position: left bottom;
+}
+
+.#{$layout-fix}#{$object-fix}-center-top {
+  object-position: center top;
+}
+
+.#{$layout-fix}#{$object-fix}-center-center {
+  object-position: center center;
+}
+
+.#{$layout-fix}#{$object-fix}-center-bottom {
+  object-position: center bottom;
+}
+
+.#{$layout-fix}#{$object-fix}-right-top {
+  object-position: right top;
+}
+
+.#{$layout-fix}#{$object-fix}-right-center {
+  object-position: right center;
+}
+
+.#{$layout-fix}#{$object-fix}-right-bottom {
+  object-position: right bottom;
+}

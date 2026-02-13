@@ -1,0 +1,66 @@
+/**
+ * Components - Navigation Styles
+ */
+
+/* Imports */
+
+@forward "../../config/config";
+@use "../../../lib/components/Navigation/Navigation";
+@use "../../../lib/components/Navigation/NavigationIcon";
+@use "../../../lib/components/Navigation/NavigationIconOne";
+@use "../../../lib/components/Navigation/NavigationIconTwo";
+@use "../../../lib/components/Navigation/NavigationIconThree";
+@use "../../../lib/components/Navigation/NavigationIconFour";
+@use "../../../lib/components/Navigation/NavigationIconFive";
+@use "../../../lib/components/Navigation/NavigationIconSix";
+@use "../../../lib/components/Navigation/NavigationIconSeven";
+@use "../../../lib/components/Navigation/NavigationIconEight";
+@use "../../../lib/components/Navigation/NavigationIconNine";
+
+/* Styles */
+
+.nav {
+  position: relative;
+  background: whitesmoke;
+  height: var(--frm-16);
+
+  ul {
+    list-style: none;
+  }
+}
+
+[data-nav-slot] {
+  display: flex;
+  gap: var(--frm-8);
+}
+
+[data-nav-slot="two"] {
+  background: lavender;
+}
+
+.nav-scrollable [data-nav-slot] {
+  overflow-x: auto;
+
+  [data-nav-item] {
+    white-space: nowrap;
+  }
+}
+
+[data-nav-item] {
+  padding: var(--frm-2);
+  line-height: 1;
+}
+
+[data-nav-open] {
+  // position: absolute;
+  // top: calc(var(--frm-12) * -1);
+  // right: 0;
+}
+
+.nav-modal {
+  background: lightgray;
+  position: absolute;
+  width: 100%;
+  top: var(--frm-16);
+  z-index: 1;
+}

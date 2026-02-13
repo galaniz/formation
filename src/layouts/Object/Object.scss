@@ -1,0 +1,22 @@
+/**
+ * Layouts - Object Fit Styles
+ */
+
+/* Imports */
+
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+$object-fix: fix.get-class-fix("object");
+
+/* Styles */
+
+.#{$layout-fix}#{$object-fix}-contain {
+  object-fit: contain;
+}
+
+.#{$layout-fix}#{$object-fix}-cover {
+  object-fit: cover;
+}

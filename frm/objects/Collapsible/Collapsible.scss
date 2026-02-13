@@ -1,0 +1,37 @@
+/**
+ * Objects - Collapsible Styles
+ */
+
+/* Imports */
+
+@forward "../../config/config";
+@use "../../../lib/objects/Collapsible/Collapsible";
+
+/* Styles */
+
+#clp-single {
+  --clp-delay: 200ms, 0ms;
+
+  .collapsible-panel {
+    --frm-duration: 0ms, 200ms;
+  }
+
+  &[expanded="true"] {
+    --clp-delay: 0ms, 0ms;
+  }
+}
+
+#clp-hover {
+  --clp-ht: auto;
+
+  .collapsible-panel {
+    --frm-prop: visibility, opacity;
+
+    white-space: nowrap;
+    opacity: var(--clp-opacity, 0);
+  }
+
+  &[expanded="true"] {
+    --clp-opacity: 1;
+  }
+}

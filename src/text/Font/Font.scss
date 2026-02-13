@@ -1,0 +1,21 @@
+/**
+ * Text - Font Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$text-fix: fix.get-class-prefix("text");
+$font-fix: fix.get-class-fix("font");
+
+/* Styles */
+
+@each $f, $v in con.$fonts {
+  .#{$text-fix}#{$font-fix}-#{$f} {
+    font-family: var(--#{con.$n}font-#{$f});
+  }
+}

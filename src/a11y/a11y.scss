@@ -1,0 +1,31 @@
+/**
+ * A11y - Styles
+ */
+
+/* Imports */
+
+@forward "../config/config";
+@use "../utils/fix/fix";
+
+/* Class name customization */
+
+$a11y-fix: fix.get-class-prefix("a11y");
+$visually-fix: fix.get-class-fix("visually");
+
+/* Styles */
+
+.#{$a11y-fix}hide-#{$visually-fix} {
+  position: absolute;
+  overflow: hidden;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  margin: -0.0625rem;
+  clip-path: inset(0 0 100% 100%);
+}
+
+.#{$a11y-fix}hide-input {
+  position: absolute;
+  opacity: 0;
+  width: 1em;
+  height: 1em;
+}

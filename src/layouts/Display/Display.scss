@@ -1,0 +1,55 @@
+/**
+ * Layouts - Display Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/breakpoint/breakpoint";
+@use "../../utils/fix/fix";
+
+/* Class name customization */
+
+$layout-fix: fix.get-class-prefix("layout");
+
+/* Styles */
+
+.#{$layout-fix}none {
+  display: none;
+}
+
+.#{$layout-fix}block {
+  display: block;
+}
+
+.#{$layout-fix}inline-block {
+  display: inline-block;
+}
+
+.#{$layout-fix}flex {
+  display: flex;
+}
+
+.#{$layout-fix}inline-flex {
+  display: inline-flex;
+}
+
+.#{$layout-fix}grid {
+  display: grid;
+}
+
+@each $b in con.$block-breakpoints {
+  .#{$layout-fix}block-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      display: block
+    ));
+  }
+}
+
+@each $b in con.$none-breakpoints {
+  .#{$layout-fix}none-#{$b} {
+    @include breakpoint.breakpoint-batch-add($b, (
+      display: none
+    ));
+  }
+}

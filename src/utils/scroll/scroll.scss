@@ -1,0 +1,9 @@
+/**
+ * Utils - Scroll Styles
+ */
+
+html[data-scroll="off"] {
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}

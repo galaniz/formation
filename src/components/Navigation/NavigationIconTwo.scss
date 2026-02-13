@@ -1,0 +1,40 @@
+/**
+ * Components - Navigation Icon Two Styles
+ */
+
+/* Imports */
+
+@use "../../config/config" as con;
+@use "../../utils/fix/fix";
+@use "./NavigationIcon" as icon;
+
+/* Class name customization */
+
+$component-fix: fix.get-class-prefix("component");
+
+/* Styles */
+
+[data-nav-icon="2"] {
+  --#{con.$n}duration: 175ms;
+  --ico-y: 0;
+  --ico-y-1: 0;
+  --ico-op: 1;
+
+  .#{$component-fix}nav-icon-top {
+    transform: translateY(var(--ico-y));
+  }
+
+  .#{$component-fix}nav-icon-bottom {
+    transform: translateY(var(--ico-y-1));
+  }
+
+  .#{$component-fix}nav-icon-middle {
+    opacity: var(--ico-op);
+  }
+
+  [show] & {
+    --ico-y: #{icon.$y};
+    --ico-y-1: #{icon.$y * -1};
+    --ico-op: 0;
+  }
+}

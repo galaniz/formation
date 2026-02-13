@@ -1,3 +1,10 @@
 node_modules/
-package-lock.json
+lib/
+spec/
+docs/
+utils-coverage/
+spec-coverage/
+test-results/
+playwright-report/
+playwright/.cache/
 .DS_Store
