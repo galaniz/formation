@@ -21,7 +21,7 @@ $object-fix: fix.get-class-prefix("object");
 
   background-color: var(--ld-bg, inherit);
   color: var(--ld-color, inherit);
-  z-index: #{map.get(con.$z-index, "loader")};
+  z-index: var(--ld-z, 1);
   visibility: var(--ld-vis, hidden);
   opacity: var(--ld-op, 0);
 
