@@ -44,7 +44,7 @@ jobs:
 
       # Release
       - name: Publish release
-        run: pnpm release
+        run: pnpm dlx release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true

@@ -1,9 +1,9 @@
 {
   "name": "@alanizcreative/formation",
   "version": "0.0.1",
-  "description": "Extendable TS web components and utilities, and SCSS generated utility classes",
+  "description": "Extendable TS web components and utilities, and design system based SCSS utility classes",
   "main": "./lib/config/config.js",
-  "packageManager": "pnpm@10.29.1",
+  "packageManager": "pnpm@10.33.0",
   "type": "module",
   "files": [
     "./lib"
@@ -20,7 +20,6 @@
     "lint:ts": "npx eslint .",
     "lint": "pnpm lint:ts && pnpm lint:scss",
     "minify": "find lib -name \"*.js\" -exec terser {} -o {} --compress \\;",
-    "release": "release-it",
     "test:utils": "vitest --run --reporter verbose --environment happy-dom --coverage",
     "test:spec": "pnpm build && pnpm build:spec && npx playwright test",
     "test": "pnpm test:utils && pnpm test:spec",
@@ -36,23 +35,27 @@
     "url": "https://github.com/galaniz/formation/issues"
   },
   "homepage": "https://github.com/galaniz/formation#readme",
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@<1.1.13": ">=1.1.13"
+    }
+  },
   "devDependencies": {
-    "@alanizcreative/formation-coverage": "0.0.5",
-    "@playwright/test": "^1.58.2",
+    "@alanizcreative/formation-coverage": "0.0.6",
+    "@playwright/test": "^1.59.1",
     "@testing-library/dom": "^10.4.1",
-    "@types/node": "^25.2.2",
-    "@vitest/coverage-v8": "4.0.18",
-    "eslint": "9.39.2",
-    "happy-dom": "^20.5.2",
-    "release-it": "^19.2.4",
-    "sass": "^1.97.3",
-    "serve": "^14.2.5",
-    "stylelint": "^17.1.1",
+    "@types/node": "^25.5.2",
+    "@vitest/coverage-v8": "4.1.3",
+    "eslint": "10.2.0",
+    "happy-dom": "^20.8.9",
+    "sass": "^1.99.0",
+    "serve": "^14.2.6",
+    "stylelint": "^17.6.0",
     "stylelint-config-standard-scss": "^17.0.0",
-    "terser": "5.46.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "8.54.0",
-    "vitest": "^4.0.18"
+    "terser": "5.46.1",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "8.58.0",
+    "vitest": "^4.1.3"
   },
   "release-it": {
     "git": {

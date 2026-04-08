@@ -1,6 +1,6 @@
 # Formation  
 
-Extendable TS web components and utilities, and SCSS generated utility classes.
+Extendable TS web components and utilities, and design system based SCSS utility classes.
 
 ## Installation
 

@@ -12,6 +12,7 @@ import { getDuration } from '../../utils/duration/duration.js'
 import { getKey } from '../../utils/key/key.js'
 import { getItem, getTemplateItem, cloneItem } from '../../items/items.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
+import { applyFilters } from '../../filters/filters.js'
 import { setDisplay } from '../../utils/display/display.js'
 import { config } from '../../config/config.js'
 
@@ -50,6 +51,13 @@ class Media extends HTMLElement {
   time: HTMLElement | null = null
 
   /**
+   * Duration element.
+   *
+   * @type {HTMLElement|null}
+   */
+  duration: HTMLElement | null = null
+
+  /**
    * Play/pause button elements.
    *
    * @type {HTMLButtonElement[]}
@@ -85,25 +93,11 @@ class Media extends HTMLElement {
   loaded: boolean = false
 
   /**
-   * Active state.
-   *
-   * @type {boolean}
-   */
-  active: boolean = true
-
-  /**
    * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
-
-  /**
-   * Player is global.
-   *
-   * @type {boolean}
-   */
-  global: boolean = false
 
   /**
    * Loader and error fragments.
@@ -125,7 +119,7 @@ class Media extends HTMLElement {
    * @private
    * @type {number}
    */
-  duration: number = 0
+  durationTime: number = 0
 
   /**
    * Duration in words.
@@ -257,6 +251,7 @@ class Media extends HTMLElement {
     this.media = null
     this.progress = null
     this.time = null
+    this.duration = null
     this.controls = []
 
     if (!Media.#count) { // Clear if last element
@@ -282,11 +277,11 @@ class Media extends HTMLElement {
     /* Items */
 
     const type = this.getAttribute('type') || 'video'
-    const global = this.hasAttribute('global')
     const media = getItem(type, this)
     const controls = getItem(['[data-media-control]'], this)
     const progress = getItem('[data-media-progress]', this)
     const time = getItem('[data-media-time]', this)
+    const duration = getItem('[data-media-duration]', this)
     const url = this.getAttribute('url')
     const errorId = this.getAttribute('error')
     const loaderId = this.getAttribute('loader')
@@ -296,7 +291,6 @@ class Media extends HTMLElement {
     if (
       !isHtmlElement(media, HTMLMediaElement) ||
       !isHtmlElementArray(controls, HTMLButtonElement) ||
-      !isStringStrict(url) ||
       !isStringStrict(errorId) ||
       !isStringStrict(loaderId)
     ) {
@@ -327,10 +321,12 @@ class Media extends HTMLElement {
 
     /* Props */
 
-    this.url = url
     this.media = media
     this.controls = controls
-    this.global = global
+
+    if (isStringStrict(url)) {
+      this.url = url
+    }
 
     /* Media */
 
@@ -351,6 +347,12 @@ class Media extends HTMLElement {
 
     if (isHtmlElement(time)) {
       this.time = time
+    }
+
+    /* Duration */
+
+    if (isHtmlElement(duration)) {
+      this.duration = duration
     }
 
     /* Progress */
@@ -384,16 +386,10 @@ class Media extends HTMLElement {
    *
    * @return {boolean}
    */
-  #isActive (): boolean {
-    if (!this.active) {
-      return false
-    }
+  #active (): boolean {
+    const active = this.contains(document.activeElement)
 
-    if (!this.global && !this.contains(document.activeElement)) {
-      return false
-    }
-
-    return true
+    return applyFilters(`media:active:${this.id}`, active)
   }
 
   /**
@@ -487,7 +483,7 @@ class Media extends HTMLElement {
 
     /* Time */
 
-    const time = this.duration * scale
+    const time = this.durationTime * scale
 
     this.#progress.time = time
     this.#setTime(time)
@@ -559,12 +555,18 @@ class Media extends HTMLElement {
       return
     }
 
-    const duration = parseInt(this.media.duration.toFixed())
-    this.duration = duration
-    this.durationText = getDuration(duration, true)
+    const duration = this.media.duration
+    const durationRounded = parseInt(duration.toFixed())
+
+    this.durationTime = duration
+    this.durationText = getDuration(durationRounded, true)
+
+    if (this.duration) {
+      this.duration.textContent = getDuration(durationRounded)
+    }
 
     if (this.progress) {
-      this.progress.setAttribute('aria-valuemax', `${duration}`)
+      this.progress.setAttribute('aria-valuemax', `${durationRounded}`)
     }
   }
 
@@ -591,7 +593,7 @@ class Media extends HTMLElement {
     }
 
     this.#setTime(this.media.currentTime)
-    this.#setProgressScrub(this.media.currentTime / this.duration)
+    this.#setProgressScrub(this.media.currentTime / this.durationTime)
   }
 
   /**
@@ -771,7 +773,7 @@ class Media extends HTMLElement {
    * @return {Promise<void>}
    */
   async #keyDown (e: KeyboardEvent): Promise<void> {
-    if (!this.#isActive()) {
+    if (!this.#active()) {
       return
     }
 
@@ -822,15 +824,15 @@ class Media extends HTMLElement {
       newTime = 0
     }
 
-    if (state === 4 || newTime > this.duration) {
-      newTime = this.duration
+    if (state === 4 || newTime > this.durationTime) {
+      newTime = this.durationTime
     }
 
     if (newTime < 0) {
       newTime = 0
     }
 
-    this.#setProgressScrub(newTime / this.duration)
+    this.#setProgressScrub(newTime / this.durationTime)
   }
 
   /**
@@ -841,7 +843,7 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #keyUp (e: KeyboardEvent): void {
-    if (!this.#isActive()) {
+    if (!this.#active()) {
       return
     }
 
