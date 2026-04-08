@@ -19,6 +19,9 @@
     "outDir": "lib",
     "declaration": true,
     "removeComments": true,
+    "types": [
+      "node"
+    ],
     "lib": [
       "es2022",
       "dom",

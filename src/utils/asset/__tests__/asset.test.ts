@@ -82,7 +82,7 @@ describe('assetLoaded()', () => {
   it('should throw an error if asset is null', async () => {
     const asset = null
 
-    await expect(async () => { await assetLoaded(asset) }).rejects.toThrowError('Asset is not a media element')
+    await expect(async () => { await assetLoaded(asset) }).rejects.toThrow('Asset is not a media element')
   })
 
   it('should resolve to asset if asset is image', async () => {
@@ -122,7 +122,7 @@ describe('assetLoaded()', () => {
       get: () => 0
     })
 
-    await expect(async () => { await assetLoaded(image) }).rejects.toThrowError('Image failed to load')
+    await expect(async () => { await assetLoaded(image) }).rejects.toThrow('Image failed to load')
   })
 
   it('should resolve to asset if asset is video', async () => {

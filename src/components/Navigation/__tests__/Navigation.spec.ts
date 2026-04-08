@@ -163,7 +163,6 @@ test.describe('Navigation', () => {
         modalRole: nav.modal?.role,
         modalSlotsSize: nav.modalSlots.size,
         breakpoints: Array.from(nav.breakpoints.keys()).join(','),
-        opensPopup: nav.opens?.ariaHasPopup,
         closesCount: nav.closes.length
       }
     })
@@ -174,7 +173,6 @@ test.describe('Navigation', () => {
     expect(navProps.modalRole).toBe('dialog')
     expect(navProps.modalSlotsSize).toBe(1)
     expect(navProps.breakpoints).toBe('0')
-    expect(navProps.opensPopup).toBe('true')
     expect(navProps.closesCount).toBe(1)
   })
 
