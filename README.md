@@ -1,6 +1,6 @@
 # Formation  
 
-Extendable TS web components and utilities, and design system based SCSS utility classes.
+Extendable TS web components and utilities, and SCSS generated utility classes.
 
 ## Installation
 
@@ -8,7 +8,7 @@ Extendable TS web components and utilities, and design system based SCSS utility
 npm install -D @alanizcreative/formation
 ```
 
-## Index
+## Reference
 <details>
 <summary>Actions</summary>
   

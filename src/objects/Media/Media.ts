@@ -31,35 +31,35 @@ declare global {
  */
 class Media extends HTMLElement {
   /**
-   * Media element.
+   * Media element identified by `type` attribute.
    *
    * @type {HTMLMediaElement|null}
    */
   media: HTMLMediaElement | null = null
 
   /**
-   * Progress bar element.
+   * Progress bar element identified by `data-media-progress`.
    *
    * @type {HTMLElement|null}
    */
   progress: HTMLElement | null = null
 
   /**
-   * Time element.
+   * Time element identified by `data-media-time`.
    *
    * @type {HTMLElement|null}
    */
   time: HTMLElement | null = null
 
   /**
-   * Duration element.
+   * Duration element identified by `data-media-duration`.
    *
    * @type {HTMLElement|null}
    */
   duration: HTMLElement | null = null
 
   /**
-   * Play/pause button elements.
+   * Play/pause button elements identified by `data-media-control` matching a `MediaControl` value.
    *
    * @type {HTMLButtonElement[]}
    */
@@ -398,11 +398,11 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Player currently active check.
+   * Player currently active check modified via the `media:active:{id}` filter.
    *
    * @return {boolean}
    */
-  #active (): boolean {
+  active (): boolean {
     const active = this.contains(document.activeElement)
 
     return applyFilters(`media:active:${this.id}`, active)
@@ -702,7 +702,7 @@ class Media extends HTMLElement {
    * @return {Promise<void>}
    */
   async #keyDown (e: KeyboardEvent): Promise<void> {
-    if (!this.#active()) {
+    if (!this.active()) {
       return
     }
 
@@ -772,7 +772,7 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #keyUp (e: KeyboardEvent): void {
-    if (!this.#active()) {
+    if (!this.active()) {
       return
     }
 

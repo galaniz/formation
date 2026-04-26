@@ -12,25 +12,31 @@ Create new instance.
 
 ### media  
 
-Media element.  
+Media element identified by `type` attribute.  
 
 **Type:** <code>HTMLMediaElement | null</code>
 
 ### progress  
 
-Progress bar element.  
+Progress bar element identified by `data-media-progress`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### time  
 
-Time element.  
+Time element identified by `data-media-time`.  
+
+**Type:** <code>HTMLElement | null</code>
+
+### duration  
+
+Duration element identified by `data-media-duration`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### controls  
 
-Play/pause button elements.  
+Play/pause button elements identified by `data-media-control` matching a `MediaControl` value.  
 
 **Type:** <code>HTMLButtonElement[]</code>
 
@@ -39,6 +45,12 @@ Play/pause button elements.
 URL of current file.  
 
 **Type:** <code>string</code>
+
+### type  
+
+Type of media.  
+
+**Type:** <code><a href="#mediatype">MediaType</a></code>
 
 ### playing  
 
@@ -58,21 +70,9 @@ Asset loaded state.
 
 **Type:** <code>boolean</code>
 
-### active  
-
-Active state.  
-
-**Type:** <code>boolean</code>
-
 ### init  
 
 Initialize success.  
-
-**Type:** <code>boolean</code>
-
-### global  
-
-Player is global.  
 
 **Type:** <code>boolean</code>
 
@@ -102,11 +102,38 @@ Init after added to DOM.
 
 Clean up after removed from DOM.
 
+### active  
+
+**<code>active(): boolean</code>**  
+
+Player currently active check modified via the `media:active:{id}` filter.
+
+#### Returns  
+
+<code>boolean</code>
+
+### getClone  
+
+**<code>getClone(type: MediaTemplateKeys): HTMLElement | null</code>**  
+
+Clone, return and append template element.
+
+#### Parameters  
+- **`type`** <code><a href="#mediatemplatekeys">MediaTemplateKeys</a></code> required
+
+#### Returns  
+
+<code>HTMLElement | null</code>
+
 ### load  
 
-**<code>load(): void</code>**  
+**<code>load(progress?: boolean): void</code>**  
 
 Load media asset, clear loader and error.
+
+#### Parameters  
+- **`progress`** <code>boolean</code> optional  
+Default: `false`
 
 #### Returns  
 
@@ -127,6 +154,10 @@ Default: `true`
 <code>Promise&lt;void&gt;</code>
 
 ## Types
+
+### MediaType  
+
+**Type:** <code>&#39;video&#39; | &#39;audio&#39;</code>
 
 ### MediaTemplateKeys  
 
