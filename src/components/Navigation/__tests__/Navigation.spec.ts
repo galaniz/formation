@@ -179,6 +179,14 @@ test.describe('Navigation', () => {
   /* Test resize */
 
   test('should move some items into modal slots if 900px viewport', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -187,7 +195,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slots-groups-breakpoints').length === 2
+      return window.testNavResize
     })
 
     const navSlots = await page.evaluate(() => {
@@ -215,6 +223,14 @@ test.describe('Navigation', () => {
   })
 
   test('should move all items into modal slots if 600px viewport', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -223,7 +239,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slots-groups-breakpoints').length === 2
+      return window.testNavResize
     })
 
     const navSlots = await page.evaluate(() => {
@@ -264,7 +280,7 @@ test.describe('Navigation', () => {
   })
 
   test('should not reset if viewport height change', async ({ page }) => {
-    await page.evaluate(async () => {
+    await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
@@ -305,6 +321,14 @@ test.describe('Navigation', () => {
   })
 
   test('should not overflow if slots undefined', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     await page.evaluate(() => {
       const nav = document.querySelector('#nav-slot') as Navigation
       nav.slots.clear()
@@ -318,7 +342,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+      return window.testNavResize
     })
 
     const navProps = await page.evaluate(() => {
@@ -337,6 +361,14 @@ test.describe('Navigation', () => {
   /* Test modal */
 
   test('should open and close modal', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -345,7 +377,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+      return window.testNavResize
     })
 
     await page.getByTestId('nav-slot-open').click()
@@ -415,6 +447,14 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on escape', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -423,7 +463,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slots').length === 2
+      return window.testNavResize
     })
 
     await page.getByTestId('nav-slots-open').click()
@@ -455,6 +495,14 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on resize', async ({ page }) => {
+    await page.evaluate(async () => { // Resize flag
+      const { onResize } = await import('../../../actions/actionResize.js')
+
+      onResize(() => {
+        window.testNavResize = true
+      })
+    })
+
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -463,7 +511,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slot').length === 2
+      return window.testNavResize
     })
 
     await page.getByTestId('nav-slot-open').click()
@@ -480,7 +528,7 @@ test.describe('Navigation', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize
-      return window.testNavSet.filter(id => id === 'nav-slot').length === 3
+      return window.testNavResize
     })
 
     await page.waitForFunction(() => { // Wait for close

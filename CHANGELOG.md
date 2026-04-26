@@ -6,13 +6,15 @@ All notable changes to this project will be documented in this file.
 
 - Initial release.
 
-## [0.0.2] - 2026-04-07
+## [0.0.2] - 2026-04-26
 
 ### Changed
 
 - Update loader z-index to CSS variable.
+- `Media` replace touch and mouse with pointer event listeners.
 
 ### Fixed
 
-- `Media` duration for progress bar.
+- `Media` duration text, load and mute on progress interaction.
+- `getDuration` returning empty string for 0 seconds when words true. 
 - z-index utility class name.

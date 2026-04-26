@@ -25,6 +25,13 @@ describe('getDuration()', () => {
     expect(result).toBe(expectedResult)
   })
 
+  it('should return 0:00 if 0 seconds', () => {
+    const result = getDuration(0)
+    const expectedResult = '0:00'
+
+    expect(result).toBe(expectedResult)
+  })
+
   it('should return 0:04 if 4 seconds', () => {
     const result = getDuration(4)
     const expectedResult = '0:04'
@@ -77,6 +84,13 @@ describe('getDuration()', () => {
   it('should return 4 seconds if 4 seconds and words true', () => {
     const result = getDuration(4, true)
     const expectedResult = '4 seconds'
+
+    expect(result).toBe(expectedResult)
+  })
+
+  it('should return 0 seconds if 0 seconds and words true', () => {
+    const result = getDuration(0, true)
+    const expectedResult = '0 seconds'
 
     expect(result).toBe(expectedResult)
   })

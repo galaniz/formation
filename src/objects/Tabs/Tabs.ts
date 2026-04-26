@@ -378,13 +378,8 @@ class Tabs extends HTMLElement {
    * @return {number}
    */
   #getIndex (e: Event): number {
-    const target = e.currentTarget
+    const target = e.currentTarget as HTMLElement
     const fallback = this.currentIndex
-
-    if (!isHtmlElement(target)) {
-      return fallback
-    }
-
     const index = parseInt(target.dataset.tabIndex || '', 10)
 
     if (!isNumber(index)) {

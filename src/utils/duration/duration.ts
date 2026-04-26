@@ -62,8 +62,8 @@ const getDuration = (seconds: number = 0, words: boolean = false): string => {
     t += `${min} ${min > 1 ? minutesLabel : minuteLabel}${seconds > 0 ? ' ' : ''}`
   }
 
-  if (seconds > 0) {
-    t += `${seconds} ${seconds > 1 ? secondsLabel : secondLabel}`
+  if (seconds > 0 || (!hours && !min)) {
+    t += `${seconds} ${seconds === 1 ? secondLabel : secondsLabel}`
   }
 
   return t

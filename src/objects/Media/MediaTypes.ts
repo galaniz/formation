@@ -3,6 +3,11 @@
  */
 
 /**
+ * @typedef {'video'|'audio'} MediaType
+ */
+export type MediaType = 'video' | 'audio'
+
+/**
  * @typedef {'play'|'pause'|'toggle'} MediaControl
  */
 export type MediaControl = 'play' | 'pause' | 'toggle'
@@ -24,6 +29,8 @@ export type MediaTemplates = Map<MediaTemplateKeys, HTMLElement>
  * @prop {boolean} [pointerDown=false]
  * @prop {number} [currentX=0]
  * @prop {number} [time=0]
+ * @prop {boolean} [load=false]
+ * @prop {boolean} [muted=false]
  */
 export interface MediaProgress {
   width: number
@@ -31,4 +38,6 @@ export interface MediaProgress {
   pointerDown: boolean
   currentX: number
   time: number
+  load: boolean
+  muted: boolean
 }
