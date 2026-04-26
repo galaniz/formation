@@ -133,7 +133,7 @@ class Form extends HTMLElement {
    */
   #changeHandler = this.#change.bind(this)
   #blurSummaryHandler = this.#blurSummary.bind(this)
-  #submitHandler = this.submit.bind(this) as (e: SubmitEvent) => void
+  #submitHandler = this.submit.bind(this) as (e: SubmitEvent) => void // eslint-disable-line @typescript-eslint/no-unnecessary-type-assertion
 
   /**
    * Create new instance.

@@ -1,5 +1,8 @@
 [
   "MediaEmpty",
+  "MediaPartialNone",
+  "MediaPartial",
   "MediaVideo",
-  "MediaAudio"
+  "MediaAudio",
+  "MediaMinimal"
 ]

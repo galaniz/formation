@@ -16,11 +16,15 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
+    "rootDir": "./src",
     "outDir": "spec",
     "sourceMap": true,
     "inlineSourceMap": false,
     "inlineSources": true,
     "removeComments": true,
+    "types": [
+      "node"
+    ],
     "lib": [
       "es2022",
       "dom",

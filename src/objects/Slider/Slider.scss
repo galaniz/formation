@@ -98,6 +98,7 @@ $object-fix: fix.get-class-prefix("object");
   padding: var(--sld-track-padding);
   scroll-padding: var(--sld-track-scroll);
   scroll-snap-type: var(--sld-snap);
+  scrollbar-width: none;
   margin-left: var(--sld-track-x, 0);
   -webkit-overflow-scrolling: touch;
 }

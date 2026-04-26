@@ -497,10 +497,9 @@ test.describe('Form', () => {
 
   /* Test clones */
 
-  test('should not add error summary or inline errors if clones cleared', async ({ page }) => {
+  test('should not add error summary or inline errors if templates cleared', async ({ page }) => {
     await page.evaluate(async () => {
       const { Form } = await import('../Form.js')
-
       Form.templates.clear()
     })
 

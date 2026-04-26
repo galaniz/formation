@@ -2,14 +2,12 @@ export default /* html */`
   <button
     id="mod-open-1"
     type="button"
-    aria-haspopup="dialog"
   >
     Open 1
   </button>
   <button
     id="mod-open-2"
     type="button"
-    aria-haspopup="dialog"
   >
     Open 2
   </button>

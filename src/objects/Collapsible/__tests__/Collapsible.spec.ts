@@ -611,10 +611,9 @@ test.describe('Collapsible', () => {
 
     await page.waitForFunction(async () => { // Wait for hoverable
       const { doActions } = await import('../../../actions/actions.js')
+      const args: CollapsibleActionArgs = { hoverable: true }
 
-      doActions('collapsible:action', {
-        hoverable: true
-      } as CollapsibleActionArgs)
+      doActions('collapsible:action', args)
 
       const clp = document.querySelector('#clp-action') as Collapsible
       return clp.hoverable
@@ -643,10 +642,9 @@ test.describe('Collapsible', () => {
 
     await page.waitForFunction(async () => { // Wait for hoverable
       const { doActions } = await import('../../../actions/actions.js')
+      const args: CollapsibleActionArgs = { hoverable: false }
 
-      doActions('collapsible:action', {
-        hoverable: false
-      } as CollapsibleActionArgs)
+      doActions('collapsible:action', args)
 
       const clp = document.querySelector('#clp-action') as Collapsible
       return clp.hoverable

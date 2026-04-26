@@ -21,7 +21,6 @@ export default /* html */`
     <button
       class="nav-hide"
       type="button"
-      aria-haspopup="true"
       data-nav-open
       data-testid="nav-slots-open"
     >

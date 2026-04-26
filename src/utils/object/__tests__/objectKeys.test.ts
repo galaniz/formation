@@ -11,11 +11,11 @@ import { getObjectKeys } from '../objectKeys.js'
 
 describe('getObjectKeys()', () => {
   it('should throw type error if null', () => {
-    expect(() => getObjectKeys(null)).toThrowError()
+    expect(() => getObjectKeys(null)).toThrow()
   })
 
   it('should throw type error if undefined', () => {
-    expect(() => getObjectKeys(undefined)).toThrowError()
+    expect(() => getObjectKeys(undefined)).toThrow()
   })
 
   it('should return array of property names if object', () => {

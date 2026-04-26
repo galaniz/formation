@@ -8,7 +8,7 @@ Extendable TS web components and utilities, and SCSS generated utility classes.
 npm install -D @alanizcreative/formation
 ```
 
-## Index
+## Reference
 <details>
 <summary>Actions</summary>
   

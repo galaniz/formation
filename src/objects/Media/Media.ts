@@ -4,14 +4,16 @@
 
 /* Imports */
 
-import type { MediaTemplates, MediaTemplateKeys, MediaProgress, MediaControl } from './MediaTypes.js'
+import type { MediaTemplates, MediaTemplateKeys, MediaProgress, MediaControl, MediaType } from './MediaTypes.js'
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
+import { isNumber } from '../../utils/number/number.js'
 import { getDuration } from '../../utils/duration/duration.js'
 import { getKey } from '../../utils/key/key.js'
 import { getItem, getTemplateItem, cloneItem } from '../../items/items.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
+import { applyFilters } from '../../filters/filters.js'
 import { setDisplay } from '../../utils/display/display.js'
 import { config } from '../../config/config.js'
 
@@ -29,28 +31,35 @@ declare global {
  */
 class Media extends HTMLElement {
   /**
-   * Media element.
+   * Media element identified by `type` attribute.
    *
    * @type {HTMLMediaElement|null}
    */
   media: HTMLMediaElement | null = null
 
   /**
-   * Progress bar element.
+   * Progress bar element identified by `data-media-progress`.
    *
    * @type {HTMLElement|null}
    */
   progress: HTMLElement | null = null
 
   /**
-   * Time element.
+   * Time element identified by `data-media-time`.
    *
    * @type {HTMLElement|null}
    */
   time: HTMLElement | null = null
 
   /**
-   * Play/pause button elements.
+   * Duration element identified by `data-media-duration`.
+   *
+   * @type {HTMLElement|null}
+   */
+  duration: HTMLElement | null = null
+
+  /**
+   * Play/pause button elements identified by `data-media-control` matching a `MediaControl` value.
    *
    * @type {HTMLButtonElement[]}
    */
@@ -62,6 +71,13 @@ class Media extends HTMLElement {
    * @type {string}
    */
   url: string = ''
+
+  /**
+   * Type of media.
+   *
+   * @type {MediaType}
+   */
+  type: MediaType = 'video'
 
   /**
    * Play state.
@@ -85,25 +101,11 @@ class Media extends HTMLElement {
   loaded: boolean = false
 
   /**
-   * Active state.
-   *
-   * @type {boolean}
-   */
-  active: boolean = true
-
-  /**
    * Initialize success.
    *
    * @type {boolean}
    */
   init: boolean = false
-
-  /**
-   * Player is global.
-   *
-   * @type {boolean}
-   */
-  global: boolean = false
 
   /**
    * Loader and error fragments.
@@ -125,7 +127,7 @@ class Media extends HTMLElement {
    * @private
    * @type {number}
    */
-  duration: number = 0
+  durationTime: number = 0
 
   /**
    * Duration in words.
@@ -153,7 +155,9 @@ class Media extends HTMLElement {
     offsetX: 0, // For touch
     pointerDown: false,
     currentX: 0,
-    time: 0
+    time: 0,
+    load: false,
+    muted: false
   }
 
   /**
@@ -192,12 +196,9 @@ class Media extends HTMLElement {
   #errorHandler = this.#error.bind(this)
   #controlHandler = this.#control.bind(this) as EventListener
   #clickProgressHandler = this.#clickProgress.bind(this)
-  #downProgressHandler = this.#downProgress.bind(this)
-  #upProgressHandler = this.#upProgress.bind(this)
-  #mouseProgressHandler = this.#mouseProgress.bind(this)
-  #startProgressHandler = this.#startProgress.bind(this)
-  #endProgressHandler = this.#endProgress.bind(this)
-  #touchProgressHandler = this.#touchProgress.bind(this)
+  #pointerDownHandler = this.#pointerDown.bind(this)
+  #pointerMoveHandler = this.#pointerMove.bind(this)
+  #pointerUpHandler = this.#pointerUp.bind(this)
   #keyDownHandler = this.#keyDown.bind(this) as (e: KeyboardEvent) => void
   #keyUpHandler = this.#keyUp.bind(this)
   #resizeHandler = this.#resize.bind(this)
@@ -232,6 +233,10 @@ class Media extends HTMLElement {
       return
     }
 
+    /* Count */
+
+    Media.#count -= 1
+
     /* Clear event listeners */
 
     this.media?.removeEventListener('loadedmetadata', this.#metaHandler)
@@ -245,8 +250,10 @@ class Media extends HTMLElement {
     })
 
     this.progress?.removeEventListener('click', this.#clickProgressHandler)
-    this.progress?.removeEventListener('touchstart', this.#startProgressHandler)
-    this.progress?.removeEventListener('mousedown', this.#downProgressHandler)
+    this.progress?.removeEventListener('pointerdown', this.#pointerDownHandler)
+    this.progress?.removeEventListener('pointermove', this.#pointerMoveHandler)
+    this.progress?.removeEventListener('pointerup', this.#pointerUpHandler)
+    this.progress?.removeEventListener('pointercancel', this.#pointerUpHandler)
 
     document.removeEventListener('keydown', this.#keyDownHandler)
     document.removeEventListener('keyup', this.#keyUpHandler)
@@ -257,6 +264,7 @@ class Media extends HTMLElement {
     this.media = null
     this.progress = null
     this.time = null
+    this.duration = null
     this.controls = []
 
     if (!Media.#count) { // Clear if last element
@@ -281,12 +289,12 @@ class Media extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const type = this.getAttribute('type') || 'video'
-    const global = this.hasAttribute('global')
+    const type = (this.getAttribute('type') || this.type) as MediaType
     const media = getItem(type, this)
     const controls = getItem(['[data-media-control]'], this)
     const progress = getItem('[data-media-progress]', this)
     const time = getItem('[data-media-time]', this)
+    const duration = getItem('[data-media-duration]', this)
     const url = this.getAttribute('url')
     const errorId = this.getAttribute('error')
     const loaderId = this.getAttribute('loader')
@@ -296,7 +304,6 @@ class Media extends HTMLElement {
     if (
       !isHtmlElement(media, HTMLMediaElement) ||
       !isHtmlElementArray(controls, HTMLButtonElement) ||
-      !isStringStrict(url) ||
       !isStringStrict(errorId) ||
       !isStringStrict(loaderId)
     ) {
@@ -327,10 +334,13 @@ class Media extends HTMLElement {
 
     /* Props */
 
-    this.url = url
+    this.type = type
     this.media = media
     this.controls = controls
-    this.global = global
+
+    if (isStringStrict(url)) {
+      this.url = url
+    }
 
     /* Media */
 
@@ -353,13 +363,21 @@ class Media extends HTMLElement {
       this.time = time
     }
 
+    /* Duration */
+
+    if (isHtmlElement(duration)) {
+      this.duration = duration
+    }
+
     /* Progress */
 
     if (isHtmlElement(progress)) {
       this.progress = progress
       this.progress.addEventListener('click', this.#clickProgressHandler)
-      this.progress.addEventListener('touchstart', this.#startProgressHandler, { passive: true })
-      this.progress.addEventListener('mousedown', this.#downProgressHandler)
+      this.progress.addEventListener('pointerdown', this.#pointerDownHandler)
+      this.progress.addEventListener('pointermove', this.#pointerMoveHandler)
+      this.progress.addEventListener('pointerup', this.#pointerUpHandler)
+      this.progress.addEventListener('pointercancel', this.#pointerUpHandler)
     }
 
     /* Event listeners */
@@ -380,60 +398,14 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Player currently active check.
+   * Player currently active check modified via the `media:active:{id}` filter.
    *
    * @return {boolean}
    */
-  #isActive (): boolean {
-    if (!this.active) {
-      return false
-    }
+  active (): boolean {
+    const active = this.contains(document.activeElement)
 
-    if (!this.global && !this.contains(document.activeElement)) {
-      return false
-    }
-
-    return true
-  }
-
-  /**
-   * Clone, return and append template element.
-   *
-   * @param {MediaTemplateKeys} type
-   * @return {HTMLElement|null}
-   */
-  #getClone (type: MediaTemplateKeys): HTMLElement | null {
-    /* Check if exists */
-
-    const result = this.clones.get(type)
-
-    if (isHtmlElement(result)) {
-      return result
-    }
-
-    /* Clone template */
-
-    const clone = cloneItem(Media.templates.get(type))
-
-    if (!isHtmlElement(clone)) {
-      return null
-    }
-
-    if (type === 'error') {
-      const cloneLink = getItem('[data-media-link]', clone)
-
-      if (isHtmlElement(cloneLink, HTMLAnchorElement)) {
-        cloneLink.href = this.url
-        cloneLink.textContent = this.title
-      }
-    }
-
-    this.append(clone)
-    this.clones.set(type, clone)
-
-    /* Return clone */
-
-    return clone
+    return applyFilters(`media:active:${this.id}`, active)
   }
 
   /**
@@ -487,10 +459,22 @@ class Media extends HTMLElement {
 
     /* Time */
 
-    const time = this.duration * scale
+    const time = this.durationTime * scale
 
     this.#progress.time = time
     this.#setTime(time)
+  }
+
+  /**
+   * Load or already loaded update media current time to progress time.
+   *
+   * @private
+   * @return {void}
+   */
+  #setProgressTime (): void {
+    this.load(true)
+    // @ts-expect-error - load throws error if missing media
+    this.media.currentTime = this.#progress.time
   }
 
   /**
@@ -501,15 +485,11 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #setTime (seconds: number): void {
-    if (isNaN(seconds)) {
-      seconds = 0
-    }
-
-    seconds = parseInt(seconds.toFixed())
-
     if (!this.progress || !this.time) {
       return
     }
+
+    seconds = parseInt(seconds.toFixed())
 
     const timeText = getDuration(seconds, true) + ' / ' + this.durationText
 
@@ -519,16 +499,21 @@ class Media extends HTMLElement {
   }
 
   /**
-   * X position from mouse or touch to set progress bar, scrub and time.
+   * X position from pointer to set progress bar, scrub and time.
    *
    * @private
    * @param {number} x
+   * @param {boolean} [time=true]
    * @return {void}
    */
-  #drag (x: number): void {
+  #drag (x: number, time: boolean = true): void {
     x -= this.#progress.offsetX
 
     this.#setProgressScrub(x / this.#progress.width)
+
+    if (this.type === 'video' && time && this.media) {
+      this.media.currentTime = this.#progress.time
+    }
   }
 
   /**
@@ -540,11 +525,14 @@ class Media extends HTMLElement {
    */
   #setDrag (drag: boolean = true): void {
     this.dragging = drag
+    this.toggleAttribute('dragging', drag)
 
-    if (drag) {
-      this.setAttribute('dragging', '')
-    } else {
-      this.removeAttribute('dragging')
+    if (this.media) {
+      if (drag) {
+        this.#progress.muted = this.media.muted
+      }
+
+      this.media.muted = drag ? true : this.#progress.muted
     }
   }
 
@@ -555,16 +543,28 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #meta (): void {
-    if (!isHtmlElement(this.media)) {
-      return
+    let duration = this.media?.duration
+
+    if (!isNumber(duration)) {
+      duration = 0
     }
 
-    const duration = parseInt(this.media.duration.toFixed())
-    this.duration = duration
-    this.durationText = getDuration(duration, true)
+    const durationRounded = parseInt(duration.toFixed())
+
+    this.durationTime = duration
+    this.durationText = getDuration(durationRounded, true)
+
+    if (this.duration) {
+      this.duration.textContent = getDuration(durationRounded)
+    }
 
     if (this.progress) {
-      this.progress.setAttribute('aria-valuemax', `${duration}`)
+      this.progress.setAttribute('aria-valuemax', `${durationRounded}`)
+    }
+
+    if (this.#progress.load) {
+      this.#setProgressScrub(this.#progress.currentX)
+      this.#setProgressTime()
     }
   }
 
@@ -575,7 +575,7 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #canPlay (): void {
-    setDisplay(this.#getClone('loader'), 'hide', 'loader')
+    setDisplay(this.getClone('loader'), 'hide', 'loader')
     this.loaded = true
   }
 
@@ -586,12 +586,14 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #time (): void {
-    if (this.#progress.pointerDown || this.#keyTime || !isHtmlElement(this.media)) {
+    if (this.#progress.pointerDown || this.#keyTime || !this.media?.readyState) {
       return
     }
 
-    this.#setTime(this.media.currentTime)
-    this.#setProgressScrub(this.media.currentTime / this.duration)
+    const seconds = this.media.currentTime
+
+    this.#setTime(seconds)
+    this.#setProgressScrub(seconds / this.durationTime)
   }
 
   /**
@@ -611,8 +613,8 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #error (): void {
-    setDisplay(this.#getClone('loader'), 'hide', 'loader')
-    this.#errorDelayId = setDisplay(this.#getClone('error'), 'focus')
+    setDisplay(this.getClone('loader'), 'hide', 'loader')
+    this.#errorDelayId = setDisplay(this.getClone('error'), 'focus')
   }
 
   /**
@@ -638,129 +640,58 @@ class Media extends HTMLElement {
    */
   #clickProgress (e: MouseEvent): void {
     this.#progress.pointerDown = true
-    this.#drag(e.pageX)
+    this.#drag(e.clientX, false)
     this.#progress.pointerDown = false
     this.#setDrag(false)
-
-    if (isHtmlElement(this.media)) {
-      this.media.currentTime = this.#progress.time
-    }
-
-    e.stopPropagation()
-    e.preventDefault()
+    this.#setProgressTime()
   }
 
   /**
-   * Mouse down handler on progress element to add mouse listeners.
-   *
-   * @private
-   * @param {MouseEvent} e
-   * @return {void}
-   */
-  #downProgress (e: MouseEvent): void {
-    e.stopPropagation()
-    e.preventDefault()
-
-    this.#progress.pointerDown = true
-    this.#setDrag()
-
-    document.addEventListener('mousemove', this.#mouseProgressHandler)
-    document.addEventListener('mouseup', this.#upProgressHandler)
-  }
-
-  /**
-   * Mouse up handler on document element to reset and remove mouse listeners.
-   *
-   * @private
-   * @param {MouseEvent} e
-   * @return {void}
-   */
-  #upProgress (e: MouseEvent): void {
-    e.stopPropagation()
-
-    this.#progress.pointerDown = false
-    this.#setDrag(false)
-
-    if (isHtmlElement(this.media)) {
-      this.media.currentTime = this.#progress.time
-    }
-
-    document.removeEventListener('mousemove', this.#mouseProgressHandler)
-    document.removeEventListener('mouseup', this.#upProgressHandler)
-  }
-
-  /**
-   * Mouse move handler on document element to update progress bar, scrub and time.
-   *
-   * @private
-   * @param {MouseEvent} e
-   * @return {void}
-   */
-  #mouseProgress (e: MouseEvent): void {
-    e.preventDefault()
-
-    if (this.#progress.pointerDown) {
-      this.#drag(e.pageX)
-    }
-  }
-
-  /**
-   * Touch start handler on progress element to add touch listeners.
+   * Pointer down handler on progress element to set drag.
    * 
    * @private
-   * @param {TouchEvent} e
+   * @param {PointerEvent} e
    * @return {void}
    */
-  #startProgress (e: TouchEvent): void {
+  #pointerDown (e: PointerEvent): void {
     e.stopPropagation()
 
     this.#progress.pointerDown = true
     this.#setDrag()
 
-    document.addEventListener('touchmove', this.#touchProgressHandler)
-    document.addEventListener('touchend', this.#endProgressHandler)
+    this.progress?.setPointerCapture(e.pointerId) // Drag continues even when pointer moves outside progress boundaries
   }
 
   /**
-   * Touch end handler on document element to reset and remove touch listeners.
+   * Pointer move handler on progress element to update progress bar, scrub and time.
    *
    * @private
-   * @param {TouchEvent} e
+   * @param {PointerEvent} e
    * @return {void}
    */
-  #endProgress (e: TouchEvent): void {
-    e.stopPropagation()
-
-    this.#progress.pointerDown = false
-    this.#setDrag(false)
-
-    if (isHtmlElement(this.media)) {
-      this.media.currentTime = this.#progress.time
-    }
-
-    document.removeEventListener('touchmove', this.#touchProgressHandler)
-    document.removeEventListener('touchend', this.#endProgressHandler)
-  }
-
-  /**
-   * Touch move handler on document element to update progress bar, scrub and time.
-   *
-   * @private
-   * @param {TouchEvent} e
-   * @return {void}
-   */
-  #touchProgress (e: TouchEvent): void {
-    e.stopPropagation()
-
-    const x = e.touches[0]?.pageX
-
-    if (!x || !this.#progress.pointerDown) {
+  #pointerMove (e: PointerEvent): void {
+    if (!this.#progress.pointerDown) {
       return
     }
 
     e.preventDefault()
 
-    this.#drag(x)
+    this.#drag(e.clientX)
+  }
+
+  /**
+   * Pointer up handler on progress element to set time and reset drag.
+   *
+   * @private
+   * @param {PointerEvent} e
+   * @return {void}
+   */
+  #pointerUp (e: PointerEvent): void {
+    e.stopPropagation()
+
+    this.#progress.pointerDown = false
+    this.#setDrag(false)
+    this.#setProgressTime()
   }
 
   /**
@@ -771,7 +702,7 @@ class Media extends HTMLElement {
    * @return {Promise<void>}
    */
   async #keyDown (e: KeyboardEvent): Promise<void> {
-    if (!this.#isActive()) {
+    if (!this.active()) {
       return
     }
 
@@ -822,15 +753,15 @@ class Media extends HTMLElement {
       newTime = 0
     }
 
-    if (state === 4 || newTime > this.duration) {
-      newTime = this.duration
+    if (state === 4 || newTime > this.durationTime) {
+      newTime = this.durationTime
     }
 
     if (newTime < 0) {
       newTime = 0
     }
 
-    this.#setProgressScrub(newTime / this.duration)
+    this.#setProgressScrub(newTime / this.durationTime)
   }
 
   /**
@@ -841,20 +772,16 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #keyUp (e: KeyboardEvent): void {
-    if (!this.#isActive()) {
+    if (!this.active()) {
       return
     }
 
     if (getKey(e) === 'SPACE') {
       e.preventDefault()
-
       return
     }
 
-    if (isHtmlElement(this.media)) {
-      this.media.currentTime = this.#progress.time
-    }
-
+    this.#setProgressTime()
     this.#keyTime = false
   }
 
@@ -877,25 +804,71 @@ class Media extends HTMLElement {
   }
 
   /**
-   * Load media asset, clear loader and error.
+   * Clone, return and append template element.
    *
-   * @return {void}
+   * @param {MediaTemplateKeys} type
+   * @return {HTMLElement|null}
    */
-  load (): void {
-    clearTimeout(this.#loaderDelayId)
-    clearTimeout(this.#errorDelayId)
+  getClone (type: MediaTemplateKeys): HTMLElement | null {
+    /* Check if exists */
 
-    if (this.clones.has('error')) {
-      setDisplay(this.#getClone('error'), 'hide')
+    const result = this.clones.get(type)
+
+    if (isHtmlElement(result)) {
+      return result
     }
 
-    this.#loaderDelayId = setDisplay(this.#getClone('loader'), 'show', 'loader')
+    /* Clone template */
 
+    const clone = cloneItem(Media.templates.get(type))
+
+    if (!isHtmlElement(clone)) {
+      return null
+    }
+
+    if (type === 'error') {
+      const cloneLink = getItem('[data-media-link]', clone)
+
+      if (isHtmlElement(cloneLink, HTMLAnchorElement)) {
+        cloneLink.href = this.url
+        cloneLink.textContent = this.title
+      }
+    }
+
+    this.append(clone)
+    this.clones.set(type, clone)
+
+    /* Return clone */
+
+    return clone
+  }
+
+  /**
+   * Load media asset, clear loader and error.
+   *
+   * @param {boolean} [progress=false]
+   * @return {void}
+   */
+  load (progress: boolean = false): void {
     if (!isHtmlElement(this.media)) {
       throw new Error('No media')
     }
 
+    if (this.media.readyState) {
+      return
+    }
+
+    clearTimeout(this.#loaderDelayId)
+    clearTimeout(this.#errorDelayId)
+
+    if (this.clones.has('error')) {
+      setDisplay(this.getClone('error'), 'hide')
+    }
+
+    this.#loaderDelayId = setDisplay(this.getClone('loader'), 'show', 'loader')
+    this.#progress.load = progress
     this.setAttribute('url', this.url)
+    this.loaded = false
     this.media.src = this.url
     this.media.load()
   }
@@ -908,26 +881,19 @@ class Media extends HTMLElement {
    */
   async toggle (play: boolean = true): Promise<void> {
     try {
-      if (!isHtmlElement(this.media)) {
-        throw new Error('No media')
-      }
-
       /* Load */
 
-      if (!this.loaded) {
-        this.load()
-      }
+      this.load()
 
       /* Play/pause */
 
       this.playing = play
+      this.toggleAttribute('playing', play)
 
       if (play) {
-        await this.media.play()
-        this.setAttribute('playing', '')
+        await this.media?.play()
       } else {
-        this.media.pause()
-        this.removeAttribute('playing')
+        this.media?.pause()
       }
 
       this.controls.forEach(control => {

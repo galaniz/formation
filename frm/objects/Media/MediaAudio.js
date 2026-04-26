@@ -9,10 +9,29 @@ export default /* html */`
     error="med-error"
   >
     <audio></audio>
-    <button type="button" data-media-control="play">Play</button>
-    <button type="button" data-media-control="pause">Pause</button>
-    <button type="button" data-media-control="toggle">Toggle</button>
+    <button
+      type="button"
+      data-media-control="play"
+      data-testid="med-audio-play"
+    >
+      Play
+    </button>
+    <button
+      type="button"
+      data-media-control="pause"
+      data-testid="med-audio-pause"
+    >
+      Pause
+    </button>
+    <button
+      type="button"
+      data-media-control="toggle"
+      data-testid="med-audio-toggle"
+    >
+      Toggle
+    </button>
     <div data-media-time>0:00</div>
+    <div data-media-duration>0:00</div>
     <div
       class="media-progress relative h-1"
       tabindex="0"
@@ -23,6 +42,7 @@ export default /* html */`
       aria-valuenow="0"
       aria-valuetext=""
       data-media-progress
+      data-testid="med-audio-progress"
     >
       <div class="media-bar absolute inset-0 after"></div>
       <div class="media-scrub absolute w-2 h-2 bg-foreground-dark b-radius-full"></div>
