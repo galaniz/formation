@@ -534,9 +534,13 @@ test.describe('Media', () => {
       }
     }
 
-    await page.waitForFunction(() => { // Wait for load
+    await page.evaluate(() => {
       const media = document.querySelector('#med-video') as Media
       media.load()
+    })
+
+    await page.waitForFunction(() => { // Wait for load
+      const media = document.querySelector('#med-video') as Media
       return media.loaded
     })
 
@@ -1044,9 +1048,13 @@ test.describe('Media', () => {
       }
     }
 
-    await page.waitForFunction(() => { // Wait for load
+    await page.evaluate(() => {
       const media = document.querySelector('#med-audio') as Media
       media.load()
+    })
+
+    await page.waitForFunction(() => { // Wait for load
+      const media = document.querySelector('#med-audio') as Media
       return media.loaded
     })
 
