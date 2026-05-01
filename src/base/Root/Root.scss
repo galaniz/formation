@@ -21,7 +21,10 @@
   @each $r in con.$root {
     @if $r == "colors" {
       @each $c, $v in con.$colors-map {
-        @if con.$colors-type == "rgb" {
+        @if con.$colors-type == "lch" {
+          --#{con.$n}#{$c}-lch: #{$v};
+          --#{con.$n}#{$c}: #{oklch(var(--#{con.$n}#{$c}-lch))};
+        } @else if con.$colors-type == "rgb" {
           --#{con.$n}#{$c}-rgb: #{$v};
           --#{con.$n}#{$c}: #{rgb(var(--#{con.$n}#{$c}-rgb))};
         } @else if con.$colors-type == "hsl" {

@@ -150,7 +150,7 @@ $prefixes: (
 
 /* Colors  */
 
-$colors-type: "hex" !default;
+$colors-type: "lch" !default; // "lch" | "rgb" | "hsl" | "rgba" | "hsla" | "hex"
 $colors: (
   "primary": (
     "base": #888,
