@@ -472,7 +472,7 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #setProgressTime (): void {
-    this.load(true)
+    this.load(false, true)
     // @ts-expect-error - load throws error if missing media
     this.media.currentTime = this.#progress.time
   }
@@ -725,11 +725,10 @@ class Media extends HTMLElement {
         state = 4
         break
       case 'SPACE': {
-        space = true
-
-        await this.toggle(!this.playing)
         e.preventDefault()
+        await this.toggle(!this.playing)
 
+        space = true
         break
       }
     }
@@ -846,15 +845,16 @@ class Media extends HTMLElement {
   /**
    * Load media asset, clear loader and error.
    *
+   * @param {boolean} [reload=false]
    * @param {boolean} [progress=false]
    * @return {void}
    */
-  load (progress: boolean = false): void {
+  load (reload: boolean = false, progress: boolean = false): void {
     if (!isHtmlElement(this.media)) {
       throw new Error('No media')
     }
 
-    if (this.media.readyState) {
+    if (this.media.readyState && !reload) {
       return
     }
 
@@ -877,13 +877,14 @@ class Media extends HTMLElement {
    * Play and pause media element.
    *
    * @param {boolean} [play=true]
+   * @param {boolean} [reload=false]
    * @return {Promise<void>}
    */
-  async toggle (play: boolean = true): Promise<void> {
+  async toggle (play: boolean = true, reload: boolean = false): Promise<void> {
     try {
       /* Load */
 
-      this.load()
+      this.load(reload)
 
       /* Play/pause */
 

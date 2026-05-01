@@ -1269,6 +1269,28 @@ test.describe('Media', () => {
     expect(mediaTimeText).toBe('0:00')
   })
 
+  /* Test reload */
+
+  test('should load new audio url on toggle if reload true', async ({ page }) => {
+    await page.evaluate(() => {
+      const media = document.querySelector('#med-audio') as Media
+      media.load()
+    })
+
+    await page.evaluate(async () => {
+      const media = document.querySelector('#med-audio') as Media
+      media.url = '/static/audio/sound.mp3'
+      await media.toggle(true)
+    })
+
+    const mediaSrc = await page.evaluate(() => {
+      const media = document.querySelector('#med-audio') as Media
+      return media.media?.src
+    })
+
+    expect(mediaSrc).toBe('http://localhost:3000/static/audio/sound.mp3')
+  })
+
   /* Test clean up */
 
   test('should remove video instance and event listeners', async ({ page }) => {
