@@ -1283,6 +1283,11 @@ test.describe('Media', () => {
       await media.toggle(true)
     })
 
+    await page.waitForFunction(() => { // Wait for load
+      const media = document.querySelector('#med-audio') as Media
+      return media.loaded
+    })
+
     const mediaSrc = await page.evaluate(() => {
       const media = document.querySelector('#med-audio') as Media
       return media.media?.src
