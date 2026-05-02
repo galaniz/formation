@@ -127,11 +127,13 @@ Clone, return and append template element.
 
 ### load  
 
-**<code>load(progress?: boolean): void</code>**  
+**<code>load(reload?: boolean, progress?: boolean): void</code>**  
 
 Load media asset, clear loader and error.
 
 #### Parameters  
+- **`reload`** <code>boolean</code> optional  
+Default: `false`  
 - **`progress`** <code>boolean</code> optional  
 Default: `false`
 
@@ -141,13 +143,15 @@ Default: `false`
 
 ### toggle  
 
-**<code>toggle(play?: boolean): Promise&lt;void&gt;</code>**  
+**<code>toggle(play?: boolean, reload?: boolean): Promise&lt;void&gt;</code>**  
 
 Play and pause media element.
 
 #### Parameters  
 - **`play`** <code>boolean</code> optional  
-Default: `true`
+Default: `true`  
+- **`reload`** <code>boolean</code> optional  
+Default: `false`
 
 #### Returns  
 
