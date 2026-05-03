@@ -7,13 +7,17 @@
 /* Imports */
 
 import { readFile, writeFile, glob } from 'node:fs/promises'
+import { pathToFileURL } from 'node:url'
 import { dirname } from 'node:path'
 import * as sass from 'sass'
 
 /* Recurse src json files to generate spec test files and clear coverage */
 
-const globalStyles = sass.compile('frm/global/global.scss', {
-  style: 'compressed'
+const globalStylesPath = 'frm/global/global.scss'
+const globalStyles = sass.compileString(`@forward "../config/config";${await readFile(globalStylesPath, 'utf8')}`, {
+  loadPaths: ['./frm'],
+  style: 'compressed',
+  url: pathToFileURL(globalStylesPath)
 })
 
 /** @type {Record<string, string>} */
@@ -49,8 +53,11 @@ for await (const entry of glob('src/**/*.json')) {
   const newPath = pathArr.join('/')
   const parent = pathArr.pop()
 
-  const componentStyles = sass.compile(`frm/${newPath}/${parent}.scss`, {
-    style: 'compressed'
+  const componentStylesPath = `frm/${newPath}/${parent}.scss`
+  const componentStyles = sass.compileString(`@forward "config/config";${await readFile(componentStylesPath, 'utf8')}`, {
+    loadPaths: ['./frm'],
+    style: 'compressed',
+    url: pathToFileURL(componentStylesPath)
   })
 
   const data = JSON.parse(json)

@@ -150,22 +150,22 @@ $prefixes: (
 
 /* Colors  */
 
-$colors-type: "hex" !default;
+$colors-type: "lch" !default; // "lch" | "rgb" | "hsl" | "rgba" | "hsla" | "hex"
 $colors: (
   "primary": (
-    "base": #888,
-    "light": #aaa,
-    "dark": #666,
+    "base": "0.6268 0 0", // #888
+    "light": "0.738 0 0", // #aaa
+    "dark": "0.5103 0 0", // #666
   ),
   "foreground": (
-    "base": #222,
-    "light": #444,
-    "dark": #000,
+    "base": "0.252 0 0", // #222
+    "light": "0.3867 0 0", // #444
+    "dark": "0 0 0", // #000
   ),
   "background": (
-    "base": #f8f8f8,
-    "light": #fff,
-    "dark": #eee,
+    "base": "0.9791 0 0", // #f8f8f8
+    "light": "1 0 0", // #fff
+    "dark": "0.9491 0 0", // #eee
   ),
 ) !default;
 

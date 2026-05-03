@@ -4,7 +4,6 @@
 
 /* Imports */
 
-@forward "../../config/config";
 @use "../../../lib/utils/utils" as util;
 
 /* Styles */
@@ -17,7 +16,7 @@
 }
 
 .media-bar {
-  background: hsla(var(--frm-foreground-dark-hsl), 0.2);
+  background: oklch(var(--frm-foreground-dark-lch) / 0.2);
 
   &::after {
     background: var(--frm-foreground-dark);
