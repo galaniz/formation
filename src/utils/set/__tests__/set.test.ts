@@ -2,8 +2,6 @@
  * Utils - Set Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isSet, isSetStrict } from '../set.js'
 

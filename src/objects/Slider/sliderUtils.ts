@@ -2,8 +2,6 @@
  * Objects - Slider Utils
  */
 
-/* Imports */
-
 import type { SliderAnimRef } from './SliderTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
@@ -105,8 +103,6 @@ const sliderScrollTo = (
 
   animRef.id = requestAnimationFrame(animate)
 }
-
-/* Exports */
 
 export {
   sliderEase,

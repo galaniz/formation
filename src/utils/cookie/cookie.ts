@@ -2,8 +2,6 @@
  * Utils - Cookie
  */
 
-/* Imports */
-
 import type { CookieOptions } from './cookieTypes.js'
 import { isStringStrict } from '../string/string.js'
 
@@ -96,8 +94,6 @@ const getCookie = (name: string): string => {
 
   return ''
 }
-
-/* Exports */
 
 export {
   setCookie,

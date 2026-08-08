@@ -2,8 +2,6 @@
  * Components - Pagination
  */
 
-/* Imports */
-
 import type {
   PaginationSlots,
   PaginationTemplateKeys,
@@ -480,7 +478,5 @@ class Pagination extends HTMLElement {
     await this.request(source)
   }
 }
-
-/* Exports */
 
 export { Pagination }

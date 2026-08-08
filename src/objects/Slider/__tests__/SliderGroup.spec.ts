@@ -2,8 +2,6 @@
  * Objects - Slider Group Test
  */
 
-/* Imports */
-
 import type { SliderGroup } from '../SliderGroup.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

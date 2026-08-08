@@ -2,8 +2,6 @@
  * Utils - Asset Test
  */
 
-/* Imports */
-
 import type { Asset } from '../assetTypes.js'
 import { it, expect, describe } from 'vitest'
 import { fireEvent } from '@testing-library/dom'

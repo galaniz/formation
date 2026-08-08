@@ -2,8 +2,6 @@
  * Objects - Form Test
  */
 
-/* Imports */
-
 import type { Form } from '../Form.js'
 import type {
   FormValue,

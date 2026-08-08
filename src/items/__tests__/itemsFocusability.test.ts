@@ -2,8 +2,6 @@
  * Items - Focusability Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import {
   toggleFocusability,

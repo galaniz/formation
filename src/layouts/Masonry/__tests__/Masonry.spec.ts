@@ -2,8 +2,6 @@
  * Layouts - Masonry Test
  */
 
-/* Imports */
-
 import type { Masonry } from '../Masonry.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

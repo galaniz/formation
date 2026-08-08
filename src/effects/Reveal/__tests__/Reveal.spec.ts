@@ -2,8 +2,6 @@
  * Effects - Reveal Test
  */
 
-/* Imports */
-
 import type { Reveal } from '../Reveal.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

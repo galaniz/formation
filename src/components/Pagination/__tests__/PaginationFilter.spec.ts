@@ -2,8 +2,6 @@
  * Components - Pagination Filter Test
  */
 
-/* Imports */
-
 import type { PaginationFilter } from '../PaginationFilter.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

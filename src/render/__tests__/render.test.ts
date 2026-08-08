@@ -2,8 +2,6 @@
  * Render - Test
  */
 
-/* Imports */
-
 import type { RenderFunction, RenderItems, RenderStringFunction } from '../renderTypes.js'
 import { it, expect, describe } from 'vitest'
 import { isString } from '../../utils/string/string.js'

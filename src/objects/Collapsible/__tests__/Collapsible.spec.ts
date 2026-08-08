@@ -2,8 +2,6 @@
  * Objects - Collapsible Test
  */
 
-/* Imports */
-
 import type { Collapsible } from '../Collapsible.js'
 import type { CollapsibleActionArgs } from '../CollapsibleTypes.js'
 import { test, expect } from '@playwright/test'

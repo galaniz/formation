@@ -2,8 +2,6 @@
  * Objects - Modal
  */
 
-/* Imports */
-
 import { isHtmlElementArray, isHtmlElement } from '../../utils/html/html.js'
 import { onEscape, removeEscape } from '../../actions/actionEscape.js'
 import { scroll } from '../../utils/scroll/scroll.js'
@@ -267,7 +265,5 @@ class Modal extends HTMLElement {
     this.#toggle(true)
   }
 }
-
-/* Exports */
 
 export { Modal }

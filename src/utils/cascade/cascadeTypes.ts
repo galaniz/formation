@@ -2,8 +2,6 @@
  * Utils - Cascade Types
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../../global/globalTypes.js'
 
 /**

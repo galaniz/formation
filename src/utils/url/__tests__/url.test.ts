@@ -2,8 +2,6 @@
  * Utils - URL Test
  */
 
-/* Imports */
-
 import { it, expect, describe, afterEach } from 'vitest'
 import { urlEncode } from '../url.js'
 import { config } from '../../../config/config.js'

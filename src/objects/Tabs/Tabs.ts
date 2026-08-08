@@ -2,8 +2,6 @@
  * Objects - Tabs
  */
 
-/* Imports */
-
 import type { TabsActivateArgs, TabsIndexesFilterArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
 import { getItem } from '../../items/items.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
@@ -506,7 +504,5 @@ class Tabs extends HTMLElement {
     this.#focusTab(index)
   }
 }
-
-/* Exports */
 
 export { Tabs }

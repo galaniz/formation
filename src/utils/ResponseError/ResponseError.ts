@@ -26,6 +26,4 @@ class ResponseError extends Error {
   }
 }
 
-/* Exports */
-
 export { ResponseError }

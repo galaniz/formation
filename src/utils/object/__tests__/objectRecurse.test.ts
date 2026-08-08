@@ -2,8 +2,6 @@
  * Utils - Object Recurse Test
  */
 
-/* Imports */
-
 import { it, expect, describe, vi } from 'vitest'
 import { recurseObject } from '../objectRecurse.js'
 

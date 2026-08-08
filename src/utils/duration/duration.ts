@@ -2,8 +2,6 @@
  * Utils - Duration
  */
 
-/* Imports */
-
 import { isNumber } from '../number/number.js'
 import { config } from '../../config/config.js'
 
@@ -68,7 +66,5 @@ const getDuration = (seconds: number = 0, words: boolean = false): string => {
 
   return t
 }
-
-/* Exports */
 
 export { getDuration }

@@ -4,8 +4,6 @@
  * Scripts - Spec
  */
 
-/* Imports */
-
 import { readFile, writeFile, glob } from 'node:fs/promises'
 import { pathToFileURL } from 'node:url'
 import { dirname } from 'node:path'

@@ -2,8 +2,6 @@
  * Objects - Form Types
  */
 
-/* Imports */
-
 import type { Generic } from '../../global/globalTypes.js'
 
 /**

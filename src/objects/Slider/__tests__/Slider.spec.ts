@@ -2,8 +2,6 @@
  * Objects - Slider Test
  */
 
-/* Imports */
-
 import type { Slider } from '../Slider.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

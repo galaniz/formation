@@ -2,8 +2,6 @@
  * Utils - Key
  */
 
-/* Imports */
-
 import { isString } from '../string/string.js'
 
 /**
@@ -46,7 +44,5 @@ const getKey = (event: KeyboardEvent): string => {
 
   return ''
 }
-
-/* Exports */
 
 export { getKey }

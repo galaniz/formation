@@ -2,8 +2,6 @@
  * Utils - Object
  */
 
-/* Imports */
-
 import { isHtmlElement } from '../html/html.js'
 import { isArray } from '../array/array.js'
 import { isFile, isBlob } from '../file/file.js'
@@ -36,8 +34,6 @@ const isObjectStrict = <T, K>(value: T): value is object & NotObject<T, K> => {
 
   return isObject(value)
 }
-
-/* Exports */
 
 export {
   isObject,

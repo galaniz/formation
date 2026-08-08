@@ -22,6 +22,4 @@ const scroll = (on: boolean = false): boolean => {
   return false
 }
 
-/* Exports */
-
 export { scroll }

@@ -2,8 +2,6 @@
  * Config - Default Font Size
  */
 
-/* Imports */
-
 import { config } from './config.js'
 
 /**
@@ -19,7 +17,5 @@ const configDefaultFontSize = (): void => {
   config.defaultFontSize = size
   config.fontSizeMultiplier = size / 16
 }
-
-/* Exports */
 
 export { configDefaultFontSize }

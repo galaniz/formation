@@ -2,8 +2,6 @@
  * Objects - Modal Test
  */
 
-/* Imports */
-
 import type { Modal } from '../Modal.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

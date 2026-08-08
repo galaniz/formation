@@ -2,8 +2,6 @@
  * Objects - Media Test
  */
 
-/* Imports */
-
 import type { Media } from '../Media.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

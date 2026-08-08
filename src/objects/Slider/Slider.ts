@@ -2,8 +2,6 @@
  * Objects - Slider
  */
 
-/* Imports */
-
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
@@ -701,7 +699,5 @@ class Slider extends Tabs {
     })
   }
 }
-
-/* Exports */
 
 export { Slider }

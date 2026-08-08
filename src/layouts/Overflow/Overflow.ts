@@ -2,8 +2,6 @@
  * Layouts - Overflow
  */
 
-/* Imports */
-
 import { isHtmlElement } from '../../utils/html/html.js'
 import { getItem } from '../../items/items.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
@@ -242,7 +240,5 @@ class Overflow extends HTMLElement {
     this.#set()
   }
 }
-
-/* Exports */
 
 export { Overflow }

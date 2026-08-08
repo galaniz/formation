@@ -2,8 +2,6 @@
  * Components - Navigation Register
  */
 
-/* Imports */
-
 import { Navigation } from './Navigation.js'
 
 /* Define */

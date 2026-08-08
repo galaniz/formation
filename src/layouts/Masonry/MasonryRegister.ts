@@ -2,8 +2,6 @@
  * Layouts - Masonry Register
  */
 
-/* Imports */
-
 import { Masonry } from './Masonry.js'
 
 /* Define */

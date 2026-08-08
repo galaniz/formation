@@ -2,8 +2,6 @@
  * Objects - Collapsible
  */
 
-/* Imports */
-
 import type { CollapsibleAccordionArgs, CollapsibleActionArgs } from './CollapsibleTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement } from '../../utils/html/html.js'
@@ -395,7 +393,5 @@ class Collapsible extends HTMLElement {
     }
   }
 }
-
-/* Exports */
 
 export { Collapsible }

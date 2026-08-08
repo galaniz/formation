@@ -2,8 +2,6 @@
  * Utils - Display Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest'
 import { setDisplay } from '../display.js'
 

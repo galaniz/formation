@@ -2,8 +2,6 @@
  * Config - Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import * as defaultFontSizeModule from '../configDefaultFontSize.js'
 import { config, setConfig } from '../config.js'

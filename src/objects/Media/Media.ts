@@ -2,8 +2,6 @@
  * Objects - Media
  */
 
-/* Imports */
-
 import type { MediaTemplates, MediaTemplateKeys, MediaProgress, MediaControl, MediaType } from './MediaTypes.js'
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -917,7 +915,5 @@ class Media extends HTMLElement {
     }
   }
 }
-
-/* Exports */
 
 export { Media }

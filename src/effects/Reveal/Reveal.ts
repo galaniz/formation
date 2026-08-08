@@ -2,8 +2,6 @@
  * Effects - Reveal
  */
 
-/* Imports */
-
 import type { Asset } from '../../utils/asset/assetTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { assetLoaded } from '../../utils/asset/asset.js'
@@ -68,7 +66,5 @@ class Reveal extends HTMLElement {
     return true
   }
 }
-
-/* Exports */
 
 export { Reveal }

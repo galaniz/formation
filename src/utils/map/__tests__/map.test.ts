@@ -2,8 +2,6 @@
  * Utils - Map Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isMap } from '../map.js'
 

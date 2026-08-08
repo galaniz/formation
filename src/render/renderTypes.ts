@@ -2,8 +2,6 @@
  * Render - Types
  */
 
-/* Imports */
-
 import type { Generic, GenericStrings, WritableKeys } from '../global/globalTypes.js'
 
 /**

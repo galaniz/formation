@@ -22,8 +22,6 @@ const isSetStrict = <T>(value: unknown): value is Set<T> => {
   return isSet(value) && value.size > 0
 }
 
-/* Exports */
-
 export {
   isSet,
   isSetStrict

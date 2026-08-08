@@ -2,8 +2,6 @@
  * Layouts - Overflow Register
  */
 
-/* Imports */
-
 import { Overflow } from './Overflow.js'
 
 /* Define */

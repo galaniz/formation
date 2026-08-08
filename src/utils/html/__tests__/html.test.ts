@@ -2,8 +2,6 @@
  * Utils - Html Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isHtmlElement, isHtmlElementArray, isHtmlElementArrayStrict } from '../html.js'
 

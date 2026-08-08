@@ -2,8 +2,6 @@
  * Objects - Form Register
  */
 
-/* Imports */
-
 import { Form } from './Form.js'
 
 /* Define */

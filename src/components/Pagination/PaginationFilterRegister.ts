@@ -2,8 +2,6 @@
  * Components - Pagination Filter Register
  */
 
-/* Imports */
-
 import { PaginationFilter } from './PaginationFilter.js'
 
 /* Define */

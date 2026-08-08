@@ -2,8 +2,6 @@
  * Tests - Setup
  */
 
-/* Imports */
-
 import { setupCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Set up */

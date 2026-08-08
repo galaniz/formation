@@ -2,8 +2,6 @@
  * Utils - Cookie Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, afterEach, vi } from 'vitest'
 import { setCookie, getCookie } from '../cookie.js'
 

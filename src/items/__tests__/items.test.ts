@@ -2,8 +2,6 @@
  * Items - Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { getItem, getItems, getTemplateItem, cloneItem } from '../items.js'
 

@@ -2,8 +2,6 @@
  * Utils - URL
  */
 
-/* Imports */
-
 import { isObject } from '../object/object.js'
 import { isArray } from '../array/array.js'
 import { config } from '../../config/config.js'
@@ -46,7 +44,5 @@ const urlEncode = (
 
   return _data.join('&')
 }
-
-/* Exports */
 
 export { urlEncode }

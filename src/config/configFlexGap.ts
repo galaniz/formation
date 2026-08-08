@@ -2,8 +2,6 @@
  * Config - Flex Gap
  */
 
-/* Imports */
-
 import { config } from './config.js'
 
 /**
@@ -33,7 +31,5 @@ const configFlexGap = (): void => {
 
   flex.remove()
 }
-
-/* Exports */
 
 export { configFlexGap }

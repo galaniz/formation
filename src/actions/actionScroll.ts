@@ -2,8 +2,6 @@
  * Actions - Scroll
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../global/globalTypes.js'
 import { actions, addAction, doActions, removeAction } from './actions.js'
 import { isSetStrict } from '../utils/set/set.js'
@@ -72,8 +70,6 @@ const onScroll = (action: GenericFunction): void => {
 const removeScroll = (action: GenericFunction): boolean => {
   return removeAction('scroll', action)
 }
-
-/* Exports */
 
 export {
   onScroll,

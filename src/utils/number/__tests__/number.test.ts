@@ -2,8 +2,6 @@
  * Utils - Number Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isNumber } from '../number.js'
 

@@ -2,8 +2,6 @@
  * Actions - Escape
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../global/globalTypes.js'
 import { actions, addAction, doActions, removeAction } from './actions.js'
 import { getKey } from '../utils/key/key.js'
@@ -52,8 +50,6 @@ const onEscape = (action: GenericFunction): void => {
 const removeEscape = (action: GenericFunction): boolean => {
   return removeAction('escape', action)
 }
-
-/* Exports */
 
 export {
   onEscape,

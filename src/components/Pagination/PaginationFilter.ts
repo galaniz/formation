@@ -2,8 +2,6 @@
  * Components - Pagination Filter
  */
 
-/* Imports */
-
 import type {
   PaginationFilterInput,
   PaginationFilterGroup,
@@ -334,7 +332,5 @@ class PaginationFilter extends Pagination {
     })
   }
 }
-
-/* Exports */
 
 export { PaginationFilter }

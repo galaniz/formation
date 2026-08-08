@@ -2,8 +2,6 @@
  * Utils - Key Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { createEvent } from '@testing-library/dom'
 import { getKey } from '../key.js'

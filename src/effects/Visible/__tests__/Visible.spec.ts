@@ -2,8 +2,6 @@
  * Effects - Visible Test
  */
 
-/* Imports */
-
 import type { Visible } from '../Visible.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'

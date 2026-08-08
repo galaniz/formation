@@ -2,8 +2,6 @@
  * Utils - Object Keys Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { getObjectKeys } from '../objectKeys.js'
 

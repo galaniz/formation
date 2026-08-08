@@ -2,8 +2,6 @@
  * Layouts - Masonry
  */
 
-/* Imports */
-
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -317,7 +315,5 @@ class Masonry extends HTMLElement {
     return true
   }
 }
-
-/* Exports */
 
 export { Masonry }

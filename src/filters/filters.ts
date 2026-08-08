@@ -2,8 +2,6 @@
  * Utils - Filter
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../global/globalTypes.js'
 import { isSet, isSetStrict } from '../utils/set/set.js'
 import { isStringStrict } from '../utils/string/string.js'
@@ -79,8 +77,6 @@ const applyFilters = <T>(name: string, value: T, args?: unknown): T => {
 
   return value
 }
-
-/* Exports */
 
 export {
   filters,

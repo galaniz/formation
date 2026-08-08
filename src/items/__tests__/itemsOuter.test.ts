@@ -2,8 +2,6 @@
  * Items - Item Outer Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { getOuterItems } from '../itemsOuter.js'
 

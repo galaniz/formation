@@ -2,11 +2,7 @@
  * Playwright
  */
 
-/* Imports */
-
 import { defineConfig, devices } from '@playwright/test'
-
-/* Config */
 
 export default defineConfig({
   testDir: './spec',

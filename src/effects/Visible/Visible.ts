@@ -2,8 +2,6 @@
  * Effects - Visible
  */
 
-/* Imports */
-
 import type { VisibleItem } from './VisibleTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
@@ -278,7 +276,5 @@ class Visible extends HTMLElement {
     this.#setVisible()
   }
 }
-
-/* Exports */
 
 export { Visible }

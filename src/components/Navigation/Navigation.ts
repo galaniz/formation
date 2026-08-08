@@ -2,8 +2,6 @@
  * Components - Navigation
  */
 
-/* Imports */
-
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
@@ -731,7 +729,5 @@ class Navigation extends HTMLElement {
     this.#toggle(true)
   }
 }
-
-/* Exports */
 
 export { Navigation }

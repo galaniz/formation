@@ -2,8 +2,6 @@
  * Objects - Form
  */
 
-/* Imports */
-
 import type {
   FormInput,
   FormPrimitive,
@@ -968,7 +966,5 @@ class Form extends HTMLElement {
     this.#setErrorList()
   }
 }
-
-/* Exports */
 
 export { Form }

@@ -2,8 +2,6 @@
  * Render
  */
 
-/* Imports */
-
 import type {
   RenderElementArgs,
   RenderItems,
@@ -240,8 +238,6 @@ const renderString = (
 
   return _output.html
 }
-
-/* Exports */
 
 export {
   render,

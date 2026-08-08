@@ -2,8 +2,6 @@
  * Objects - Collapsible Register
  */
 
-/* Imports */
-
 import { Collapsible } from './Collapsible.js'
 
 /* Define */

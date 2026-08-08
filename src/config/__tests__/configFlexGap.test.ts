@@ -2,8 +2,6 @@
  * Config - Flex Gap Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import { configFlexGap } from '../configFlexGap.js'
 import { config } from '../config.js'
