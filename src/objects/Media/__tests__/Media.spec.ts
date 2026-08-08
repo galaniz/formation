@@ -1280,7 +1280,7 @@ test.describe('Media', () => {
     await page.evaluate(async () => {
       const media = document.querySelector('#med-audio') as Media
       media.url = '/static/audio/sound.mp3'
-      await media.toggle(true)
+      await media.toggle(true, true) // Reload required to swap src once loaded
     })
 
     await page.waitForFunction(() => { // Wait for load
