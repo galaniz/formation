@@ -17,9 +17,26 @@ declare global {
     testNavSet: string[]
     testNavToggle: string[]
     testNavToggled: string[]
-    testNavResize: boolean
+    testNavResize: number
   }
 }
+
+/* Ids of navs that emit events on init */
+
+const expectedIds = [
+  'nav-slot',
+  'nav-slots',
+  'nav-slots-breakpoint',
+  'nav-slots-groups',
+  'nav-slots-groups-breakpoints'
+]
+
+/* Ids of all navs on test page */
+
+const navIds = [
+  'nav-empty',
+  ...expectedIds
+]
 
 /* Tests */
 
@@ -29,68 +46,42 @@ test.describe('Navigation', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript(() => {
+    await page.addInitScript((ids: string[]) => {
       window.testNavReset = []
       window.testNavResetted = []
       window.testNavSet = []
       window.testNavToggle = []
       window.testNavToggled = []
-      window.testNavResize = false
+      window.testNavResize = 0
 
-      requestAnimationFrame(() => {
-        const ids = [
-          'nav-empty',
-          'nav-slot',
-          'nav-slots',
-          'nav-slots-breakpoint',
-          'nav-slots-groups',
-          'nav-slots-groups-breakpoints'
-        ]
+      /* Listen on document so recording does not depend on when the elements init */
 
-        ids.forEach(id => {
-          const nav = document.getElementById(id)
+      const idSet = new Set(ids)
 
-          if (!nav) {
+      const listen = (type: string, store: () => string[]): void => {
+        document.addEventListener(type, (e: Event) => {
+          const { id } = e.target as HTMLElement
+
+          if (!idSet.has(id)) {
             return
           }
 
-          nav.addEventListener('nav:reset', (e) => {
-            window.testNavReset.push((e.target as HTMLElement).id)
-          })
+          store().push(id)
+        }, true)
+      }
 
-          nav.addEventListener('nav:resetted', (e) => {
-            window.testNavResetted.push((e.target as HTMLElement).id)
-          })
-
-          nav.addEventListener('nav:set', (e) => {
-            window.testNavSet.push((e.target as HTMLElement).id)
-          })
-
-          nav.addEventListener('nav:toggle', (e) => {
-            window.testNavToggle.push((e.target as HTMLElement).id)
-          })
-
-          nav.addEventListener('nav:toggled', (e) => {
-            window.testNavToggled.push((e.target as HTMLElement).id)
-          })
-        })
-      })
-    })
+      listen('nav:reset', () => window.testNavReset)
+      listen('nav:resetted', () => window.testNavResetted)
+      listen('nav:set', () => window.testNavSet)
+      listen('nav:toggle', () => window.testNavToggle)
+      listen('nav:toggled', () => window.testNavToggled)
+    }, navIds)
 
     await page.goto('/spec/components/Navigation/__tests__/Navigation.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, false)
-
-    await page.addInitScript(() => {
-      window.testNavReset = []
-      window.testNavResetted = []
-      window.testNavSet = []
-      window.testNavToggle = []
-      window.testNavToggled = []
-      window.testNavResize = false
-    })
   })
 
   /* Test init */
@@ -110,27 +101,19 @@ test.describe('Navigation', () => {
       return navs.map(nav => nav.init)
     })
 
-    await page.waitForFunction(() => { // Wait for set
-      return window.testNavSet
-    })
+    await page.waitForFunction((count: number) => { // Wait for set
+      return window.testNavSet.length >= count
+    }, expectedIds.length)
 
-    const navEvents = await page.evaluate(() => {
+    const navEvents = await page.evaluate((count: number) => {
       return {
-        reset: window.testNavReset,
-        resetted: window.testNavResetted,
-        set: window.testNavSet,
+        reset: window.testNavReset.slice(0, count),
+        resetted: window.testNavResetted.slice(0, count),
+        set: window.testNavSet.slice(0, count),
         toggle: window.testNavToggle,
         toggled: window.testNavToggled
       }
-    })
-
-    const expectedIds = [
-      'nav-slot',
-      'nav-slots',
-      'nav-slots-breakpoint',
-      'nav-slots-groups',
-      'nav-slots-groups-breakpoints'
-    ]
+    }, expectedIds.length)
 
     expect(navInit).toStrictEqual([
       false, // #nav-empty
@@ -183,7 +166,7 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
@@ -227,7 +210,7 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
@@ -284,40 +267,58 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
     const viewport = page.viewportSize() as { width: number, height: number }
+    const width = viewport.width - 1 // Must differ to fire resize
+
+    /**
+     * Mobile emulation reports an unstable innerWidth while the page loads, so
+     * the width navs record on init can be stale and read as a width change on
+     * the next resize - resize the width first so only the height changes below.
+     */
 
     await page.setViewportSize({
-      width: viewport.width,
-      height: viewport.height - 100
+      width,
+      height: viewport.height
     })
 
     await page.waitForFunction(() => { // Wait for resize
       return window.testNavResize
     })
 
-    const navEvents = await page.evaluate(() => {
+    const navEventsBefore = await page.evaluate(() => {
       return {
-        reset: window.testNavReset,
-        resetted: window.testNavResetted,
-        set: window.testNavSet
+        reset: window.testNavReset.length,
+        resetted: window.testNavResetted.length,
+        set: window.testNavSet.length,
+        resize: window.testNavResize
       }
     })
 
-    const expectedIds = [
-      'nav-slot',
-      'nav-slots',
-      'nav-slots-breakpoint',
-      'nav-slots-groups',
-      'nav-slots-groups-breakpoints'
-    ]
+    await page.setViewportSize({
+      width,
+      height: viewport.height - 100
+    })
 
-    expect(navEvents.reset).toStrictEqual([...expectedIds])
-    expect(navEvents.resetted).toStrictEqual([...expectedIds])
-    expect(navEvents.set).toStrictEqual([...expectedIds])
+    await page.waitForFunction((count: number) => { // Wait for resize
+      return window.testNavResize > count
+    }, navEventsBefore.resize)
+
+    const navEvents = await page.evaluate(() => {
+      return {
+        reset: window.testNavReset.length,
+        resetted: window.testNavResetted.length,
+        set: window.testNavSet.length
+      }
+    })
+
+    expect(navEventsBefore.set).toBeGreaterThanOrEqual(expectedIds.length) // Events recorded
+    expect(navEvents.reset).toBe(navEventsBefore.reset) // No new events
+    expect(navEvents.resetted).toBe(navEventsBefore.resetted)
+    expect(navEvents.set).toBe(navEventsBefore.set)
   })
 
   test('should not overflow if slots undefined', async ({ page }) => {
@@ -325,7 +326,7 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
@@ -365,11 +366,19 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
     const viewport = page.viewportSize() as { width: number, height: number }
+
+    const navEventsBefore = await page.evaluate(() => { // Events before resize
+      return {
+        reset: window.testNavReset.length,
+        resetted: window.testNavResetted.length,
+        set: window.testNavSet.length
+      }
+    })
 
     await page.setViewportSize({
       width: 600,
@@ -413,23 +422,15 @@ test.describe('Navigation', () => {
       }
     })
 
-    const navEvents = await page.evaluate(() => {
+    const navEvents = await page.evaluate((before: typeof navEventsBefore) => { // Events since resize
       return {
-        reset: window.testNavReset,
-        resetted: window.testNavResetted,
-        set: window.testNavSet,
+        reset: window.testNavReset.slice(before.reset),
+        resetted: window.testNavResetted.slice(before.resetted),
+        set: window.testNavSet.slice(before.set),
         toggle: window.testNavToggle,
         toggled: window.testNavToggled
       }
-    })
-
-    const expectedIds = [
-      'nav-slot',
-      'nav-slots',
-      'nav-slots-breakpoint',
-      'nav-slots-groups',
-      'nav-slots-groups-breakpoints'
-    ]
+    }, navEventsBefore)
 
     expect(navOpen.show).toBe(true)
     expect(navOpen.open).toBe('true')
@@ -439,10 +440,10 @@ test.describe('Navigation', () => {
     expect(navClose.open).toBe('false')
     expect(navClose.showModal).toBe(false)
     expect(navClose.lastActive).toBe('Open')
-    expect(navEvents.reset).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
-    expect(navEvents.resetted).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
-    expect(navEvents.set).toStrictEqual([...expectedIds, ...expectedIds]) // Twice for init and resize
-    expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot']) // Twice for resize and click
+    expect(navEvents.reset).toStrictEqual(expectedIds) // Once for resize
+    expect(navEvents.resetted).toStrictEqual(expectedIds) // Once for resize
+    expect(navEvents.set).toStrictEqual(expectedIds) // Once for resize
+    expect(navEvents.toggle).toStrictEqual(['nav-slot', 'nav-slot']) // Twice for open and close click
     expect(navEvents.toggled).toStrictEqual(['nav-slot'])
   })
 
@@ -451,7 +452,7 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 
@@ -499,7 +500,7 @@ test.describe('Navigation', () => {
       const { onResize } = await import('../../../actions/actionResize.js')
 
       onResize(() => {
-        window.testNavResize = true
+        window.testNavResize += 1
       })
     })
 

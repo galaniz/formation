@@ -17,6 +17,17 @@ declare global {
   }
 }
 
+/* Ids of media on test page */
+
+const medIds = [
+  'med-empty',
+  'med-partial-none',
+  'med-partial',
+  'med-video',
+  'med-audio',
+  'med-minimal'
+]
+
 /* Tests */
 
 test.describe('Media', () => {
@@ -25,33 +36,22 @@ test.describe('Media', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript(() => {
+    await page.addInitScript((ids: string[]) => {
       window.testMediaToggle = []
       window.testMediaResize = false
 
-      requestAnimationFrame(() => {
-        const ids = [
-          'med-empty',
-          'med-partial-none',
-          'med-partial',
-          'med-video',
-          'med-audio',
-          'med-minimal'
-        ]
+      /* Listen on document so recording does not depend on when the elements init */
 
-        ids.forEach(id => {
-          const med = document.getElementById(id)
+      const idSet = new Set(ids)
 
-          if (!med) {
-            return
-          }
+      document.addEventListener('media:toggle', (e: Event) => {
+        const { id } = e.target as HTMLElement
 
-          med.addEventListener('media:toggle', (e) => {
-            window.testMediaToggle.push((e.target as HTMLElement).id)
-          })
-        })
-      })
-    })
+        if (idSet.has(id)) {
+          window.testMediaToggle.push(id)
+        }
+      }, true)
+    }, medIds)
 
     await page.goto('/spec/objects/Media/__tests__/Media.html')
   })
@@ -921,13 +921,15 @@ test.describe('Media', () => {
     const progressWidth = progressBox?.width as number
     const progressHeight = progressBox?.height as number
 
+    /* Target the middle of the 12 second band - 0.6 sits on the rounding boundary */
+
     await progress.dragTo(progress, {
       sourcePosition: {
         x: 0,
         y: progressHeight / 2
       },
       targetPosition: {
-        x: progressWidth * 0.6,
+        x: progressWidth * (12 / 19),
         y: progressHeight / 2
       },
       steps: 10

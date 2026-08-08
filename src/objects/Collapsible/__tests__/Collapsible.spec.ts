@@ -17,6 +17,18 @@ declare global {
   }
 }
 
+/* Ids of collapsibles on test page */
+
+const clpIds = [
+  'clp-empty',
+  'clp-single',
+  'clp-hover',
+  'clp-accordion-1',
+  'clp-accordion-2',
+  'clp-accordion-3',
+  'clp-action'
+]
+
 /* Tests */
 
 test.describe('Collapsible', () => {
@@ -25,43 +37,27 @@ test.describe('Collapsible', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript(() => {
+    await page.addInitScript((ids: string[]) => {
       window.testCollapsibleToggle = []
 
-      requestAnimationFrame(() => {
-        const ids = [
-          'clp-empty',
-          'clp-single',
-          'clp-hover',
-          'clp-accordion-1',
-          'clp-accordion-2',
-          'clp-accordion-3',
-          'clp-action'
-        ]
+      /* Listen on document so recording does not depend on when the elements init */
 
-        ids.forEach(id => {
-          const clp = document.getElementById(id)
+      const idSet = new Set(ids)
 
-          if (!clp) {
-            return
-          }
+      document.addEventListener('collapsible:toggle', (e: Event) => {
+        const { id } = e.target as HTMLElement
 
-          clp.addEventListener('collapsible:toggle', (e) => {
-            window.testCollapsibleToggle.push((e.target as HTMLElement).id)
-          })
-        })
-      })
-    })
+        if (idSet.has(id)) {
+          window.testCollapsibleToggle.push(id)
+        }
+      }, true)
+    }, clpIds)
 
     await page.goto('/spec/objects/Collapsible/__tests__/Collapsible.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, false)
-
-    await page.addInitScript(() => {
-      window.testCollapsibleToggle = []
-    })
   })
 
   /* Test init */

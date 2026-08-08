@@ -16,6 +16,14 @@ declare global {
   }
 }
 
+/* Ids of pags on test page */
+
+const pagIds = [
+  'pag-empty',
+  'pag-partial',
+  'pag'
+]
+
 /* Tests */
 
 test.describe('Pagination', () => {
@@ -24,39 +32,27 @@ test.describe('Pagination', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript(() => {
+    await page.addInitScript((ids: string[]) => {
       window.testPagLoad = []
 
-      requestAnimationFrame(() => {
-        const ids = [
-          'pag-empty',
-          'pag-partial',
-          'pag'
-        ]
+      /* Listen on document so recording does not depend on when the elements init */
 
-        ids.forEach(id => {
-          const pag = document.getElementById(id)
+      const idSet = new Set(ids)
 
-          if (!pag) {
-            return
-          }
+      document.addEventListener('pag:load', (e: Event) => {
+        const { id } = e.target as HTMLElement
 
-          pag.addEventListener('pag:load', (e) => {
-            window.testPagLoad.push((e.target as HTMLElement).id)
-          })
-        })
-      })
-    })
+        if (idSet.has(id)) {
+          window.testPagLoad.push(id)
+        }
+      }, true)
+    }, pagIds)
 
     await page.goto('/spec/components/Pagination/__tests__/Pagination.html')
   })
 
   test.afterEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, false)
-
-    await page.addInitScript(() => {
-      window.testPagLoad = []
-    })
   })
 
   /* Test init */
