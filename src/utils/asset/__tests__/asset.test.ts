@@ -34,6 +34,10 @@ const testAssets = (): TestItems => {
   const audio = document.createElement('audio')
   const iframe = document.createElement('iframe')
 
+  Object.defineProperty(img, 'complete', { // Override complete property - happy-dom sets it to true by default
+    get: () => false
+  })
+
   img.src = '../../../../static/img/test.webp'
   video.innerHTML = '<source src="../../../../static/video/test.mp4" type="video/mp4">'
   audio.innerHTML = '<source src="../../../../static/audio/test.mp3" type="audio/mpeg">'
