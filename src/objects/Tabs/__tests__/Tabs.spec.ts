@@ -3,7 +3,7 @@
  */
 
 import type { Tabs } from '../Tabs.js'
-import type { TabsEventDetail } from '../TabsTypes.js'
+import type { TabsEventDetail, TabsIndexesFilterArgs } from '../TabsTypes.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
@@ -115,6 +115,57 @@ test.describe('Tabs', () => {
     expect(tabsProps.panelCount).toBe(3)
   })
 
+  /* Test activate */
+
+  test('should not activate if index out of range', async ({ page }) => {
+    const tabsOutOfRange = await page.evaluate(() => {
+      const tabs = document.querySelector('#tabs') as Tabs
+
+      return {
+        activated: tabs.activate({ current: 3 }),
+        selected: tabs.tabs.map(tab => tab.ariaSelected),
+        tabIndexes: tabs.tabs.map(tab => tab.tabIndex),
+        panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
+        panelHidden: tabs.panels.map(panel => panel.hidden)
+      }
+    })
+
+    expect(tabsOutOfRange.activated).toBe(false)
+    expect(tabsOutOfRange.selected).toStrictEqual(['true', 'false', 'false'])
+    expect(tabsOutOfRange.tabIndexes).toStrictEqual([0, -1, -1])
+    expect(tabsOutOfRange.panelSelected).toStrictEqual(['true', null, null])
+    expect(tabsOutOfRange.panelHidden).toStrictEqual([false, true, true])
+  })
+
+  test('should filter indexes on activate', async ({ page }) => {
+    const tabsFiltered = await page.evaluate(async () => {
+      const { addFilter } = await import('../../../filters/filters.js')
+      const tabs = document.querySelector('#tabs') as Tabs
+      const currentIndex = tabs.currentIndex
+
+      addFilter('tabs:indexes:tabs', (indexes: TabsIndexesFilterArgs) => {
+        return {
+          ...indexes,
+          currentIndex: 2 // Last tab instead of requested
+        }
+      })
+
+      tabs.activate({ current: 1 })
+
+      return {
+        currentIndex,
+        filteredIndex: tabs.currentIndex,
+        selected: tabs.tabs.map(tab => tab.ariaSelected),
+        tabIndexes: tabs.tabs.map(tab => tab.tabIndex)
+      }
+    })
+
+    expect(tabsFiltered.currentIndex).toBe(0)
+    expect(tabsFiltered.filteredIndex).toBe(2)
+    expect(tabsFiltered.selected).toStrictEqual(['false', 'false', 'true'])
+    expect(tabsFiltered.tabIndexes).toStrictEqual([-1, -1, 0])
+  })
+
   /* Test delay */
 
   test('should set and use specified delay on activate', async ({ page }) => {
@@ -193,8 +244,39 @@ test.describe('Tabs', () => {
     expect(tabsFirst.panelHidden).toStrictEqual([false, true, true])
   })
 
+  test('should show current panel on tab press without index', async ({ page }) => {
+    await page.evaluate(() => {
+      const tabs = document.querySelector('#tabs') as Tabs
+      tabs.tabs[1]?.removeAttribute('data-tab-index')
+    })
+
+    await page.getByTestId('tabs-tab-2').click()
+    await page.waitForFunction(() => { // Wait for first tab activated - current index fallback
+      return window.testTabsActivated?.tab.id === 'tabs-tab-1'
+    })
+
+    const tabsFallback = await page.evaluate(() => {
+      const tabs = document.querySelector('#tabs') as Tabs
+
+      return {
+        currentIndex: tabs.currentIndex,
+        selected: tabs.tabs.map(tab => tab.ariaSelected),
+        tabIndexes: tabs.tabs.map(tab => tab.tabIndex),
+        panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
+        panelHidden: tabs.panels.map(panel => panel.hidden)
+      }
+    })
+
+    expect(tabsFallback.currentIndex).toBe(0)
+    expect(tabsFallback.selected).toStrictEqual(['true', 'false', 'false'])
+    expect(tabsFallback.tabIndexes).toStrictEqual([0, -1, -1])
+    expect(tabsFallback.panelSelected).toStrictEqual(['true', null, null])
+    expect(tabsFallback.panelHidden).toStrictEqual([false, true, true])
+  })
+
   test('should show corresponding horizontal panel on left or right arrow key press', async ({ page }) => {
     await page.getByTestId('tabs-tab-1').focus()
+    await page.keyboard.press('ArrowUp') // Ignored - vertical key
     await page.keyboard.press('ArrowDown') // Ignored - vertical key
 
     const tabsIgnore = await page.evaluate(() => {
@@ -301,6 +383,7 @@ test.describe('Tabs', () => {
 
   test('should show corresponding vertical panel on up or down arrow key press', async ({ page }) => {
     await page.getByTestId('tabs-vertical-tab-1').focus()
+    await page.keyboard.press('ArrowLeft') // Ignored - horizontal key
     await page.keyboard.press('ArrowRight') // Ignored - horizontal key
 
     const tabsIgnore = await page.evaluate(() => {
@@ -472,8 +555,8 @@ test.describe('Tabs', () => {
       }
     })
 
-    await page.goto('/spec/objects/Tabs/__tests__/Tabs.html#panel-anchor-2')
-    await page.reload() // Hash is a same document navigation - reload to init with it
+    // Query differs so hash is not a same document navigation
+    await page.goto('/spec/objects/Tabs/__tests__/Tabs.html?anchor#panel-anchor-2')
 
     await page.waitForFunction(() => { // Wait for second panel
       const tabs = document.querySelector('#tabs-anchor') as Tabs
