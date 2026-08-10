@@ -69,6 +69,12 @@ class PaginationFilter extends Pagination {
 
     super.connectedCallback()
 
+    /* Skip if initialized */
+
+    if (this.subInit) {
+      return
+    }
+
     /* Event listeners */
 
     this.addEventListener('pag:load', this.#loadHandler as EventListener)
@@ -100,6 +106,7 @@ class PaginationFilter extends Pagination {
 
     this.removeEventListener('pag:load', this.#loadHandler as EventListener)
     this.form?.removeEventListener('submit', this.#submitHandler)
+    this.form?.removeEventListener('reset', this.#resetHandler)
     this.groups.forEach(group => {
       group.inputs.forEach(input => {
         input.removeEventListener('change', this.#changeHandler)
@@ -271,7 +278,7 @@ class PaginationFilter extends Pagination {
     let diff = false
 
     this.groups.forEach((group, name) => {
-      diff = this.#setGroup(group, name)
+      diff = this.#setGroup(group, name) || diff // All groups set
     })
 
     if (!diff) { // eslint-disable-line @typescript-eslint/no-unnecessary-condition

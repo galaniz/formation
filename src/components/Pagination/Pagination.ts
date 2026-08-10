@@ -231,9 +231,9 @@ class Pagination extends HTMLElement {
   async #click (e: Event): Promise<void> {
     /* Link required */
 
-    const target = (e.target as HTMLElement).closest('a') as HTMLAnchorElement
+    const target = (e.target as HTMLElement).closest('a')
 
-    if (target.tagName !== 'A') {
+    if (!isHtmlElement(target, HTMLAnchorElement)) {
       return
     }
 
@@ -356,7 +356,10 @@ class Pagination extends HTMLElement {
     nav?: DocumentFragment | string,
     entry?: DocumentFragment | string
   ): boolean {
-    /* Clear loader, nav and entry slots */
+    /* Clear delays, loader, nav and entry slots */
+
+    clearTimeout(this.#loaderDelayId) // Response may precede display delays
+    clearTimeout(this.#resultDelayId)
 
     setDisplay(this.getClone('loader'), 'hide', 'loader')
 
@@ -386,7 +389,7 @@ class Pagination extends HTMLElement {
       navSlot.insertAdjacentHTML('afterbegin', nav)
     }
 
-    if (isHtmlElement(nav)) {
+    if (nav instanceof DocumentFragment) {
       navSlot.append(nav)
     }
 
@@ -394,7 +397,7 @@ class Pagination extends HTMLElement {
       entrySlot.insertAdjacentHTML('afterbegin', entry)
     }
 
-    if (isHtmlElement(entry)) {
+    if (entry instanceof DocumentFragment) {
       entrySlot.append(entry)
     }
 

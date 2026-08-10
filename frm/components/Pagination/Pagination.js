@@ -24,7 +24,7 @@ export default /* html */`
           <span aria-hidden="true">&larr;</span>
         </li>
         <li>
-          <span>
+          <span data-testid="pag-current">
             <span class="a-hide-vis">Current page </span>
             <span>1</span>
           </span>
@@ -36,13 +36,13 @@ export default /* html */`
           </a>
         </li>
         <li>
-          <a href="/blog/?page=3" data-testid="pag-3">
+          <a href="/blog/?page=3">
             <span class="a-hide-vis">Page </span>
             <span>3</span>
           </a>
         </li>
         <li>
-          <a href="/blog/?page=2" aria-label="Next page" data-testid="pag-next">
+          <a href="/blog/?page=2" aria-label="Next page">
             &rarr;
           </a>
         </li>

@@ -573,6 +573,8 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #canPlay (): void {
+    clearTimeout(this.#loaderDelayId) // Media event may precede display delay
+
     setDisplay(this.getClone('loader'), 'hide', 'loader')
     this.loaded = true
   }
@@ -611,6 +613,8 @@ class Media extends HTMLElement {
    * @return {void}
    */
   #error (): void {
+    clearTimeout(this.#loaderDelayId) // Media event may precede display delay
+
     setDisplay(this.getClone('loader'), 'hide', 'loader')
     this.#errorDelayId = setDisplay(this.getClone('error'), 'focus')
   }

@@ -1,4 +1,5 @@
 [
   "PaginationFilterPartial",
-  "PaginationFilter"
+  "PaginationFilter",
+  "PaginationFilterChange"
 ]
