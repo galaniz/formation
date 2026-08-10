@@ -166,6 +166,12 @@ class Tabs extends HTMLElement {
       return false
     }
 
+    /* Check each tab has a corresponding panel */
+
+    if (tabs.length !== panels.length) {
+      return false
+    }
+
     /* Element props */
 
     this.tabs = tabs

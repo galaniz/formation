@@ -272,12 +272,7 @@ test.describe('Navigation', () => {
     const viewport = page.viewportSize() as { width: number, height: number }
     const width = viewport.width - 1 // Must differ to fire resize
 
-    /**
-     * Mobile emulation reports an unstable innerWidth while the page loads, so
-     * the width navs record on init can be stale and read as a width change on
-     * the next resize - resize the width first so only the height changes below.
-     */
-
+    // Initial inner width unstable on mobile emulator - resize width first so only height changes below
     await page.setViewportSize({
       width,
       height: viewport.height

@@ -3,5 +3,6 @@
   "Tabs",
   "TabsDelay",
   "TabsVertical",
-  "TabsAnchor"
+  "TabsAnchor",
+  "TabsMismatch"
 ]

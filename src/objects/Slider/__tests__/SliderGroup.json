@@ -1,4 +1,7 @@
 [
   "SliderGroupEmpty",
-  "SliderGroup"
+  "SliderGroup",
+  "SliderGroupMissingVisible",
+  "SliderGroupInvalidBreakpoints",
+  "SliderGroupOutOfRange"
 ]

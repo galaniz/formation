@@ -132,16 +132,12 @@ Clean up after removed from DOM.
 
 ## sliderScrollTo  
 
-**<code>sliderScrollTo(to: number, source: string, animRef: SliderAnimRef, track: HTMLElement | null, duration: number): void</code>**  
+**<code>sliderScrollTo(args: SliderScrollToArgs): void</code>**  
 
 Move track immediately or smoothly.
 
 ### Parameters  
-- **`to`** <code>number</code> required  
-- **`source`** <code>string</code> required  
-- **`animRef`** <code><a href="#slideranimref">SliderAnimRef</a></code> required  
-- **`track`** <code>HTMLElement | null</code> required  
-- **`duration`** <code>number</code> required
+- **`args`** <code><a href="#sliderscrolltoargs">SliderScrollToArgs</a></code> required
 
 ### Returns  
 
@@ -155,3 +151,17 @@ Move track immediately or smoothly.
 
 #### Properties  
 - **`id`** <code>number</code> required
+
+### SliderScrollToArgs  
+
+**Type:** <code>object</code>
+
+#### Properties  
+- **`to`** <code>number</code> required  
+- **`source`** <code>string</code> required  
+- **`animRef`** <code><a href="#slideranimref">SliderAnimRef</a></code> required  
+- **`track`** <code>HTMLElement | null</code> required  
+- **`slider`** <code>HTMLElement</code> required  
+- **`duration`** <code>number</code> required  
+- **`currentIndex`** <code>number</code> required  
+- **`panelIndex`** <code>number</code> required

@@ -16,6 +16,7 @@ export default /* html */`
     <div class="overflow-hidden relative">
       <div
         class="slider-track flex gap-4 gap-6-l overflow-x-auto overflow-y-hidden"
+        id="sld-loop-track"
         data-slider-track
       >
         <div
@@ -93,17 +94,21 @@ export default /* html */`
         </div>
       </div>
       <button
+        id="sld-loop-prev"
         class="slider-prev w-8 h-8 t-background-light b-radius-full absolute left-0"
         type="button"
         aria-label="Previous"
         data-slider-prev
+        data-testid="sld-loop-prev"
       >
       </button>  
       <button
+        id="sld-loop-next"
         class="slider-next w-8 h-8 t-background-light b-radius-full absolute right-0"
         type="button"
         aria-label="Next"
         data-slider-next
+        data-testid="sld-loop-next"
       >
       </button>
     </div>
@@ -117,6 +122,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-1"
           aria-label="Panel 1"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -127,6 +133,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-2"
           aria-label="Panel 2"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -138,6 +145,7 @@ export default /* html */`
           type="button"
           role="tab"
           aria-selected="true"
+          data-testid="sld-loop-tab-3"
           aria-label="Panel 3"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -148,6 +156,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-4"
           aria-label="Panel 4"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -158,6 +167,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-5"
           aria-label="Panel 5"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -168,6 +178,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-6"
           aria-label="Panel 6"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -178,6 +189,7 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
+          data-testid="sld-loop-tab-7"
           aria-label="Panel 7"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>

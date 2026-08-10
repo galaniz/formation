@@ -9,8 +9,12 @@ import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
 
 /* Types */
 
-type TabsDetail = TabsEventDetail & { hidden: boolean, now: number }
 type TabsDetailKey = 'testTabsDeactivate' | 'testTabsActivate' | 'testTabsActivated'
+
+interface TabsDetail extends TabsEventDetail {
+  hidden: boolean
+  now: number
+}
 
 declare global {
   interface Window {
@@ -85,8 +89,48 @@ test.describe('Tabs', () => {
       true,  // #tabs
       true,  // #tabs-delay
       true,  // #tabs-vertical
-      true   // #tabs-anchor
+      true,  // #tabs-anchor
+      false  // #tabs-mismatch
     ])
+  })
+
+  test('should not initialize if tabs and panels do not correspond', async ({ page }) => {
+    const tabsMismatch = await page.evaluate(() => {
+      const tabs = document.querySelector('#tabs-mismatch') as Tabs
+
+      return {
+        init: tabs.init,
+        tabs: tabs.tabs, // Props left empty
+        panels: tabs.panels,
+        tabCount: document.querySelectorAll('#tabs-mismatch [role="tab"]').length,
+        panelCount: document.querySelectorAll('#tabs-mismatch [role="tabpanel"]').length
+      }
+    })
+
+    await page.getByTestId('tabs-mismatch-tab-2').click()
+
+    const tabsMismatchClick = await page.evaluate(() => {
+      const tabs = document.querySelector('#tabs-mismatch') as Tabs
+
+      return {
+        activate: window.testTabsActivate, // No click listeners
+        currentIndex: tabs.currentIndex,
+        selected: Array.from(tabs.querySelectorAll('[role="tab"]')).map(tab => tab.ariaSelected),
+        hidden: Array.from(tabs.querySelectorAll('[role="tabpanel"]')).map(panel => {
+          return (panel as HTMLElement).hidden
+        })
+      }
+    })
+
+    expect(tabsMismatch.init).toBe(false)
+    expect(tabsMismatch.tabs).toStrictEqual([])
+    expect(tabsMismatch.panels).toStrictEqual([])
+    expect(tabsMismatch.tabCount).toBe(3)
+    expect(tabsMismatch.panelCount).toBe(2)
+    expect(tabsMismatchClick.activate).toBe(null)
+    expect(tabsMismatchClick.currentIndex).toBe(0)
+    expect(tabsMismatchClick.selected).toStrictEqual(['true', 'false', 'false'])
+    expect(tabsMismatchClick.hidden).toStrictEqual([false, true])
   })
 
   test('should move instance and not reinitialize', async ({ page }) => {

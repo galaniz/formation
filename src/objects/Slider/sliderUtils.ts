@@ -2,10 +2,19 @@
  * Objects - Slider Utils
  */
 
-import type { SliderAnimRef } from './SliderTypes.js'
+import type { SliderScrollToArgs, SliderScrolledEventDetail } from './SliderTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
 import { config } from '../../config/config.js'
+
+/**
+ * Custom event details.
+ */
+declare global {
+  interface ElementEventMap {
+    'slider:scrolled': CustomEvent<SliderScrolledEventDetail>
+  }
+}
 
 /**
  * Sine ease in out.
@@ -22,22 +31,50 @@ const sliderEase = (elapsed: number, from: number, change: number, duration: num
 }
 
 /**
+ * Dispatch scrolled event.
+ *
+ * @private
+ * @param {string} source
+ * @param {HTMLElement} slider
+ * @param {number} currentIndex
+ * @param {number} panelIndex
+ * @return {number}
+ */
+const sliderScrolled = (
+  source: string,
+  slider: HTMLElement,
+  currentIndex: number,
+  panelIndex: number
+): void => {
+  const detail: SliderScrolledEventDetail = {
+    currentIndex,
+    panelIndex,
+    source
+  }
+
+  slider.dispatchEvent(new CustomEvent('slider:scrolled', { detail }))
+}
+
+/**
  * Move track immediately or smoothly.
  *
- * @param {number} to
- * @param {string} source
- * @param {SliderAnimRef} animRef
- * @param {HTMLElement|null} track
- * @param {number} duration
+ * @param {SliderScrollToArgs} args
  * @return {void}
  */
-const sliderScrollTo = (
-  to: number,
-  source: string,
-  animRef: SliderAnimRef,
-  track: HTMLElement | null,
-  duration: number
-): void => {
+const sliderScrollTo = (args: SliderScrollToArgs): void => {
+  /* Args */
+
+  const {
+    to,
+    source,
+    animRef,
+    track,
+    slider,
+    duration,
+    currentIndex,
+    panelIndex
+  } = args
+
   /* Cancel any ongoing animation */
 
   cancelAnimationFrame(animRef.id)
@@ -52,6 +89,7 @@ const sliderScrollTo = (
 
   if (config.reduceMotion || source !== 'click') {
     track.scrollLeft = to
+    sliderScrolled(source, slider, currentIndex, panelIndex)
     return
   }
 
@@ -94,8 +132,12 @@ const sliderScrollTo = (
     }
 
     if (done) {
+      track.scrollLeft = to // Exact target before snap is restored
+
       track.style.removeProperty('scroll-snap-type')
       track.style.removeProperty('overscroll-behavior')
+
+      sliderScrolled(source, slider, currentIndex, panelIndex)
     } else {
       animRef.id = requestAnimationFrame(animate)
     }
