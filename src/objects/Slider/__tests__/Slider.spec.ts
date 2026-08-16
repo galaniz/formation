@@ -276,42 +276,38 @@ test.describe('Slider', () => {
   })
 
   test('should disable previous button on first slide and next button on last slide', async ({ page }) => {
-    const sliderFirst = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-single') as Slider
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-single') as Slider)
 
+    const sliderFirst = await page.evaluate(slider => {
       return {
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     await page.getByTestId('sld-single-tab-4').click()
     await page.waitForFunction(() => { // Wait for fourth slide activated
       return window.testSliderActivated['sld-single']?.currentIndex === 3
     })
 
-    const sliderMiddle = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-single') as Slider
-
+    const sliderMiddle = await page.evaluate(slider => {
       return {
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     await page.getByTestId('sld-single-tab-7').click()
     await page.waitForFunction(() => { // Wait for last slide activated
       return window.testSliderActivated['sld-single']?.currentIndex === 6
     })
 
-    const sliderLast = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-single') as Slider
-
+    const sliderLast = await page.evaluate(slider => {
       return {
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     expect(sliderFirst.prevDisabled).toBe(true)
     expect(sliderFirst.nextDisabled).toBe(false)
@@ -365,30 +361,28 @@ test.describe('Slider', () => {
   })
 
   test('should only allow focus in current slide', async ({ page }) => {
-    const sliderFirst = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-single') as Slider
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-single') as Slider)
 
+    const sliderFirst = await page.evaluate(slider => {
       return {
         disabled: slider.panels.map(panel => panel.getAttribute('aria-disabled')),
         panelIndexes: slider.panels.map(panel => panel.tabIndex),
         linkIndexes: slider.panels.map(panel => panel.querySelector('a')?.tabIndex)
       }
-    })
+    }, sliderInstance)
 
     await page.getByTestId('sld-single-tab-2').click()
     await page.waitForFunction(() => { // Wait for second slide activated
       return window.testSliderActivated['sld-single']?.currentIndex === 1
     })
 
-    const sliderSecond = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-single') as Slider
-
+    const sliderSecond = await page.evaluate(slider => {
       return {
         disabled: slider.panels.map(panel => panel.getAttribute('aria-disabled')),
         panelIndexes: slider.panels.map(panel => panel.tabIndex),
         linkIndexes: slider.panels.map(panel => panel.querySelector('a')?.tabIndex)
       }
-    })
+    }, sliderInstance)
 
     expect(sliderFirst.disabled).toStrictEqual([null, 'true', 'true', 'true', 'true', 'true', 'true'])
     expect(sliderFirst.panelIndexes).toStrictEqual([0, -1, -1, -1, -1, -1, -1])
@@ -678,6 +672,8 @@ test.describe('Slider', () => {
   })
 
   test('should loop and not disable buttons on next and previous button press', async ({ page }) => {
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-loop') as Slider)
+
     await page.getByTestId('sld-loop-tab-1').click()
     await page.waitForFunction(() => { // Wait for first slide activated
       return window.testSliderActivated['sld-loop']?.currentIndex === 0
@@ -689,9 +685,7 @@ test.describe('Slider', () => {
       return window.testSliderActivated['sld-loop']?.currentIndex === 6
     })
 
-    const sliderPrev = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-loop') as Slider
-
+    const sliderPrev = await page.evaluate(slider => {
       return {
         currentIndex: slider.currentIndex,
         panelIndex: window.testSliderActivated['sld-loop']?.panelIndex,
@@ -699,16 +693,14 @@ test.describe('Slider', () => {
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     await page.getByTestId('sld-loop-next').dispatchEvent('click')
     await page.waitForFunction(() => { // Wait for first slide activated
       return window.testSliderActivated['sld-loop']?.currentIndex === 0
     })
 
-    const sliderNext = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-loop') as Slider
-
+    const sliderNext = await page.evaluate(slider => {
       return {
         currentIndex: slider.currentIndex,
         panelIndex: window.testSliderActivated['sld-loop']?.panelIndex,
@@ -716,7 +708,7 @@ test.describe('Slider', () => {
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     expect(sliderPrev.currentIndex).toBe(6)
     expect(sliderPrev.panelIndex).toBe(6)

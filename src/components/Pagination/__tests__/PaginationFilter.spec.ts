@@ -118,15 +118,15 @@ test.describe('PaginationFilter', () => {
   /* Test submit */
 
   test('should update params, page and location on submit', async ({ page }) => {
-    await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag-filter') as PaginationFilter)
 
+    await page.evaluate(pag => {
       pag.page = 3 // Reset to first page on submit
 
       pag.request = (source) => {
         pag.update('success', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-filter-search').fill('hello')
     await page.getByTestId('pag-filter-sort').selectOption('desc')
@@ -137,16 +137,14 @@ test.describe('PaginationFilter', () => {
 
     await expect(page).toHaveURL(`${pagFilterUrl}?q=hello&sort=desc&cat=cat-1%2Ccat-3&year=2024`)
 
-    const pagProps = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
-
+    const pagProps = await page.evaluate(pag => {
       return {
         page: pag.page,
         params: pag.params,
         groups: Array.from(pag.groups).map(([key, value]) => `${key}:${value.values.join('|')}`),
         load: window.testPagFilterLoad
       }
-    })
+    }, pagInstance)
 
     expect(pagProps.page).toBe(1)
     expect(pagProps.params).toStrictEqual({
@@ -165,27 +163,25 @@ test.describe('PaginationFilter', () => {
   })
 
   test('should load on submit if any group values change', async ({ page }) => {
-    await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag-filter') as PaginationFilter)
 
+    await page.evaluate(pag => {
       pag.request = (source) => {
         pag.update('success', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-filter-search').fill('hello') // First group - later groups unchanged
     await page.getByTestId('pag-filter-submit').click()
 
     await expect(page).toHaveURL(`${pagFilterUrl}?q=hello`)
 
-    const pagProps = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
-
+    const pagProps = await page.evaluate(pag => {
       return {
         params: Object.fromEntries(Object.entries(pag.params).filter(([, value]) => value !== undefined)),
         load: window.testPagFilterLoad
       }
-    })
+    }, pagInstance)
 
     expect(pagProps.params).toStrictEqual({ q: 'hello' })
     expect(pagProps.load).toStrictEqual(['pag-filter:form'])
@@ -220,13 +216,13 @@ test.describe('PaginationFilter', () => {
   /* Test reset */
 
   test('should clear params, page and location on reset', async ({ page }) => {
-    await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag-filter') as PaginationFilter)
 
+    await page.evaluate(pag => {
       pag.request = (source) => {
         pag.update('success', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-filter-cat-2-label').click()
     await page.getByTestId('pag-filter-2025-label').click()
@@ -238,15 +234,13 @@ test.describe('PaginationFilter', () => {
 
     await expect(page).toHaveURL(pagFilterUrl)
 
-    const pagProps = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
-
+    const pagProps = await page.evaluate(pag => {
       return {
         page: pag.page,
         params: pag.params,
         load: window.testPagFilterLoad
       }
-    })
+    }, pagInstance)
 
     expect(pagProps.page).toBe(1)
     expect(pagProps.params).toStrictEqual({})
@@ -259,30 +253,28 @@ test.describe('PaginationFilter', () => {
   /* Test change */
 
   test('should update params and page on change if load onset is change', async ({ page }) => {
-    await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter-change') as PaginationFilter
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag-filter-change') as PaginationFilter)
 
+    await page.evaluate(pag => {
       pag.page = 2 // Reset to first page on change
 
       pag.request = (source) => {
         pag.update('success', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-filter-change-sort').selectOption('title')
     await page.getByTestId('pag-filter-change-cat-2-label').click()
 
     await expect(page).toHaveURL(`${pagFilterUrl}?sort=title&cat=cat-2`)
 
-    const pagProps = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter-change') as PaginationFilter
-
+    const pagProps = await page.evaluate(pag => {
       return {
         page: pag.page,
         params: pag.params,
         load: window.testPagFilterLoad
       }
-    })
+    }, pagInstance)
 
     expect(pagProps.page).toBe(1)
     expect(pagProps.params).toStrictEqual({
@@ -320,13 +312,13 @@ test.describe('PaginationFilter', () => {
   /* Test history */
 
   test('should restore input values on history navigation', async ({ page }) => {
-    await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag-filter') as PaginationFilter)
 
+    await page.evaluate(pag => {
       pag.request = (source) => {
         pag.update('success', source)
       }
-    })
+    }, pagInstance)
 
     const search = page.getByTestId('pag-filter-search')
     const sort = page.getByTestId('pag-filter-sort')
@@ -351,10 +343,9 @@ test.describe('PaginationFilter', () => {
     await expect(cat).not.toBeChecked()
     await expect(year).not.toBeChecked()
 
-    const pagBackParams = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagBackParams = await page.evaluate(pag => {
       return pag.params
-    })
+    }, pagInstance)
 
     await page.goForward()
     await page.waitForFunction(() => { // Wait for second pop load
@@ -366,10 +357,9 @@ test.describe('PaginationFilter', () => {
     await expect(cat).toBeChecked()
     await expect(year).toBeChecked()
 
-    const pagForwardParams = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter') as PaginationFilter
+    const pagForwardParams = await page.evaluate(pag => {
       return pag.params
-    })
+    }, pagInstance)
 
     expect(pagBackParams).toStrictEqual({})
     expect(pagForwardParams).toStrictEqual({

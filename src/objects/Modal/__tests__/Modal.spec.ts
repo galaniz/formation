@@ -81,9 +81,9 @@ test.describe('Modal', () => {
   /* Test open */
 
   test('should open modal, focus first focusable and disable outside', async ({ page }) => {
-    const modBefore = await page.evaluate(() => {
-      const mod = document.querySelector('#mod') as Modal
+    const modInstance = await page.evaluateHandle(() => document.querySelector('#mod') as Modal)
 
+    const modBefore = await page.evaluate(mod => {
       return {
         open: [
           mod.open,
@@ -91,13 +91,12 @@ test.describe('Modal', () => {
         ],
         scroll: document.documentElement.dataset.scroll
       }
-    })
+    }, modInstance)
 
     await page.getByTestId('mod-open-1').click()
     await expect(page.getByTestId('mod-link')).toBeFocused()
 
-    const modOpen = await page.evaluate(() => {
-      const mod = document.querySelector('#mod') as Modal
+    const modOpen = await page.evaluate(mod => {
       const open1 = document.querySelector('#mod-open-1') as HTMLButtonElement
       const open2 = document.querySelector('#mod-open-2') as HTMLButtonElement
 
@@ -113,7 +112,7 @@ test.describe('Modal', () => {
         scroll: document.documentElement.dataset.scroll,
         toggle: window.testModalToggle
       }
-    })
+    }, modInstance)
 
     expect(modBefore.open).toStrictEqual([false, null])
     expect(modBefore.scroll).toBeUndefined()

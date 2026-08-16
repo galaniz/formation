@@ -306,6 +306,8 @@ test.describe('Navigation', () => {
   })
 
   test('should not overflow if slots undefined', async ({ page }) => {
+    const navInstance = await page.evaluateHandle(() => document.querySelector('#nav-slot') as Navigation)
+
     await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
@@ -314,10 +316,9 @@ test.describe('Navigation', () => {
       })
     })
 
-    await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slot') as Navigation
+    await page.evaluate(nav => {
       nav.slots.clear()
-    })
+    }, navInstance)
 
     const viewport = page.viewportSize() as { width: number, height: number }
 
@@ -330,14 +331,12 @@ test.describe('Navigation', () => {
       return window.testNavResize
     })
 
-    const navProps = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slot') as Navigation
-
+    const navProps = await page.evaluate(nav => {
       return {
         overflow: nav.overflow,
         overflowAttr: nav.getAttribute('overflow')
       }
-    })
+    }, navInstance)
 
     expect(navProps.overflow).toBe(false)
     expect(navProps.overflowAttr).toBe('false')
@@ -346,6 +345,8 @@ test.describe('Navigation', () => {
   /* Test modal */
 
   test('should open and close modal', async ({ page }) => {
+    const navInstance = await page.evaluateHandle(() => document.querySelector('#nav-slot') as Navigation)
+
     await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
@@ -374,37 +375,32 @@ test.describe('Navigation', () => {
     })
 
     await page.getByTestId('nav-slot-open').click()
-    await page.waitForFunction(() => { // Wait for open
-      const nav = document.querySelector('#nav-slot') as Navigation
+    await page.waitForFunction(nav => { // Wait for open
       return nav.getAttribute('show-modal') === 'items'
-    })
+    }, navInstance)
 
-    const navOpen = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slot') as Navigation
-
+    const navOpen = await page.evaluate(nav => {
       return {
         show: nav.hasAttribute('show'),
         open: nav.getAttribute('open'),
         showModal: nav.getAttribute('show-modal'),
         lastActive: document.activeElement?.textContent.trim()
       }
-    })
+    }, navInstance)
 
     await page.getByTestId('nav-slot-close').click()
     await page.waitForFunction(() => { // Wait for close
       return window.testNavToggled.filter(id => id === 'nav-slot').length === 1
     })
 
-    const navClose = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slot') as Navigation
-
+    const navClose = await page.evaluate(nav => {
       return {
         show: nav.hasAttribute('show'),
         open: nav.getAttribute('open'),
         showModal: nav.hasAttribute('show-modal'),
         lastActive: document.activeElement?.textContent.trim()
       }
-    })
+    }, navInstance)
 
     const navEvents = await page.evaluate((before: typeof navEventsBefore) => { // Events since resize
       return {
@@ -432,6 +428,8 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on escape', async ({ page }) => {
+    const navInstance = await page.evaluateHandle(() => document.querySelector('#nav-slots') as Navigation)
+
     await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
@@ -452,26 +450,23 @@ test.describe('Navigation', () => {
     })
 
     await page.getByTestId('nav-slots-open').click()
-    await page.waitForFunction(() => { // Wait for open
-      const nav = document.querySelector('#nav-slots') as Navigation
+    await page.waitForFunction(nav => { // Wait for open
       return nav.getAttribute('show-modal') === 'items'
-    })
+    }, navInstance)
 
     await page.keyboard.press('Escape')
     await page.waitForFunction(() => { // Wait for close
       return window.testNavToggled.filter(id => id === 'nav-slots').length === 1
     })
 
-    const navClose = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slots') as Navigation
-
+    const navClose = await page.evaluate(nav => {
       return {
         show: nav.hasAttribute('show'),
         open: nav.getAttribute('open'),
         showModal: nav.hasAttribute('show-modal'),
         lastActive: document.activeElement?.textContent.trim()
       }
-    })
+    }, navInstance)
 
     expect(navClose.show).toBe(false)
     expect(navClose.open).toBe('false')
@@ -480,6 +475,8 @@ test.describe('Navigation', () => {
   })
 
   test('should close modal on resize', async ({ page }) => {
+    const navInstance = await page.evaluateHandle(() => document.querySelector('#nav-slot') as Navigation)
+
     await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
@@ -500,10 +497,9 @@ test.describe('Navigation', () => {
     })
 
     await page.getByTestId('nav-slot-open').click()
-    await page.waitForFunction(() => { // Wait for open
-      const nav = document.querySelector('#nav-slot') as Navigation
+    await page.waitForFunction(nav => { // Wait for open
       return nav.getAttribute('show-modal') === 'items'
-    })
+    }, navInstance)
 
     const newViewport = page.viewportSize() as { width: number, height: number }
 
@@ -520,9 +516,7 @@ test.describe('Navigation', () => {
       return window.testNavToggled.filter(id => id === 'nav-slot').length === 1
     })
 
-    const navProps = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-slot') as Navigation
-
+    const navProps = await page.evaluate(nav => {
       return {
         slot: nav.slots.get('0')?.children.length,
         modalSlot: nav.modalSlots.get('0')?.children.length,
@@ -531,7 +525,7 @@ test.describe('Navigation', () => {
         showModal: nav.hasAttribute('show-modal'),
         lastActive: document.activeElement?.tagName
       }
-    })
+    }, navInstance)
 
     const {
       slot,

@@ -86,23 +86,21 @@ test.describe('Tabs', () => {
   })
 
   test('should not initialize if tabs and panels do not correspond', async ({ page }) => {
-    const tabsMismatch = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-mismatch') as Tabs
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs-mismatch') as Tabs)
 
+    const tabsMismatch = await page.evaluate(tabs => {
       return {
         init: tabs.init,
         tabs: tabs.tabs, // Props left empty
         panels: tabs.panels,
-        tabCount: document.querySelectorAll('#tabs-mismatch [role="tab"]').length,
-        panelCount: document.querySelectorAll('#tabs-mismatch [role="tabpanel"]').length
+        tabCount: tabs.querySelectorAll('[role="tab"]').length,
+        panelCount: tabs.querySelectorAll('[role="tabpanel"]').length
       }
-    })
+    }, tabsInstance)
 
     await page.getByTestId('tabs-mismatch-tab-2').click()
 
-    const tabsMismatchClick = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-mismatch') as Tabs
-
+    const tabsMismatchClick = await page.evaluate(tabs => {
       return {
         activate: window.testTabsActivate, // No click listeners
         currentIndex: tabs.currentIndex,
@@ -111,7 +109,7 @@ test.describe('Tabs', () => {
           return (panel as HTMLElement).hidden
         })
       }
-    })
+    }, tabsInstance)
 
     expect(tabsMismatch.init).toBe(false)
     expect(tabsMismatch.tabs).toStrictEqual([])
@@ -233,14 +231,14 @@ test.describe('Tabs', () => {
   /* Test navigation */
 
   test('should show second panel on second tab press', async ({ page }) => {
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs') as Tabs)
+
     await page.getByTestId('tabs-tab-2').click()
     await page.waitForFunction(() => { // Wait for second tab activated
       return window.testTabsActivated?.tab.id === 'tabs-tab-2'
     })
 
-    const tabsSecond = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsSecond = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         selected: tabs.tabs.map(tab => tab.ariaSelected),
@@ -248,16 +246,14 @@ test.describe('Tabs', () => {
         panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.getByTestId('tabs-tab-1').click()
     await page.waitForFunction(() => { // Wait for first tab activated
       return window.testTabsActivated?.tab.id === 'tabs-tab-1'
     })
 
-    const tabsFirst = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsFirst = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         selected: tabs.tabs.map(tab => tab.ariaSelected),
@@ -265,7 +261,7 @@ test.describe('Tabs', () => {
         panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     expect(tabsSecond.currentIndex).toBe(1)
     expect(tabsSecond.selected).toStrictEqual(['false', 'true', 'false'])
@@ -280,19 +276,18 @@ test.describe('Tabs', () => {
   })
 
   test('should show current panel on tab press without index', async ({ page }) => {
-    await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs') as Tabs)
+
+    await page.evaluate(tabs => {
       tabs.tabs[1]?.removeAttribute('data-tab-index')
-    })
+    }, tabsInstance)
 
     await page.getByTestId('tabs-tab-2').click()
     await page.waitForFunction(() => { // Wait for first tab activated - current index fallback
       return window.testTabsActivated?.tab.id === 'tabs-tab-1'
     })
 
-    const tabsFallback = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsFallback = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         selected: tabs.tabs.map(tab => tab.ariaSelected),
@@ -300,7 +295,7 @@ test.describe('Tabs', () => {
         panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     expect(tabsFallback.currentIndex).toBe(0)
     expect(tabsFallback.selected).toStrictEqual(['true', 'false', 'false'])
@@ -310,28 +305,26 @@ test.describe('Tabs', () => {
   })
 
   test('should show corresponding horizontal panel on left or right arrow key press', async ({ page }) => {
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs') as Tabs)
+
     await page.getByTestId('tabs-tab-1').focus()
     await page.keyboard.press('ArrowUp') // Ignored - vertical key
     await page.keyboard.press('ArrowDown') // Ignored - vertical key
 
-    const tabsIgnore = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsIgnore = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowRight')
     await page.waitForFunction(() => { // Wait for second tab activated
       return window.testTabsActivated?.tab.id === 'tabs-tab-2'
     })
 
-    const tabsRight = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsRight = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
@@ -339,7 +332,7 @@ test.describe('Tabs', () => {
         tabIndexes: tabs.tabs.map(tab => tab.tabIndex),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowRight')
     await page.waitForFunction(() => { // Wait for third tab activated
@@ -351,48 +344,42 @@ test.describe('Tabs', () => {
       return window.testTabsActivated?.tab.id === 'tabs-tab-1'
     })
 
-    const tabsRightWrap = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsRightWrap = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowLeft') // Before first tab wraps to last
     await page.waitForFunction(() => { // Wait for third tab activated
       return window.testTabsActivated?.tab.id === 'tabs-tab-3'
     })
 
-    const tabsLeftWrap = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsLeftWrap = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowLeft')
     await page.waitForFunction(() => { // Wait for second tab activated
       return window.testTabsActivated?.tab.id === 'tabs-tab-2'
     })
 
-    const tabsLeft = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs') as Tabs
-
+    const tabsLeft = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     expect(tabsIgnore.currentIndex).toBe(0)
     expect(tabsIgnore.focusIndex).toBe(0)
@@ -417,28 +404,26 @@ test.describe('Tabs', () => {
   })
 
   test('should show corresponding vertical panel on up or down arrow key press', async ({ page }) => {
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs-vertical') as Tabs)
+
     await page.getByTestId('tabs-vertical-tab-1').focus()
     await page.keyboard.press('ArrowLeft') // Ignored - horizontal key
     await page.keyboard.press('ArrowRight') // Ignored - horizontal key
 
-    const tabsIgnore = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-vertical') as Tabs
-
+    const tabsIgnore = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowDown')
     await page.waitForFunction(() => { // Wait for second tab activated
       return window.testTabsActivated?.tab.id === 'tabs-vertical-tab-2'
     })
 
-    const tabsDown = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-vertical') as Tabs
-
+    const tabsDown = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
@@ -446,7 +431,7 @@ test.describe('Tabs', () => {
         tabIndexes: tabs.tabs.map(tab => tab.tabIndex),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowDown')
     await page.waitForFunction(() => { // Wait for third tab activated
@@ -458,48 +443,42 @@ test.describe('Tabs', () => {
       return window.testTabsActivated?.tab.id === 'tabs-vertical-tab-1'
     })
 
-    const tabsDownWrap = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-vertical') as Tabs
-
+    const tabsDownWrap = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowUp') // Before first tab wraps to last
     await page.waitForFunction(() => { // Wait for third tab activated
       return window.testTabsActivated?.tab.id === 'tabs-vertical-tab-3'
     })
 
-    const tabsUpWrap = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-vertical') as Tabs
-
+    const tabsUpWrap = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     await page.keyboard.press('ArrowUp')
     await page.waitForFunction(() => { // Wait for second tab activated
       return window.testTabsActivated?.tab.id === 'tabs-vertical-tab-2'
     })
 
-    const tabsUp = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-vertical') as Tabs
-
+    const tabsUp = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         focusIndex: tabs.tabs.indexOf(document.activeElement as HTMLElement),
         selected: tabs.tabs.map(tab => tab.ariaSelected),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     expect(tabsIgnore.currentIndex).toBe(0)
     expect(tabsIgnore.focusIndex).toBe(0)
@@ -593,14 +572,13 @@ test.describe('Tabs', () => {
     // Query differs so hash is not a same document navigation
     await page.goto('/spec/objects/Tabs/__tests__/Tabs.html?anchor#panel-anchor-2')
 
-    await page.waitForFunction(() => { // Wait for second panel
-      const tabs = document.querySelector('#tabs-anchor') as Tabs
+    const tabsInstance = await page.evaluateHandle(() => document.querySelector('#tabs-anchor') as Tabs)
+
+    await page.waitForFunction(tabs => { // Wait for second panel
       return tabs.panels[1]?.hidden === false
-    })
+    }, tabsInstance)
 
-    const tabsHash = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-anchor') as Tabs
-
+    const tabsHash = await page.evaluate(tabs => {
       return {
         currentIndex: tabs.currentIndex,
         selected: tabs.tabs.map(tab => tab.ariaSelected),
@@ -608,7 +586,7 @@ test.describe('Tabs', () => {
         panelSelected: tabs.panels.map(panel => panel.getAttribute('data-tabs-selected')),
         panelHidden: tabs.panels.map(panel => panel.hidden)
       }
-    })
+    }, tabsInstance)
 
     expect(tabsNoHash.currentIndex).toBe(0)
     expect(tabsNoHash.selected).toStrictEqual(['true', 'false', 'false'])

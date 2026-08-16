@@ -129,54 +129,48 @@ test.describe('Overflow', () => {
   })
 
   test('should update horizontal attributes on track scroll', async ({ page }) => {
-    await page.evaluate(() => { // Scroll to middle of track
-      const ov = document.querySelector('#ov') as Overflow
+    const ovInstance = await page.evaluateHandle(() => document.querySelector('#ov') as Overflow)
+
+    await page.evaluate(ov => { // Scroll to middle of track
       const track = ov.track as HTMLElement
 
       track.scrollTo({
         left: Math.round((track.scrollWidth - track.clientWidth) / 2),
         behavior: 'instant'
       })
-    })
+    }, ovInstance)
 
-    await page.waitForFunction(() => { // Wait for debounced set
-      const ov = document.querySelector('#ov') as Overflow
+    await page.waitForFunction(ov => { // Wait for debounced set
       return ov.getAttribute('left') === 'true'
-    })
+    }, ovInstance)
 
-    const ovMiddle = await page.evaluate(() => {
-      const ov = document.querySelector('#ov') as Overflow
-
+    const ovMiddle = await page.evaluate(ov => {
       return {
         left: ov.getAttribute('left'),
         right: ov.getAttribute('right')
       }
-    })
+    }, ovInstance)
 
-    await page.evaluate(() => { // Scroll to end of track
-      const ov = document.querySelector('#ov') as Overflow
+    await page.evaluate(ov => { // Scroll to end of track
       const track = ov.track as HTMLElement
 
       track.scrollTo({
         left: track.scrollWidth - track.clientWidth,
         behavior: 'instant'
       })
-    })
+    }, ovInstance)
 
-    await page.waitForFunction(() => { // Wait for debounced set
-      const ov = document.querySelector('#ov') as Overflow
+    await page.waitForFunction(ov => { // Wait for debounced set
       return ov.getAttribute('right') === 'false'
-    })
+    }, ovInstance)
 
-    const ovEnd = await page.evaluate(() => {
-      const ov = document.querySelector('#ov') as Overflow
-
+    const ovEnd = await page.evaluate(ov => {
       return {
         left: ov.getAttribute('left'),
         right: ov.getAttribute('right'),
         scrollCount: window.testOverflowScroll.ov ?? 0
       }
-    })
+    }, ovInstance)
 
     expect(ovMiddle.left).toBe('true')
     expect(ovMiddle.right).toBe('true')
@@ -213,30 +207,28 @@ test.describe('Overflow', () => {
   })
 
   test('should update vertical attributes on track scroll', async ({ page }) => {
-    await page.evaluate(() => { // Scroll to end of track
-      const ov = document.querySelector('#ov-vertical') as Overflow
+    const ovInstance = await page.evaluateHandle(() => document.querySelector('#ov-vertical') as Overflow)
+
+    await page.evaluate(ov => { // Scroll to end of track
       const track = ov.track as HTMLElement
 
       track.scrollTo({
         top: track.scrollHeight - track.clientHeight,
         behavior: 'instant'
       })
-    })
+    }, ovInstance)
 
-    await page.waitForFunction(() => { // Wait for debounced set
-      const ov = document.querySelector('#ov-vertical') as Overflow
+    await page.waitForFunction(ov => { // Wait for debounced set
       return ov.getAttribute('bottom') === 'false'
-    })
+    }, ovInstance)
 
-    const ovEnd = await page.evaluate(() => {
-      const ov = document.querySelector('#ov-vertical') as Overflow
-
+    const ovEnd = await page.evaluate(ov => {
       return {
         top: ov.getAttribute('top'),
         bottom: ov.getAttribute('bottom'),
         scrollCount: window.testOverflowScroll['ov-vertical'] ?? 0
       }
-    })
+    }, ovInstance)
 
     expect(ovEnd.top).toBe('true')
     expect(ovEnd.bottom).toBe('false')
@@ -246,6 +238,7 @@ test.describe('Overflow', () => {
   /* Test resize */
 
   test('should update overflow state on resize', async ({ page }) => {
+    const ovInstance = await page.evaluateHandle(() => document.querySelector('#ov-resize') as Overflow)
     const viewport = page.viewportSize() as { width: number, height: number }
 
     await page.setViewportSize({
@@ -257,9 +250,7 @@ test.describe('Overflow', () => {
       return (window.testOverflowSet['ov-resize'] ?? 0) >= 2
     })
 
-    const ovWide = await page.evaluate(() => {
-      const ov = document.querySelector('#ov-resize') as Overflow
-
+    const ovWide = await page.evaluate(ov => {
       return {
         overflow: [
           ov.overflow,
@@ -268,21 +259,18 @@ test.describe('Overflow', () => {
         left: ov.getAttribute('left'),
         right: ov.getAttribute('right')
       }
-    })
+    }, ovInstance)
 
     await page.setViewportSize({
       width: 360,
       height: viewport.height
     })
 
-    await page.waitForFunction(() => { // Wait for resize set
-      const ov = document.querySelector('#ov-resize') as Overflow
+    await page.waitForFunction(ov => { // Wait for resize set
       return ov.overflow
-    })
+    }, ovInstance)
 
-    const ovNarrow = await page.evaluate(() => {
-      const ov = document.querySelector('#ov-resize') as Overflow
-
+    const ovNarrow = await page.evaluate(ov => {
       return {
         overflow: [
           ov.overflow,
@@ -291,7 +279,7 @@ test.describe('Overflow', () => {
         left: ov.getAttribute('left'),
         right: ov.getAttribute('right')
       }
-    })
+    }, ovInstance)
 
     expect(ovWide.overflow).toStrictEqual([false, 'false'])
     expect(ovWide.left).toBe('false')

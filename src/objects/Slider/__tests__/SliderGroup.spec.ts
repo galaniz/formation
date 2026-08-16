@@ -467,16 +467,16 @@ test.describe('SliderGroup', () => {
   })
 
   test('should ignore breakpoints without numbers when regrouping', async ({ page }) => {
-    await page.evaluate(() => { // Breakpoints is public so entries are not guaranteed to be numbers
-      const slider = document.querySelector('#sld-group') as SliderGroup
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-group') as SliderGroup)
 
+    await page.evaluate(slider => { // Breakpoints is public so entries are not guaranteed to be numbers
       slider.breakpoints.add({
         low: NaN,
         high: NaN,
         items: NaN,
         panels: NaN
       })
-    })
+    }, sliderInstance)
 
     const viewport = page.viewportSize() as { width: number, height: number }
 
@@ -489,9 +489,7 @@ test.describe('SliderGroup', () => {
       return window.testSliderGroupActivated['sld-group']?.source === 'resize'
     })
 
-    const sliderGroups = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
-
+    const sliderGroups = await page.evaluate(slider => {
       return {
         breakpointCount: slider.breakpoints.size,
         endIndex: window.testSliderGroupActivated['sld-group']?.endIndex,
@@ -499,7 +497,7 @@ test.describe('SliderGroup', () => {
           return Array.from(panel.children).map(item => item.id)
         })
       }
-    })
+    }, sliderInstance)
 
     expect(sliderGroups.breakpointCount).toBe(5)
     expect(sliderGroups.endIndex).toBe(3) // Grouped by the valid breakpoint only
@@ -607,15 +605,15 @@ test.describe('SliderGroup', () => {
   })
 
   test('should disable previous button on first group and next button on last group', async ({ page }) => {
-    const sliderFirst = await page.evaluate(() => { // First group on init
-      const slider = document.querySelector('#sld-group') as SliderGroup
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-group') as SliderGroup)
 
+    const sliderFirst = await page.evaluate(slider => { // First group on init
       return {
         currentIndex: slider.currentIndex,
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     // Last group index depends on viewport width so move there with the end key
     await page.getByTestId('sld-group-tab-1').press('End')
@@ -624,16 +622,14 @@ test.describe('SliderGroup', () => {
       return activated?.currentIndex === activated?.endIndex
     })
 
-    const sliderLast = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
-
+    const sliderLast = await page.evaluate(slider => {
       return {
         currentIndex: slider.currentIndex,
         endIndex: window.testSliderGroupActivated['sld-group']?.endIndex,
         prevDisabled: slider.prev?.disabled,
         nextDisabled: slider.next?.disabled
       }
-    })
+    }, sliderInstance)
 
     expect(sliderFirst.currentIndex).toBe(0)
     expect(sliderFirst.prevDisabled).toBe(true)
@@ -674,20 +670,20 @@ test.describe('SliderGroup', () => {
   })
 
   test('should only allow focus in current group', async ({ page }) => {
-    const sliderFirst = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-group') as SliderGroup)
+
+    const sliderFirst = await page.evaluate(slider => {
       return slider.panels.map(panel => panel.inert)
-    })
+    }, sliderInstance)
 
     await page.getByTestId('sld-group-tab-2').click()
     await page.waitForFunction(() => { // Wait for second group activated
       return window.testSliderGroupActivated['sld-group']?.currentIndex === 1
     })
 
-    const sliderSecond = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
+    const sliderSecond = await page.evaluate(slider => {
       return slider.panels.map(panel => panel.inert)
-    })
+    }, sliderInstance)
 
     expect(sliderFirst).toStrictEqual([false, true, true, true, true, true, true])
     expect(sliderSecond).toStrictEqual([true, false, true, true, true, true, true])
@@ -844,6 +840,8 @@ test.describe('SliderGroup', () => {
   })
 
   test('should not regroup items on resize if viewport height changes', async ({ page }) => {
+    const sliderInstance = await page.evaluateHandle(() => document.querySelector('#sld-group') as SliderGroup)
+
     await page.evaluate(async () => { // Resize flag
       const { onResize } = await import('../../../actions/actionResize.js')
 
@@ -865,9 +863,7 @@ test.describe('SliderGroup', () => {
       return window.testSliderGroupResize
     })
 
-    const sliderBefore = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
-
+    const sliderBefore = await page.evaluate(slider => {
       return {
         count: window.testSliderGroupActivate['sld-group']?.count,
         resize: window.testSliderGroupResize,
@@ -875,7 +871,7 @@ test.describe('SliderGroup', () => {
           return Array.from(panel.children).map(item => item.id)
         })
       }
-    })
+    }, sliderInstance)
 
     await page.setViewportSize({ // Height only resize
       width,
@@ -886,9 +882,7 @@ test.describe('SliderGroup', () => {
       return window.testSliderGroupResize > resize
     }, sliderBefore.resize)
 
-    const sliderHeight = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group') as SliderGroup
-
+    const sliderHeight = await page.evaluate(slider => {
       return {
         count: window.testSliderGroupActivate['sld-group']?.count,
         currentIndex: slider.currentIndex,
@@ -896,7 +890,7 @@ test.describe('SliderGroup', () => {
           return Array.from(panel.children).map(item => item.id)
         })
       }
-    })
+    }, sliderInstance)
 
     expect(sliderHeight.count).toBe(sliderBefore.count) // No activation on height change
     expect(sliderHeight.currentIndex).toBe(0)

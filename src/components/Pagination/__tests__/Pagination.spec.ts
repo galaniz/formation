@@ -336,9 +336,9 @@ test.describe('Pagination', () => {
   /* Test history */
 
   test('should push page and params to history', async ({ page }) => {
-    const pagPage = await page.evaluate(({ nav, entry }) => {
-      const pag = document.querySelector('#pag') as Pagination
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag') as Pagination)
 
+    const pagPage = await page.evaluate(({ pag, nav, entry }) => {
       pag.page = 2
       pag.params = { cat: 'cat-1', sort: undefined } // Empty param removed
 
@@ -347,11 +347,9 @@ test.describe('Pagination', () => {
         url: window.location.href,
         state: history.state as PaginationState
       }
-    }, { nav, entry })
+    }, { pag: pagInstance, nav, entry })
 
-    const pagNoPage = await page.evaluate(() => {
-      const pag = document.querySelector('#pag') as Pagination
-
+    const pagNoPage = await page.evaluate(pag => {
       pag.page = 1 // Page param removed
 
       return {
@@ -359,7 +357,7 @@ test.describe('Pagination', () => {
         url: window.location.href,
         state: history.state as PaginationState
       }
-    })
+    }, pagInstance)
 
     expect(pagPage.updated).toBe(true)
     expect(pagPage.url).toBe(`${pagUrl}?page=2&cat=cat-1`)
@@ -397,15 +395,15 @@ test.describe('Pagination', () => {
   })
 
   test('should load page and params from history navigation', async ({ page }) => {
-    await page.evaluate(({ nav, entry }) => {
-      const pag = document.querySelector('#pag') as Pagination
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag') as Pagination)
 
+    await page.evaluate(({ pag, nav, entry }) => {
       pag.params = { cat: 'cat-1' }
 
       pag.request = (source) => {
         pag.update('success', source, nav, entry)
       }
-    }, { nav, entry })
+    }, { pag: pagInstance, nav, entry })
 
     await page.getByTestId('pag-2').click()
     await expect(page).toHaveURL(`${pagUrl}?page=2&cat=cat-1`)
@@ -415,30 +413,26 @@ test.describe('Pagination', () => {
       return window.testPagLoad.includes('pag:pop')
     })
 
-    const pagBack = await page.evaluate(() => { // No state so params from location
-      const pag = document.querySelector('#pag') as Pagination
-
+    const pagBack = await page.evaluate(pag => { // No state so params from location
       return {
         page: pag.page,
         params: pag.params,
         url: window.location.href
       }
-    })
+    }, pagInstance)
 
     await page.goForward()
     await page.waitForFunction(() => { // Wait for second pop load
       return window.testPagLoad.filter(load => load === 'pag:pop').length === 2
     })
 
-    const pagForward = await page.evaluate(() => { // Page and params from state
-      const pag = document.querySelector('#pag') as Pagination
-
+    const pagForward = await page.evaluate(pag => { // Page and params from state
       return {
         page: pag.page,
         params: pag.params,
         url: window.location.href
       }
-    })
+    }, pagInstance)
 
     expect(pagBack.page).toBe(1)
     expect(pagBack.params).toStrictEqual({})
@@ -451,14 +445,14 @@ test.describe('Pagination', () => {
   /* Test error */
 
   test('should display error and clear slots on failed request', async ({ page }) => {
-    await page.evaluate(() => { // Failed request
-      const pag = document.querySelector('#pag') as Pagination
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag') as Pagination)
 
+    await page.evaluate(pag => { // Failed request
       pag.request = async (source) => {
         await new Promise(resolve => { setTimeout(resolve, 0) }) // Delay response so loader displays first
         pag.update('error', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-2').click()
 
@@ -472,10 +466,9 @@ test.describe('Pagination', () => {
     const navItems = await page.getByTestId('pag-nav').innerHTML()
     const entryItems = await page.getByTestId('pag-entry').innerHTML()
 
-    const pagUpdated = await page.evaluate(() => { // Slots and history not updated
-      const pag = document.querySelector('#pag') as Pagination
+    const pagUpdated = await page.evaluate(pag => { // Slots and history not updated
       return pag.update('error', 'nav')
-    })
+    }, pagInstance)
 
     expect(navItems).toBe('')
     expect(entryItems).toBe('')
@@ -496,13 +489,13 @@ test.describe('Pagination', () => {
   })
 
   test('should hide error on load', async ({ page }) => {
-    await page.evaluate(() => { // Failed request
-      const pag = document.querySelector('#pag') as Pagination
+    const pagInstance = await page.evaluateHandle(() => document.querySelector('#pag') as Pagination)
 
+    await page.evaluate(pag => { // Failed request
       pag.request = (source) => {
         pag.update('error', source)
       }
-    })
+    }, pagInstance)
 
     await page.getByTestId('pag-2').click()
 
@@ -511,16 +504,14 @@ test.describe('Pagination', () => {
 
     await expect(error).toBeVisible()
 
-    await page.evaluate(async () => { // Successful request with no items
-      const pag = document.querySelector('#pag') as Pagination
-
+    await page.evaluate(async pag => { // Successful request with no items
       pag.request = async (source) => {
         await new Promise(resolve => { setTimeout(resolve, 0) }) // Delay response so loader displays first
         pag.update('success', source)
       }
 
       await pag.load('nav')
-    })
+    }, pagInstance)
 
     await expect(error).not.toBeVisible()
     await expect(loader).not.toHaveAttribute('data-loader')

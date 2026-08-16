@@ -87,24 +87,21 @@ test.describe('Collapsible', () => {
   /* Test single */
 
   test('should close and open single collapsible', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-single') as Collapsible
+    const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-single') as Collapsible)
 
+    const clpInit = await page.evaluate(clp => {
       return {
         expanded: clp.expanded,
         duration: clp.duration
       }
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-single-toggle').click()
-    await page.waitForFunction(() => { // Wait for close
-      const clp = document.querySelector('#clp-single') as Collapsible
+    await page.waitForFunction(clp => { // Wait for close
       return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpClose = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-single') as Collapsible
-
+    const clpClose = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -115,17 +112,14 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-single-toggle').click()
-    await page.waitForFunction(() => { // Wait for open
-      const clp = document.querySelector('#clp-single') as Collapsible
+    await page.waitForFunction(clp => { // Wait for open
       return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpOpen = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-single') as Collapsible
-
+    const clpOpen = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -136,7 +130,7 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     const clpEvents = await page.evaluate(() => {
       return {
@@ -156,24 +150,21 @@ test.describe('Collapsible', () => {
   /* Test hover */
 
   test('should open and close hoverable collapsible', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-hover') as Collapsible)
 
+    const clpInit = await page.evaluate(clp => {
       return {
         expanded: clp.expanded,
         duration: clp.duration
       }
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-hover').hover() // Mouse enter
-    await page.waitForFunction(() => { // Wait for open
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    await page.waitForFunction(clp => { // Wait for open
       return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpOpen = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
-
+    const clpOpen = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -184,17 +175,14 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-single-toggle').hover() // Mouse leave
-    await page.waitForFunction(() => { // Wait for close
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    await page.waitForFunction(clp => { // Wait for close
       return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpClose = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
-
+    const clpClose = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -205,7 +193,7 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     const clpEvents = await page.evaluate(() => {
       return {
@@ -223,25 +211,22 @@ test.describe('Collapsible', () => {
   })
 
   test('should open and close hoverable collapsible via keyboard', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-hover') as Collapsible)
 
+    const clpInit = await page.evaluate(clp => {
       return {
         expanded: clp.expanded,
         duration: clp.duration
       }
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-hover-toggle').focus() // Focus
     await page.keyboard.press('Enter')
-    await page.waitForFunction(() => { // Wait for open
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    await page.waitForFunction(clp => { // Wait for open
       return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpOpen = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
-
+    const clpOpen = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -252,17 +237,14 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     await page.keyboard.press('Tab')
-    await page.waitForFunction(() => { // Wait for close
-      const clp = document.querySelector('#clp-hover') as Collapsible
+    await page.waitForFunction(clp => { // Wait for close
       return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpClose = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-hover') as Collapsible
-
+    const clpClose = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -273,7 +255,7 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     const clpEvents = await page.evaluate(() => {
       return {
@@ -293,11 +275,11 @@ test.describe('Collapsible', () => {
   /* Test accordion */
 
   test('should open and close accordion collapsibles', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp1 = document.querySelector('#clp-accordion-1') as Collapsible
-      const clp2 = document.querySelector('#clp-accordion-2') as Collapsible
-      const clp3 = document.querySelector('#clp-accordion-3') as Collapsible
+    const clp1Instance = await page.evaluateHandle(() => document.querySelector('#clp-accordion-1') as Collapsible)
+    const clp2Instance = await page.evaluateHandle(() => document.querySelector('#clp-accordion-2') as Collapsible)
+    const clp3Instance = await page.evaluateHandle(() => document.querySelector('#clp-accordion-3') as Collapsible)
 
+    const clpInit = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
         expanded: [
           clp1.expanded,
@@ -305,19 +287,14 @@ test.describe('Collapsible', () => {
           clp3.expanded
         ]
       }
-    })
+    }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-1-toggle').click()
-    await page.waitForFunction(() => { // Wait for 1 open
-      const clp1 = document.querySelector('#clp-accordion-1') as Collapsible
+    await page.waitForFunction(clp1 => { // Wait for 1 open
       return clp1.expanded && clp1.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clp1Instance)
 
-    const clp1Open = await page.evaluate(() => {
-      const clp1 = document.querySelector('#clp-accordion-1') as Collapsible
-      const clp2 = document.querySelector('#clp-accordion-2') as Collapsible
-      const clp3 = document.querySelector('#clp-accordion-3') as Collapsible
-
+    const clp1Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
         ariaExpanded: [
           [
@@ -348,19 +325,14 @@ test.describe('Collapsible', () => {
           ]
         ]
       }
-    })
+    }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-2-toggle').click()
-    await page.waitForFunction(() => { // Wait for 2 open
-      const clp2 = document.querySelector('#clp-accordion-2') as Collapsible
+    await page.waitForFunction(clp2 => { // Wait for 2 open
       return clp2.expanded && clp2.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clp2Instance)
 
-    const clp2Open = await page.evaluate(() => {
-      const clp1 = document.querySelector('#clp-accordion-1') as Collapsible
-      const clp2 = document.querySelector('#clp-accordion-2') as Collapsible
-      const clp3 = document.querySelector('#clp-accordion-3') as Collapsible
-
+    const clp2Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
         ariaExpanded: [
           [
@@ -391,19 +363,14 @@ test.describe('Collapsible', () => {
           ]
         ]
       }
-    })
+    }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-3-toggle').click()
-    await page.waitForFunction(() => { // Wait for 3 open
-      const clp3 = document.querySelector('#clp-accordion-3') as Collapsible
+    await page.waitForFunction(clp3 => { // Wait for 3 open
       return clp3.expanded && clp3.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clp3Instance)
 
-    const clp3Open = await page.evaluate(() => {
-      const clp1 = document.querySelector('#clp-accordion-1') as Collapsible
-      const clp2 = document.querySelector('#clp-accordion-2') as Collapsible
-      const clp3 = document.querySelector('#clp-accordion-3') as Collapsible
-
+    const clp3Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
         ariaExpanded: [
           [
@@ -434,7 +401,7 @@ test.describe('Collapsible', () => {
           ]
         ]
       }
-    })
+    }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     const clpEvents = await page.evaluate(() => {
       return {
@@ -491,26 +458,23 @@ test.describe('Collapsible', () => {
   /* Test action */
 
   test('should open and close collapsible with action', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
+    const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-action') as Collapsible)
 
+    const clpInit = await page.evaluate(clp => {
       return {
         expanded: clp.expanded
       }
-    })
+    }, clpInstance)
 
-    await page.waitForFunction(async () => { // Wait for open
+    await page.waitForFunction(async clp => { // Wait for open
       const { doActions } = await import('../../../actions/actions.js')
 
       doActions('collapsible:action', { expanded: true })
 
-      const clp = document.querySelector('#clp-action') as Collapsible
       return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpOpen = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
-
+    const clpOpen = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -521,20 +485,17 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
-    await page.waitForFunction(async () => { // Wait for close
+    await page.waitForFunction(async clp => { // Wait for close
       const { doActions } = await import('../../../actions/actions.js')
 
       doActions('collapsible:action', { expanded: false })
 
-      const clp = document.querySelector('#clp-action') as Collapsible
       return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpClose = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
-
+    const clpClose = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -545,7 +506,7 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     await page.evaluate(async () => { // Test different state required
       const { doActions } = await import('../../../actions/actions.js')
@@ -568,34 +529,30 @@ test.describe('Collapsible', () => {
   })
 
   test('should open collapsible with hover via action', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
+    const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-action') as Collapsible)
 
+    const clpInit = await page.evaluate(clp => {
       return {
         expanded: clp.expanded,
         hoverable: clp.hoverable
       }
-    })
+    }, clpInstance)
 
-    await page.waitForFunction(async () => { // Wait for hoverable
+    await page.waitForFunction(async clp => { // Wait for hoverable
       const { doActions } = await import('../../../actions/actions.js')
       const args: CollapsibleActionArgs = { hoverable: true }
 
       doActions('collapsible:action', args)
 
-      const clp = document.querySelector('#clp-action') as Collapsible
       return clp.hoverable
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-action-toggle').hover() // Mouse enter
-    await page.waitForFunction(() => { // Wait for open
-      const clp = document.querySelector('#clp-action') as Collapsible
+    await page.waitForFunction(clp => { // Wait for open
       return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    })
+    }, clpInstance)
 
-    const clpEnter = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
-
+    const clpEnter = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -606,23 +563,20 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
-    await page.waitForFunction(async () => { // Wait for hoverable
+    await page.waitForFunction(async clp => { // Wait for hoverable
       const { doActions } = await import('../../../actions/actions.js')
       const args: CollapsibleActionArgs = { hoverable: false }
 
       doActions('collapsible:action', args)
 
-      const clp = document.querySelector('#clp-action') as Collapsible
       return clp.hoverable
-    })
+    }, clpInstance)
 
     await page.getByTestId('clp-single-toggle').hover() // Mouse leave
 
-    const clpLeave = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-action') as Collapsible
-
+    const clpLeave = await page.evaluate(clp => {
       return {
         ariaExpanded: [
           clp.toggle?.ariaExpanded,
@@ -633,7 +587,7 @@ test.describe('Collapsible', () => {
           clp.getAttribute('expanded')
         ]
       }
-    })
+    }, clpInstance)
 
     const clpEvents = await page.evaluate(() => {
       return {

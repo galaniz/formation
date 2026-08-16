@@ -46,15 +46,16 @@ test.describe('Reveal', () => {
   })
 
   test('should update image attribute on load', async ({ page }) => {
-    await page.waitForFunction(() => {
-      const revImg: HTMLImageElement | null = document.querySelector('#rev img')
-      return revImg?.dataset.reveal === 'loaded'
-    })
+    const revInstance = await page.evaluateHandle(() => document.querySelector('#rev') as Reveal)
 
-    const revLoaded = await page.evaluate(() => {
-      const rev = document.querySelector('#rev') as Reveal
+    await page.waitForFunction(rev => {
+      const revImg: HTMLImageElement | null = rev.querySelector('img')
+      return revImg?.dataset.reveal === 'loaded'
+    }, revInstance)
+
+    const revLoaded = await page.evaluate(rev => {
       return rev.loaded
-    })
+    }, revInstance)
 
     expect(revLoaded).toBe(true)
   })
@@ -62,15 +63,16 @@ test.describe('Reveal', () => {
   /* Test error */
 
   test('should update image attribute on error', async ({ page }) => {
-    await page.waitForFunction(() => {
-      const revImg: HTMLImageElement | null = document.querySelector('#rev-error img')
-      return revImg?.dataset.reveal === 'error'
-    })
+    const revInstance = await page.evaluateHandle(() => document.querySelector('#rev-error') as Reveal)
 
-    const revLoaded = await page.evaluate(() => {
-      const rev = document.querySelector('#rev-error') as Reveal
+    await page.waitForFunction(rev => {
+      const revImg: HTMLImageElement | null = rev.querySelector('img')
+      return revImg?.dataset.reveal === 'error'
+    }, revInstance)
+
+    const revLoaded = await page.evaluate(rev => {
       return rev.loaded
-    })
+    }, revInstance)
 
     expect(revLoaded).toBe(false)
   })
