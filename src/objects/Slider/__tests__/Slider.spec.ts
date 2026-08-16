@@ -69,11 +69,8 @@ test.describe('Slider', () => {
 
     await page.goto('/spec/objects/Slider/__tests__/Slider.html')
 
-    await page.waitForFunction(() => { // Wait for init scroll and scroll listeners
-      return (
-        window.testSliderActivated['sld-single']?.source === 'init' &&
-        window.testSliderActivated['sld-loop']?.source === 'init'
-      )
+    await page.waitForFunction(() => { // Wait for init activated events
+      return Object.keys(window.testSliderActivated).length === 2
     })
   })
 
@@ -83,30 +80,16 @@ test.describe('Slider', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const sliderInit = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-empty') as Slider
-
-      return {
-        init: slider.init,
-        subInit: slider.subInit
-      }
-    })
-
-    expect(sliderInit.init).toBe(false)
-    expect(sliderInit.subInit).toBe(false)
-  })
-
   test('should initialize if contains required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
       const sliders: Slider[] = Array.from(document.querySelectorAll('frm-slider'))
-      return sliders.map(slider => slider.init && slider.subInit)
+      return sliders.map(slider => [slider.init, slider.subInit])
     })
 
-    expect(sliderInit).toStrictEqual([
-      false, // #sld-empty
-      true,  // #sld-single
-      true   // #sld-loop
+    expect(sliderInit).toStrictEqual([ // Init and sub init
+      [false, false], // #sld-empty
+      [true, true],   // #sld-single
+      [true, true]    // #sld-loop
     ])
   })
 

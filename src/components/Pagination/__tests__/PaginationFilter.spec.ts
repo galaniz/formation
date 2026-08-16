@@ -49,30 +49,16 @@ test.describe('PaginationFilter', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const pagInit = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-filter-partial') as PaginationFilter
-
-      return {
-        init: pag.init,
-        subInit: pag.subInit
-      }
-    })
-
-    expect(pagInit.init).toBe(true) // Pagination items present
-    expect(pagInit.subInit).toBe(false)
-  })
-
   test('should initialize if contains required elements', async ({ page }) => {
     const pagInit = await page.evaluate(() => {
       const pags: PaginationFilter[] = Array.from(document.querySelectorAll('frm-pagination-filter'))
-      return pags.map(pag => pag.init && pag.subInit)
+      return pags.map(pag => [pag.init, pag.subInit])
     })
 
-    expect(pagInit).toStrictEqual([
-      false, // #pag-filter-partial
-      true,  // #pag-filter
-      true   // #pag-filter-change
+    expect(pagInit).toStrictEqual([ // Init and sub init
+      [true, false], // #pag-filter-partial
+      [true, true],  // #pag-filter
+      [true, true]   // #pag-filter-change
     ])
   })
 

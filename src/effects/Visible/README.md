@@ -22,12 +22,6 @@ Top offset (eg. scroll margin).
 
 **Type:** <code>number</code>
 
-### end  
-
-ID of end element.  
-
-**Type:** <code>string</code>
-
 ### init  
 
 Initialize success.  

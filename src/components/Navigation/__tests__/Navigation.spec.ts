@@ -84,15 +84,6 @@ test.describe('Navigation', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const navInit = await page.evaluate(() => {
-      const nav = document.querySelector('#nav-empty') as Navigation
-      return nav.init
-    })
-
-    expect(navInit).toBe(false)
-  })
-
   test('should initialize if contains required elements and emit set events', async ({ page }) => {
     const navInit = await page.evaluate(() => {
       const navs: Navigation[] = Array.from(document.querySelectorAll('frm-navigation'))

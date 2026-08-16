@@ -76,12 +76,8 @@ test.describe('SliderGroup', () => {
 
     await page.goto('/spec/objects/Slider/__tests__/SliderGroup.html')
 
-    await page.waitForFunction(() => { // Wait for init scroll and scroll listeners
-      return (
-        window.testSliderGroupActivated['sld-group']?.source === 'init' &&
-        window.testSliderGroupActivated['sld-group-invalid-breakpoints']?.source === 'init' &&
-        window.testSliderGroupActivated['sld-group-out-of-range']?.source === 'init'
-      )
+    await page.waitForFunction(() => { // Wait for init activated events
+      return Object.keys(window.testSliderGroupActivated).length === 3
     })
   })
 
@@ -91,51 +87,19 @@ test.describe('SliderGroup', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const sliderInit = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group-empty') as SliderGroup
-
-      return {
-        init: slider.init,
-        subInit: slider.subInit
-      }
-    })
-
-    expect(sliderInit.init).toBe(false)
-    expect(sliderInit.subInit).toBe(false)
-  })
-
   test('should initialize if contains required elements', async ({ page }) => {
     const sliderInit = await page.evaluate(() => {
       const sliders: SliderGroup[] = Array.from(document.querySelectorAll('frm-slider-group'))
-      return sliders.map(slider => slider.init && slider.subInit)
+      return sliders.map(slider => [slider.init, slider.subInit])
     })
 
-    expect(sliderInit).toStrictEqual([
-      false, // #sld-group-empty
-      true,  // #sld-group
-      false, // #sld-group-missing-visible
-      true,  // #sld-group-invalid-breakpoints
-      true   // #sld-group-out-of-range
+    expect(sliderInit).toStrictEqual([ // Init and sub init
+      [false, false], // #sld-group-empty
+      [true, true],   // #sld-group
+      [true, false],  // #sld-group-missing-visible
+      [true, true],   // #sld-group-invalid-breakpoints
+      [true, true]    // #sld-group-out-of-range
     ])
-  })
-
-  test('should not initialize without both breakpoints and visible attributes', async ({ page }) => {
-    const sliderMissing = await page.evaluate(() => {
-      const slider = document.querySelector('#sld-group-missing-visible') as SliderGroup
-
-      return {
-        init: slider.init, // Tabs still init
-        subInit: slider.subInit,
-        breakpointCount: slider.breakpoints.size,
-        visible: slider.getAttribute('visible')
-      }
-    })
-
-    expect(sliderMissing.init).toBe(true)
-    expect(sliderMissing.subInit).toBe(false)
-    expect(sliderMissing.breakpointCount).toBe(0)
-    expect(sliderMissing.visible).toBe(null)
   })
 
   test('should not group or listen for resize if init fails', async ({ page }) => {

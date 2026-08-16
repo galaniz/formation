@@ -97,15 +97,6 @@ test.describe('Pagination', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const pagInit = await page.evaluate(() => {
-      const pag = document.querySelector('#pag-empty') as Pagination
-      return pag.init
-    })
-
-    expect(pagInit).toBe(false)
-  })
-
   test('should initialize if contains required elements', async ({ page }) => {
     const pagInit = await page.evaluate(() => {
       const pags: Pagination[] = Array.from(document.querySelectorAll('frm-pagination'))

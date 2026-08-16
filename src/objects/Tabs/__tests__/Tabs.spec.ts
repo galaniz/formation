@@ -69,15 +69,6 @@ test.describe('Tabs', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const tabsInit = await page.evaluate(() => {
-      const tabs = document.querySelector('#tabs-empty') as Tabs
-      return tabs.init
-    })
-
-    expect(tabsInit).toBe(false)
-  })
-
   test('should initialize if contains required elements', async ({ page }) => {
     const tabsInit = await page.evaluate(() => {
       const tabs: Tabs[] = Array.from(document.querySelectorAll('frm-tabs'))

@@ -22,12 +22,15 @@ test.describe('Masonry', () => {
 
   /* Test init */
 
-  test('should not initialize if missing required elements', async ({ page }) => {
+  test('should initialize if contains required elements', async ({ page }) => {
     const masonryInit = await page.evaluate(() => {
-      const masonry = document.querySelector('#msn-empty') as Masonry
-      return masonry.init
+      const masonry: Masonry[] = Array.from(document.querySelectorAll('frm-masonry'))
+      return masonry.map(msn => msn.init)
     })
 
-    expect(masonryInit).toBe(false)
+    expect(masonryInit).toStrictEqual([
+      false, // #msn-empty
+      false  // #msn
+    ])
   })
 })

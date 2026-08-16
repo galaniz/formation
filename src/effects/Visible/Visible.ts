@@ -28,13 +28,6 @@ class Visible extends HTMLElement {
   offset: number = 0
 
   /**
-   * ID of end element.
-   *
-   * @type {string}
-   */
-  end: string = ''
-
-  /**
    * Initialize success.
    *
    * @type {boolean}
@@ -47,13 +40,6 @@ class Visible extends HTMLElement {
    * @type {number}
    */
   #scrollY: number = 0
-
-  /**
-   * End element.
-   *
-   * @type {HTMLElement|null}
-   */
-  #end: HTMLElement | null = null
 
   /**
    * Bind this to event callbacks.
@@ -121,49 +107,40 @@ class Visible extends HTMLElement {
 
     /* End element */
 
-    const end = document.getElementById(this.getAttribute('end') || '')
-
-    if (isHtmlElement(end)) {
-      this.#end = end
-    }
+    const endId = this.getAttribute('end')
+    const end = endId ? document.getElementById(endId) : null
 
     /* Corresponding items required */
 
-    const nextMap: Map<string, HTMLElement> = new Map()
+    let prevId = ''
 
-    links.forEach((link, i) => {
+    links.forEach(link => {
       const id = link.hash.replace('#', '')
       const item = document.getElementById(id)
 
       if (!isHtmlElement(item)) {
-        return false
+        return
       }
 
       this.items.set(id, {
         link,
         item,
-        next: this.#end,
+        next: end,
         top: 0,
         bottom: 0,
         visible: false
       })
 
-      if (i === 0) {
-        return
+      /* Item marks end of preceding item */
+
+      const prevItem = this.items.get(prevId)
+
+      if (prevItem) {
+        prevItem.next = item
       }
 
-      nextMap.set(id, item)      
+      prevId = id
     })
-
-    nextMap.forEach((item, id) => {
-      const visibleItem = this.items.get(id)
-
-      if (visibleItem) {
-        visibleItem.next = item
-      }
-    })
-
-    nextMap.clear()
 
     if (!this.items.size) {
       return false
@@ -224,8 +201,8 @@ class Visible extends HTMLElement {
         bottom = next.getBoundingClientRect().top + scrollY
       }
 
-      entry.top = top
-      entry.bottom = bottom
+      entry.top = Math.floor(top) // Browsers truncate scroll position to integer
+      entry.bottom = Math.floor(bottom)
     })
   }
 
@@ -241,7 +218,7 @@ class Visible extends HTMLElement {
     this.items.forEach(entry => {
       const { link, top, bottom } = entry
 
-      const visible = (scrollY >= top - this.offset) && scrollY <= bottom - this.offset
+      const visible = (scrollY >= top - this.offset) && scrollY < bottom - this.offset // Exclude bottom as shared with next item top
 
       if (visible) {
         link.setAttribute('aria-current', 'true')

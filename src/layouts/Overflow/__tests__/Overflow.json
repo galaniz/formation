@@ -1,4 +1,6 @@
 [
   "OverflowEmpty",
-  "Overflow"
+  "Overflow",
+  "OverflowVertical",
+  "OverflowResize"
 ]

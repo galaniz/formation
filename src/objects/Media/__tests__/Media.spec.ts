@@ -15,17 +15,6 @@ declare global {
   }
 }
 
-/* Ids of media on test page */
-
-const medIds = [
-  'med-empty',
-  'med-partial-none',
-  'med-partial',
-  'med-video',
-  'med-audio',
-  'med-minimal'
-]
-
 /* Tests */
 
 test.describe('Media', () => {
@@ -34,22 +23,17 @@ test.describe('Media', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript((ids: string[]) => {
+    await page.addInitScript(() => {
       window.testMediaToggle = []
       window.testMediaResize = false
 
       /* Listen on document so recording does not depend on when the elements init */
 
-      const idSet = new Set(ids)
-
       document.addEventListener('media:toggle', (e: Event) => {
         const { id } = e.target as HTMLElement
-
-        if (idSet.has(id)) {
-          window.testMediaToggle.push(id)
-        }
+        window.testMediaToggle.push(id)
       }, true)
-    }, medIds)
+    })
 
     await page.goto('/spec/objects/Media/__tests__/Media.html')
   })
@@ -59,15 +43,6 @@ test.describe('Media', () => {
   })
 
   /* Test init */
-
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const mediaInit = await page.evaluate(() => {
-      const media = document.querySelector('#med-empty') as Media
-      return media.init
-    })
-
-    expect(mediaInit).toBe(false)
-  })
 
   test('should initialize if contains required elements', async ({ page }) => {
     const mediaInit = await page.evaluate(() => {

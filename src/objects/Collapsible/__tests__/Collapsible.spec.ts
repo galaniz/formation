@@ -15,18 +15,6 @@ declare global {
   }
 }
 
-/* Ids of collapsibles on test page */
-
-const clpIds = [
-  'clp-empty',
-  'clp-single',
-  'clp-hover',
-  'clp-accordion-1',
-  'clp-accordion-2',
-  'clp-accordion-3',
-  'clp-action'
-]
-
 /* Tests */
 
 test.describe('Collapsible', () => {
@@ -35,21 +23,16 @@ test.describe('Collapsible', () => {
   test.beforeEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, true)
 
-    await page.addInitScript((ids: string[]) => {
+    await page.addInitScript(() => {
       window.testCollapsibleToggle = []
 
       /* Listen on document so recording does not depend on when the elements init */
 
-      const idSet = new Set(ids)
-
       document.addEventListener('collapsible:toggle', (e: Event) => {
         const { id } = e.target as HTMLElement
-
-        if (idSet.has(id)) {
-          window.testCollapsibleToggle.push(id)
-        }
+        window.testCollapsibleToggle.push(id)
       }, true)
-    }, clpIds)
+    })
 
     await page.goto('/spec/objects/Collapsible/__tests__/Collapsible.html')
   })
@@ -59,15 +42,6 @@ test.describe('Collapsible', () => {
   })
 
   /* Test init */
-
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const clpInit = await page.evaluate(() => {
-      const clp = document.querySelector('#clp-empty') as Collapsible
-      return clp.init
-    })
-
-    expect(clpInit).toBe(false)
-  })
 
   test('should initialize if contains required elements', async ({ page }) => {
     const clpInit = await page.evaluate(() => {
