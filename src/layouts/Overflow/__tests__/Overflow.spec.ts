@@ -31,12 +31,12 @@ test.describe('Overflow', () => {
 
       document.addEventListener('overflow:set', (e: Event) => {
         const { id } = e.target as HTMLElement
-        window.testOverflowSet[id] = (window.testOverflowSet[id] ?? 0) + 1
+        window.testOverflowSet[id] = (window.testOverflowSet[id] || 0) + 1
       }, true)
 
       document.addEventListener('overflow:scroll', (e: Event) => {
         const { id } = e.target as HTMLElement
-        window.testOverflowScroll[id] = (window.testOverflowScroll[id] ?? 0) + 1
+        window.testOverflowScroll[id] = (window.testOverflowScroll[id] || 0) + 1
       }, true)
     })
 
@@ -168,7 +168,7 @@ test.describe('Overflow', () => {
       return {
         left: ov.getAttribute('left'),
         right: ov.getAttribute('right'),
-        scrollCount: window.testOverflowScroll.ov ?? 0
+        scrollCount: window.testOverflowScroll.ov || 0
       }
     }, ovInstance)
 
@@ -226,7 +226,7 @@ test.describe('Overflow', () => {
       return {
         top: ov.getAttribute('top'),
         bottom: ov.getAttribute('bottom'),
-        scrollCount: window.testOverflowScroll['ov-vertical'] ?? 0
+        scrollCount: window.testOverflowScroll['ov-vertical'] || 0
       }
     }, ovInstance)
 
@@ -247,7 +247,7 @@ test.describe('Overflow', () => {
     })
 
     await page.waitForFunction(() => { // Wait for resize set
-      return (window.testOverflowSet['ov-resize'] ?? 0) >= 2
+      return (window.testOverflowSet['ov-resize'] || 0) >= 2
     })
 
     const ovWide = await page.evaluate(ov => {
@@ -298,7 +298,7 @@ test.describe('Overflow', () => {
       const ov = document.querySelector('#ov') as Overflow
       const track = ov.track as HTMLElement
       const resizeActionsCount = actions.get('resize')?.size || 1
-      const scrollCount = window.testOverflowScroll.ov ?? 0
+      const scrollCount = window.testOverflowScroll.ov || 0
 
       ov.remove()
 
@@ -310,7 +310,7 @@ test.describe('Overflow', () => {
         init: ov.init,
         overflow: ov.overflow,
         track: ov.track,
-        scrolled: (window.testOverflowScroll.ov ?? 0) > scrollCount,
+        scrolled: (window.testOverflowScroll.ov || 0) > scrollCount,
         actionsRemoved: actions.get('resize')?.size === resizeActionsCount - 1
       }
     })

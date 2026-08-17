@@ -53,7 +53,7 @@ test.describe('Slider', () => {
             source,
             currentIndex,
             panelIndex,
-            count: (window[store][id]?.count ?? 0) + 1
+            count: (window[store][id]?.count || 0) + 1
           }
         }, true)
       }
@@ -591,7 +591,7 @@ test.describe('Slider', () => {
       const track = slider.track as HTMLElement
       const offset = parseInt(getComputedStyle(track).scrollPaddingLeft, 10)
       const trackLeft = track.getBoundingClientRect().left
-      const panelLeft = slider.panels[8]?.getBoundingClientRect().left ?? 0
+      const panelLeft = slider.panels[8]?.getBoundingClientRect().left || 0
 
       return {
         currentIndex: slider.currentIndex,
@@ -642,7 +642,7 @@ test.describe('Slider', () => {
       const track = slider.track as HTMLElement
       const offset = parseInt(getComputedStyle(track).scrollPaddingLeft, 10)
       const trackLeft = track.getBoundingClientRect().left
-      const panelLeft = slider.panels[13]?.getBoundingClientRect().left ?? 0
+      const panelLeft = slider.panels[13]?.getBoundingClientRect().left || 0
 
       return {
         currentIndex: slider.currentIndex,

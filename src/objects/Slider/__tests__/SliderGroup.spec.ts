@@ -60,7 +60,7 @@ test.describe('SliderGroup', () => {
             currentIndex,
             panelIndex,
             endIndex,
-            count: (window[store][id]?.count ?? 0) + 1
+            count: (window[store][id]?.count || 0) + 1
           }
         }, true)
       }
@@ -118,7 +118,7 @@ test.describe('SliderGroup', () => {
       const slider = document.querySelector('#sld-group-missing-visible') as SliderGroup
 
       return {
-        activateCount: window.testSliderGroupActivate['sld-group-missing-visible']?.count ?? 0,
+        activateCount: window.testSliderGroupActivate['sld-group-missing-visible']?.count || 0,
         itemIds: slider.panels.map(panel => {
           return Array.from(panel.children).map(item => item.id)
         }),
@@ -153,7 +153,12 @@ test.describe('SliderGroup', () => {
     expect(sliderInvalid.visible).toBe('4,,2,0,3')
     // Skipped in order - unparsable next value, no visible value, unparsable low, less than one item
     expect(sliderInvalid.parsed).toStrictEqual([
-      { low: 0, high: 99999, items: 3, panels: 2 }
+      {
+        low: 0,
+        high: 99999,
+        items: 3,
+        panels: 2
+      }
     ])
   })
 
@@ -218,10 +223,30 @@ test.describe('SliderGroup', () => {
     expect(sliderProps.panelCount).toBe(7)
     expect(sliderProps.itemCount).toBe(7)
     expect(sliderProps.breakpoints).toStrictEqual([ // Panels are the seven items divided by visible
-      { low: 0, high: 600, items: 1, panels: 7 },
-      { low: 600, high: 900, items: 2, panels: 4 },
-      { low: 900, high: 1200, items: 3, panels: 3 },
-      { low: 1200, high: 99999, items: 4, panels: 2 }
+      {
+        low: 0,
+        high: 600,
+        items: 1,
+        panels: 7
+      },
+      {
+        low: 600,
+        high: 900,
+        items: 2,
+        panels: 4
+      },
+      {
+        low: 900,
+        high: 1200,
+        items: 3,
+        panels: 3
+      },
+      {
+        low: 1200,
+        high: 99999,
+        items: 4,
+        panels: 2
+      }
     ])
   })
 
@@ -250,7 +275,7 @@ test.describe('SliderGroup', () => {
       'sld-group-item-6',
       'sld-group-item-7'
     ])
-    expect(sliderGroups.groupCount).toBe((sliderGroups.endIndex ?? 0) + 1)
+    expect(sliderGroups.groupCount).toBe((sliderGroups.endIndex || 0) + 1)
     expect(sliderGroups.emptyCount).toBe(7 - sliderGroups.groupCount)
     expect(sliderGroups.panelDisplay).toStrictEqual(sliderGroups.tabDisplay)
   })
@@ -293,7 +318,7 @@ test.describe('SliderGroup', () => {
         endIndex: window.testSliderGroupActivated['sld-group-out-of-range']?.endIndex,
         scrolledSource: window.testSliderGroupScrolled['sld-group-out-of-range']?.source,
         scrolledPanelIndex: window.testSliderGroupScrolled['sld-group-out-of-range']?.panelIndex,
-        scrollLeft: slider.track?.scrollLeft ?? 0,
+        scrollLeft: slider.track?.scrollLeft || 0,
         selected: slider.tabs.map(tab => tab.ariaSelected)
       }
     })

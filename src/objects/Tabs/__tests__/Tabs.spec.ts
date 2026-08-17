@@ -214,7 +214,7 @@ test.describe('Tabs', () => {
 
       return {
         delay: tabs.delay,
-        elapsed: (activated?.now ?? 0) - (activate?.now ?? 0),
+        elapsed: (activated?.now || 0) - (activate?.now || 0),
         activateHidden: activate?.hidden, // Panel hidden until delay elapses
         hidden: tabs.panels.map(panel => panel.hidden),
         selected: tabs.tabs.map(tab => tab.ariaSelected)

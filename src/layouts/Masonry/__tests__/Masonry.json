@@ -1,4 +1,10 @@
 [
   "MasonryEmpty",
-  "Masonry"
+  "MasonryNoId",
+  "MasonryNoItemIds",
+  "MasonryNoBreakpoints",
+  "MasonryInvalidBreakpoints",
+  "MasonryPartialBreakpoints",
+  "Masonry",
+  "MasonryLoads"
 ]

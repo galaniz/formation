@@ -73,7 +73,7 @@ test.describe('Visible', () => {
           id,
           hash: entry.link.hash,
           itemId: entry.item.id,
-          nextId: entry.next?.id ?? null
+          nextId: entry.next?.id || null
         }
       })
     })
@@ -108,7 +108,7 @@ test.describe('Visible', () => {
         init: vis.init,
         offset: vis.offset,
         itemIds: Array.from(vis.items.keys()),
-        nextIds: Array.from(vis.items.values()).map(entry => entry.next?.id ?? null)
+        nextIds: Array.from(vis.items.values()).map(entry => entry.next?.id || null)
       }
     })
 
