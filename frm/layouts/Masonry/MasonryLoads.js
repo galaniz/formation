@@ -18,7 +18,9 @@ export default /* html */`
     margins="16,16"
     loads-offset="64"
   >
-    <ul class="masonry-list grid cols gap-4 align-start">${items}</ul>
+    <ul class="masonry-list grid cols gap-4 align-start" data-masonry-list>
+      ${items}
+    </ul>
     <div class="masonry-loads" data-masonry-loads></div>
   </frm-masonry>
 `

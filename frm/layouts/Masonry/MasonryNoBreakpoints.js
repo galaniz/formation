@@ -1,6 +1,6 @@
 export default /* html */`
   <frm-masonry id="msn-no-bk" class="block">
-    <ul class="masonry-list grid cols gap-4 align-start">
+    <ul class="masonry-list grid cols gap-4 align-start" data-masonry-list>
       <li
         id="msn-no-bk-0"
         class="masonry-item col-6 col-4-s"

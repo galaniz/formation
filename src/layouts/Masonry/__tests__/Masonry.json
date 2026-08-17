@@ -1,7 +1,7 @@
 [
   "MasonryEmpty",
   "MasonryNoId",
-  "MasonryNoItemIds",
+  "MasonryNoList",
   "MasonryNoBreakpoints",
   "MasonryInvalidBreakpoints",
   "MasonryPartialBreakpoints",

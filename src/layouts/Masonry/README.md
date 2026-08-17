@@ -10,6 +10,12 @@ Create new instance.
 
 ## Properties
 
+### list  
+
+Element that contains the items to arrange.  
+
+**Type:** <code>HTMLElement | null</code>
+
 ### items  
 
 Elements to arrange.  
@@ -68,12 +74,12 @@ Clean up after removed from DOM.
 
 ### appendItems  
 
-**<code>appendItems(newItems: HTMLElement[]): boolean</code>**  
+**<code>appendItems(newItems: DocumentFragment | string): boolean</code>**  
 
-Add new items to layout and reset.
+Append new items to list and add to layout.
 
 #### Parameters  
-- **`newItems`** <code>HTMLElement[]</code> required
+- **`newItems`** <code>DocumentFragment | string</code> required
 
 #### Returns  
 

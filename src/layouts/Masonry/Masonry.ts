@@ -25,6 +25,13 @@ declare global {
  */
 class Masonry extends HTMLElement {
   /**
+   * Element that contains the items to arrange.
+   *
+   * @type {HTMLElement|null}
+   */
+  list: HTMLElement | null = null
+
+  /**
    * Elements to arrange.
    *
    * @type {HTMLElement[]}
@@ -146,6 +153,7 @@ class Masonry extends HTMLElement {
 
     /* Empty props */
 
+    this.list = null
     this.items = []
     this.breakpoints.clear()
     this.loads = null
@@ -166,12 +174,19 @@ class Masonry extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const items = getItem(['[data-masonry-item]'], this)
-    const ids = items.map(item => item.id)
+    const list = getItem('[data-masonry-list]', this)
+
+    /* List required to check items */
+
+    if (!isHtmlElement(list)) {
+      return false
+    }
+
+    const items = getItem(['[data-masonry-item]'], list)
 
     /* Check required items exist */
 
-    if (!isHtmlElementArray(items) || ids.includes('') || !isStringStrict(this.id)) {
+    if (!isHtmlElementArray(items) || !isStringStrict(this.id)) {
       return false
     }
 
@@ -239,6 +254,7 @@ class Masonry extends HTMLElement {
 
     /* Props */
 
+    this.list = list
     this.items = items
     this.loads = isHtmlElement(loads) ? loads : null
 
@@ -426,23 +442,40 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Add new items to layout and reset.
+   * Append new items to list and add to layout.
    *
-   * @param {HTMLElement[]} newItems
+   * @param {DocumentFragment|string} newItems
    * @return {boolean}
    */
-  appendItems (newItems: HTMLElement[]): boolean {
+  appendItems (newItems: DocumentFragment | string): boolean {
     this.loading = false
 
-    const newIds = newItems.map(item => item.id)
+    const list = this.list
 
-    if (!this.init || !isHtmlElementArray(newItems) || newIds.includes('')) {
+    if (!this.init || !isHtmlElement(list)) {
       return false
     }
 
-    const fromIndex = this.items.length
+    /* Append */
 
-    this.items.push(...newItems)
+    if (isStringStrict(newItems)) {
+      list.insertAdjacentHTML('beforeend', newItems)
+    }
+
+    if (newItems instanceof DocumentFragment) {
+      list.append(newItems)
+    }
+
+    /* Items required */
+
+    const fromIndex = this.items.length
+    const items = getItem(['[data-masonry-item]'], list)
+
+    if (!isHtmlElementArray(items) || items.length <= fromIndex) {
+      return false
+    }
+
+    this.items = items
 
     this.#set(undefined, fromIndex)
     this.#rewatch()

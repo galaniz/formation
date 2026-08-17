@@ -58,20 +58,16 @@ test.describe('Masonry', () => {
         /* Timeout to mimic fetching items */
 
         setTimeout(() => {
-          const list = masonry.querySelector('.masonry-list') as HTMLElement
           const template = document.getElementById('msn-item') as HTMLTemplateElement
-          const start = masonry.items.length
+          const newItems = document.createDocumentFragment()
 
-          const newItems = heights.map((height, i) => {
+          heights.forEach(height => {
             const item = template.content.firstElementChild?.cloneNode(true) as HTMLElement
 
-            item.id = `msn-loads-${start + i}`
             item.style.height = `${height}px`
 
-            return item
+            newItems.append(item)
           })
-
-          list.append(...newItems)
 
           loads += 1
 
@@ -102,7 +98,7 @@ test.describe('Masonry', () => {
     expect(msnInit).toStrictEqual([
       false, // #msn-empty
       false, // No element ID
-      false, // #msn-no-item-ids
+      false, // #msn-no-list
       false, // #msn-no-bk
       false, // #msn-invalid-bk
       true,  // #msn-partial-bk
@@ -256,16 +252,13 @@ test.describe('Masonry', () => {
   test('should append items and keep the layout', async ({ page }) => {
     const msnAppend = await page.evaluate(() => {
       const msn = document.querySelector('#msn') as Masonry
-      const list = msn.querySelector('.masonry-list') as HTMLElement
       const template = document.getElementById('msn-item') as HTMLTemplateElement
       const item = template.content.firstElementChild?.cloneNode(true) as HTMLElement
 
       item.id = 'msn-9'
       item.style.height = '150px'
 
-      list.append(item)
-
-      const appended = msn.appendItems([item])
+      const appended = msn.appendItems(item.outerHTML)
       const rects = msn.items.map(msnItem => msnItem.getBoundingClientRect())
       const columns = new Set(rects.map(rect => Math.round(rect.left))).size
 
@@ -286,15 +279,14 @@ test.describe('Masonry', () => {
     expect(new Set(msnAppend.gaps)).toStrictEqual(new Set([16]))
   })
 
-  test('should not append items without IDs', async ({ page }) => {
+  test('should not append markup without items', async ({ page }) => {
     const msnAppend = await page.evaluate(() => {
       const msn = document.querySelector('#msn') as Masonry
-      const item = document.createElement('li')
 
       msn.loading = true
 
       return {
-        appended: msn.appendItems([item]),
+        appended: msn.appendItems('<li id="msn-9"></li>'), // No data-masonry-item
         loading: msn.loading,
         items: msn.items.length
       }
@@ -308,12 +300,9 @@ test.describe('Masonry', () => {
   test('should not append or end items if not initialized', async ({ page }) => {
     const msnEmpty = await page.evaluate(() => {
       const msn = document.querySelector('#msn-empty') as Masonry
-      const item = document.createElement('li')
-
-      item.id = 'msn-empty-0'
 
       return {
-        appended: msn.appendItems([item]),
+        appended: msn.appendItems('<li id="msn-empty-0" data-masonry-item></li>'),
         ended: msn.endItems()
       }
     })
@@ -384,6 +373,7 @@ test.describe('Masonry', () => {
 
       return {
         init: msn.init,
+        list: msn.list,
         items: msn.items.length,
         breakpoints: msn.breakpoints.size,
         loads: msn.loads,
@@ -395,6 +385,7 @@ test.describe('Masonry', () => {
     })
 
     expect(msnProps.init).toBe(false)
+    expect(msnProps.list).toBeNull()
     expect(msnProps.items).toBe(0)
     expect(msnProps.breakpoints).toBe(0)
     expect(msnProps.loads).toBeNull()
