@@ -2,8 +2,6 @@
  * Utils - Object Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isObject, isObjectStrict } from '../object.js'
 

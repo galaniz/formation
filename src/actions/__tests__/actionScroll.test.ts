@@ -2,8 +2,6 @@
  * Actions - Scroll Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import { fireEvent } from '@testing-library/dom'
 import { actions } from '../actions.js'

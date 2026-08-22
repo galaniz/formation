@@ -2,8 +2,6 @@
  * Config - Default Font Size Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { configDefaultFontSize } from '../configDefaultFontSize.js'
 import { config } from '../config.js'

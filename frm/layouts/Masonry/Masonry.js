@@ -1,9 +1,24 @@
+const heights = [120, 200, 90, 160, 110, 180, 140, 100, 170]
+
+const items = heights.map((height, i) => /* html */`
+  <li
+    id="msn-${i}"
+    class="masonry-item col-6 col-4-s"
+    style="height: ${height}px"
+    data-masonry-item
+  ></li>
+`).join('')
+
 export default /* html */`
-  <frm-masonry id="msn">
-    <ul>
-      <li data-masonry-item></li>
-      <li data-masonry-item></li>
-      <li data-masonry-item></li>
+  <frm-masonry
+    id="msn"
+    class="block"
+    breakpoints="0,600"
+    columns="2,3"
+    gaps="16,24"
+  >
+    <ul class="masonry-list grid cols gap-4 gap-6-s align-start" data-masonry-list>
+      ${items}
     </ul>
   </frm-masonry>
 `

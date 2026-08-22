@@ -2,8 +2,6 @@
  * Utils - String Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isString, isStringStrict, isStringSafe } from '../string.js'
 

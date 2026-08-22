@@ -12,6 +12,4 @@ const isMap = <T, U>(value: unknown): value is Map<T, U> => {
   return value instanceof Map
 }
 
-/* Exports */
-
 export { isMap }

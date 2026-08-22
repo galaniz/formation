@@ -2,8 +2,6 @@
  * Objects - Slider
  */
 
-/* Imports */
-
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
@@ -22,28 +20,28 @@ import { sliderScrollTo } from './sliderUtils.js'
  */
 class SliderGroup extends Tabs {
   /**
-   * Scrollable container element.
+   * Scrollable container element identified by `data-slider-track`.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Elements within panels.
+   * Elements within panels identified by `data-slider-item`.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Previous navigation button element.
+   * Optional previous navigation button element identified by `data-slider-prev`.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element.
+   * Optional next navigation button element identified by `data-slider-next`.
    *
    * @type {HTMLButtonElement|null}
    */
@@ -57,7 +55,8 @@ class SliderGroup extends Tabs {
   duration: number = 500
 
   /**
-   * Number of visible items and panels by breakpoint.
+   * Number of visible items and panels by breakpoint, set by `breakpoints="{number},{number}"`
+   * and `visible="{number},{number}"`.
    *
    * @type {Set<Record<string, number>>}
    */
@@ -144,6 +143,12 @@ class SliderGroup extends Tabs {
     /* Inherit */
 
     super.connectedCallback()
+
+    /* Skip if moved */
+
+    if (this.subInit) {
+      return
+    }
 
     /* Event listeners */
 
@@ -241,21 +246,6 @@ class SliderGroup extends Tabs {
       this.items = items
     }
 
-    /* Delays */
-
-    this.delay = this.duration + 100
-
-    /* Event listeners */
-
-    const viewportWidth = onResize(this.#resizeHandler)
-
-    if (isHtmlElement(next, HTMLButtonElement) && isHtmlElement(prev, HTMLButtonElement)) {
-      this.next = next
-      this.prev = prev
-      this.prev.addEventListener('click', this.#prevHandler)
-      this.next.addEventListener('click', this.#nextHandler)
-    }
-
     /* Breakpoints required */
 
     const { fontSizeMultiplier } = config
@@ -278,7 +268,7 @@ class SliderGroup extends Tabs {
         const low = parseInt(b, 10)
         const items = parseInt(v, 10)
 
-        if (!isNumber(low) || !isNumber(items)) {
+        if (!isNumber(low) || !isNumber(items) || items < 1) { // Items divide the panels
           return
         }
 
@@ -302,6 +292,17 @@ class SliderGroup extends Tabs {
       return false
     }
 
+    /* Delays */
+
+    this.delay = this.duration + 100
+
+    /* Nav buttons */
+
+    if (isHtmlElement(next, HTMLButtonElement) && isHtmlElement(prev, HTMLButtonElement)) {
+      this.next = next
+      this.prev = prev
+    }
+
     /* Last group */
 
     this.#endIndex = this.panels.length - 1
@@ -312,7 +313,7 @@ class SliderGroup extends Tabs {
 
     /* Dimension properties */
 
-    this.#setDimensions(viewportWidth)
+    this.#setDimensions(window.innerWidth)
 
     /* Cap current */
 
@@ -326,6 +327,15 @@ class SliderGroup extends Tabs {
       current,
       source: 'init'
     })
+
+    /* Event listeners only if init */
+
+    if (init) {
+      onResize(this.#resizeHandler)
+
+      this.prev?.addEventListener('click', this.#prevHandler)
+      this.next?.addEventListener('click', this.#nextHandler)
+    }
 
     /* Init successful */
 
@@ -444,7 +454,7 @@ class SliderGroup extends Tabs {
    * @return {void}
    */
   #activate (e: CustomEvent): void {
-    const { source, panelIndex } = e.detail as TabsEventDetail
+    const { source, currentIndex, panelIndex } = e.detail as TabsEventDetail
 
     const offsets = this.#leftOffsets
     const target = offsets[panelIndex]
@@ -454,7 +464,16 @@ class SliderGroup extends Tabs {
     }
 
     if (source !== 'scroll') {
-      sliderScrollTo(target, source, this.#animRef, this.track, this.duration)
+      sliderScrollTo({
+        to: target,
+        source,
+        animRef: this.#animRef,
+        track: this.track,
+        slider: this,
+        duration: this.duration,
+        currentIndex,
+        panelIndex
+      })
     }
   }
 
@@ -656,7 +675,5 @@ class SliderGroup extends Tabs {
     })
   }
 }
-
-/* Exports */
 
 export { SliderGroup }

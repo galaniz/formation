@@ -2,8 +2,6 @@
  * Utils - Cascade Test
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../../../global/globalTypes.js'
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import { cascade } from '../cascade.js'

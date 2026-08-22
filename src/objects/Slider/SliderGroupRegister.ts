@@ -2,8 +2,6 @@
  * Objects - Slider Group Register
  */
 
-/* Imports */
-
 import { SliderGroup } from './SliderGroup.js'
 
 /* Define */

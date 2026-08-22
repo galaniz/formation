@@ -14,25 +14,25 @@ Create new instance.
 
 #### track  
 
-Scrollable container element.  
+Scrollable container element identified by `data-slider-track`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 #### items  
 
-Elements within panels.  
+Elements within panels identified by `data-slider-item`.  
 
 **Type:** <code>HTMLElement[]</code>
 
 #### prev  
 
-Previous navigation button element.  
+Optional previous navigation button element identified by `data-slider-prev`.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
 #### next  
 
-Next navigation button element.  
+Optional next navigation button element identified by `data-slider-next`.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
@@ -44,7 +44,8 @@ Transition duration on scroll (tab or button click).
 
 #### breakpoints  
 
-Number of visible items and panels by breakpoint.  
+Number of visible items and panels by breakpoint, set by `breakpoints="{number},{number}"`
+and `visible="{number},{number}"`.  
 
 **Type:** <code>Set&lt;Record&lt;string, number&gt;&gt;</code>
 
@@ -82,19 +83,19 @@ Create new instance.
 
 #### track  
 
-Scrollable container element.  
+Scrollable container element identified by `data-slider-track`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 #### prev  
 
-Previous navigation button element.  
+Optional previous navigation button element identified by `data-slider-prev`.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
 #### next  
 
-Next navigation button element.  
+Optional next navigation button element identified by `data-slider-next`.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
@@ -106,7 +107,7 @@ Transition duration on scroll (tab or button click).
 
 #### loop  
 
-Repeat panels to the left and right.  
+Optionally repeat panels to the left and right, set by the `loop` attribute.  
 
 **Type:** <code>boolean</code>
 
@@ -132,16 +133,12 @@ Clean up after removed from DOM.
 
 ## sliderScrollTo  
 
-**<code>sliderScrollTo(to: number, source: string, animRef: SliderAnimRef, track: HTMLElement | null, duration: number): void</code>**  
+**<code>sliderScrollTo(args: SliderScrollToArgs): void</code>**  
 
 Move track immediately or smoothly.
 
 ### Parameters  
-- **`to`** <code>number</code> required  
-- **`source`** <code>string</code> required  
-- **`animRef`** <code><a href="#slideranimref">SliderAnimRef</a></code> required  
-- **`track`** <code>HTMLElement | null</code> required  
-- **`duration`** <code>number</code> required
+- **`args`** <code><a href="#sliderscrolltoargs">SliderScrollToArgs</a></code> required
 
 ### Returns  
 
@@ -155,3 +152,17 @@ Move track immediately or smoothly.
 
 #### Properties  
 - **`id`** <code>number</code> required
+
+### SliderScrollToArgs  
+
+**Type:** <code>object</code>
+
+#### Properties  
+- **`to`** <code>number</code> required  
+- **`source`** <code>string</code> required  
+- **`animRef`** <code><a href="#slideranimref">SliderAnimRef</a></code> required  
+- **`track`** <code>HTMLElement | null</code> required  
+- **`slider`** <code>HTMLElement</code> required  
+- **`duration`** <code>number</code> required  
+- **`currentIndex`** <code>number</code> required  
+- **`panelIndex`** <code>number</code> required

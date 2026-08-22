@@ -2,8 +2,6 @@
  * Utils - Object Recurse
  */
 
-/* Imports */
-
 import type { ObjectRecurse } from './objectTypes.js'
 import { isFunction } from '../function/function.js'
 import { getObjectKeys } from './objectKeys.js'
@@ -38,7 +36,5 @@ const recurseObject: ObjectRecurse = (value, condition, callback) => {
     }
   }
 }
-
-/* Exports */
 
 export { recurseObject }

@@ -2,8 +2,6 @@
  * Utils - Display
  */
 
-/* Imports */
-
 import { isHtmlElement } from '../html/html.js'
 
 /**
@@ -45,7 +43,5 @@ const setDisplay = (
     }
   }, 0)
 }
-
-/* Exports */
 
 export { setDisplay }

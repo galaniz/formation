@@ -2,8 +2,6 @@
  * Utils - Scroll Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach } from 'vitest'
 import { scroll } from '../scroll.js'
 

@@ -2,8 +2,6 @@
  * Utils - Html
  */
 
-/* Imports */
-
 import { isArrayStrict } from '../array/array.js'
 
 /**
@@ -55,8 +53,6 @@ const isHtmlElementArrayStrict = <T extends HTMLElement>(
 
   return value.every((v) => isHtmlElement(v, instance))
 }
-
-/* Exports */
 
 export {
   isHtmlElement,

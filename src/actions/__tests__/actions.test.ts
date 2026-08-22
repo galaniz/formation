@@ -2,8 +2,6 @@
  * Actions - Test
  */
 
-/* Imports */
-
 import { it, expect, describe, beforeEach, vi } from 'vitest'
 import {
   actions,

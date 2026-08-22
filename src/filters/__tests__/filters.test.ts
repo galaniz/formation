@@ -2,8 +2,6 @@
  * Utils - Filter Test
  */
 
-/* Imports */
-
 import { it, expect, describe, afterEach, vi } from 'vitest'
 import { filters, addFilter, applyFilters, removeFilter } from '../filters.js'
 

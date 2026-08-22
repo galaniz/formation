@@ -2,8 +2,6 @@
  * Config
  */
 
-/* Imports */
-
 import type { Config } from './configTypes.js'
 import { configDefaultFontSize } from './configDefaultFontSize.js'
 
@@ -69,8 +67,6 @@ const setConfig = (): void => {
 
   configDefaultFontSize()
 }
-
-/* Exports */
 
 export {
   config,

@@ -2,8 +2,6 @@
  * Utils - URL
  */
 
-/* Imports */
-
 import { isObject } from '../object/object.js'
 import { isArray } from '../array/array.js'
 import { config } from '../../config/config.js'
@@ -12,6 +10,8 @@ import { config } from '../../config/config.js'
  * Recursively convert object key value pairs into url encoded string.
  *
  * @param {object} value
+ * @param {string} [_key]
+ * @param {string[]} [_data]
  * @return {string}
  */
 const urlEncode = (
@@ -46,7 +46,5 @@ const urlEncode = (
 
   return _data.join('&')
 }
-
-/* Exports */
 
 export { urlEncode }

@@ -2,8 +2,6 @@
  * Effects - Reveal Register
  */
 
-/* Imports */
-
 import { Reveal } from './Reveal.js'
 
 /* Define */

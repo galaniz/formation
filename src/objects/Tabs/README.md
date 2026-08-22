@@ -12,25 +12,25 @@ Create new instance.
 
 ### tabs  
 
-Tab elements.  
+Tab elements identified by `role="tab"`.  
 
 **Type:** <code>HTMLElement[]</code>
 
 ### panels  
 
-Panel elements.  
+Panel elements identified by `role="tabpanel"`.  
 
 **Type:** <code>HTMLElement[]</code>
 
 ### delay  
 
-Delay before displaying panel.  
+Optional delay before displaying panel, set by `delay="{number}"`.  
 
 **Type:** <code>number</code>
 
 ### direction  
 
-Layout for keyboard navigation.  
+Optional layout for keyboard navigation, set by `direction="{TabsDirection}"`.  
 
 **Type:** <code><a href="#tabsdirection">TabsDirection</a></code>
 

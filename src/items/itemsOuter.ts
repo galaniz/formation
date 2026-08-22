@@ -2,8 +2,6 @@
  * Items - Outer
  */
 
-/* Imports */
-
 import type { ItemsOuter } from './itemsTypes.js'
 import { isHtmlElement } from '../utils/html/html.js'
 import { isFunction } from '../utils/function/function.js'
@@ -86,7 +84,5 @@ const getOuterItems: ItemsOuter = (item, type = 'all', filter, _store = []) => {
 
   return _store
 }
-
-/* Exports */
 
 export { getOuterItems }

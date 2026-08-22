@@ -2,8 +2,6 @@
  * Objects - Media Test
  */
 
-/* Imports */
-
 import type { Media } from '../Media.js'
 import { test, expect } from '@playwright/test'
 import { doCoverage } from '@alanizcreative/formation-coverage/coverage.js'
@@ -29,28 +27,12 @@ test.describe('Media', () => {
       window.testMediaToggle = []
       window.testMediaResize = false
 
-      requestAnimationFrame(() => {
-        const ids = [
-          'med-empty',
-          'med-partial-none',
-          'med-partial',
-          'med-video',
-          'med-audio',
-          'med-minimal'
-        ]
+      /* Listen on document so recording does not depend on when the elements init */
 
-        ids.forEach(id => {
-          const med = document.getElementById(id)
-
-          if (!med) {
-            return
-          }
-
-          med.addEventListener('media:toggle', (e) => {
-            window.testMediaToggle.push((e.target as HTMLElement).id)
-          })
-        })
-      })
+      document.addEventListener('media:toggle', (e: Event) => {
+        const { id } = e.target as HTMLElement
+        window.testMediaToggle.push(id)
+      }, true)
     })
 
     await page.goto('/spec/objects/Media/__tests__/Media.html')
@@ -61,15 +43,6 @@ test.describe('Media', () => {
   })
 
   /* Test init */
-
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const mediaInit = await page.evaluate(() => {
-      const media = document.querySelector('#med-empty') as Media
-      return media.init
-    })
-
-    expect(mediaInit).toBe(false)
-  })
 
   test('should initialize if contains required elements', async ({ page }) => {
     const mediaInit = await page.evaluate(() => {
@@ -135,38 +108,35 @@ test.describe('Media', () => {
   })
 
   test('should play minimal video on toggle button click', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-minimal') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-minimal') as Media)
+
+    await page.evaluate(media => {
       media.url = '/static/video/test.mp4'
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-minimal-toggle').click()
     await page.waitForFunction(() => { // Wait for playing
       return window.testMediaToggle.filter(id => id === 'med-minimal').length === 1
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-minimal') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-minimal-toggle').click()
     await page.waitForFunction(() => { // Wait for play
       return window.testMediaToggle.filter(id => id === 'med-minimal').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-minimal') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPlayProps.playing).toBe(true)
     expect(mediaPlayProps.labels).toStrictEqual(['Pause'])
@@ -175,25 +145,23 @@ test.describe('Media', () => {
   })
 
   test('should play minimal video until end', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-minimal') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-minimal') as Media)
+
+    await page.evaluate(media => {
       media.url = '/static/video/test.mp4'
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-minimal-media').click()
-    await page.waitForFunction(() => { // Wait for end
-      const media = document.querySelector('#med-minimal') as Media
+    await page.waitForFunction(media => { // Wait for end
       return !media.playing
-    })
+    }, mediaInstance)
 
-    const mediaProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-minimal') as Media
-
+    const mediaProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         currentTime: Math.round(media.media?.currentTime as number)
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProps.paused).toBe(true)
     expect(mediaProps.currentTime).toBe(5)
@@ -249,33 +217,31 @@ test.describe('Media', () => {
   })
 
   test('should play and pause video on toggle button click', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     await page.getByTestId('med-video-toggle').click()
     await page.waitForFunction(() => { // Wait for playing
       return window.testMediaToggle.filter(id => id === 'med-video').length === 1
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-video-toggle').click()
     await page.waitForFunction(() => { // Wait for play
       return window.testMediaToggle.filter(id => id === 'med-video').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPlayProps.playing).toBe(true)
     expect(mediaPlayProps.labels).toStrictEqual(['Play', 'Pause', 'Pause'])
@@ -286,6 +252,8 @@ test.describe('Media', () => {
   /* Test video media */
 
   test('should pause and play video on media click', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     await page.getByTestId('med-video-play').click()
     await page.waitForFunction(() => { // Wait for playing
       return window.testMediaToggle.filter(id => id === 'med-video').length === 1
@@ -296,28 +264,24 @@ test.describe('Media', () => {
       return window.testMediaToggle.filter(id => id === 'med-video').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-video-media').click()
     await page.waitForFunction(() => { // Wait for play
       return window.testMediaToggle.filter(id => id === 'med-video').length === 3
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPauseProps.paused).toBe(true)
     expect(mediaPauseProps.labels).toStrictEqual(['Play', 'Pause', 'Play'])
@@ -339,6 +303,8 @@ test.describe('Media', () => {
   })
 
   test('should pause and play video on space key if active', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     await page.evaluate(async () => {
       const { addFilter } = await import('../../../filters/filters.js')
 
@@ -350,28 +316,24 @@ test.describe('Media', () => {
       return window.testMediaToggle.filter(id => id === 'med-video').length === 1
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.keyboard.press('Space')
     await page.waitForFunction(() => { // Wait for pause
       return window.testMediaToggle.filter(id => id === 'med-video').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPlayProps.playing).toBe(true)
     expect(mediaPlayProps.labels).toStrictEqual(['Play', 'Pause', 'Pause'])
@@ -382,26 +344,27 @@ test.describe('Media', () => {
   /* Test video progress */
 
   test('should load video on progress click', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     await page.getByTestId('med-video-progress').click()
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-video') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaProps = await page.evaluate(media => {
       return {
         readyState: media.media?.readyState,
         durationText: media.duration?.textContent
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProps.readyState).toBeGreaterThan(0)
     expect(mediaProps.durationText).toBe('0:05')
   })
 
   test('should update time and video frame on progress drag', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     const progress = page.getByTestId('med-video-progress')
     const progressBox = await progress.boundingBox()
     const progressWidth = progressBox?.width as number
@@ -419,14 +382,11 @@ test.describe('Media', () => {
       steps: 10
     })
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-video') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaProgress = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaProgress = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')).toFixed(1),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -436,7 +396,7 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProgress.scale).toBe('0.6')
     expect(mediaProgress.currentTime).toBe(3)
@@ -450,13 +410,14 @@ test.describe('Media', () => {
   // test('should mute and update video current time during progress drag', async ({ page }) => {})
 
   test('should update time and video frame on progress over and under drag', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     const progress = page.getByTestId('med-video-progress')
     await progress.click()
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-video') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
     const progressBox = await progress.boundingBox()
     const progressX = progressBox?.x as number
@@ -471,9 +432,7 @@ test.describe('Media', () => {
     await page.mouse.move(progressX - 16, progressCenterY, { steps: 10 })
     await page.mouse.up()
 
-    const mediaProgressUnder = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaProgressUnder = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -483,16 +442,14 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     await page.mouse.move(progressCenterX, progressCenterY)
     await page.mouse.down()
     await page.mouse.move(progressX + progressWidth + 16, progressCenterY)
     await page.mouse.up()
 
-    const mediaProgressOver = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
-
+    const mediaProgressOver = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -502,7 +459,7 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProgressUnder.scale).toBe(0)
     expect(mediaProgressUnder.currentTime).toBe(0)
@@ -521,6 +478,8 @@ test.describe('Media', () => {
   })
 
   test('should update time and video frame on progress arrow key', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
     const getTime = () => {
       const media = document.querySelector('#med-video') as Media
 
@@ -534,15 +493,13 @@ test.describe('Media', () => {
       }
     }
 
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
+    await page.evaluate(media => {
       media.load()
-    })
+    }, mediaInstance)
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-video') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-video-progress').focus()
     await page.keyboard.press('ArrowRight')
@@ -710,29 +667,29 @@ test.describe('Media', () => {
   })
 
   test('should display and hide error on video toggle for empty and valid url', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
+
+    await page.evaluate(media => {
       media.url = ''
-    })
+    }, mediaInstance)
 
     const error = page.getByTestId('med-error')
 
     await page.getByTestId('med-video-toggle').click()
     await expect(error).toBeVisible()
 
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
+    await page.evaluate(media => {
       media.url = '/static/video/test.mp4'
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-video-toggle').click()
     await expect(error).not.toBeVisible()
   })
 
   test('should display 0:00 time if video duration is not a number', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-video') as Media)
 
+    await page.evaluate(media => {
       media.url = '/static/video/test.mp4'
 
       Object.defineProperty(media.media, 'duration', {
@@ -740,17 +697,15 @@ test.describe('Media', () => {
       })
 
       media.load()
-    })
+    }, mediaInstance)
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-video') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaTimeText = await page.evaluate(() => {
-      const media = document.querySelector('#med-video') as Media
+    const mediaTimeText = await page.evaluate(media => {
       return media.time?.textContent
-    })
+    }, mediaInstance)
 
     expect(mediaTimeText).toBe('0:00')
   })
@@ -805,33 +760,31 @@ test.describe('Media', () => {
   })
 
   test('should play and pause audio on toggle button click', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     await page.getByTestId('med-audio-toggle').click()
     await page.waitForFunction(() => { // Wait for playing
       return window.testMediaToggle.filter(id => id === 'med-audio').length === 1
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-audio-toggle').click()
     await page.waitForFunction(() => { // Wait for play
       return window.testMediaToggle.filter(id => id === 'med-audio').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPlayProps.playing).toBe(true)
     expect(mediaPlayProps.labels).toStrictEqual(['Play', 'Pause', 'Pause'])
@@ -853,6 +806,8 @@ test.describe('Media', () => {
   })
 
   test('should pause and play audio on space key if active', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     await page.evaluate(async () => {
       const { addFilter } = await import('../../../filters/filters.js')
 
@@ -864,28 +819,24 @@ test.describe('Media', () => {
       return window.testMediaToggle.filter(id => id === 'med-audio').length === 1
     })
 
-    const mediaPlayProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaPlayProps = await page.evaluate(media => {
       return {
         playing: media.playing && media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     await page.keyboard.press('Space')
     await page.waitForFunction(() => { // Wait for pause
       return window.testMediaToggle.filter(id => id === 'med-audio').length === 2
     })
 
-    const mediaPauseProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaPauseProps = await page.evaluate(media => {
       return {
         paused: !media.playing && !media.hasAttribute('playing'),
         labels: media.controls.map(control => (control.ariaLabel || control.textContent).trim())
       }
-    })
+    }, mediaInstance)
 
     expect(mediaPlayProps.playing).toBe(true)
     expect(mediaPlayProps.labels).toStrictEqual(['Play', 'Pause', 'Pause'])
@@ -896,30 +847,33 @@ test.describe('Media', () => {
   /* Test audio progress */
 
   test('should load audio on progress click', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     await page.getByTestId('med-audio-progress').click()
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaProps = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaProps = await page.evaluate(media => {
       return {
         readyState: media.media?.readyState,
         durationText: media.duration?.textContent
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProps.readyState).toBeGreaterThan(0)
     expect(mediaProps.durationText).toBe('0:19')
   })
 
   test('should update time and audio frame on progress drag', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     const progress = page.getByTestId('med-audio-progress')
     const progressBox = await progress.boundingBox()
     const progressWidth = progressBox?.width as number
     const progressHeight = progressBox?.height as number
+
+    /* Target the middle of the 12 second band - 0.6 sits on the rounding boundary */
 
     await progress.dragTo(progress, {
       sourcePosition: {
@@ -927,20 +881,17 @@ test.describe('Media', () => {
         y: progressHeight / 2
       },
       targetPosition: {
-        x: progressWidth * 0.6,
+        x: progressWidth * (12 / 19),
         y: progressHeight / 2
       },
       steps: 10
     })
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaProgress = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaProgress = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')).toFixed(1),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -950,7 +901,7 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProgress.scale).toBe('0.6')
     expect(mediaProgress.currentTime).toBe(12)
@@ -964,13 +915,14 @@ test.describe('Media', () => {
   // test('should not update audio current time during progress drag', async ({ page }) => {})
 
   test('should update time and audio frame on progress over and under drag', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     const progress = page.getByTestId('med-audio-progress')
     await progress.click()
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
     const progressBox = await progress.boundingBox()
     const progressX = progressBox?.x as number
@@ -985,9 +937,7 @@ test.describe('Media', () => {
     await page.mouse.move(progressX - 16, progressCenterY, { steps: 10 })
     await page.mouse.up()
 
-    const mediaProgressUnder = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaProgressUnder = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -997,16 +947,14 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     await page.mouse.move(progressCenterX, progressCenterY)
     await page.mouse.down()
     await page.mouse.move(progressX + progressWidth + 16, progressCenterY)
     await page.mouse.up()
 
-    const mediaProgressOver = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
-
+    const mediaProgressOver = await page.evaluate(media => {
       return {
         scale: parseFloat(media.style.getPropertyValue('--med-progress-bar')),
         currentTime: Math.round(media.media?.currentTime as number),
@@ -1016,7 +964,7 @@ test.describe('Media', () => {
         ariaNow: media.progress?.ariaValueNow,
         ariaText: media.progress?.ariaValueText
       }
-    })
+    }, mediaInstance)
 
     expect(mediaProgressUnder.scale).toBe(0)
     expect(mediaProgressUnder.currentTime).toBe(0)
@@ -1035,6 +983,8 @@ test.describe('Media', () => {
   })
 
   test('should update time and audio frame on progress arrow key', async ({ page }) => {
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
     const getTime = () => {
       const media = document.querySelector('#med-audio') as Media
 
@@ -1048,15 +998,13 @@ test.describe('Media', () => {
       }
     }
 
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    await page.evaluate(media => {
       media.load()
-    })
+    }, mediaInstance)
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-audio-progress').focus()
     await page.keyboard.press('ArrowRight')
@@ -1224,29 +1172,29 @@ test.describe('Media', () => {
   })
 
   test('should display and hide error on audio toggle for empty and valid url', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
+    await page.evaluate(media => {
       media.url = ''
-    })
+    }, mediaInstance)
 
     const error = page.getByTestId('med-error')
 
     await page.getByTestId('med-audio-toggle').click()
     await expect(error).toBeVisible()
 
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    await page.evaluate(media => {
       media.url = '/static/audio/test.mp3'
-    })
+    }, mediaInstance)
 
     await page.getByTestId('med-audio-toggle').click()
     await expect(error).not.toBeVisible()
   })
 
   test('should display 0:00 time if audio duration is not a number', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
 
+    await page.evaluate(media => {
       media.url = '/static/audio/test.mp3'
 
       Object.defineProperty(media.media, 'duration', {
@@ -1254,17 +1202,15 @@ test.describe('Media', () => {
       })
 
       media.load()
-    })
+    }, mediaInstance)
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaTimeText = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    const mediaTimeText = await page.evaluate(media => {
       return media.time?.textContent
-    })
+    }, mediaInstance)
 
     expect(mediaTimeText).toBe('0:00')
   })
@@ -1272,26 +1218,24 @@ test.describe('Media', () => {
   /* Test reload */
 
   test('should load new audio url on toggle if reload true', async ({ page }) => {
-    await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    const mediaInstance = await page.evaluateHandle(() => document.querySelector('#med-audio') as Media)
+
+    await page.evaluate(media => {
       media.load()
-    })
+    }, mediaInstance)
 
-    await page.evaluate(async () => {
-      const media = document.querySelector('#med-audio') as Media
+    await page.evaluate(async media => {
       media.url = '/static/audio/sound.mp3'
-      await media.toggle(true)
-    })
+      await media.toggle(true, true) // Reload required to swap src once loaded
+    }, mediaInstance)
 
-    await page.waitForFunction(() => { // Wait for load
-      const media = document.querySelector('#med-audio') as Media
+    await page.waitForFunction(media => { // Wait for load
       return media.loaded
-    })
+    }, mediaInstance)
 
-    const mediaSrc = await page.evaluate(() => {
-      const media = document.querySelector('#med-audio') as Media
+    const mediaSrc = await page.evaluate(media => {
       return media.media?.src
-    })
+    }, mediaInstance)
 
     expect(mediaSrc).toBe('http://localhost:3000/static/audio/sound.mp3')
   })

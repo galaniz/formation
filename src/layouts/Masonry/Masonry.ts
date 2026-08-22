@@ -2,10 +2,8 @@
  * Layouts - Masonry
  */
 
-/* Imports */
-
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
-import { isHtmlElementArray } from '../../utils/html/html.js'
+import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isNumber } from '../../utils/number/number.js'
 import { getItem } from '../../items/items.js'
@@ -13,22 +11,68 @@ import { onResize, removeResize } from '../../actions/actionResize.js'
 import { config } from '../../config/config.js'
 
 /**
+ * Custom event details.
+ */
+declare global {
+  interface ElementEventMap {
+    'masonry:set': CustomEvent
+    'masonry:load': CustomEvent
+  }
+}
+
+/**
  * Handles arranging items into masonry layout.
  */
 class Masonry extends HTMLElement {
   /**
-   * Elements to arrange.
+   * Element identified by `data-masonry-list` that contains the items to arrange.
+   *
+   * @type {HTMLElement|null}
+   */
+  list: HTMLElement | null = null
+
+  /**
+   * Elements to arrange identified by `data-masonry-item`.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Number of columns and margins by breakpoint.
+   * Number of columns and gaps by breakpoint, set by `breakpoints="{number},{number}"`,
+   * `columns="{number},{number}"` and `gaps="{number},{number}"`.
    *
    * @type {Set<Record<string, number>>}
    */
-  breakpoints: Set<Record<'low' | 'high' | 'columns' | 'margin', number>> = new Set()
+  breakpoints: Set<Record<'low' | 'high' | 'columns' | 'gap', number>> = new Set()
+
+  /**
+   * Optional element identified by `data-masonry-loads` that requests more items when scrolled into view.
+   *
+   * @type {HTMLElement|null}
+   */
+  loads: HTMLElement | null = null
+
+  /**
+   * Optional pixels beyond the viewport to request more items, set by `loads-offset="{number}"`.
+   *
+   * @type {number}
+   */
+  loadsOffset: number = 0
+
+  /**
+   * More items requested and not yet appended.
+   *
+   * @type {boolean}
+   */
+  loading: boolean = false
+
+  /**
+   * No more items to request.
+   *
+   * @type {boolean}
+   */
+  done: boolean = false
 
   /**
    * Initialize success.
@@ -38,12 +82,12 @@ class Masonry extends HTMLElement {
   init: boolean = false
 
   /**
-   * Item IDs for margin styles.
+   * Item heights (without gaps applied).
    *
    * @private
-   * @type {string[]}
+   * @type {number[]}
    */
-  #ids: string[] = []
+  #heights: number[] = []
 
   /**
    * Viewport width to check breakpoint(s).
@@ -54,11 +98,20 @@ class Masonry extends HTMLElement {
   #viewportWidth: number = 0
 
   /**
+   * Watches loads element.
+   *
+   * @private
+   * @type {IntersectionObserver|null}
+   */
+  #observer: IntersectionObserver | null = null
+
+  /**
    * Bind this to event callbacks.
    *
    * @private
    */
   #resizeHandler = this.#resize.bind(this)
+  #intersectHandler = this.#intersect.bind(this)
 
   /**
    * Create new instance.
@@ -93,13 +146,24 @@ class Masonry extends HTMLElement {
     /* Clear event listeners */
 
     removeResize(this.#resizeHandler)
+    this.#observer?.disconnect()
+
+    /* Clear styles */
+
+    document.getElementById(`msn-${this.id}-styles`)?.remove()
 
     /* Empty props */
 
+    this.list = null
     this.items = []
     this.breakpoints.clear()
+    this.loads = null
+    this.loadsOffset = 0
+    this.loading = false
+    this.done = false
     this.init = false
-    this.#ids = []
+    this.#heights = []
+    this.#observer = null
   }
 
   /**
@@ -111,12 +175,19 @@ class Masonry extends HTMLElement {
   #initialize (): boolean {
     /* Items */
 
-    const items = getItem(['[data-masonry-item]'], this)
-    const ids = items.map(item => item.id)
+    const list = getItem('[data-masonry-list]', this)
+
+    /* List required to check items */
+
+    if (!isHtmlElement(list)) {
+      return false
+    }
+
+    const items = getItem(['[data-masonry-item]'], list)
 
     /* Check required items exist */
 
-    if (!isHtmlElementArray(items) || ids.includes('') || !isStringStrict(this.id)) {
+    if (!isHtmlElementArray(items) || !isStringStrict(this.id)) {
       return false
     }
 
@@ -126,26 +197,26 @@ class Masonry extends HTMLElement {
 
     const breakpoints = this.getAttribute('breakpoints')
     const columns = this.getAttribute('columns')
-    const margins = this.getAttribute('margins')
+    const gaps = this.getAttribute('gaps')
 
-    if (isStringStrict(breakpoints) && isStringStrict(columns) && isStringStrict(margins)) {
+    if (isStringStrict(breakpoints) && isStringStrict(columns) && isStringStrict(gaps)) {
       const breakpointsArr = breakpoints.split(',')
       const columnsArr = columns.split(',')
-      const marginsArr = margins.split(',')
+      const gapsArr = gaps.split(',')
 
       breakpointsArr.forEach((b, i) => {
         const c = columnsArr[i]
-        const m = marginsArr[i]
+        const g = gapsArr[i]
 
-        if (!isStringStrict(c) || !isStringStrict(m)) {
+        if (!isStringStrict(c) || !isStringStrict(g)) {
           return
         }
 
         const low = parseInt(b, 10)
         const columns = parseInt(c, 10)
-        const margin = parseInt(m, 10)
+        const gap = parseInt(g, 10)
 
-        if (!isNumber(low) || !isNumber(columns) || !isNumber(margin)) {
+        if (!isNumber(low) || !isNumber(columns) || !isNumber(gap)) {
           return
         }
 
@@ -159,7 +230,7 @@ class Masonry extends HTMLElement {
         this.breakpoints.add({
           low: low * fontSizeMultiplier,
           high: high * fontSizeMultiplier,
-          margin: margin * fontSizeMultiplier,
+          gap: gap * fontSizeMultiplier,
           columns
         })
       })
@@ -169,10 +240,24 @@ class Masonry extends HTMLElement {
       return false
     }
 
+    /* Loads element and offset if they exist */
+
+    const loads = getItem('[data-masonry-loads]', this)
+    const loadsOffset = this.getAttribute('loads-offset')
+
+    if (isStringStrict(loadsOffset)) {
+      const loadsOffsetValue = parseInt(loadsOffset, 10)
+
+      if (isNumber(loadsOffsetValue)) {
+        this.loadsOffset = loadsOffsetValue * fontSizeMultiplier
+      }
+    }
+
     /* Props */
 
+    this.list = list
     this.items = items
-    this.#ids = ids
+    this.loads = isHtmlElement(loads) ? loads : null
 
     /* Event listeners */
 
@@ -180,7 +265,12 @@ class Masonry extends HTMLElement {
 
     /* Layout */
 
+    this.#style()
     this.#set(viewportWidth)
+
+    /* Watch loads */
+
+    this.#watch()
 
     /* Init successful */
 
@@ -188,96 +278,129 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Update negative margins based on current columns and margins.
+   * Observe loads element to request more items.
+   *
+   * @private
+   * @return {void}
+   */
+  #watch (): void {
+    if (!isHtmlElement(this.loads)) {
+      return
+    }
+
+    this.#observer = new IntersectionObserver(this.#intersectHandler, {
+      rootMargin: `${this.loadsOffset}px 0px`
+    })
+
+    this.#observer.observe(this.loads)
+  }
+
+  /**
+   * Re-observe loads element as observer only fires when intersection changes.
+   *
+   * @private
+   * @return {void}
+   */
+  #rewatch (): void {
+    if (this.#observer == null || !isHtmlElement(this.loads) || this.done) {
+      return
+    }
+
+    this.#observer.unobserve(this.loads)
+    this.#observer.observe(this.loads)
+  }
+
+  /**
+   * Add margin styles.
+   *
+   * @private
+   * @return {void}
+   */
+  #style (): void {
+    const style = document.createElement('style')
+
+    style.id = `msn-${this.id}-styles`
+    style.textContent = `#${this.id} [data-masonry-item]{margin-top:var(--msn-margin, 0)}`
+
+    document.head.appendChild(style)
+  }
+
+  /**
+   * Update negative margins based on current columns, gaps and index.
    *
    * @private
    * @param {number} [viewportWidth]
+   * @param {number} [fromIndex=0]
    * @return {void}
    */
-  #set (viewportWidth?: number): void {
+  #set (viewportWidth?: number, fromIndex: number = 0): void {
     /* Viewport width */
 
     if (viewportWidth) {
       this.#viewportWidth = viewportWidth
     }
 
-    /* Reset margins */
-
-    const styleId = `mas-${this.id}-styles`
-    let styles = ''
-
-    this.#ids.forEach(id => {
-      styles += `#${id}{margin-top:var(--msn-${id}-margin, 0)}`
-    })
-
-    let style = document.getElementById(styleId) as HTMLStyleElement
-    const hasStyle = style != null // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-    const newStyle = hasStyle ? style : document.createElement('style')
-
-    newStyle.id = styleId
-    newStyle.textContent = styles
-
-    if (!hasStyle) {
-      style = document.head.appendChild(newStyle)
-    }
-
-    /* Items */
-
-    const newCount = this.items.length
-
-    /* Columns and margin */
+    /* Columns and gap */
 
     let newColumns = 1
-    let newMargin = 0
+    let newGap = 0
 
     this.breakpoints.forEach(bk => {
-      const { low, high, columns, margin } = bk
+      const { low, high, columns, gap } = bk
 
       if (this.#viewportWidth >= low && this.#viewportWidth < high) {
         newColumns = columns
-        newMargin = margin
+        newGap = gap
       }
     })
 
-    /* Layout */
+    /* Heights */
 
-    const newLayout = Array.from({ length: newCount }, (_, i): [number, number, number] => {
+    const newCount = this.items.length
+
+    for (let i = fromIndex; i < newCount; i += 1) {
       const item = this.items[i] as HTMLElement
-      const rect = item.getBoundingClientRect()
-      const top = rect.top + scrollY
-      const height = rect.height
 
-      if (i < newColumns - 1) {
-        return [
-          i,
-          top + height + newMargin, // Bottom offset for next row
-          0 // Negative offset not needed for first row
-        ]
+      this.#heights[i] = item.getBoundingClientRect().height
+    }
+
+    this.#heights.length = newCount
+
+    /* Layout stacks each item below the item above it in its column */
+
+    const bottoms: number[] = []
+
+    let rowTop = 0
+    let rowBottom = 0
+
+    for (let i = 0; i < newCount; i += 1) {
+      if (i > 0 && i % newColumns === 0) { // Row starts below tallest item in previous row
+        rowTop = rowBottom + newGap
+        rowBottom = 0
       }
 
-      const prevOffset = (newLayout[i - newColumns] as [number, number, number])[1] // Number as previous row must exist
-      const negativeOffset = top - prevOffset
-      const bottomOffset = negativeOffset + height + newMargin
+      const height = this.#heights[i] as number
+      const peerBottom = bottoms[i - newColumns] as number // Item one row up in the same column
+      const top = i < newColumns ? 0 : peerBottom + newGap
+      const bottom = top + height
+      const offset = rowTop - top
 
-      return [
-        i,
-        bottomOffset,
-        negativeOffset
-      ]
-    })
+      bottoms[i] = bottom
+      rowBottom = Math.max(rowBottom, bottom)
 
-    /* Update styles */
+      /* Margins before the index are unchanged so stay as set */
 
-    let newStyles = ''
+      if (i >= fromIndex) {
+        const item = this.items[i] as HTMLElement
 
-    this.#ids.forEach((id, i) => {
-      const negativeOffset = (newLayout[i] as [number, number, number])[2] // Number as IDs length always matches items length
+        item.style.setProperty('--msn-margin', `${offset > 0 ? offset * -1 : 0}px`)
+      }
+    }
 
-      newStyles += `--msn-${id}-margin:${negativeOffset > 0 ? negativeOffset * -1 : 0}px;`
-    })
+    /* Emit set event */
 
-    newStyles = `#${this.id}{${newStyles}}`
-    style.textContent = styles + newStyles
+    const onSet = new CustomEvent('masonry:set')
+    this.dispatchEvent(onSet)
   }
 
   /**
@@ -298,26 +421,86 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Add new items to layout and reset.
+   * Loads intersection callback.
    *
-   * @param {HTMLElement[]} newItems
+   * @private
+   * @param {IntersectionObserverEntry[]} entries
+   * @return {void}
+   */
+  #intersect (entries: IntersectionObserverEntry[]): void {
+    const entry = entries[0]
+
+    if (entry?.isIntersecting !== true || this.loading || this.done || !this.init) {
+      return
+    }
+
+    this.loading = true
+
+    /* Emit load event */
+
+    const onLoad = new CustomEvent('masonry:load')
+    this.dispatchEvent(onLoad)
+  }
+
+  /**
+   * Append new items to list and add to layout.
+   *
+   * @param {DocumentFragment|string} newItems
    * @return {boolean}
    */
-  appendItems (newItems: HTMLElement[]): boolean {
-    const newIds = newItems.map(item => item.id)
+  appendItems (newItems: DocumentFragment | string): boolean {
+    this.loading = false
 
-    if (!isHtmlElementArray(newItems) || newIds.includes('')) {
+    const list = this.list
+
+    if (!this.init || !isHtmlElement(list)) {
       return false
     }
 
-    this.items.push(...newItems)
-    this.#ids.push(...newIds)
-    this.#set()
+    /* Append */
+
+    if (isStringStrict(newItems)) {
+      list.insertAdjacentHTML('beforeend', newItems)
+    }
+
+    if (newItems instanceof DocumentFragment) {
+      list.append(newItems)
+    }
+
+    /* Items required */
+
+    const fromIndex = this.items.length
+    const items = getItem(['[data-masonry-item]'], list)
+
+    if (!isHtmlElementArray(items) || items.length <= fromIndex) {
+      return false
+    }
+
+    this.items = items
+
+    this.#set(undefined, fromIndex)
+    this.#rewatch()
+
+    return true
+  }
+
+  /**
+   * Stop requesting more items.
+   *
+   * @return {boolean}
+   */
+  endItems (): boolean {
+    if (!this.init) {
+      return false
+    }
+
+    this.loading = false
+    this.done = true
+
+    this.#observer?.disconnect()
 
     return true
   }
 }
-
-/* Exports */
 
 export { Masonry }

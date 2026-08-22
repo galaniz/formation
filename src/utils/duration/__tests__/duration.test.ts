@@ -2,8 +2,6 @@
  * Utils - Duration Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { getDuration } from '../duration.js'
 

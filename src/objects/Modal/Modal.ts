@@ -2,8 +2,6 @@
  * Objects - Modal
  */
 
-/* Imports */
-
 import { isHtmlElementArray, isHtmlElement } from '../../utils/html/html.js'
 import { onEscape, removeEscape } from '../../actions/actionEscape.js'
 import { scroll } from '../../utils/scroll/scroll.js'
@@ -28,14 +26,14 @@ declare global {
  */
 class Modal extends HTMLElement {
   /**
-   * Button element(s) open modal.
+   * Button element(s) identified by ids in `opens="{id},{id}"` that open modal.
    *
    * @type {HTMLButtonElement[]}
    */
   opens: HTMLButtonElement[] = []
 
   /**
-   * Element(s) close modal.
+   * Element(s) identified by `data-modal-close` that close modal.
    *
    * @type {HTMLElement[]}
    */
@@ -267,7 +265,5 @@ class Modal extends HTMLElement {
     this.#toggle(true)
   }
 }
-
-/* Exports */
 
 export { Modal }

@@ -2,8 +2,6 @@
  * Formation - Config
  */
 
-/* Imports */
-
 @use "sass:list";
 
 /* Vertical sizes */
@@ -178,7 +176,7 @@ $horizontal-sizes: (
   $padding-vertical-breakpoints: (
     "s",
     "m",
-    "l"
+    "l",
   ),
 
   /* Widths */
@@ -213,13 +211,24 @@ $horizontal-sizes: (
     "10",
   ),
 
+  /* Columns */
+
+  $columns: 12,
+  $columns-grid: 12,
+  $columns-type: "grid",
+  $columns-breakpoints: (
+    "s",
+    "m",
+    "l",
+  ),
+
   /* Gaps */
 
   $gaps: $horizontal-sizes,
   $gap-breakpoints: (
     "s",
     "m",
-    "l"
+    "l",
   ),
 
   /* Aspect ratios */

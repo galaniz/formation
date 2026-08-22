@@ -2,8 +2,6 @@
  * Items
  */
 
-/* Imports */
-
 import type { Items, ItemsRes, Items0, Item } from './itemsTypes.js'
 import { getObjectKeys } from '../utils/object/objectKeys.js'
 import { isObject, isObjectStrict } from '../utils/object/object.js'
@@ -159,8 +157,6 @@ const getTemplateItem = <T extends HTMLElement>(id: string): T | null |undefined
 const cloneItem = <T extends HTMLElement>(item: T | null | undefined): T | null | undefined => {
   return item?.cloneNode(true) as T
 }
-
-/* Exports */
 
 export {
   getItem,

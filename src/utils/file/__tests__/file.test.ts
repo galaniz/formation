@@ -2,8 +2,6 @@
  * Utils - File Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isFile, isBlob } from '../file.js'
 

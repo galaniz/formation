@@ -2,8 +2,6 @@
  * Utils - Function
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../../global/globalTypes.js'
 
 /**
@@ -15,7 +13,5 @@ import type { GenericFunction } from '../../global/globalTypes.js'
 const isFunction = <T>(value: T): value is GenericFunction & T => {
   return typeof value === 'function'
 }
-
-/* Exports */
 
 export { isFunction }

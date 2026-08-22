@@ -2,8 +2,6 @@
  * Utils - Asset
  */
 
-/* Imports */
-
 import type { Asset, AssetDone } from './assetTypes.js'
 import { isArrayStrict } from '../array/array.js'
 
@@ -88,8 +86,6 @@ const assetsLoaded = (assets: Asset[], done: AssetDone): void => {
       done(false, error as Event | Error)
     })
 }
-
-/* Exports */
 
 export {
   assetLoaded,

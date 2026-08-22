@@ -2,8 +2,6 @@
  * Utils - Asset Test
  */
 
-/* Imports */
-
 import type { Asset } from '../assetTypes.js'
 import { it, expect, describe } from 'vitest'
 import { fireEvent } from '@testing-library/dom'
@@ -33,6 +31,10 @@ const testAssets = (): TestItems => {
   const video = document.createElement('video')
   const audio = document.createElement('audio')
   const iframe = document.createElement('iframe')
+
+  Object.defineProperty(img, 'complete', { // Override complete property - happy-dom sets it to true by default
+    get: () => false
+  })
 
   img.src = '../../../../static/img/test.webp'
   video.innerHTML = '<source src="../../../../static/video/test.mp4" type="video/mp4">'

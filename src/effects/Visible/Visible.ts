@@ -2,8 +2,6 @@
  * Effects - Visible
  */
 
-/* Imports */
-
 import type { VisibleItem } from './VisibleTypes.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
@@ -16,25 +14,25 @@ import { onResize, removeResize } from '../../actions/actionResize.js'
  */
 class Visible extends HTMLElement {
   /**
-   * Links, corresponding items, state and offsets.
+   * Group of link elements identified by `data-visible-link`, with corresponding items, state and offsets, keyed by item id.
    *
    * @type {Map<string, VisibleItem>}
    */
   items: Map<string, VisibleItem> = new Map()
 
   /**
-   * Top offset (eg. scroll margin).
+   * Optional element identified by `end="{id}"` marks the end of the last item.
+   *
+   * @type {HTMLElement|null}
+   */
+  end: HTMLElement | null = null
+
+  /**
+   * Optional top offset (eg. scroll margin), set by `offset="{number}"`.
    *
    * @type {number}
    */
   offset: number = 0
-
-  /**
-   * ID of end element.
-   *
-   * @type {string}
-   */
-  end: string = ''
 
   /**
    * Initialize success.
@@ -49,13 +47,6 @@ class Visible extends HTMLElement {
    * @type {number}
    */
   #scrollY: number = 0
-
-  /**
-   * End element.
-   *
-   * @type {HTMLElement|null}
-   */
-  #end: HTMLElement | null = null
 
   /**
    * Bind this to event callbacks.
@@ -103,6 +94,7 @@ class Visible extends HTMLElement {
     /* Empty props */
 
     this.init = false
+    this.end = null
     this.items.clear()
   }
 
@@ -123,49 +115,41 @@ class Visible extends HTMLElement {
 
     /* End element */
 
-    const end = document.getElementById(this.getAttribute('end') || '')
+    const endId = this.getAttribute('end')
 
-    if (isHtmlElement(end)) {
-      this.#end = end
-    }
+    this.end = endId ? document.getElementById(endId) : null
 
     /* Corresponding items required */
 
-    const nextMap: Map<string, HTMLElement> = new Map()
+    let prevId = ''
 
-    links.forEach((link, i) => {
+    links.forEach(link => {
       const id = link.hash.replace('#', '')
       const item = document.getElementById(id)
 
       if (!isHtmlElement(item)) {
-        return false
+        return
       }
 
       this.items.set(id, {
         link,
         item,
-        next: this.#end,
+        next: this.end,
         top: 0,
         bottom: 0,
         visible: false
       })
 
-      if (i === 0) {
-        return
+      /* Item marks end of preceding item */
+
+      const prevItem = this.items.get(prevId)
+
+      if (prevItem) {
+        prevItem.next = item
       }
 
-      nextMap.set(id, item)      
+      prevId = id
     })
-
-    nextMap.forEach((item, id) => {
-      const visibleItem = this.items.get(id)
-
-      if (visibleItem) {
-        visibleItem.next = item
-      }
-    })
-
-    nextMap.clear()
 
     if (!this.items.size) {
       return false
@@ -226,8 +210,8 @@ class Visible extends HTMLElement {
         bottom = next.getBoundingClientRect().top + scrollY
       }
 
-      entry.top = top
-      entry.bottom = bottom
+      entry.top = Math.floor(top) // Browsers truncate scroll position to integer
+      entry.bottom = Math.floor(bottom)
     })
   }
 
@@ -243,7 +227,7 @@ class Visible extends HTMLElement {
     this.items.forEach(entry => {
       const { link, top, bottom } = entry
 
-      const visible = (scrollY >= top - this.offset) && scrollY <= bottom - this.offset
+      const visible = (scrollY >= top - this.offset) && scrollY < bottom - this.offset // Exclude bottom as shared with next item top
 
       if (visible) {
         link.setAttribute('aria-current', 'true')
@@ -278,7 +262,5 @@ class Visible extends HTMLElement {
     this.#setVisible()
   }
 }
-
-/* Exports */
 
 export { Visible }

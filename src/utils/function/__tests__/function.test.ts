@@ -2,8 +2,6 @@
  * Utils - Function Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isFunction } from '../function.js'
 

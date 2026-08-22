@@ -6,8 +6,12 @@ export default /* html */`
   >
     <form novalidate>
       <div>
-        <label for="pag-sort">Sort</label>
-        <select id="pag-sort" name="sort" data-pag-filter>
+        <label for="pag-filter-search">Search</label>
+        <input id="pag-filter-search" type="text" name="q" data-pag-filter data-testid="pag-filter-search">
+      </div>
+      <div>
+        <label for="pag-filter-sort">Sort</label>
+        <select id="pag-filter-sort" name="sort" data-pag-filter data-testid="pag-filter-sort">
           <option value="">Default</option>
           <option value="desc">Latest</option>
           <option value="title">Title</option>
@@ -17,35 +21,35 @@ export default /* html */`
       <fieldset>
         <legend>Category</legend>
         <div>
-          <input id="pag-cat-1" type="checkbox" name="cat" value="cat-1" data-pag-filter>
-          <label for="pag-cat-1">Cat 1</label>
+          <input id="pag-filter-cat-1" type="checkbox" name="cat" value="cat-1" data-pag-filter>
+          <label for="pag-filter-cat-1" data-testid="pag-filter-cat-1-label">Cat 1</label>
         </div>
         <div>
-          <input id="pag-cat-2" type="checkbox" name="cat" value="cat-2" data-pag-filter>
-          <label for="pag-cat-2">Cat 2</label>
+          <input id="pag-filter-cat-2" type="checkbox" name="cat" value="cat-2" data-pag-filter data-testid="pag-filter-cat-2">
+          <label for="pag-filter-cat-2" data-testid="pag-filter-cat-2-label">Cat 2</label>
         </div>
         <div>
-          <input id="pag-cat-3" type="checkbox" name="cat" value="cat-3" data-pag-filter>
-          <label for="pag-cat-3">Cat 3</label>
+          <input id="pag-filter-cat-3" type="checkbox" name="cat" value="cat-3" data-pag-filter>
+          <label for="pag-filter-cat-3" data-testid="pag-filter-cat-3-label">Cat 3</label>
         </div>
       </fieldset>
       <fieldset>
         <legend>Year</legend>
         <div>
-          <input id="pag-2025" type="radio" name="year" value="2025" data-pag-filter>
-          <label for="pag-2025">2025</label>
+          <input id="pag-filter-2025" type="radio" name="year" value="2025" data-pag-filter>
+          <label for="pag-filter-2025" data-testid="pag-filter-2025-label">2025</label>
         </div>
         <div>
-          <input id="pag-2024" type="radio" name="year" value="2024" data-pag-filter>
-          <label for="pag-2024">2024</label>
+          <input id="pag-filter-2024" type="radio" name="year" value="2024" data-pag-filter>
+          <label for="pag-filter-2024" data-testid="pag-filter-2024-label">2024</label>
         </div>
         <div>
-          <input id="pag-2023" type="radio" name="year" value="2023" data-pag-filter>
-          <label for="pag-2023">2023</label>
+          <input id="pag-filter-2023" type="radio" name="year" value="2023" data-pag-filter data-testid="pag-filter-2023">
+          <label for="pag-filter-2023" data-testid="pag-filter-2023-label">2023</label>
         </div>
       </fieldset>
-      <button type="submit">Apply filters</button>
-      <button type="reset">Clear filters</button>
+      <button type="submit" data-testid="pag-filter-submit">Apply filters</button>
+      <button type="reset" data-testid="pag-filter-reset">Clear filters</button>
     </form>
     <ul data-pag-slot="entry">
       <li>

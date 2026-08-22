@@ -2,8 +2,6 @@
  * Utils - Response Error Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { ResponseError } from '../ResponseError.js'
 

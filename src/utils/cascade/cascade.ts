@@ -2,8 +2,6 @@
  * Utils - Cascade
  */
 
-/* Imports */
-
 import type { CascadeEvent } from './cascadeTypes.js'
 import type { GenericFunction } from '../../global/globalTypes.js'
 import { isObjectStrict } from '../object/object.js'
@@ -138,7 +136,5 @@ const cascade = (events: CascadeEvent[], repeat: number = 0): void => {
 
   recurse(0, 0)
 }
-
-/* Exports */
 
 export { cascade }

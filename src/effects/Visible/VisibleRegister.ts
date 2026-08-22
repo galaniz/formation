@@ -2,8 +2,6 @@
  * Effects - Visible Register
  */
 
-/* Imports */
-
 import { Visible } from './Visible.js'
 
 /* Define */

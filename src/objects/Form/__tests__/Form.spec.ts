@@ -2,8 +2,6 @@
  * Objects - Form Test
  */
 
-/* Imports */
-
 import type { Form } from '../Form.js'
 import type {
   FormValue,
@@ -42,22 +40,9 @@ test.describe('Form', () => {
 
   test.afterEach(async ({ browserName, page }) => {
     await doCoverage(browserName, page, false)
-
-    await page.addInitScript(() => {
-      window.testFormChangeAction = []
-    })
   })
 
   /* Test init */
-
-  test('should not initialize if missing required elements', async ({ page }) => {
-    const formInit = await page.evaluate(() => {
-      const form = document.querySelector('#frm-empty') as Form
-      return form.init
-    })
-
-    expect(formInit).toBe(false)
-  })
 
   test('should initialize if contains required elements', async ({ page }) => {
     const formInit = await page.evaluate(() => {

@@ -22,8 +22,6 @@ const isArrayStrict = (value: unknown): value is unknown[] => {
   return isArray(value) && value.length > 0
 }
 
-/* Exports */
-
 export {
   isArray,
   isArrayStrict

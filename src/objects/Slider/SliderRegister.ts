@@ -2,8 +2,6 @@
  * Objects - Slider Register
  */
 
-/* Imports */
-
 import { Slider } from './Slider.js'
 
 /* Define */

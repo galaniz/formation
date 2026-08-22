@@ -12,21 +12,21 @@ Create new instance.
 
 ### items  
 
-Links, corresponding items, state and offsets.  
+Group of link elements identified by `data-visible-link`, with corresponding items, state and offsets, keyed by item id.  
 
 **Type:** <code>Map&lt;string, <a href="#visibleitem">VisibleItem</a>&gt;</code>
 
-### offset  
-
-Top offset (eg. scroll margin).  
-
-**Type:** <code>number</code>
-
 ### end  
 
-ID of end element.  
+Optional element identified by `end="{id}"` marks the end of the last item.  
 
-**Type:** <code>string</code>
+**Type:** <code>HTMLElement | null</code>
+
+### offset  
+
+Optional top offset (eg. scroll margin), set by `offset="{number}"`.  
+
+**Type:** <code>number</code>
 
 ### init  
 

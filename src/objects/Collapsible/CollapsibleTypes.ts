@@ -2,8 +2,6 @@
  * Objects - Collapsible Types
  */
 
-/* Imports */
-
 import type { Collapsible } from './Collapsible.js'
 
 /**

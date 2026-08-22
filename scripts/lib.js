@@ -4,8 +4,6 @@
  * Scripts - Lib
  */
 
-/* Imports */
-
 import { cp, glob } from 'node:fs/promises'
 
 /* Recurse src for scss files and copy to lib */

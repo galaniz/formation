@@ -2,8 +2,6 @@
  * Objects - Tabs
  */
 
-/* Imports */
-
 import type { TabsActivateArgs, TabsIndexesFilterArgs, TabsEventDetail, TabsDirection } from './TabsTypes.js'
 import { getItem } from '../../items/items.js'
 import { isHtmlElement, isHtmlElementArray } from '../../utils/html/html.js'
@@ -28,28 +26,28 @@ declare global {
  */
 class Tabs extends HTMLElement {
   /**
-   * Tab elements.
+   * Tab elements identified by `role="tab"`.
    *
    * @type {HTMLElement[]}
    */
   tabs: HTMLElement[] = []
 
   /**
-   * Panel elements.
+   * Panel elements identified by `role="tabpanel"`.
    *
    * @type {HTMLElement[]}
    */
   panels: HTMLElement[] = []
 
   /**
-   * Delay before displaying panel.
+   * Optional delay before displaying panel, set by `delay="{number}"`.
    *
    * @type {number}
    */
   delay: number = 0
 
   /**
-   * Layout for keyboard navigation.
+   * Optional layout for keyboard navigation, set by `direction="{TabsDirection}"`.
    *
    * @type {TabsDirection}
    */
@@ -165,6 +163,12 @@ class Tabs extends HTMLElement {
     /* Check required items exist */
 
     if (!isHtmlElementArray(tabs) || !isHtmlElementArray(panels)) {
+      return false
+    }
+
+    /* Check each tab has a corresponding panel */
+
+    if (tabs.length !== panels.length) {
       return false
     }
 
@@ -506,7 +510,5 @@ class Tabs extends HTMLElement {
     this.#focusTab(index)
   }
 }
-
-/* Exports */
 
 export { Tabs }

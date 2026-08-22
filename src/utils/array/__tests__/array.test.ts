@@ -2,8 +2,6 @@
  * Utils - Array Test
  */
 
-/* Imports */
-
 import { it, expect, describe } from 'vitest'
 import { isArray, isArrayStrict } from '../array.js'
 

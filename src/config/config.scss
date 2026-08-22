@@ -2,8 +2,6 @@
  * Config - Styles
  */
 
-/* Imports */
-
 @use "sass:map";
 @use "../utils/map/map" as maps;
 
@@ -268,7 +266,7 @@ $sizes: (
 
 $columns: 0 !default;
 $columns-grid: 0 !default;
-$columns-type: "width";
+$columns-type: "width" !default;
 $columns-breakpoints: () !default;
 
 /* Width percentages */

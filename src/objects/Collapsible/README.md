@@ -12,43 +12,43 @@ Create new instance.
 
 ### panel  
 
-Element expands and collapses.  
+Element identified by `data-collapsible-panel` that expands and collapses.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### toggle  
 
-Button element initiates open and close.  
+Button element identified by `data-collapsible-toggle`, initiates open and close.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
 ### expanded  
 
-Open state.  
+Open state, optionally set on init by `expanded="true"`.  
 
 **Type:** <code>boolean</code>
 
 ### hoverable  
 
-Respond to hover events.  
+Optionally respond to hover events, set by the `hoverable` attribute.  
 
 **Type:** <code>boolean</code>
 
 ### accordion  
 
-Accordion group action name.  
+Optional accordion group action name, set by `accordion="{name}"`.  
 
 **Type:** <code>string</code>
 
 ### action  
 
-Custom action name.  
+Optional custom action name, set by `action="{name}"`.  
 
 **Type:** <code>string</code>
 
 ### duration  
 
-Transition duration on open or close.  
+Optional transition duration on open or close, set by `duration="{number}"`.  
 
 **Type:** <code>number</code>
 

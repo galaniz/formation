@@ -2,8 +2,6 @@
  * Objects - Tabs Register
  */
 
-/* Imports */
-
 import { Tabs } from './Tabs.js'
 
 /* Define */

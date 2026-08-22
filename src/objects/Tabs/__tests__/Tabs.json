@@ -1,4 +1,8 @@
 [
   "TabsEmpty",
-  "Tabs"
+  "Tabs",
+  "TabsDelay",
+  "TabsVertical",
+  "TabsAnchor",
+  "TabsMismatch"
 ]

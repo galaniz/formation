@@ -2,8 +2,6 @@
  * Config - Types
  */
 
-/* Imports */
-
 import type { Generic } from '../global/globalTypes.js'
 
 /**

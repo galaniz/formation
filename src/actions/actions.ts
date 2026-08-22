@@ -2,8 +2,6 @@
  * Actions
  */
 
-/* Imports */
-
 import type { GenericFunction } from '../global/globalTypes.js'
 import { isStringStrict } from '../utils/string/string.js'
 import { isFunction } from '../utils/function/function.js'
@@ -82,8 +80,6 @@ const doActions = (name: string, args?: unknown): void => {
     }
   }
 }
-
-/* Exports */
 
 export {
   actions,

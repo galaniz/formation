@@ -2,8 +2,6 @@
  * Objects - Slider
  */
 
-/* Imports */
-
 import type { SliderAnimRef } from './SliderTypes.js'
 import type { TabsEventDetail, TabsIndexesFilterArgs } from '../Tabs/TabsTypes.js'
 import type { ActionResizeArgs } from '../../actions/actionsTypes.js'
@@ -21,21 +19,21 @@ import { sliderScrollTo } from './sliderUtils.js'
  */
 class Slider extends Tabs {
   /**
-   * Scrollable container element.
+   * Scrollable container element identified by `data-slider-track`.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Previous navigation button element.
+   * Optional previous navigation button element identified by `data-slider-prev`.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element.
+   * Optional next navigation button element identified by `data-slider-next`.
    *
    * @type {HTMLButtonElement|null}
    */
@@ -49,7 +47,7 @@ class Slider extends Tabs {
   duration: number = 500
 
   /**
-   * Repeat panels to the left and right.
+   * Optionally repeat panels to the left and right, set by the `loop` attribute.
    *
    * @type {boolean}
    */
@@ -153,6 +151,12 @@ class Slider extends Tabs {
 
     super.connectedCallback()
 
+    /* Skip if moved */
+
+    if (this.subInit) {
+      return
+    }
+
     /* Event listeners */
 
     this.addEventListener('tabs:deactivate', this.#deactivateHandler)
@@ -250,15 +254,11 @@ class Slider extends Tabs {
 
     this.delay = this.duration + 100
 
-    /* Event listeners */
-
-    onResize(this.#resizeHandler)
+    /* Nav buttons */
 
     if (isHtmlElement(next, HTMLButtonElement) && isHtmlElement(prev, HTMLButtonElement)) {
       this.next = next
       this.prev = prev
-      this.prev.addEventListener('click', this.#prevHandler)
-      this.next.addEventListener('click', this.#nextHandler)
     }
 
     /* Current */
@@ -303,6 +303,15 @@ class Slider extends Tabs {
       source: 'init'
     })
 
+    /* Event listeners only if init */
+
+    if (init) {
+      onResize(this.#resizeHandler)
+
+      this.prev?.addEventListener('click', this.#prevHandler)
+      this.next?.addEventListener('click', this.#nextHandler)
+    }
+
     /* Init successful */
 
     return init
@@ -330,16 +339,7 @@ class Slider extends Tabs {
 
     /* Reset offsets */
 
-    this.#leftOffsets = []
-    const endIndex = this.panels.length - 1
-
-    this.panels.forEach((panel, i) => {
-      if (!this.loop && i > endIndex) {
-        return
-      }
-
-      this.#leftOffsets.push(panel.offsetLeft - offset)
-    })
+    this.#leftOffsets = this.panels.map(panel => panel.offsetLeft - offset)
   }
 
   /**
@@ -490,7 +490,7 @@ class Slider extends Tabs {
    * @return {void}
    */
   #activate (e: CustomEvent): void {
-    const { source, panelIndex } = e.detail as TabsEventDetail
+    const { source, currentIndex, panelIndex } = e.detail as TabsEventDetail
 
     const offsets = this.#leftOffsets
     const target = offsets[panelIndex]
@@ -500,7 +500,16 @@ class Slider extends Tabs {
     }
 
     if (source !== 'scroll') {
-      sliderScrollTo(target, source, this.#animRef, this.track, this.duration)
+      sliderScrollTo({
+        to: target,
+        source,
+        animRef: this.#animRef,
+        track: this.track,
+        slider: this,
+        duration: this.duration,
+        currentIndex,
+        panelIndex
+      })
     }
   }
 
@@ -701,7 +710,5 @@ class Slider extends Tabs {
     })
   }
 }
-
-/* Exports */
 
 export { Slider }

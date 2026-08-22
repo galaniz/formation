@@ -2,8 +2,6 @@
  * Components - Pagination Register
  */
 
-/* Imports */
-
 import { Pagination } from './Pagination.js'
 
 /* Define */

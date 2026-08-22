@@ -2,8 +2,6 @@
  * Actions - Resize
  */
 
-/* Imports */
-
 import type { ActionResize } from './actionsTypes.js'
 import { actions, addAction, doActions, removeAction } from './actions.js'
 import { isSetStrict } from '../utils/set/set.js'
@@ -89,8 +87,6 @@ const onResize = (action: ActionResize): number => {
 const removeResize = (action: ActionResize): boolean => {
   return removeAction('resize', action)
 }
-
-/* Exports */
 
 export {
   onResize,

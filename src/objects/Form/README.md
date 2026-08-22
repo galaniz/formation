@@ -12,19 +12,19 @@ Create new instance.
 
 ### form  
 
-Form element.  
+Form element identified by `form` tag.  
 
 **Type:** <code>HTMLFormElement | null</code>
 
 ### groups  
 
-Data (values, inputs, type) by input name.  
+Group of input elements identified by `data-form-input`, with values and type, keyed by input name.  
 
 **Type:** <code><a href="#formgroups">FormGroups</a></code>
 
 ### errorOn  
 
-Display errors on submit, change or both.  
+Optionally display errors on submit, change or both, set by `error-on="{FormErrorOn}"`.  
 
 **Type:** <code><a href="#formerroron">FormErrorOn</a></code>
 
@@ -48,7 +48,8 @@ Template types in use.
 
 ### templates  
 
-Error, loader and success fragments.  
+Group of error, loader and success fragments from templates set by `error-inline="{id}"` and
+optionally `error-summary="{id}"`, `error="{id}"`, `success="{id}"` and `loader="{id}"`.  
 
 **Type:** <code><a href="#formtemplates">FormTemplates</a></code>
 

@@ -32,8 +32,6 @@ const isStringSafe = (value: unknown): value is string => {
   return isStringStrict(value) && value !== '__proto__' && value !== 'constructor' && value !== 'prototype'
 }
 
-/* Exports */
-
 export {
   isString,
   isStringStrict,

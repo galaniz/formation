@@ -2,8 +2,6 @@
  * Items - Focusability
  */
 
-/* Imports */
-
 import { isHtmlElement, isHtmlElementArray } from '../utils/html/html.js'
 import { getOuterItems } from './itemsOuter.js'
 
@@ -92,8 +90,6 @@ const getOuterFocusableItems = (item: Element | null): Element[] => {
 
   return getOuterItems(item)
 }
-
-/* Exports */
 
 export {
   toggleFocusability,

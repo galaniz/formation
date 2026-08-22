@@ -2,8 +2,6 @@
  * Layouts - Column Styles
  */
 
-/* Imports */
-
 @use "../../config/config" as con;
 @use "../../utils/fix/fix";
 @use "../../utils/breakpoint/breakpoint";
@@ -51,7 +49,7 @@ $columns-fix: fix.get-class-fix("columns");
   }
 
   @each $b in con.$columns-breakpoints {
-    .#{$layout-fix}#{$columns-fix}-#{b} {
+    .#{$layout-fix}#{$columns-fix}-#{$b} {
       --#{con.$n}columns: 1;
 
       @extend %l-grid-columns;

@@ -12,43 +12,43 @@ Create new instance.
 
 ### media  
 
-Media element identified by `type` attribute.  
+Media element identified by tag matching the `type="{MediaType}"` attribute.  
 
 **Type:** <code>HTMLMediaElement | null</code>
 
 ### progress  
 
-Progress bar element identified by `data-media-progress`.  
+Optional progress bar element identified by `data-media-progress`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### time  
 
-Time element identified by `data-media-time`.  
+Optional time element identified by `data-media-time`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### duration  
 
-Duration element identified by `data-media-duration`.  
+Optional duration element identified by `data-media-duration`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### controls  
 
-Play/pause button elements identified by `data-media-control` matching a `MediaControl` value.  
+Play/pause button elements identified by `data-media-control` | `data-media-control="{MediaControl}"`.  
 
 **Type:** <code>HTMLButtonElement[]</code>
 
 ### url  
 
-URL of current file.  
+Optional URL of current file, set by `url="{url}"`.  
 
 **Type:** <code>string</code>
 
 ### type  
 
-Type of media.  
+Optional type of media, set by `type="{MediaType}"`.  
 
 **Type:** <code><a href="#mediatype">MediaType</a></code>
 
@@ -78,7 +78,7 @@ Initialize success.
 
 ### templates  
 
-Loader and error fragments.  
+Group of loader and error fragments from templates set by `loader="{id}"` and `error="{id}"`.  
 
 **Type:** <code><a href="#mediatemplates">MediaTemplates</a></code>
 

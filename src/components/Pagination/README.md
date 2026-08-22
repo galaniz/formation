@@ -14,19 +14,19 @@ Create new instance.
 
 #### form  
 
-Form element of inputs.  
+Form element of inputs identified by `form` tag.  
 
 **Type:** <code>HTMLFormElement | null</code>
 
 #### groups  
 
-Data (values, inputs, type) by input name.  
+Group of input elements identified by `data-pag-filter`, with values and type, keyed by input name.  
 
 **Type:** <code><a href="#paginationfiltergroups">PaginationFilterGroups</a></code>
 
 #### loadOn  
 
-Event to fire load on.  
+Optional event to fire load on, set by `load-on="{PaginationFilterLoadOn}"`.  
 
 **Type:** <code><a href="#paginationfilterloadon">PaginationFilterLoadOn</a></code>
 
@@ -76,13 +76,13 @@ Current page.
 
 #### slots  
 
-Navigation and entry containers.  
+Group of containers identified by `data-pag-slot="nav"` and `data-pag-slot="entry"`, keyed by name.  
 
 **Type:** <code><a href="#paginationslots">PaginationSlots</a></code>
 
 #### templates  
 
-Loader and error fragments.  
+Group of loader and error fragments from templates set by `loader="{id}"` and `error="{id}"`.  
 
 **Type:** <code><a href="#paginationtemplates">PaginationTemplates</a></code>
 
