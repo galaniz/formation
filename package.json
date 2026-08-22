@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Extendable TS web components and utilities, and SCSS generated utility classes",
   "main": "./lib/config/config.js",
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.22.0",
   "type": "module",
   "files": [
     "./lib"
@@ -40,17 +40,17 @@
     "@playwright/test": "^1.62.1",
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^26.2.0",
-    "@vitest/coverage-v8": "4.1.10",
-    "eslint": "10.8.1",
-    "happy-dom": "^20.11.2",
-    "sass": "^1.102.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "10.9.0",
+    "happy-dom": "^20.11.6",
+    "sass": "^1.103.1",
     "serve": "^14.2.6",
     "stylelint": "^17.14.1",
     "stylelint-config-standard-scss": "^17.0.0",
-    "terser": "5.49.2",
+    "terser": "5.50.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "8.66.0",
-    "vitest": "^4.1.10"
+    "typescript-eslint": "8.67.0",
+    "vitest": "^4.1.11"
   },
   "release-it": {
     "git": {

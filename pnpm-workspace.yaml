@@ -1,6 +1,2 @@
 allowBuilds:
   '@parcel/watcher': true
-minimumReleaseAgeExclude:
-  - '@alanizcreative/formation-coverage@0.0.7'
-  - '@types/node@26.2.0'
-  - eslint@10.8.1
