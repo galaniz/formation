@@ -19,21 +19,21 @@ import { Pagination } from './Pagination.js'
  */
 class PaginationFilter extends Pagination {
   /**
-   * Form element of inputs.
+   * Form element of inputs identified by `form` tag.
    *
    * @type {HTMLFormElement|null}
    */
   form: HTMLFormElement | null = null
 
   /**
-   * Data (values, inputs, type) by input name.
+   * Group of input elements identified by `data-pag-filter`, with values and type, keyed by input name.
    *
    * @type {PaginationFilterGroups}
    */
   groups: PaginationFilterGroups = new Map()
 
   /**
-   * Event to fire load on.
+   * Optional event to fire load on, set by `load-on="{PaginationFilterLoadOn}"`.
    *
    * @type {PaginationFilterLoadOn}
    */

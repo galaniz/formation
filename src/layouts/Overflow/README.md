@@ -12,15 +12,15 @@ Create new instance.
 
 ### track  
 
-Scrollable element.  
+Scrollable element identified by `data-overflow-track`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### direction  
 
-Scroll direction.  
+Optional scroll direction, set by `direction="{OverflowDirection}"`.  
 
-**Type:** <code>&#39;vertical&#39; | &#39;horizontal&#39;</code>
+**Type:** <code><a href="#overflowdirection">OverflowDirection</a></code>
 
 ### overflow  
 
@@ -47,3 +47,9 @@ Init after added to DOM.
 **<code>disconnectedCallback(): </code>**  
 
 Clean up after removed from DOM.
+
+## Types
+
+### OverflowDirection  
+
+**Type:** <code>&#39;horizontal&#39; | &#39;vertical&#39;</code>

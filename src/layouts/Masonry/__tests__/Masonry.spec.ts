@@ -107,7 +107,7 @@ test.describe('Masonry', () => {
     ])
   })
 
-  test('should skip breakpoints without matching columns or margins', async ({ page }) => {
+  test('should skip breakpoints without matching columns or gaps', async ({ page }) => {
     const msnBreakpoints = await page.evaluate(() => {
       const msn = document.querySelector('#msn-partial-bk') as Masonry
       return Array.from(msn.breakpoints)
@@ -118,13 +118,13 @@ test.describe('Masonry', () => {
         low: 0,
         high: 600,
         columns: 2,
-        margin: 16
+        gap: 16
       },
       {
         low: 600,
         high: 900,
         columns: 3,
-        margin: 16
+        gap: 24
       }
     ])
   })
@@ -154,6 +154,9 @@ test.describe('Masonry', () => {
   /* Test layout */
 
   test('should stack each item below the item above it in its column', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+    const gap = viewport.width < 600 ? 16 : 24 // Gap by breakpoint
+
     const msnLayout = await page.evaluate(() => {
       const msn = document.querySelector('#msn') as Masonry
       const rects = msn.items.map(item => item.getBoundingClientRect())
@@ -169,7 +172,7 @@ test.describe('Masonry', () => {
     })
 
     expect(msnLayout.columns).toBeGreaterThanOrEqual(2)
-    expect(new Set(msnLayout.gaps)).toStrictEqual(new Set([16]))
+    expect(new Set(msnLayout.gaps)).toStrictEqual(new Set([gap]))
   })
 
   test('should relayout on resize', async ({ page }) => {
@@ -201,7 +204,7 @@ test.describe('Masonry', () => {
 
     expect(msnNarrow.columns).toBe(2)
     expect(msnNarrow.gaps.length).toBe(7)
-    expect(new Set(msnNarrow.gaps)).toStrictEqual(new Set([16]))
+    expect(new Set(msnNarrow.gaps)).toStrictEqual(new Set([16])) // First breakpoint gap
   })
 
   test('should not relayout if viewport height change', async ({ page }) => {
@@ -250,6 +253,9 @@ test.describe('Masonry', () => {
   /* Test append */
 
   test('should append items and keep the layout', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+    const gap = viewport.width < 600 ? 16 : 24 // Gap by breakpoint
+
     const msnAppend = await page.evaluate(() => {
       const msn = document.querySelector('#msn') as Masonry
       const template = document.getElementById('msn-item') as HTMLTemplateElement
@@ -276,7 +282,7 @@ test.describe('Masonry', () => {
     expect(msnAppend.appended).toBe(true)
     expect(msnAppend.items).toBe(10)
     expect(msnAppend.setCount).toBe(2)
-    expect(new Set(msnAppend.gaps)).toStrictEqual(new Set([16]))
+    expect(new Set(msnAppend.gaps)).toStrictEqual(new Set([gap]))
   })
 
   test('should not append markup without items', async ({ page }) => {
@@ -314,6 +320,9 @@ test.describe('Masonry', () => {
   /* Test loads */
 
   test('should load more items when loads element scrolled into view', async ({ page }) => {
+    const viewport = page.viewportSize() as { width: number, height: number }
+    const gap = viewport.width < 600 ? 16 : 24 // Gap by breakpoint
+
     const msnInstance = await page.evaluateHandle(() => document.querySelector('#msn-loads') as Masonry)
 
     await page.evaluate(() => { window.scrollTo(0, document.body.scrollHeight) })
@@ -355,7 +364,7 @@ test.describe('Masonry', () => {
     expect(msnEnd.loading).toBe(false)
     expect(msnEnd.done).toBe(true)
     expect(msnEnd.loadCount).toBe(3)
-    expect(new Set(msnEnd.gaps)).toStrictEqual(new Set([16]))
+    expect(new Set(msnEnd.gaps)).toStrictEqual(new Set([gap]))
   })
 
   /* Test clean up */

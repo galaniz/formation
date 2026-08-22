@@ -14,14 +14,21 @@ import { onResize, removeResize } from '../../actions/actionResize.js'
  */
 class Visible extends HTMLElement {
   /**
-   * Links, corresponding items, state and offsets.
+   * Group of link elements identified by `data-visible-link`, with corresponding items, state and offsets, keyed by item id.
    *
    * @type {Map<string, VisibleItem>}
    */
   items: Map<string, VisibleItem> = new Map()
 
   /**
-   * Top offset (eg. scroll margin).
+   * Optional element identified by `end="{id}"` marks the end of the last item.
+   *
+   * @type {HTMLElement|null}
+   */
+  end: HTMLElement | null = null
+
+  /**
+   * Optional top offset (eg. scroll margin), set by `offset="{number}"`.
    *
    * @type {number}
    */
@@ -87,6 +94,7 @@ class Visible extends HTMLElement {
     /* Empty props */
 
     this.init = false
+    this.end = null
     this.items.clear()
   }
 
@@ -108,7 +116,8 @@ class Visible extends HTMLElement {
     /* End element */
 
     const endId = this.getAttribute('end')
-    const end = endId ? document.getElementById(endId) : null
+
+    this.end = endId ? document.getElementById(endId) : null
 
     /* Corresponding items required */
 
@@ -125,7 +134,7 @@ class Visible extends HTMLElement {
       this.items.set(id, {
         link,
         item,
-        next: end,
+        next: this.end,
         top: 0,
         bottom: 0,
         visible: false

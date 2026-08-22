@@ -3,7 +3,7 @@ export default /* html */`
     class="block"
     breakpoints="0,600"
     columns="2,3"
-    margins="16,16"
+    gaps="16,16"
   >
     <ul class="masonry-list grid cols gap-4 align-start" data-masonry-list>
       <li

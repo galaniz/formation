@@ -12,49 +12,50 @@ Create new instance.
 
 ### slots  
 
-Slot elements by name.  
+Group of slot elements identified by `data-nav-slot` | `data-nav-slot="{name}"`, keyed by name.  
 
 **Type:** <code>Map&lt;string, HTMLElement&gt;</code>
 
 ### items  
 
-Item elements.  
+Item elements identified by `data-nav-item` | `data-nav-item="{slot name}"`.  
 
 **Type:** <code>HTMLElement[]</code>
 
 ### modal  
 
-Modal element.  
+Modal element identified by `data-nav-modal`.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### modalSlots  
 
-Slot elements in modal by name.  
+Group of slot elements in modal identified by `data-nav-modal-slot` | `data-nav-modal-slot="{name}"`, keyed by name.  
 
 **Type:** <code>Map&lt;string, HTMLElement&gt;</code>
 
 ### opens  
 
-Button element opens modal.  
+Button element identified by `data-nav-open` that opens modal.  
 
 **Type:** <code>HTMLButtonElement | null</code>
 
 ### closes  
 
-Element(s) close modal.  
+Element(s) identified by `data-nav-close` that close modal.  
 
 **Type:** <code>HTMLElement[]</code>
 
 ### delay  
 
-Milliseconds to delay show attribute.  
+Optional milliseconds to delay show attribute, set by `delay="{number}"`.  
 
 **Type:** <code>number</code>
 
 ### breakpoints  
 
-Breakpoint(s) to prompt "overflowing" state.  
+Optional breakpoint(s) to prompt "overflowing" state, set by `breakpoints="{number},{number}"`,
+keyed by slot name.  
 
 **Type:** <code>Map&lt;string, number&gt;</code>
 

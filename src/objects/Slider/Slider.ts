@@ -19,21 +19,21 @@ import { sliderScrollTo } from './sliderUtils.js'
  */
 class Slider extends Tabs {
   /**
-   * Scrollable container element.
+   * Scrollable container element identified by `data-slider-track`.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Previous navigation button element.
+   * Optional previous navigation button element identified by `data-slider-prev`.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element.
+   * Optional next navigation button element identified by `data-slider-next`.
    *
    * @type {HTMLButtonElement|null}
    */
@@ -47,7 +47,7 @@ class Slider extends Tabs {
   duration: number = 500
 
   /**
-   * Repeat panels to the left and right.
+   * Optionally repeat panels to the left and right, set by the `loop` attribute.
    *
    * @type {boolean}
    */

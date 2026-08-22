@@ -30,21 +30,21 @@ import { doActions } from '../../actions/actions.js'
  */
 class Form extends HTMLElement {
   /**
-   * Form element.
+   * Form element identified by `form` tag.
    *
    * @type {HTMLFormElement|null}
    */
   form: HTMLFormElement | null = null
 
   /**
-   * Data (values, inputs, type) by input name.
+   * Group of input elements identified by `data-form-input`, with values and type, keyed by input name.
    *
    * @type {FormGroups}
    */
   groups: FormGroups = new Map()
 
   /**
-   * Display errors on submit, change or both.
+   * Optionally display errors on submit, change or both, set by `error-on="{FormErrorOn}"`.
    *
    * @type {FormErrorOn}
    */
@@ -72,7 +72,8 @@ class Form extends HTMLElement {
   usedTemplates: Set<FormTemplateKeys> = new Set(['errorInline'])
 
   /**
-   * Error, loader and success fragments.
+   * Group of error, loader and success fragments from templates set by `error-inline="{id}"` and
+   * optionally `error-summary="{id}"`, `error="{id}"`, `success="{id}"` and `loader="{id}"`.
    *
    * @type {FormTemplates}
    */

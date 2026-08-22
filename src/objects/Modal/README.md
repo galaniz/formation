@@ -12,13 +12,13 @@ Create new instance.
 
 ### opens  
 
-Button element(s) open modal.  
+Button element(s) identified by ids in `opens="{id},{id}"` that open modal.  
 
 **Type:** <code>HTMLButtonElement[]</code>
 
 ### closes  
 
-Element(s) close modal.  
+Element(s) identified by `data-modal-close` that close modal.  
 
 **Type:** <code>HTMLElement[]</code>
 

@@ -2,6 +2,7 @@
  * Layouts - Overflow
  */
 
+import type { OverflowDirection } from './OverflowTypes.js'
 import { isHtmlElement } from '../../utils/html/html.js'
 import { getItem } from '../../items/items.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
@@ -21,18 +22,18 @@ declare global {
  */
 class Overflow extends HTMLElement {
   /**
-   * Scrollable element.
+   * Scrollable element identified by `data-overflow-track`.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Scroll direction.
+   * Optional scroll direction, set by `direction="{OverflowDirection}"`.
    *
-   * @type {'vertical'|'horizontal'}
+   * @type {OverflowDirection}
    */
-  direction: 'vertical' | 'horizontal' = 'horizontal'
+  direction: OverflowDirection = 'horizontal'
 
   /**
    * Overflow state.

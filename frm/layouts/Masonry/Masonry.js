@@ -15,9 +15,9 @@ export default /* html */`
     class="block"
     breakpoints="0,600"
     columns="2,3"
-    margins="16,16"
+    gaps="16,24"
   >
-    <ul class="masonry-list grid cols gap-4 align-start" data-masonry-list>
+    <ul class="masonry-list grid cols gap-4 gap-6-s align-start" data-masonry-list>
       ${items}
     </ul>
   </frm-masonry>

@@ -44,14 +44,14 @@ class Pagination extends HTMLElement {
   page: number = 1
 
   /**
-   * Navigation and entry containers.
+   * Group of containers identified by `data-pag-slot="nav"` and `data-pag-slot="entry"`, keyed by name.
    *
    * @type {PaginationSlots}
    */
   slots: PaginationSlots = new Map()
 
   /**
-   * Loader and error fragments.
+   * Group of loader and error fragments from templates set by `loader="{id}"` and `error="{id}"`.
    *
    * @type {PaginationTemplates}
    */

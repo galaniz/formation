@@ -36,56 +36,57 @@ declare global {
  */
 class Navigation extends HTMLElement {
   /**
-   * Slot elements by name.
+   * Group of slot elements identified by `data-nav-slot` | `data-nav-slot="{name}"`, keyed by name.
    *
    * @type {Map<string, HTMLElement>}
    */
   slots: Map<string, HTMLElement> = new Map()
 
   /**
-   * Item elements.
+   * Item elements identified by `data-nav-item` | `data-nav-item="{slot name}"`.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Modal element.
+   * Modal element identified by `data-nav-modal`.
    *
    * @type {HTMLElement|null}
    */
   modal: HTMLElement | null = null
 
   /**
-   * Slot elements in modal by name.
+   * Group of slot elements in modal identified by `data-nav-modal-slot` | `data-nav-modal-slot="{name}"`, keyed by name.
    *
    * @type {Map<string, HTMLElement>}
    */
   modalSlots: Map<string, HTMLElement> = new Map()
 
   /**
-   * Button element opens modal.
+   * Button element identified by `data-nav-open` that opens modal.
    *
    * @type {HTMLButtonElement|null}
    */
   opens: HTMLButtonElement | null = null
 
   /**
-   * Element(s) close modal.
+   * Element(s) identified by `data-nav-close` that close modal.
    *
    * @type {HTMLElement[]}
    */
   closes: HTMLElement[] = []
 
   /**
-   * Milliseconds to delay show attribute.
+   * Optional milliseconds to delay show attribute, set by `delay="{number}"`.
    *
    * @type {number}
    */
   delay: number = 200
 
   /**
-   * Breakpoint(s) to prompt "overflowing" state.
+   * Optional breakpoint(s) to prompt "overflowing" state, set by `breakpoints="{number},{number}"`,
+   * keyed by slot name.
    *
    * @type {Map<string, number>}
    */
@@ -113,7 +114,7 @@ class Navigation extends HTMLElement {
   overflow: boolean = false
 
   /**
-   * Items by group attribute.
+   * Group of item elements identified by `data-nav-group` | `data-nav-group="{name}"`, keyed by name.
    *
    * @private
    * @type {Map<string, Set<HTMLElement>>}

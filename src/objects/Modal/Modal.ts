@@ -26,14 +26,14 @@ declare global {
  */
 class Modal extends HTMLElement {
   /**
-   * Button element(s) open modal.
+   * Button element(s) identified by ids in `opens="{id},{id}"` that open modal.
    *
    * @type {HTMLButtonElement[]}
    */
   opens: HTMLButtonElement[] = []
 
   /**
-   * Element(s) close modal.
+   * Element(s) identified by `data-modal-close` that close modal.
    *
    * @type {HTMLElement[]}
    */

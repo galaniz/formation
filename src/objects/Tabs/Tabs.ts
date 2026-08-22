@@ -26,28 +26,28 @@ declare global {
  */
 class Tabs extends HTMLElement {
   /**
-   * Tab elements.
+   * Tab elements identified by `role="tab"`.
    *
    * @type {HTMLElement[]}
    */
   tabs: HTMLElement[] = []
 
   /**
-   * Panel elements.
+   * Panel elements identified by `role="tabpanel"`.
    *
    * @type {HTMLElement[]}
    */
   panels: HTMLElement[] = []
 
   /**
-   * Delay before displaying panel.
+   * Optional delay before displaying panel, set by `delay="{number}"`.
    *
    * @type {number}
    */
   delay: number = 0
 
   /**
-   * Layout for keyboard navigation.
+   * Optional layout for keyboard navigation, set by `direction="{TabsDirection}"`.
    *
    * @type {TabsDirection}
    */

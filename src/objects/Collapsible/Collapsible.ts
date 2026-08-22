@@ -23,49 +23,49 @@ declare global {
  */
 class Collapsible extends HTMLElement {
   /**
-   * Element expands and collapses.
+   * Element identified by `data-collapsible-panel` that expands and collapses.
    *
    * @type {HTMLElement|null}
    */
   panel: HTMLElement | null = null
 
   /**
-   * Button element initiates open and close.
+   * Button element identified by `data-collapsible-toggle`, initiates open and close.
    *
    * @type {HTMLButtonElement|null}
    */
   toggle: HTMLButtonElement | null = null
 
   /**
-   * Open state.
+   * Open state, optionally set on init by `expanded="true"`.
    *
    * @type {boolean}
    */
   expanded: boolean = false
 
   /**
-   * Respond to hover events.
+   * Optionally respond to hover events, set by the `hoverable` attribute.
    *
    * @type {boolean}
    */
   hoverable: boolean = false
 
   /**
-   * Accordion group action name.
+   * Optional accordion group action name, set by `accordion="{name}"`.
    *
    * @type {string}
    */
   accordion: string = ''
 
   /**
-   * Custom action name.
+   * Optional custom action name, set by `action="{name}"`.
    *
    * @type {string}
    */
   action: string = ''
 
   /**
-   * Transition duration on open or close.
+   * Optional transition duration on open or close, set by `duration="{number}"`.
    *
    * @type {number}
    */

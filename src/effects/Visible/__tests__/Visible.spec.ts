@@ -53,12 +53,14 @@ test.describe('Visible', () => {
       return {
         init: vis.init,
         offset: vis.offset,
+        endId: vis.end?.id,
         itemsSize: vis.items.size
       }
     })
 
     expect(visProps.init).toBe(true)
     expect(visProps.offset).toBe(0)
+    expect(visProps.endId).toBe('vis-end')
     expect(visProps.itemsSize).toBe(3)
   })
 
@@ -107,6 +109,7 @@ test.describe('Visible', () => {
       return {
         init: vis.init,
         offset: vis.offset,
+        endId: vis.end?.id,
         itemIds: Array.from(vis.items.keys()),
         nextIds: Array.from(vis.items.values()).map(entry => entry.next?.id || null)
       }
@@ -114,6 +117,7 @@ test.describe('Visible', () => {
 
     expect(visProps.init).toBe(true)
     expect(visProps.offset).toBe(100)
+    expect(visProps.endId).toBe(undefined)
     expect(visProps.itemIds).toStrictEqual(['vis-offset-1', 'vis-offset-3'])
     expect(visProps.nextIds).toStrictEqual(['vis-offset-3', null])
   })
@@ -270,6 +274,7 @@ test.describe('Visible', () => {
 
       return {
         init: vis.init,
+        endId: vis.end?.id,
         itemsSize: vis.items.size,
         current: links.map(link => link.getAttribute('aria-current')), // Stale as links no longer updated
         actionsRemoved:
@@ -279,6 +284,7 @@ test.describe('Visible', () => {
     })
 
     expect(visProps.init).toBe(false)
+    expect(visProps.endId).toBe(undefined)
     expect(visProps.itemsSize).toBe(0)
     expect(visProps.current).toStrictEqual([null, null, null])
     expect(visProps.actionsRemoved).toBe(true)

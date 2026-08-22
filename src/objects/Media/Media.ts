@@ -29,49 +29,49 @@ declare global {
  */
 class Media extends HTMLElement {
   /**
-   * Media element identified by `type` attribute.
+   * Media element identified by tag matching the `type="{MediaType}"` attribute.
    *
    * @type {HTMLMediaElement|null}
    */
   media: HTMLMediaElement | null = null
 
   /**
-   * Progress bar element identified by `data-media-progress`.
+   * Optional progress bar element identified by `data-media-progress`.
    *
    * @type {HTMLElement|null}
    */
   progress: HTMLElement | null = null
 
   /**
-   * Time element identified by `data-media-time`.
+   * Optional time element identified by `data-media-time`.
    *
    * @type {HTMLElement|null}
    */
   time: HTMLElement | null = null
 
   /**
-   * Duration element identified by `data-media-duration`.
+   * Optional duration element identified by `data-media-duration`.
    *
    * @type {HTMLElement|null}
    */
   duration: HTMLElement | null = null
 
   /**
-   * Play/pause button elements identified by `data-media-control` matching a `MediaControl` value.
+   * Play/pause button elements identified by `data-media-control` | `data-media-control="{MediaControl}"`.
    *
    * @type {HTMLButtonElement[]}
    */
   controls: HTMLButtonElement[] = []
 
   /**
-   * URL of current file.
+   * Optional URL of current file, set by `url="{url}"`.
    *
    * @type {string}
    */
   url: string = ''
 
   /**
-   * Type of media.
+   * Optional type of media, set by `type="{MediaType}"`.
    *
    * @type {MediaType}
    */
@@ -106,7 +106,7 @@ class Media extends HTMLElement {
   init: boolean = false
 
   /**
-   * Loader and error fragments.
+   * Group of loader and error fragments from templates set by `loader="{id}"` and `error="{id}"`.
    *
    * @type {MediaTemplates}
    */

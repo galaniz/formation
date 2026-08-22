@@ -20,28 +20,28 @@ import { sliderScrollTo } from './sliderUtils.js'
  */
 class SliderGroup extends Tabs {
   /**
-   * Scrollable container element.
+   * Scrollable container element identified by `data-slider-track`.
    *
    * @type {HTMLElement|null}
    */
   track: HTMLElement | null = null
 
   /**
-   * Elements within panels.
+   * Elements within panels identified by `data-slider-item`.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Previous navigation button element.
+   * Optional previous navigation button element identified by `data-slider-prev`.
    *
    * @type {HTMLButtonElement|null}
    */
   prev: HTMLButtonElement | null = null
 
   /**
-   * Next navigation button element.
+   * Optional next navigation button element identified by `data-slider-next`.
    *
    * @type {HTMLButtonElement|null}
    */
@@ -55,7 +55,8 @@ class SliderGroup extends Tabs {
   duration: number = 500
 
   /**
-   * Number of visible items and panels by breakpoint.
+   * Number of visible items and panels by breakpoint, set by `breakpoints="{number},{number}"`
+   * and `visible="{number},{number}"`.
    *
    * @type {Set<Record<string, number>>}
    */

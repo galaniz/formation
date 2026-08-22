@@ -25,35 +25,36 @@ declare global {
  */
 class Masonry extends HTMLElement {
   /**
-   * Element that contains the items to arrange.
+   * Element identified by `data-masonry-list` that contains the items to arrange.
    *
    * @type {HTMLElement|null}
    */
   list: HTMLElement | null = null
 
   /**
-   * Elements to arrange.
+   * Elements to arrange identified by `data-masonry-item`.
    *
    * @type {HTMLElement[]}
    */
   items: HTMLElement[] = []
 
   /**
-   * Number of columns and margins by breakpoint.
+   * Number of columns and gaps by breakpoint, set by `breakpoints="{number},{number}"`,
+   * `columns="{number},{number}"` and `gaps="{number},{number}"`.
    *
    * @type {Set<Record<string, number>>}
    */
-  breakpoints: Set<Record<'low' | 'high' | 'columns' | 'margin', number>> = new Set()
+  breakpoints: Set<Record<'low' | 'high' | 'columns' | 'gap', number>> = new Set()
 
   /**
-   * Element that requests more items when scrolled into view.
+   * Optional element identified by `data-masonry-loads` that requests more items when scrolled into view.
    *
    * @type {HTMLElement|null}
    */
   loads: HTMLElement | null = null
 
   /**
-   * Pixels beyond the viewport to request more items.
+   * Optional pixels beyond the viewport to request more items, set by `loads-offset="{number}"`.
    *
    * @type {number}
    */
@@ -81,7 +82,7 @@ class Masonry extends HTMLElement {
   init: boolean = false
 
   /**
-   * Item heights (without margins applied).
+   * Item heights (without gaps applied).
    *
    * @private
    * @type {number[]}
@@ -196,26 +197,26 @@ class Masonry extends HTMLElement {
 
     const breakpoints = this.getAttribute('breakpoints')
     const columns = this.getAttribute('columns')
-    const margins = this.getAttribute('margins')
+    const gaps = this.getAttribute('gaps')
 
-    if (isStringStrict(breakpoints) && isStringStrict(columns) && isStringStrict(margins)) {
+    if (isStringStrict(breakpoints) && isStringStrict(columns) && isStringStrict(gaps)) {
       const breakpointsArr = breakpoints.split(',')
       const columnsArr = columns.split(',')
-      const marginsArr = margins.split(',')
+      const gapsArr = gaps.split(',')
 
       breakpointsArr.forEach((b, i) => {
         const c = columnsArr[i]
-        const m = marginsArr[i]
+        const g = gapsArr[i]
 
-        if (!isStringStrict(c) || !isStringStrict(m)) {
+        if (!isStringStrict(c) || !isStringStrict(g)) {
           return
         }
 
         const low = parseInt(b, 10)
         const columns = parseInt(c, 10)
-        const margin = parseInt(m, 10)
+        const gap = parseInt(g, 10)
 
-        if (!isNumber(low) || !isNumber(columns) || !isNumber(margin)) {
+        if (!isNumber(low) || !isNumber(columns) || !isNumber(gap)) {
           return
         }
 
@@ -229,7 +230,7 @@ class Masonry extends HTMLElement {
         this.breakpoints.add({
           low: low * fontSizeMultiplier,
           high: high * fontSizeMultiplier,
-          margin: margin * fontSizeMultiplier,
+          gap: gap * fontSizeMultiplier,
           columns
         })
       })
@@ -325,7 +326,7 @@ class Masonry extends HTMLElement {
   }
 
   /**
-   * Update negative margins based on current columns, margins and index.
+   * Update negative margins based on current columns, gaps and index.
    *
    * @private
    * @param {number} [viewportWidth]
@@ -339,17 +340,17 @@ class Masonry extends HTMLElement {
       this.#viewportWidth = viewportWidth
     }
 
-    /* Columns and margin */
+    /* Columns and gap */
 
     let newColumns = 1
-    let newMargin = 0
+    let newGap = 0
 
     this.breakpoints.forEach(bk => {
-      const { low, high, columns, margin } = bk
+      const { low, high, columns, gap } = bk
 
       if (this.#viewportWidth >= low && this.#viewportWidth < high) {
         newColumns = columns
-        newMargin = margin
+        newGap = gap
       }
     })
 
@@ -374,13 +375,13 @@ class Masonry extends HTMLElement {
 
     for (let i = 0; i < newCount; i += 1) {
       if (i > 0 && i % newColumns === 0) { // Row starts below tallest item in previous row
-        rowTop = rowBottom + newMargin
+        rowTop = rowBottom + newGap
         rowBottom = 0
       }
 
       const height = this.#heights[i] as number
       const peerBottom = bottoms[i - newColumns] as number // Item one row up in the same column
-      const top = i < newColumns ? 0 : peerBottom + newMargin
+      const top = i < newColumns ? 0 : peerBottom + newGap
       const bottom = top + height
       const offset = rowTop - top
 

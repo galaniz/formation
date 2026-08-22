@@ -12,31 +12,32 @@ Create new instance.
 
 ### list  
 
-Element that contains the items to arrange.  
+Element identified by `data-masonry-list` that contains the items to arrange.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### items  
 
-Elements to arrange.  
+Elements to arrange identified by `data-masonry-item`.  
 
 **Type:** <code>HTMLElement[]</code>
 
 ### breakpoints  
 
-Number of columns and margins by breakpoint.  
+Number of columns and gaps by breakpoint, set by `breakpoints="{number},{number}"`,
+`columns="{number},{number}"` and `gaps="{number},{number}"`.  
 
 **Type:** <code>Set&lt;Record&lt;string, number&gt;&gt;</code>
 
 ### loads  
 
-Element that requests more items when scrolled into view.  
+Optional element identified by `data-masonry-loads` that requests more items when scrolled into view.  
 
 **Type:** <code>HTMLElement | null</code>
 
 ### loadsOffset  
 
-Pixels beyond the viewport to request more items.  
+Optional pixels beyond the viewport to request more items, set by `loads-offset="{number}"`.  
 
 **Type:** <code>number</code>
 
