@@ -12,24 +12,31 @@ $object-fix: fix.get-class-prefix("object");
 /* Styles */
 
 .#{$object-fix}collapsible {
+  --clp-duration: #{con.$collapsible-duration};
+  --clp-rows: 0fr;
   --clp-vis: hidden;
-  --clp-overflow: hidden;
-  --clp-delay: #{con.$collapsible-delay};
-  --clp-ht: 0;
+  --clp-delay: var(--clp-duration);
 
   &[expanded="true"] {
-    --clp-vis: visible;
-    --clp-delay: #{con.$collapsible-delay-expanded};
-    --clp-ht: var(--clp-height);
+    --clp-rows: 1fr;
+    --clp-delay: 0ms;
+    --clp-vis: inherit;
   }
 }
 
 .#{$object-fix}collapsible-panel {
   --#{con.$n}prop: #{con.$collapsible-prop};
-  --#{con.$n}duration: #{con.$collapsible-duration};
+  --#{con.$n}duration: var(--clp-duration);
+  --#{con.$n}delay: 0ms;
+
+  grid-template-rows: var(--clp-rows);
+}
+
+.#{$object-fix}collapsible-content {
+  --#{con.$n}prop: #{con.$collapsible-content-prop};
+  --#{con.$n}duration: #{con.$collapsible-content-duration};
   --#{con.$n}delay: var(--clp-delay);
 
-  height: var(--clp-ht);
+  min-height: 0;
   visibility: var(--clp-vis);
-  overflow: var(--clp-overflow);
 }

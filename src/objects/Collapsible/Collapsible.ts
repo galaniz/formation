@@ -5,7 +5,6 @@
 import type { CollapsibleAccordionArgs, CollapsibleActionArgs } from './CollapsibleTypes.js'
 import { isStringStrict } from '../../utils/string/string.js'
 import { isHtmlElement } from '../../utils/html/html.js'
-import { isNumber } from '../../utils/number/number.js'
 import { addAction, doActions, removeAction } from '../../actions/actions.js'
 import { getItem } from '../../items/items.js'
 
@@ -22,13 +21,6 @@ declare global {
  * Handles expansion and collapse of element.
  */
 class Collapsible extends HTMLElement {
-  /**
-   * Element identified by `data-collapsible-panel` that expands and collapses.
-   *
-   * @type {HTMLElement|null}
-   */
-  panel: HTMLElement | null = null
-
   /**
    * Button element identified by `data-collapsible-toggle`, initiates open and close.
    *
@@ -65,13 +57,6 @@ class Collapsible extends HTMLElement {
   action: string = ''
 
   /**
-   * Optional transition duration on open or close, set by `duration="{number}"`.
-   *
-   * @type {number}
-   */
-  duration: number = 300
-
-  /**
    * Initialize success.
    *
    * @type {boolean}
@@ -85,22 +70,6 @@ class Collapsible extends HTMLElement {
    * @type {number}
    */
   #blurDelayId: number = 0
-
-  /**
-   * ID for expand timeout.
-   *
-   * @private
-   * @type {number}
-   */
-  #delayId: number = 0
-
-  /**
-   * ID for height timeout.
-   *
-   * @private
-   * @type {number}
-   */
-  #autoDelayId: number = 0
 
   /**
    * Bind this to event callbacks.
@@ -154,14 +123,11 @@ class Collapsible extends HTMLElement {
     /* Empty props */
 
     this.toggle = null
-    this.panel = null
     this.init = false
 
-    /* Clear timeouts */
+    /* Clear timeout */
 
     clearTimeout(this.#blurDelayId)
-    clearTimeout(this.#autoDelayId)
-    clearTimeout(this.#delayId)
   }
 
   /**
@@ -174,34 +140,20 @@ class Collapsible extends HTMLElement {
     /* Items */
 
     const toggle = getItem('[data-collapsible-toggle]', this)
-    const panel = getItem('[data-collapsible-panel]', this)
 
     /* Check required items exist */
 
-    if (!isHtmlElement(toggle, HTMLButtonElement) || !isHtmlElement(panel)) {
+    if (!isHtmlElement(toggle, HTMLButtonElement)) {
       return false
     }
 
     /* Element props */
 
     this.toggle = toggle
-    this.panel = panel
 
     /* Expanded */
 
     this.expanded = this.getAttribute('expanded') === 'true'
-
-    /* Duration */
-
-    const duration = this.getAttribute('duration')
-
-    if (isStringStrict(duration)) {
-      const durationValue = parseInt(duration, 10)
-
-      if (isNumber(durationValue)) {
-        this.duration = durationValue
-      }
-    }
 
     /* Accordion group */
 
@@ -268,45 +220,20 @@ class Collapsible extends HTMLElement {
    * @return {void}
    */
   #toggle (open: boolean = true): void {
-    /* Clear timeouts */
-
-    clearTimeout(this.#autoDelayId)
-    clearTimeout(this.#delayId)
-
     /* Different state required */
 
     if (open === this.expanded) {
       return
     }
 
-    /* Height */
-
-    let height: number | undefined
-
-    if (!this.hoverable) { // Skip height setting if hoverable
-      this.panel?.style.setProperty('height', 'auto')
-      height = this.panel?.clientHeight
-      this.panel?.style.removeProperty('height')
-    }
-
     /* Update attributes and emit event */
 
-    this.#delayId = window.setTimeout(() => {
-      this.toggle?.setAttribute('aria-expanded', open.toString())
-      this.setAttribute('expanded', open.toString())
-      this.expanded = open
+    this.toggle?.setAttribute('aria-expanded', open.toString())
+    this.setAttribute('expanded', open.toString())
+    this.expanded = open
 
-      const onToggle = new CustomEvent('collapsible:toggle')
-      this.dispatchEvent(onToggle)
-    }, 0)
-
-    /* Height */
-
-    this.style.setProperty('--clp-height', height ? `${height}px` : 'auto')
-
-    this.#autoDelayId = window.setTimeout(() => {
-      this.style.setProperty('--clp-height', 'auto')
-    }, this.duration)
+    const onToggle = new CustomEvent('collapsible:toggle')
+    this.dispatchEvent(onToggle)
 
     /* Accordion group action */
 

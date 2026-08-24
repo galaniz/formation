@@ -365,10 +365,10 @@ $default-delay: map.get($transitions, "default", "delay");
 
 /* Collapsible transition */
 
-$collapsible-prop: visibility, height;
-$collapsible-duration: 0ms, #{$default-duration};
-$collapsible-delay: #{$default-duration}, 0ms;
-$collapsible-delay-expanded: 0ms, 0ms;
+$collapsible-prop: grid-template-rows;
+$collapsible-duration: #{$default-duration};
+$collapsible-content-prop: visibility;
+$collapsible-content-duration: 0ms;
 
 /* Loader transition */
 

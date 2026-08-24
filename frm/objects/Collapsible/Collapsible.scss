@@ -6,26 +6,18 @@
 
 /* Styles */
 
-#clp-single {
-  --clp-delay: 200ms, 0ms;
-
-  .collapsible-panel {
-    --frm-duration: 0ms, 200ms;
-  }
-
-  &[expanded="true"] {
-    --clp-delay: 0ms, 0ms;
-  }
-}
-
 #clp-hover {
-  --clp-ht: auto;
+  --clp-rows: 1fr;
 
   .collapsible-panel {
-    --frm-prop: visibility, opacity;
+    --frm-prop: opacity;
 
-    white-space: nowrap;
     opacity: var(--clp-opacity, 0);
+  }
+
+  .collapsible-content {
+    white-space: nowrap;
+    min-width: fit-content;
   }
 
   &[expanded="true"] {

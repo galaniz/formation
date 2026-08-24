@@ -56,7 +56,9 @@ test.describe('Collapsible', () => {
       true,  // #clp-accordion-1
       true,  // #clp-accordion-2
       true,  // #clp-accordion-3
-      true   // #clp-action
+      true,  // #clp-action
+      true,  // #clp-nested
+      true   // #clp-nested-inner
     ])
   })
 
@@ -71,35 +73,32 @@ test.describe('Collapsible', () => {
       return {
         init: clp.init,
         expanded: clp.expanded,
-        duration: clp.duration,
-        toggleTag: clp.toggle?.tagName,
-        panelTag: clp.panel?.tagName
+        toggleTag: clp.toggle?.tagName
       }
     })
 
     expect(clpProps.init).toBe(true)
     expect(clpProps.expanded).toBe(true)
-    expect(clpProps.duration).toBe(200)
     expect(clpProps.toggleTag).toBe('BUTTON')
-    expect(clpProps.panelTag).toBe('DIV')
   })
 
   /* Test single */
 
   test('should close and open single collapsible', async ({ page }) => {
     const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-single') as Collapsible)
+    const clpPanel = page.getByTestId('clp-single-panel')
+    const clpToggle = page.getByTestId('clp-single-toggle')
 
     const clpInit = await page.evaluate(clp => {
       return {
-        expanded: clp.expanded,
-        duration: clp.duration
+        expanded: clp.expanded
       }
     }, clpInstance)
 
-    await page.getByTestId('clp-single-toggle').click()
-    await page.waitForFunction(clp => { // Wait for close
-      return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    }, clpInstance)
+    await clpToggle.click()
+    await clpPanel.evaluate(async panel => { // Wait for close transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clpClose = await page.evaluate(clp => {
       return {
@@ -114,10 +113,16 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
-    await page.getByTestId('clp-single-toggle').click()
-    await page.waitForFunction(clp => { // Wait for open
-      return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    }, clpInstance)
+    const clpClosePanel = await clpPanel.evaluate(panel => {
+      return {
+        panelHeight: panel.clientHeight
+      }
+    })
+
+    await clpToggle.click()
+    await clpPanel.evaluate(async panel => { // Wait for open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clpOpen = await page.evaluate(clp => {
       return {
@@ -132,6 +137,13 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
+    const clpOpenPanel = await clpPanel.evaluate(panel => {
+      return {
+        panelHeight: panel.clientHeight,
+        contentHeight: panel.firstElementChild?.scrollHeight
+      }
+    })
+
     const clpEvents = await page.evaluate(() => {
       return {
         toggle: window.testCollapsibleToggle
@@ -139,11 +151,13 @@ test.describe('Collapsible', () => {
     })
 
     expect(clpInit.expanded).toBe(true)
-    expect(clpInit.duration).toBe(200)
     expect(clpClose.ariaExpanded).toStrictEqual(['false', 'false'])
     expect(clpClose.expanded).toStrictEqual([false, 'false'])
+    expect(clpClosePanel.panelHeight).toBe(0)
     expect(clpOpen.ariaExpanded).toStrictEqual(['true', 'true'])
     expect(clpOpen.expanded).toStrictEqual([true, 'true'])
+    expect(clpOpenPanel.contentHeight).toBeGreaterThan(0) // Otherwise equality passes on two zeroes
+    expect(clpOpenPanel.panelHeight).toBe(clpOpenPanel.contentHeight)
     expect(clpEvents.toggle).toStrictEqual(['clp-single', 'clp-single'])
   })
 
@@ -154,14 +168,13 @@ test.describe('Collapsible', () => {
 
     const clpInit = await page.evaluate(clp => {
       return {
-        expanded: clp.expanded,
-        duration: clp.duration
+        expanded: clp.expanded
       }
     }, clpInstance)
 
     await page.getByTestId('clp-hover').hover() // Mouse enter
     await page.waitForFunction(clp => { // Wait for open
-      return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
+      return clp.expanded // Hoverable fades in place, so state is the whole transition
     }, clpInstance)
 
     const clpOpen = await page.evaluate(clp => {
@@ -179,7 +192,7 @@ test.describe('Collapsible', () => {
 
     await page.getByTestId('clp-single-toggle').hover() // Mouse leave
     await page.waitForFunction(clp => { // Wait for close
-      return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
+      return !clp.expanded
     }, clpInstance)
 
     const clpClose = await page.evaluate(clp => {
@@ -202,7 +215,6 @@ test.describe('Collapsible', () => {
     })
 
     expect(clpInit.expanded).toBe(false)
-    expect(clpInit.duration).toBe(300)
     expect(clpOpen.ariaExpanded).toStrictEqual(['true', 'true'])
     expect(clpOpen.expanded).toStrictEqual([true, 'true'])
     expect(clpClose.ariaExpanded).toStrictEqual(['false', 'false'])
@@ -215,15 +227,14 @@ test.describe('Collapsible', () => {
 
     const clpInit = await page.evaluate(clp => {
       return {
-        expanded: clp.expanded,
-        duration: clp.duration
+        expanded: clp.expanded
       }
     }, clpInstance)
 
     await page.getByTestId('clp-hover-toggle').focus() // Focus
     await page.keyboard.press('Enter')
     await page.waitForFunction(clp => { // Wait for open
-      return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
+      return clp.expanded // Hoverable fades in place, so state is the whole transition
     }, clpInstance)
 
     const clpOpen = await page.evaluate(clp => {
@@ -241,7 +252,7 @@ test.describe('Collapsible', () => {
 
     await page.keyboard.press('Tab')
     await page.waitForFunction(clp => { // Wait for close
-      return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
+      return !clp.expanded
     }, clpInstance)
 
     const clpClose = await page.evaluate(clp => {
@@ -264,7 +275,6 @@ test.describe('Collapsible', () => {
     })
 
     expect(clpInit.expanded).toBe(false)
-    expect(clpInit.duration).toBe(300)
     expect(clpOpen.ariaExpanded).toStrictEqual(['true', 'true'])
     expect(clpOpen.expanded).toStrictEqual([true, 'true'])
     expect(clpClose.ariaExpanded).toStrictEqual(['false', 'false'])
@@ -290,9 +300,9 @@ test.describe('Collapsible', () => {
     }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-1-toggle').click()
-    await page.waitForFunction(clp1 => { // Wait for 1 open
-      return clp1.expanded && clp1.style.getPropertyValue('--clp-height') === 'auto'
-    }, clp1Instance)
+    await page.getByTestId('clp-accordion-1-panel').evaluate(async panel => { // Wait for 1 open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clp1Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
@@ -328,9 +338,9 @@ test.describe('Collapsible', () => {
     }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-2-toggle').click()
-    await page.waitForFunction(clp2 => { // Wait for 2 open
-      return clp2.expanded && clp2.style.getPropertyValue('--clp-height') === 'auto'
-    }, clp2Instance)
+    await page.getByTestId('clp-accordion-2-panel').evaluate(async panel => { // Wait for 2 open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clp2Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
@@ -366,9 +376,9 @@ test.describe('Collapsible', () => {
     }, { clp1: clp1Instance, clp2: clp2Instance, clp3: clp3Instance })
 
     await page.getByTestId('clp-accordion-3-toggle').click()
-    await page.waitForFunction(clp3 => { // Wait for 3 open
-      return clp3.expanded && clp3.style.getPropertyValue('--clp-height') === 'auto'
-    }, clp3Instance)
+    await page.getByTestId('clp-accordion-3-panel').evaluate(async panel => { // Wait for 3 open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clp3Open = await page.evaluate(({ clp1, clp2, clp3 }) => {
       return {
@@ -459,6 +469,7 @@ test.describe('Collapsible', () => {
 
   test('should open and close collapsible with action', async ({ page }) => {
     const clpInstance = await page.evaluateHandle(() => document.querySelector('#clp-action') as Collapsible)
+    const clpPanel = page.getByTestId('clp-action-panel')
 
     const clpInit = await page.evaluate(clp => {
       return {
@@ -466,13 +477,15 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
-    await page.waitForFunction(async clp => { // Wait for open
+    await page.evaluate(async () => {
       const { doActions } = await import('../../../actions/actions.js')
 
       doActions('collapsible:action', { expanded: true })
+    })
 
-      return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    }, clpInstance)
+    await clpPanel.evaluate(async panel => { // Wait for open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clpOpen = await page.evaluate(clp => {
       return {
@@ -487,13 +500,15 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
-    await page.waitForFunction(async clp => { // Wait for close
+    await page.evaluate(async () => {
       const { doActions } = await import('../../../actions/actions.js')
 
       doActions('collapsible:action', { expanded: false })
+    })
 
-      return !clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    }, clpInstance)
+    await clpPanel.evaluate(async panel => { // Wait for close transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clpClose = await page.evaluate(clp => {
       return {
@@ -538,19 +553,17 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
-    await page.waitForFunction(async clp => { // Wait for hoverable
+    await page.evaluate(async () => { // Set hoverable
       const { doActions } = await import('../../../actions/actions.js')
       const args: CollapsibleActionArgs = { hoverable: true }
 
       doActions('collapsible:action', args)
-
-      return clp.hoverable
-    }, clpInstance)
+    })
 
     await page.getByTestId('clp-action-toggle').hover() // Mouse enter
-    await page.waitForFunction(clp => { // Wait for open
-      return clp.expanded && clp.style.getPropertyValue('--clp-height') === 'auto'
-    }, clpInstance)
+    await page.getByTestId('clp-action-panel').evaluate(async panel => { // Wait for open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
 
     const clpEnter = await page.evaluate(clp => {
       return {
@@ -565,14 +578,12 @@ test.describe('Collapsible', () => {
       }
     }, clpInstance)
 
-    await page.waitForFunction(async clp => { // Wait for hoverable
+    await page.evaluate(async () => { // Set hoverable
       const { doActions } = await import('../../../actions/actions.js')
       const args: CollapsibleActionArgs = { hoverable: false }
 
       doActions('collapsible:action', args)
-
-      return clp.hoverable
-    }, clpInstance)
+    })
 
     await page.getByTestId('clp-single-toggle').hover() // Mouse leave
 
@@ -602,6 +613,61 @@ test.describe('Collapsible', () => {
     expect(clpLeave.ariaExpanded).toStrictEqual(['true', 'true'])
     expect(clpLeave.expanded).toStrictEqual([true, 'true'])
     expect(clpEvents.toggle).toStrictEqual(['clp-action'])
+  })
+
+  /* Test nesting */
+
+  test('should keep an open collapsible inside a closed one out of the tab order', async ({ page }) => {
+    const nestedClosed = await page.evaluate(() => {
+      const innerInstance = document.querySelector('#clp-nested-inner') as Collapsible
+      const innerLink = document.querySelector('#clp-nested-inner-link') as HTMLAnchorElement
+
+      innerInstance.toggle?.focus()
+      const innerToggleFocus = document.activeElement === innerInstance.toggle
+
+      innerLink.focus()
+      const innerLinkFocus = document.activeElement === innerLink
+
+      return {
+        innerExpanded: innerInstance.expanded,
+        innerToggleFocus,
+        innerLinkFocus
+      }
+    })
+
+    await page.getByTestId('clp-nested-toggle').click()
+    await page.getByTestId('clp-nested-panel').evaluate(async panel => { // Wait for open transition
+      await Promise.all(panel.getAnimations().map(animation => animation.finished))
+    })
+
+    const nestedOpen = await page.evaluate(() => {
+      const innerLink = document.querySelector('#clp-nested-inner-link') as HTMLAnchorElement
+
+      innerLink.focus()
+
+      return {
+        innerLinkFocus: document.activeElement === innerLink
+      }
+    })
+
+    const nestedOpenPanel = await page.getByTestId('clp-nested-inner-panel').evaluate(panel => {
+      return {
+        innerPanelHeight: panel.clientHeight
+      }
+    })
+
+    const clpEvents = await page.evaluate(() => {
+      return {
+        toggle: window.testCollapsibleToggle
+      }
+    })
+
+    expect(nestedClosed.innerExpanded).toBe(true)
+    expect(nestedClosed.innerToggleFocus).toBe(false)
+    expect(nestedClosed.innerLinkFocus).toBe(false)
+    expect(nestedOpen.innerLinkFocus).toBe(true)
+    expect(nestedOpenPanel.innerPanelHeight).toBeGreaterThan(0)
+    expect(clpEvents.toggle).toStrictEqual(['clp-nested'])
   })
 
   /* Test clean up */
@@ -644,11 +710,6 @@ test.describe('Collapsible', () => {
           clpAction.toggle,
           clpHover.toggle
         ],
-        panel: [
-          clpAccordion.panel,
-          clpAction.panel,
-          clpHover.panel
-        ],
         toggleCount: window.testCollapsibleToggle.length,
         actionsRemoved:
           actions.get(accordion)?.size === 2 && actions.get(action)?.size === 0
@@ -658,7 +719,6 @@ test.describe('Collapsible', () => {
     expect(clpProps.init).toStrictEqual([false, false, false])
     expect(clpProps.expanded).toStrictEqual([false, false, false])
     expect(clpProps.toggle).toStrictEqual([null, null, null])
-    expect(clpProps.panel).toStrictEqual([null, null, null])
     expect(clpProps.toggleCount).toBe(0)
     expect(clpProps.actionsRemoved).toBe(true)
   })
