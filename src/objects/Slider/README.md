@@ -1,5 +1,11 @@
 # Slider
 
+## loopSets  
+
+Number of panel sets in loop.  
+
+**Type:** <code>number</code>
+
 ## SliderGroup  
 
 Handles scroll based slider with multiple items in panels.
@@ -130,6 +136,34 @@ Init after added to DOM.
 **<code>disconnectedCallback(): </code>**  
 
 Clean up after removed from DOM.
+
+## sliderPanelOffsets  
+
+**<code>sliderPanelOffsets(track: HTMLElement | null, count: number): number[] | undefined</code>**  
+
+Left offsets of panels, assuming all are the width of the first.
+
+### Parameters  
+- **`track`** <code>HTMLElement | null</code> required  
+- **`count`** <code>number</code> required
+
+### Returns  
+
+<code>number[] | undefined</code>
+
+## sliderClosestIndex  
+
+**<code>sliderClosestIndex(offsets: number[], target: number): number</code>**  
+
+Index of offset closest to scroll position, or -1 if no offsets.
+
+### Parameters  
+- **`offsets`** <code>number[]</code> required  
+- **`target`** <code>number</code> required
+
+### Returns  
+
+<code>number</code>
 
 ## sliderScrollTo  
 

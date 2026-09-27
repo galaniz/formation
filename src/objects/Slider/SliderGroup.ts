@@ -13,7 +13,11 @@ import { isNumber } from '../../utils/number/number.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
 import { addFilter, removeFilter } from '../../filters/filters.js'
 import { config } from '../../config/config.js'
-import { sliderScrollTo } from './sliderUtils.js'
+import {
+  sliderClosestIndex,
+  sliderPanelOffsets,
+  sliderScrollTo
+} from './sliderUtils.js'
 
 /**
  * Handles scroll based slider with multiple items in panels.
@@ -354,32 +358,13 @@ class SliderGroup extends Tabs {
 
     this.#viewportWidth = viewportWidth
 
-    /* Track width and offset */
-
-    let offset = 0
-
-    if (isHtmlElement(this.track)) {
-      const left = getComputedStyle(this.track).getPropertyValue('scroll-padding-left')
-      const leftNum = parseInt(left, 10)
-
-      offset = isNumber(leftNum) ? leftNum : 0
-    }
-
     /* Shift items to different panels */
 
     this.#moveGroups()
 
-    /* Reset offsets */
+    /* Reset offsets for visible panels */
 
-    this.#leftOffsets = []
-
-    this.panels.forEach((panel, i) => {
-      if (i > this.#endIndex) {
-        return
-      }
-
-      this.#leftOffsets.push(panel.offsetLeft - offset)
-    })
+    this.#leftOffsets = sliderPanelOffsets(this.track, this.#endIndex + 1) || []
   }
 
   /**
@@ -628,24 +613,13 @@ class SliderGroup extends Tabs {
         return
       }
 
-      /* Target and offset */
-
-      const target = this.track.scrollLeft
-      const offsets = this.#leftOffsets
-
       /* New index to activate */
 
-      let newIndex = this.currentIndex
-
-      const closestOffset = offsets.reduce((prev, curr) => {
-        return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
-      })
-
-      newIndex = offsets.indexOf(closestOffset)
+      const newIndex = sliderClosestIndex(this.#leftOffsets, this.track.scrollLeft)
 
       /* Move to new panel */
 
-      if (newIndex > -1) {
+      if (newIndex > -1 && newIndex !== this.currentIndex) {
         this.activate({
           current: newIndex,
           source: 'scroll'
