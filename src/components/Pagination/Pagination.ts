@@ -454,9 +454,8 @@ class Pagination extends HTMLElement {
    * @param {PaginationSource} source
    * @return {Promise<void>|void}
    */
-  request (source: PaginationSource): Promise<void> | void {
-    void source
-  }
+  request (source: PaginationSource): Promise<void> | void
+  request (): Promise<void> | void {}
 
   /**
    * Initiate loader and data request.

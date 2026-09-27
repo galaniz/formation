@@ -70,7 +70,7 @@ test.describe('Slider', () => {
     await page.goto('/spec/objects/Slider/__tests__/Slider.html')
 
     await page.waitForFunction(() => { // Wait for init activated events
-      return Object.keys(window.testSliderActivated).length === 2
+      return Object.keys(window.testSliderActivated).length === 3
     })
   })
 
@@ -89,7 +89,8 @@ test.describe('Slider', () => {
     expect(sliderInit).toStrictEqual([ // Init and sub init
       [false, false], // #sld-empty
       [true, true],   // #sld-single
-      [true, true]    // #sld-loop
+      [true, true],   // #sld-loop
+      [true, true]    // #sld-full
     ])
   })
 
@@ -522,7 +523,7 @@ test.describe('Slider', () => {
     })
 
     expect(sliderLoop.currentIndex).toBe(0)
-    expect(sliderLoop.panelIndex).toBe(14)
+    expect(sliderLoop.panelIndex).toBe(7)
     expect(sliderLoop.panelCount).toBe(21)
     expect(sliderLoop.selected).toStrictEqual([
       'true', null, 'false', null, null, null, 'false'
@@ -566,7 +567,7 @@ test.describe('Slider', () => {
     })
 
     expect(sliderLoop.currentIndex).toBe(6)
-    expect(sliderLoop.panelIndex).toBe(6)
+    expect(sliderLoop.panelIndex).toBe(13)
     expect(sliderLoop.panelCount).toBe(21)
     expect(sliderLoop.selected).toStrictEqual([
       'false', null, 'false', null, null, null, 'true'
@@ -574,7 +575,7 @@ test.describe('Slider', () => {
     expect(sliderLoop.tabIndexes).toStrictEqual([-1, -1, -1, -1, -1, -1, 0])
   })
 
-  test('should move panels and track to middle set at loop start', async ({ page }) => {
+  test('should move track to middle set at loop start', async ({ page }) => {
     await page.evaluate(() => { // Scroll to second panel of first set
       document.querySelector('#sld-loop-panel-2')?.scrollIntoView({
         inline: 'start',
@@ -596,7 +597,7 @@ test.describe('Slider', () => {
       return {
         currentIndex: slider.currentIndex,
         panelCount: slider.panels.length,
-        panelIds: [ // Last set moved to start
+        panelIds: [ // Panel order unchanged by the move
           slider.panels[0]?.id,
           slider.panels[7]?.id,
           slider.panels[14]?.id
@@ -609,9 +610,9 @@ test.describe('Slider', () => {
     expect(sliderLoop.currentIndex).toBe(1)
     expect(sliderLoop.panelCount).toBe(21)
     expect(sliderLoop.panelIds).toStrictEqual([
-      'sld-loop-panel-1-clone-2',
       'sld-loop-panel-1',
-      'sld-loop-panel-1-clone-1'
+      'sld-loop-panel-1-clone-1',
+      'sld-loop-panel-1-clone-2'
     ])
     // Second panel of middle set flush with track scroll start after the move
     expect(Math.abs(sliderLoop.panelStart)).toBeLessThanOrEqual(1)
@@ -620,7 +621,7 @@ test.describe('Slider', () => {
     ])
   })
 
-  test('should move panels and track to middle set at loop end', async ({ page }) => {
+  test('should move track to middle set at loop end', async ({ page }) => {
     await page.evaluate(() => { // Scroll to first panel of last set
       document.querySelector('#sld-loop-panel-1-clone-2')?.scrollIntoView({
         inline: 'start',
@@ -628,8 +629,8 @@ test.describe('Slider', () => {
       })
     })
 
-    await page.waitForFunction(() => { // Wait for first panel of last set activated
-      return window.testSliderActivated['sld-loop']?.panelIndex === 14
+    await page.waitForFunction(() => { // Wait for first panel of middle set activated
+      return window.testSliderActivated['sld-loop']?.panelIndex === 7
     })
 
     await page.getByTestId('sld-loop-tab-7').click()
@@ -647,7 +648,7 @@ test.describe('Slider', () => {
       return {
         currentIndex: slider.currentIndex,
         panelCount: slider.panels.length,
-        panelIds: [ // Last set moved to start
+        panelIds: [ // Panel order unchanged by the move
           slider.panels[0]?.id,
           slider.panels[7]?.id,
           slider.panels[14]?.id
@@ -660,9 +661,9 @@ test.describe('Slider', () => {
     expect(sliderLoop.currentIndex).toBe(6)
     expect(sliderLoop.panelCount).toBe(21)
     expect(sliderLoop.panelIds).toStrictEqual([
-      'sld-loop-panel-1-clone-2',
       'sld-loop-panel-1',
-      'sld-loop-panel-1-clone-1'
+      'sld-loop-panel-1-clone-1',
+      'sld-loop-panel-1-clone-2'
     ])
     // Last panel of middle set flush with track scroll start after the move
     expect(Math.abs(sliderLoop.panelStart)).toBeLessThanOrEqual(1)
@@ -711,7 +712,7 @@ test.describe('Slider', () => {
     }, sliderInstance)
 
     expect(sliderPrev.currentIndex).toBe(6)
-    expect(sliderPrev.panelIndex).toBe(6)
+    expect(sliderPrev.panelIndex).toBe(13)
     expect(sliderPrev.selected).toStrictEqual([
       'false', null, 'false', null, null, null, 'true'
     ])

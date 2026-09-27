@@ -13,6 +13,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
+  globalTimeout: process.env.CI ? 20 * 60 * 1000 : undefined,
   reporter: [
     [
       'list', {
@@ -26,7 +27,7 @@ export default defineConfig({
     trace: 'on-first-retry'
   },
   webServer: {
-    command: 'pnpm serve',
+    command: 'npx serve --cors',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI
   },

@@ -1,9 +1,8 @@
 export default /* html */`
   <frm-slider
-    id="sld-loop"
+    id="sld-full"
     class="slider slider-single slider-contain-full w-full flex col m-auto"
     role="group"
-    loop
     style="
       --sld-items-init: 1;
       --sld-items-s: 2;
@@ -16,12 +15,12 @@ export default /* html */`
     <div class="overflow-hidden relative">
       <div
         class="slider-track flex gap-4 gap-6-l overflow-x-auto overflow-y-hidden"
-        id="sld-loop-track"
+        id="sld-full-track"
         data-slider-track
       >
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-1"
+          id="sld-full-panel-1"
           role="tabpanel"
           aria-label="Panel 1"
         >
@@ -31,7 +30,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-2"
+          id="sld-full-panel-2"
           role="tabpanel"
           aria-label="Panel 2"
         >
@@ -41,7 +40,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-3"
+          id="sld-full-panel-3"
           role="tabpanel"
           aria-label="Panel 3"
         >
@@ -51,7 +50,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-4"
+          id="sld-full-panel-4"
           role="tabpanel"
           aria-label="Panel 4"
         >
@@ -61,7 +60,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-5"
+          id="sld-full-panel-5"
           role="tabpanel"
           aria-label="Panel 5"
         >
@@ -71,7 +70,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-6"
+          id="sld-full-panel-6"
           role="tabpanel"
           aria-label="Panel 6"
         >
@@ -81,7 +80,7 @@ export default /* html */`
         </div>
         <div
           class="slider-panel flex shrink-0"
-          id="sld-loop-panel-7"
+          id="sld-full-panel-7"
           role="tabpanel"
           aria-label="Panel 7"
         >
@@ -89,23 +88,22 @@ export default /* html */`
             <a href="#">7</a>
           </div>
         </div>
+        <div class="slider-spacer shrink-0"></div>
       </div>
       <button
-        id="sld-loop-prev"
+        id="sld-full-prev"
         class="slider-prev w-8 h-8 t-background-light b-radius-full absolute left-0"
         type="button"
         aria-label="Previous"
         data-slider-prev
-        data-testid="sld-loop-prev"
       >
       </button>  
       <button
-        id="sld-loop-next"
+        id="sld-full-next"
         class="slider-next w-8 h-8 t-background-light b-radius-full absolute right-0"
         type="button"
         aria-label="Next"
         data-slider-next
-        data-testid="sld-loop-next"
       >
       </button>
     </div>
@@ -119,7 +117,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-1"
           aria-label="Panel 1"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -130,7 +127,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-2"
           aria-label="Panel 2"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -141,8 +137,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          aria-selected="true"
-          data-testid="sld-loop-tab-3"
           aria-label="Panel 3"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -153,7 +147,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-4"
           aria-label="Panel 4"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -164,7 +157,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-5"
           aria-label="Panel 5"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -175,7 +167,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-6"
           aria-label="Panel 6"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>
@@ -186,7 +177,6 @@ export default /* html */`
           class="slider-tab flex align-center justify-center w-6 h-6"
           type="button"
           role="tab"
-          data-testid="sld-loop-tab-7"
           aria-label="Panel 7"
         >
           <span class="slider-dot block b-radius-full b-all w-3 h-3"></span>

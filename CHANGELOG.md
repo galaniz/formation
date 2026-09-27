@@ -56,3 +56,18 @@ All notable changes to this project will be documented in this file.
 - `Slider` and `SliderGroup` re-initializing when moved in the DOM.
 - `sliderScrollTo` resting short of the target before scroll snap restored.
 - Column breakpoint utility class names.
+
+## [0.0.5] - 2026-09-26
+
+### Changed
+
+- `Collapsible` transitions with `grid-template-rows`, panel requires a `collapsible-content` child and `data-collapsible-panel` no longer required.
+- `Collapsible` `panel` and `duration` properties removed.
+- `Slider` `--sld-track-padding` and `--sld-track-scroll` replaced by `--sld-track-start`.
+
+### Fixed
+
+- `Slider` loop scrolling through every panel when wrapping from last to first (or first to last).
+- `Slider` and `SliderGroup` activate event firing when already on the current panel.
+- `Slider` `slider-single` spacer too narrow for the last panel to reach the start with multiple panels visible.
+- `Slider` `slider-contain-full` first and last panels not lining up with the container edge.

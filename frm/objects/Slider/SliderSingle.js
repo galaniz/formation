@@ -4,6 +4,10 @@ export default /* html */`
     class="slider slider-single slider-contain w-full flex col m-auto"
     role="group"
     style="
+      --sld-items-init: 1;
+      --sld-items-s: 2;
+      --sld-items-m: 3;
+      --sld-items-l: 3;
       --sld-gap-init: var(--frm-4);
       --sld-gap-l: var(--frm-6);
     "
@@ -21,10 +25,7 @@ export default /* html */`
           role="tabpanel"
           aria-label="Panel 1"
         >
-          <div
-            class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full"
-            data-slider-offset
-          >
+          <div class="flex align-center justify-center ar-16-9 bg-accent-cold-light w-full">
             <a href="#">1</a>
           </div>
         </div>

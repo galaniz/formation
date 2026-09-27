@@ -12,7 +12,18 @@ import { isHtmlElement } from '../../utils/html/html.js'
 import { isNumber } from '../../utils/number/number.js'
 import { onResize, removeResize } from '../../actions/actionResize.js'
 import { addFilter, removeFilter } from '../../filters/filters.js'
-import { sliderScrollTo } from './sliderUtils.js'
+import {
+  sliderClosestIndex,
+  sliderPanelOffsets,
+  sliderScrollTo
+} from './sliderUtils.js'
+
+/**
+ * Number of panel sets in loop.
+ *
+ * @type {number}
+ */
+const loopSets: number = 3
 
 /**
  * Handles scroll based slider with single item panels.
@@ -93,36 +104,12 @@ class Slider extends Tabs {
   #leftOffsets: number[] = []
 
   /**
-   * Visible current tab index in loop.
-   *
-   * @private
-   * @type {number}
-   */
-  #loopCurrentIndex: number = 0
-
-  /**
-   * Track element width.
-   *
-   * @private
-   * @type {number}
-   */
-  #loopTrackWidth: number = 0
-
-  /**
    * Initial number of panels in loop.
    *
    * @private
    * @type {number}
    */
   #loopInitCount: number = 0
-
-  /**
-   * Number of panels in loop including cloned panels.
-   *
-   * @private
-   * @type {number}
-   */
-  #loopCount: number = 0
 
   /**
    * Bind this to event callbacks.
@@ -273,7 +260,7 @@ class Slider extends Tabs {
       const panelsFrag = new DocumentFragment()
       panelsFrag.append(...this.panels)
 
-      for (let i = 1; i < 3; i += 1) {
+      for (let i = 1; i < loopSets; i += 1) {
         this.panels.map(panel => {
           const clone = panel.cloneNode(true) as HTMLElement
 
@@ -287,7 +274,6 @@ class Slider extends Tabs {
 
       this.#insert.append(panelsFrag)
       this.panels = [...this.#insert.children] as HTMLElement[]
-      this.#loopCount = this.panels.length
 
       current = this.currentIndex + this.#loopInitCount
     }
@@ -318,76 +304,42 @@ class Slider extends Tabs {
   }
 
   /**
-   * Offsets, loop and viewport width.
+   * Offsets.
    *
    * @private
    * @return {void}
    */
   #setDimensions (): void {
-    /* Track width and offset */
-
-    let offset = 0
-
-    if (isHtmlElement(this.track)) {
-      this.#loopTrackWidth = this.loop ? this.track.clientWidth : 0
-
-      const left = getComputedStyle(this.track).getPropertyValue('scroll-padding-left')
-      const leftNum = parseInt(left, 10)
-
-      offset = isNumber(leftNum) ? leftNum : 0
-    }
-
-    /* Reset offsets */
-
-    this.#leftOffsets = this.panels.map(panel => panel.offsetLeft - offset)
+    this.#leftOffsets = sliderPanelOffsets(this.track, this.panels.length) || []
   }
 
   /**
-   * Filter indexes for loop.
+   * Filter indexes for loop, always landing on the middle panel set.
    *
    * @private
    * @param {TabsIndexesFilterArgs} args
-   * @param {boolean} [moved=false]
    * @return {TabsIndexesFilterArgs}
    */
-  #getLoopIndexes (args: TabsIndexesFilterArgs, moved: boolean = false): TabsIndexesFilterArgs {
+  #getLoopIndexes (args: TabsIndexesFilterArgs): TabsIndexesFilterArgs {
     const { lastIndex, source } = args
+    const { rawIndex = args.currentIndex } = args // Raw index needed for tab keydown
+    const count = this.#loopInitCount
 
-    let {
-      currentIndex,
-      lastPanelIndex,
-      panelIndex
-    } = args
+    /* A click gives an index inside the middle set, every other source
+    gives one that already spans all three */
 
-    const { rawIndex = currentIndex } = args // Raw index needed for tab keydown
+    const absolute = source === 'click' ? rawIndex + count : rawIndex
 
-    currentIndex = rawIndex
-    panelIndex = rawIndex
+    /* Put it back on a panel, then onto the middle set */
 
-    if (source === 'click') {
-      currentIndex = currentIndex + (this.#loopInitCount * this.#loopCurrentIndex)
-    }
-
-    lastPanelIndex = lastIndex + (this.#loopInitCount * this.#loopCurrentIndex)
-
-    if (lastIndex === 0) {
-      lastPanelIndex = 0
-    }
-
-    this.#loopCurrentIndex = Math.floor(currentIndex / this.#loopInitCount)
-    currentIndex = currentIndex - (this.#loopInitCount * this.#loopCurrentIndex)
-
-    if (source === 'init' || moved) {
-      this.#loopCurrentIndex = 1
-    }
-
-    panelIndex = currentIndex + (this.#loopInitCount * this.#loopCurrentIndex)
+    const currentIndex = ((absolute % count) + count) % count
 
     return {
+      rawIndex,
       currentIndex,
       lastIndex,
-      panelIndex,
-      lastPanelIndex,
+      panelIndex: currentIndex + count,
+      lastPanelIndex: lastIndex + count,
       source
     }
   }
@@ -439,20 +391,11 @@ class Slider extends Tabs {
 
     /* Loop args */
 
-    args = this.#getLoopIndexes(args)
+    const loopArgs = this.#getLoopIndexes(args)
 
-    const newCurrentIndex = this.#moveLoopEnd(args)
+    this.#alignLoop(loopArgs)
 
-    if (isNumber(newCurrentIndex)) {
-      return this.#getLoopIndexes({
-        ...args,
-        currentIndex: newCurrentIndex
-      }, true)
-    }
-
-    /* End args */
-
-    return args
+    return loopArgs
   }
 
   /**
@@ -531,90 +474,67 @@ class Slider extends Tabs {
   }
 
   /**
-   * Move panels if first or last panel visible.
+   * Move track to the middle panel set before it is scrolled to.
    *
    * @private
    * @param {TabsIndexesFilterArgs} args
-   * @return {number|undefined}
+   * @return {void}
    */
-  #moveLoopEnd (args: TabsIndexesFilterArgs): number | undefined {
+  #alignLoop (args: TabsIndexesFilterArgs): void {
     /* Check required elements */
 
-    if (!isHtmlElement(this.track) || !isHtmlElement(this.#insert)) {
+    if (!isHtmlElement(this.track)) {
       return
     }
 
     /* Args */
 
     const {
-      currentIndex,
+      rawIndex = 0,
       panelIndex,
-      lastIndex,
+      lastPanelIndex,
       source
     } = args
 
     const offsets = this.#leftOffsets
-    const target = offsets[panelIndex]
+    const count = this.#loopInitCount
 
-    /* Target required */
+    /* A drag can end in a cloned set, so snap to its middle set copy */
 
-    if (!isNumber(target)) {
+    if (source === 'scroll') {
+      const target = offsets[panelIndex]
+
+      if (rawIndex !== panelIndex && isNumber(target)) {
+        this.track.scrollLeft = target
+      }
+
       return
     }
 
-    /* First and last offsets */
+    /* Only prev, next or tab keydown wraps go out of range */
 
-    const startBuffer = offsets[1]
-    const endBuffer = offsets[this.#loopCount - 1]
-
-    /* Move elements from end to start */
-
-    let move = false
-    let newIndex: number | undefined
-    let diff = 0
-
-    if (isNumber(startBuffer) && target <= startBuffer) {
-      move = true
+    if (source !== 'click') {
+      return
     }
 
-    if (isNumber(endBuffer) && target + this.#loopTrackWidth >= endBuffer) {
-      move = true
+    /* Start from the current panel's copy in the neighboring set so wraps
+    scroll the way the user pressed */
+
+    let shift = 0
+
+    if (rawIndex < 0) {
+      shift = count
     }
 
-    if (move) {
-      const panelsFrag = new DocumentFragment()
-      const start = this.#loopCount - this.#loopInitCount
-
-      for (let i = start; i < this.#loopCount; i += 1) {
-        const panel = this.panels[i]
-
-        if (!isHtmlElement(panel)) {
-          continue
-        }
-
-        panelsFrag.append(panel)
-      }
-
-      this.#insert.prepend(panelsFrag)
-      this.panels = [...this.#insert.children] as HTMLElement[]
-
-      newIndex = currentIndex + this.#loopInitCount
-      diff = source === 'click' ? lastIndex - currentIndex : 0
+    if (rawIndex >= count) {
+      shift = -count
     }
 
-    /* Move track to new index offset */
+    const from = offsets[lastPanelIndex + shift]
 
-    if (isNumber(newIndex)) {
-      const left = this.#leftOffsets[newIndex + diff]
-
-      if (isNumber(left)) {
-        this.track.scrollLeft = left
-      }
+    if (shift !== 0 && isNumber(from)) {
+      this.track.scrollLeft = from
     }
-
-    /* New index */
-
-    return newIndex
   }
 
   /**
@@ -663,24 +583,19 @@ class Slider extends Tabs {
         return
       }
 
-      /* Target and offset */
-
-      const target = this.track.scrollLeft
-      const offsets = this.#leftOffsets
-
       /* New index to activate */
 
-      let newIndex = this.currentIndex
+      const newIndex = sliderClosestIndex(this.#leftOffsets, this.track.scrollLeft)
 
-      const closestOffset = offsets.reduce((prev, curr) => {
-        return (Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev)
-      })
+      /* Current panel index in the track, offset to the middle set if looping */
 
-      newIndex = offsets.indexOf(closestOffset)
+      const panelIndex = this.loop
+        ? this.currentIndex + this.#loopInitCount
+        : this.currentIndex
 
       /* Move to new panel */
 
-      if (newIndex > -1) {
+      if (newIndex > -1 && newIndex !== panelIndex) {
         this.activate({
           current: newIndex,
           source: 'scroll'

@@ -10,12 +10,6 @@ Create new instance.
 
 ## Properties
 
-### panel  
-
-Element identified by `data-collapsible-panel` that expands and collapses.  
-
-**Type:** <code>HTMLElement | null</code>
-
 ### toggle  
 
 Button element identified by `data-collapsible-toggle`, initiates open and close.  
@@ -45,12 +39,6 @@ Optional accordion group action name, set by `accordion="{name}"`.
 Optional custom action name, set by `action="{name}"`.  
 
 **Type:** <code>string</code>
-
-### duration  
-
-Optional transition duration on open or close, set by `duration="{number}"`.  
-
-**Type:** <code>number</code>
 
 ### init  
 

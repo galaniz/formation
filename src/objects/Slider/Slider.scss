@@ -20,11 +20,9 @@ $object-fix: fix.get-class-prefix("object");
   --sld-items-l: 1;
   --sld-item-width: 100% / var(--sld-items);
   --sld-padding: var(--#{con.$n}container-padding);
-  --sld-track-padding: 0 0 0 var(--sld-padding);
-  --sld-track-scroll: 0 0 0 var(--sld-padding); 
+  --sld-track-start: var(--sld-padding);
   --sld-gap: var(--sld-gap-init, var(--#{con.$n}4));
   --sld-gap-l: var(--#{con.$n}6);
-  --sld-spacer: var(--sld-padding);
   --sld-nav-fill: currentcolor;
   --sld-tab-fill: currentcolor;
 
@@ -50,19 +48,19 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-single {
+  --sld-spacer: 100% - (var(--sld-width)) - var(--sld-gap);
   --sld-width:
     var(--sld-item-width) - ((var(--sld-padding) + (var(--sld-gap) * var(--sld-items))) / var(--sld-items));
 }
 
 .#{$object-fix}slider-group {
+  --sld-spacer: var(--sld-padding);
   --sld-width: 100% - (var(--sld-padding) + var(--sld-gap));
 }
 
 .#{$object-fix}slider-contain {
   @include breakpoint.breakpoint-min("container-content") {
-    --sld-spacer-display: none;
-    --sld-track-padding: 0;
-    --sld-track-scroll: 0;
+    --sld-track-start: 0;
 
     max-width: var(--#{con.$n}container);
     padding-left: var(--sld-padding);
@@ -73,6 +71,7 @@ $object-fix: fix.get-class-prefix("object");
     }
 
     &.#{$object-fix}slider-group {
+      --sld-spacer-display: none;
       --sld-width: 100%;
     }
   }
@@ -82,9 +81,8 @@ $object-fix: fix.get-class-prefix("object");
   @include breakpoint.breakpoint-min("container") {
     --sld-container: var(--#{con.$n}container-content);
     --sld-item-width: var(--sld-container) / var(--sld-items);
-    --sld-track-scroll: 0 0 0 calc(50vw - (var(--sld-container) / 2));
+    --sld-track-start: calc(50vw - (var(--sld-container) / 2));
     --sld-track-x: calc(var(--#{con.$n}scrollbar-width, 0) / -2);
-    --sld-track-padding: 0;
 
     &.#{$object-fix}slider-single {
       --sld-width: var(--sld-item-width) - ((var(--sld-gap) * (var(--sld-items) - 1)) / var(--sld-items));
@@ -93,8 +91,8 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-track {
-  padding: var(--sld-track-padding);
-  scroll-padding: var(--sld-track-scroll);
+  padding-left: var(--sld-track-start);
+  scroll-padding-left: var(--sld-track-start);
   scroll-snap-type: var(--sld-snap);
   scrollbar-width: none;
   margin-left: var(--sld-track-x, 0);
@@ -109,7 +107,7 @@ $object-fix: fix.get-class-prefix("object");
 }
 
 .#{$object-fix}slider-spacer {
-  width: var(--sld-spacer);
+  width: calc(var(--sld-spacer));
   display: var(--sld-spacer-display);
 }
 

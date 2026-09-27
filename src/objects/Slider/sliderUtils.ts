@@ -56,6 +56,60 @@ const sliderScrolled = (
 }
 
 /**
+ * Left offsets of panels, assuming all are the width of the first.
+ *
+ * @param {HTMLElement|null} track
+ * @param {number} count
+ * @return {number[]|undefined}
+ */
+const sliderPanelOffsets = (
+  track: HTMLElement | null,
+  count: number
+): number[] | undefined => {
+  const panel = track?.firstElementChild
+
+  if (!track || !isHtmlElement(panel)) {
+    return
+  }
+
+  const style = getComputedStyle(track)
+  const gap = parseFloat(style.columnGap)
+  const padding = parseFloat(style.scrollPaddingLeft)
+
+  const panelWidth = panel.getBoundingClientRect().width // Subpixel width, offsetWidth drift accumulates
+  const panelLeft = panel.offsetLeft
+  const trackGap = !isNumber(gap) ? 0 : gap
+  const trackPadding = !isNumber(padding) ? 0 : padding
+
+  return Array.from({ length: count }, (_, i) => {
+    return panelLeft - trackPadding + i * (panelWidth + trackGap)
+  })
+}
+
+/**
+ * Index of offset closest to scroll position, or -1 if no offsets.
+ *
+ * @param {number[]} offsets
+ * @param {number} target
+ * @return {number}
+ */
+const sliderClosestIndex = (offsets: number[], target: number): number => {
+  let index = -1
+  let closest = 0
+
+  offsets.forEach((offset, i) => {
+    const distance = Math.abs(offset - target)
+
+    if (index === -1 || distance < closest) {
+      index = i
+      closest = distance
+    }
+  })
+
+  return index
+}
+
+/**
  * Move track immediately or smoothly.
  *
  * @param {SliderScrollToArgs} args
@@ -108,7 +162,7 @@ const sliderScrollTo = (args: SliderScrollToArgs): void => {
   /* Move smoothly to new position */
 
   const animate = (timestamp: DOMHighResTimeStamp): void => {
-    if (!isHtmlElement(track)) {
+    if (!track.isConnected) {
       cancelAnimationFrame(animRef.id)
       return
     }
@@ -148,5 +202,7 @@ const sliderScrollTo = (args: SliderScrollToArgs): void => {
 
 export {
   sliderEase,
+  sliderPanelOffsets,
+  sliderClosestIndex,
   sliderScrollTo
 }
